@@ -2,6 +2,17 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.004] — 2026-10-01
+**SP-U (lanjutan): Ringkasan Simpan Pinjam, urutan daftar, simulasi angsuran, ajukan dari nasabah.**
+- **Sub-tab Ringkasan** (kini tab pertama dan bawaan): kartu *Pinjaman aktif* (sisa pokok), *Tunggakan*, *Jatuh tempo 7 hari* (30 hari), *Menunggu keputusan* (diajukan / disetujui belum cair), *Pembayaran bulan ini*; kartu membuka tab dan filter yang sesuai. Di bawahnya daftar **Akan jatuh tempo (30 hari)** (10 terdekat; klik membuka rincian pinjaman). Mengikuti filter unit di sidebar. Tombol *Ajukan pinjaman* juga ada di Ringkasan.
+- **Daftar pinjaman:** pilihan **Urutkan** (Terbaru bawaan, Terlama, Pokok terbesar, Sisa pokok terbesar, Menunggak dulu) dan **Muat lebih banyak** (20 baris per halaman), penghitung "Menampilkan x dari y".
+- **Modal pengajuan:** panel **simulasi angsuran langsung** (angsuran pertama/terakhir, total jasa, total bayar, jasa efektif per tahun, jadwal lipat) memakai `simulate()` dan setelan hitung berjalan; berubah saat pokok, jasa, metode, tenor, atau tanggal diubah; masukan belum sah menampilkan petunjuk tanpa galat.
+- **Nasabah:** kolom *Sisa pokok*, lencana **Menunggak**, modal nasabah menampilkan sisa pokok aktif dan tombol **Ajukan pinjaman** (nasabah terpilih otomatis).
+- Tes: logic-42 (22 cek), ui-ringkasan.py; logic-38, ui-sp0, ui-spm, ui-import-dummy, ui-tabs, ui-cal disesuaikan dengan tab Ringkasan (lima sub-tab).
+
+## [1.1.003] — 2026-10-01
+**Tombol ? Catatan rilis di Setelan.** Di bagian atas Setelan ada baris "Versi x.y.zzz" dengan tombol **?** (Catatan rilis) yang membuka modal berisi riwayat rilis (rilis terbaru terbuka, yang lama bisa dibuka satu per satu). Datanya ada di berkas baru `releases.js` (dibaca langsung dari aplikasi, jadi tetap tampil offline dan dari `file://`); tambahkan rilis baru di paling atas. `node build.js --check` kini memastikan entri teratas `releases.js`, judul `release_notes.md`, dan entri `CHANGELOG.md` sama dengan versi di `package.json`.
+
 ## [1.1.002] — 2026-10-01
 **Perbaikan ikon gembok di Data → Periode.** Tombol aksi periode selalu memakai ikon gembok tertutup, sehingga setelah periode ditutup ikonnya tidak berubah. Kini periode terbuka memakai gembok tertutup (aksi *Tutup*) dan periode yang sudah ditutup memakai **gembok terbuka** (aksi *Buka*). Tes ui-p0 memeriksa pergantian ikon.
 

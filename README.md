@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.002** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.004** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,7 +10,7 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.002)
+## Fitur (v1.1.004)
 
 | Area | Isi |
 |------|-----|
@@ -83,6 +83,7 @@ Satu folder datar (tanpa subfolder sumber). Halaman utama `index.html` memuat ga
 | `reports.js` | Laporan keuangan, piutang, saldo awal terpandu, laporan air |
 | `closing.js` | Tutup buku/periode, audit log, backup |
 | `users.js` | Pengguna, peran, login PIN |
+| `releases.js` | Data catatan rilis untuk tombol ? di Setelan (rilis baru ditambah di paling atas) |
 | `modals.js` | Dialog modal tambah/ubah data |
 | `keyboard.js` | Keyboard layar dan pintasan |
 | `permissions.js` | Penjagaan izin per aksi (dimuat setelah semua fungsi) |
