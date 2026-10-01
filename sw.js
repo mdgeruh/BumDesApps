@@ -2,7 +2,7 @@
 // Strategi: halaman, skrip, gaya, manifest = jaringan dulu, cadangan dari cache (selalu terbarui bila online, tetap jalan bila offline);
 // ikon = cache dulu. Data aplikasi ada di localStorage, tidak pernah lewat service worker.
 const V=new URL(self.location).searchParams.get("v")||"dev",CACHE="bumdes-"+V;
-const ASSETS=["./","./index.html","./style.css","./config.js","./accounting.js","./layout.js","./views.js","./modules.js","./loans.js","./water.js","./ui.js","./payroll.js","./reports.js","./closing.js","./users.js","./releases.js","./modals.js","./rates.js","./flow.js","./keyboard.js","./permissions.js","./pwa.js","./app.js","./manifest.json","./icon.svg","./icon-192.png","./icon-512.png","./icon-maskable-512.png"];
+const ASSETS=["./","./index.html","./style.css","./config.js","./accounting.js","./layout.js","./views.js","./modules.js","./loans.js","./water.js","./ui.js","./payroll.js","./reports.js","./closing.js","./users.js","./releases.js","./modals.js","./rates.js","./flow.js","./savings.js","./share.js","./sod.js","./keyboard.js","./permissions.js","./pwa.js","./app.js","./manifest.json","./icon.svg","./icon-192.png","./icon-512.png","./icon-maskable-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("bumdes-")&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET"||new URL(r.url).origin!==self.location.origin)return;

@@ -2,6 +2,56 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.017] — 2026-10-01
+**TAB2: bunga otomatis, biaya administrasi, pajak bunga untuk tabungan.**
+- `savings.js`: `savCfg/setSav` (`settings.sav`: rate, admin_code, tax_code, tax_min), `savPlan(ym)` (bunga = Σ saldo harian × rate / 365, pajak dari `taxAt`, biaya dari `calcFees` metode tetap), `prosesSav()` (jurnal per rekening: Dr 5600 / Cr 2300 bersih / Cr 2210 pajak; biaya Dr 2300 / Cr 4500). Tipe mutasi baru `biaya`; kolom `period/gross/tax`; daftar mutasi diurutkan menurut tanggal.
+- Akun baru 2210 Utang Pajak Bunga Tabungan dan 4500 Pendapatan Administrasi Tabungan (data lama lewat `ensureSavAcc`). Bunga manual ikut dikenai pajak bila kode pajak diatur.
+- Aturan: hanya bulan yang sudah berakhir; sekali per rekening per bulan per jenis (batal lalu proses ulang diperbolehkan); biaya dilewati bila saldo − biaya < saldo minimum. Izin proses = `sp.bayar`, setelan = `setelan.kelola`.
+- Belum: pajak atas biaya, bunga bertingkat per produk/saldo, produk berjangka, cetak buku tabungan. Uji: `logic-52.js` (19), `ui-tab2.py`.
+
+## [1.1.016] — 2026-10-01
+**SP3: peran per tahap dan pemisahan tugas Simpan Pinjam.**
+- Izin baru `sp.data/ajukan/verifikasi/analisis/setujui/akad/cairkan/bayar`; `can()` menganggap `sp.kelola` mencakup semuanya (peran lama tidak berubah). `GUARD` dipecah per tahap; `lst` memeriksa izin di dalam fungsi (setujui/tolak = `sp.setujui`, batal ajuan = `sp.ajukan`); transaksi tabungan = `sp.bayar`, rekening tabungan = `sp.data`. Menu Simpan Pinjam tampil bila punya salah satu izin tahap.
+- Peran sistem baru: Petugas Kredit (`ROL-KRD`), Surveyor/Analis (`ROL-SVY`), Approver/Manajer (`ROL-APR`), Kasir (`ROL-KSR`); `seedRoles` menambah peran yang belum ada pada data lama. Direktur baru memegang `sp.setujui` (data lama: ubah di matriks).
+- Berkas `sod.js`: pemisahan tugas `aju_setuju`, `analis_setuju`, `setuju_cair` (Setelan, bawaan mati, hanya saat Mode Pengguna aktif); pinjaman mencatat `submitted_by`, `approved_by`, `disbursed_by`, `analysis.by_id`; pelanggaran ditolak + audit `akses_ditolak`. Pinjaman saldo awal dikecualikan.
+- Uji: `logic-51.js` (26), `ui-sod.py`; `logic-23/26/35/48/49` disesuaikan (10 peran, menu Direktur, tidak ada `lst/saveTolak` di GUARD).
+
+## [1.1.015] — 2026-10-01
+**Ringkasan nasabah yang dapat dibagikan (NSB1).**
+- Berkas baru `share.js`: `nsText()` menyusun teks (pinjaman aktif, tunggakan beserta denda, angsuran berikut, tabungan dan 3 mutasi terakhir), `waNo()` menormalkan nomor, `nsCopy/nsWa/nsShare` dengan catatan audit `share`. Modal `ns` dibuka dari modal nasabah.
+- Snapshot saat dibuat (bukan data langsung); portal nasabah sungguhan tetap di ROADMAP (NSB2). Uji: `logic-50.js` (9), `ui-nsb.py`.
+
+## [1.1.014] — 2026-10-01
+**Tabungan nasabah (setoran, penarikan, bunga, buku tabungan).**
+- Berkas baru `savings.js`: koleksi `savings_accounts` dan `savings_tx`; akun baru 2300 Tabungan Nasabah (liabilitas) dan 5600 Beban Bunga Tabungan (data lama ditambah lewat `ensureSavAcc` saat migrasi).
+- Jurnal: setoran Dr Kas/Bank, Cr 2300; penarikan Dr 2300, Cr Kas/Bank; bunga Dr 5600, Cr 2300. Tipe transaksi `sav_in/sav_out/sav_int`; `voidT` umum menolaknya (batal lewat buku tabungan).
+- Aturan: tanggal tidak mendahului mutasi terakhir/tanggal buka dan tidak melewati hari ini; penarikan ≤ saldo − saldo minimum dan kas/bank cukup; batal mutasi ditolak bila saldo berjalan menjadi negatif; tutup rekening hanya bila saldo nol; satu rekening aktif per nasabah per produk.
+- UI: sub-tab Tabungan (daftar ringkas, cari, filter, rekonsiliasi dengan akun 2300), kartu Ringkasan, modal rekening/buku tabungan (Setor, Tarik, Bunga, Tutup rekening), izin `sp.kelola`. Arus Kas: akun 2300 = Pendanaan.
+- Uji baru `logic-49.js` (23) dan `ui-tabungan.py` (390/1280px). Belum: biaya admin/pajak bunga lewat mesin tarif, bunga otomatis berkala, ringkasan nasabah yang dibagikan, portal nasabah.
+
+## [1.1.013] — 2026-10-01
+**Peran Superadmin (akses penuh).**
+- Peran sistem `ROL-SUP` berisi seluruh izin (`PERMS`), disinkronkan tiap migrasi sehingga izin baru otomatis ikut; data lama mendapat peran ini lewat `seedRoles`. Matriks izin terkunci untuk peran ini (`togPerm` menolak).
+- Superadmin = pengembang sistem: tersembunyi di daftar pengguna, matriks izin, dan pilihan peran bagi non-Superadmin; ubah/nonaktifkan/reset PIN/pemberian peran Superadmin hanya oleh Superadmin (`needSup`, `cuSup`).
+- Superadmin juga terhitung Admin Sistem (memiliki `pengguna.kelola`). Uji baru `logic-48.js`; `logic-23` menyesuaikan jumlah peran (6).
+
+## [1.1.012] — 2026-10-01
+**Master: daftar ringkas + modal rincian.**
+- Unit, Kas & Bank, COA, Pihak, Pegawai, Tarif & Pajak memakai daftar ringkas (`mlist`/`mrow`); klik baris membuka modal `mdt` berisi rincian, Ubah, dan Nonaktifkan/Aktifkan (tarif: Tambah versi baru). Form tambah/ubah sudah berupa modal.
+- `tglView()` kini juga memformat tanggal di modal form (`#fm`).
+- Uji disesuaikan (`logic-11`, `ui-nav`, `ui-modal`, `ui-tarif`, `ui-trx`). Pencarian COA/Pihak belum ditambahkan.
+
+## [1.1.011] — 2026-10-01
+**Bahasa pengguna: "Void" → "Batalkan".**
+- Tombol di modal rincian transaksi, judul dan tombol konfirmasi ("Batalkan transaksi?", "Ya, batalkan"), status "Dibatalkan", dan pesan sukses/ubah/tutup periode memakai bahasa pengguna. Nama fungsi internal (`voidT`), status data (`voided`), dan kode aksi audit (`void`) tidak berubah.
+- Uji disesuaikan (`logic-3.js`, `ui-form.py`, `ui-trx.py`).
+
+## [1.1.010] — 2026-10-01
+**Ubah transaksi (void + posting ulang bertaut) dari modal rincian.**
+- Tombol *Ubah* di modal `td` untuk jenis `in/out/tf/manual`; `editTrx()`/`editChk()`/`editDef()` mengisi form dari jurnal asli. Jenis pinjaman, penjualan, gaji, saldo awal, dan penutup tetap dikoreksi dari menu asalnya.
+- `submitT()` pada mode ubah: validasi periode/unit asli dulu, posting transaksi baru (atomik bila gagal), lalu `rev()` transaksi lama; `edited_from`/`replaced_by` saling menaut dan audit `edit`. Modal rincian menampilkan tautan "Lihat transaksi lama/baru".
+- Uji: `logic-47.js` (22 cek), `ui-trx.py` diperluas.
+
 ## [1.1.009] — 2026-10-01
 **UI Transaksi: daftar ringkas + modal rincian, form lewat modal.**
 - Daftar transaksi memakai baris `.li` (keterangan, tanggal · unit, jenis, jumlah, status); klik membuka modal `td` (data, jurnal asli dan pembalik, Void dengan konfirmasi untuk transaksi yang boleh di-void; pinjaman/penjualan/gaji tetap dikoreksi dari menu masing-masing).

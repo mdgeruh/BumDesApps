@@ -214,3 +214,5 @@ ol.tl .tld{font-size:12px;color:var(--mu)}ol.tl small{color:var(--mu);font-size:
 
 /* v1.1.008: kotak alur pengajuan lengkap */
 .card.flb{margin-top:8px}.card.flb .fl{margin-top:8px}
+
+.ns-t{white-space:pre-wrap;word-break:break-word;background:color-mix(in srgb,var(--tx) 6%,var(--cd));border:1px solid var(--bd);border-radius:10px;padding:12px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;max-height:50vh;overflow:auto;margin:8px 0}

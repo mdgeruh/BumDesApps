@@ -35,19 +35,19 @@ const more=n=>n>0?`<button class="b s" onclick="S.lim=(S.lim||PG)+PG;render()">M
 function vTrx(){const H=vTrx0();return subT(H+vAwal(),"xt",[["daftar","Transaksi",null],["awal","Saldo Awal","<h2>Saldo Awal Terpandu</h2>"]])}
 function vTrx0(){
  const q=(S.q||"").toLowerCase(),all=db.transactions.filter(t=>(S.unit==="all"||t.business_unit_id===S.unit)&&inD(t.date)&&(!S.tt||t.type===S.tt)&&(!q||(t.description+" "+TL[t.type]+" "+unitName(t.business_unit_id)).toLowerCase().includes(q))).sort((a,b)=>b.date.localeCompare(a.date)||b.created_at.localeCompare(a.created_at)),lim=S.lim||PG,ls=all.slice(0,lim);
- return`<h2>Transaksi</h2><div class="fl"><button class="b ad" onclick="mdOpen('tn','')">${ic("plus")}<span>Transaksi baru</span></button><button class="b s ad" onclick="mdOpen('jm','')">${ic("plus")}<span>Jurnal multi-baris</span></button></div>${flt(1)}<p class="k">${all.length} transaksi${all.length>ls.length?" · tampil "+ls.length:""}</p>${ls.length?`<div class="ll"><div class="lh" aria-hidden="true"><span>Transaksi</span><span>Jenis</span><span class="n">Jumlah</span><span class="n"></span><span>Status</span><span></span></div>${ls.map(t=>`<button class="li" onclick="mdOpen('td','${t._id}')"><span class="l1"><b>${esc(t.description)}</b><small>${t.date} · ${esc(unitName(t.business_unit_id))}</small></span><span class="l2">${esc(TL[t.type]||t.type)}</span><span class="n l3">${rp(t.amount)}</span><span class="n l4"></span><span class="l5"><span class="bdg ${t.status==="posted"?"ok":"wr"}">${t.status==="posted"?"Diposting":t.status==="voided"?"Di-void":esc(t.status)}</span></span><span class="l6">${ic("next")}</span></button>`).join("")}</div>`:'<div class="empty"><p>Belum ada transaksi yang cocok.</p></div>'}${more(all.length-ls.length)}`}
-function trxFormHtml(){S.ft=S.ft||"in";return`<fieldset class="grp"><legend>1 · Jenis dan tanggal</legend>
+ return`<h2>Transaksi</h2><div class="fl"><button class="b ad" onclick="mdOpen('tn','')">${ic("plus")}<span>Transaksi baru</span></button><button class="b s ad" onclick="mdOpen('jm','')">${ic("plus")}<span>Jurnal multi-baris</span></button></div>${flt(1)}<p class="k">${all.length} transaksi${all.length>ls.length?" · tampil "+ls.length:""}</p>${ls.length?`<div class="ll"><div class="lh" aria-hidden="true"><span>Transaksi</span><span>Jenis</span><span class="n">Jumlah</span><span class="n"></span><span>Status</span><span></span></div>${ls.map(t=>`<button class="li" onclick="mdOpen('td','${t._id}')"><span class="l1"><b>${esc(t.description)}</b><small>${t.date} · ${esc(unitName(t.business_unit_id))}</small></span><span class="l2">${esc(TL[t.type]||t.type)}</span><span class="n l3">${rp(t.amount)}</span><span class="n l4"></span><span class="l5"><span class="bdg ${t.status==="posted"?"ok":"wr"}">${t.status==="posted"?"Diposting":t.status==="voided"?"Dibatalkan":esc(t.status)}</span></span><span class="l6">${ic("next")}</span></button>`).join("")}</div>`:'<div class="empty"><p>Belum ada transaksi yang cocok.</p></div>'}${more(all.length-ls.length)}`}
+function trxFormHtml(o){o=o||{};S.ft=S.ft||"in";return`<fieldset class="grp"><legend>1 · Jenis dan tanggal</legend>
 ${fld("f-type","Jenis",{t:"select",opts:opt(["in","out","tf","manual"],k=>[k,TL[k]],S.ft),a:' onchange="S.ft=this.value;rows()"'})}
-${fld("f-date","Tanggal",{type:"date",value:today(),req:1})}
-${fld("f-unit","Unit usaha",{t:"select",opts:`<option value="">Umum (tanpa unit)</option>${opt(db.business_units.filter(isAct),u=>[u._id,u.name])}`})}</fieldset>
+${fld("f-date","Tanggal",{type:"date",value:o.date||today(),req:1})}
+${fld("f-unit","Unit usaha",{t:"select",opts:`<option value="">Umum (tanpa unit)</option>${opt(db.business_units.filter(isAct),u=>[u._id,u.name],o.unit)}`})}</fieldset>
 <fieldset class="grp"><legend>2 · Kas dan akun</legend>
-<div data-t="in out tf">${fld("f-cash","Kas/Bank",{t:"select",lid:"l-cash",opts:opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name]),a:' onchange="trxPrev()"'})}</div>
-<div data-t="tf">${fld("f-cash2","Kas/Bank tujuan",{t:"select",opts:opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name],"CASH-002"),a:' onchange="trxPrev()"'})}</div>
-<div data-t="in out manual">${fld("f-acc","Akun lawan",{t:"select",lid:"l-acc",opts:`<option value="">— pilih akun —</option>${accOpts()}`,a:' onchange="trxPrev()"'})}</div>
+<div data-t="in out tf">${fld("f-cash","Kas/Bank",{t:"select",lid:"l-cash",opts:opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name],o.cash),a:' onchange="trxPrev()"'})}</div>
+<div data-t="tf">${fld("f-cash2","Kas/Bank tujuan",{t:"select",opts:opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name],o.cash2||"CASH-002"),a:' onchange="trxPrev()"'})}</div>
+<div data-t="in out manual">${fld("f-acc","Akun lawan",{t:"select",lid:"l-acc",opts:`<option value="">— pilih akun —</option>${accOpts(o.acc)}`,a:' onchange="trxPrev()"'})}</div>
 <div data-t="manual">${fld("f-acc2","Akun kredit",{t:"select",opts:`<option value="">— pilih akun —</option>${accOpts()}`,a:' onchange="trxPrev()"'})}</div></fieldset>
 <fieldset class="grp"><legend>3 · Jumlah dan keterangan</legend>
-${fld("f-amt","Jumlah (Rp)",{type:"text",req:1,a:' inputmode="numeric" autocomplete="off" placeholder="0" oninput="fmtR(this);trxPrev()"'})}
-${fld("f-desc","Keterangan",{})}</fieldset>
+${fld("f-amt","Jumlah (Rp)",{type:"text",req:1,value:o.amt||"",a:' inputmode="numeric" autocomplete="off" placeholder="0" oninput="fmtR(this);trxPrev()"'})}
+${fld("f-desc","Keterangan",{value:o.desc||""})}</fieldset>
 <div class="prev" id="f-prev" aria-live="polite"></div>`}
 function vJnl(){const n=S.jn||4,R=[...Array(n).keys()];
  return`<div class="k">Untuk jurnal manual dengan banyak akun dan saldo awal (jurnal pembuka). Total debit harus sama dengan total kredit.</div>
@@ -83,7 +83,7 @@ function submitT(){try{const v=i=>$("#"+i).value,raw=v("f-amt").trim(),t=S.ft,d=
  if(t==="in"||t==="out"){if(!v("f-acc"))throw fe("f-acc","Pilih akun lawan");const k=ca("f-cash");L=t==="in"?[{acc:k,d:amt},{acc:v("f-acc"),c:amt}]:[{acc:v("f-acc"),d:amt},{acc:k,c:amt}]}
  else if(t==="tf"){if(v("f-cash")===v("f-cash2"))throw fe("f-cash2","Kas asal dan tujuan sama");L=[{acc:ca("f-cash2"),d:amt},{acc:ca("f-cash"),c:amt}]}
  else{if(!v("f-acc"))throw fe("f-acc","Pilih akun debit");if(!v("f-acc2"))throw fe("f-acc2","Pilih akun kredit");if(v("f-acc")===v("f-acc2"))throw fe("f-acc2","Akun debit dan kredit sama");L=[{acc:v("f-acc"),d:amt},{acc:v("f-acc2"),c:amt}]}
- post({type:t,date:d,unit:v("f-unit"),desc:v("f-desc")||"-",lines:L});clrF("#f-amt,#f-desc");S.msg="Transaksi berhasil diposting";okM()}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
+ const eo=S.etn?editChk(S.etn):null;const nt=post({type:t,date:d,unit:v("f-unit"),desc:v("f-desc")||"-",lines:L});if(eo){nt.edited_from=eo._id;rev(eo._id);eo.replaced_by=nt._id;audit("edit","transaction",nt._id,"Mengganti "+eo.description+" · "+eo.date);save()}clrF("#f-amt,#f-desc");S.msg=eo?"Transaksi diubah: yang lama dibatalkan dengan jurnal pembalik, yang baru diposting":"Transaksi berhasil diposting";okM()}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
 function vLed(){const a=acc(S.acc),ls=db.journal_lines.filter(l=>l.account_id===S.acc&&inUnit(l)).sort((x,y)=>x.date.localeCompare(y.date));
  let run=0;const dn=["asset","expense"].includes(a.type);
  const trs=ls.map(l=>{run+=dn?l.debit-l.credit:l.credit-l.debit;const t=db.transactions.find(x=>x._id===l.transaction_id);
@@ -96,11 +96,14 @@ function vTb(){const m=balU(S.unit);let D=0,C=0;
  trs.push(`<tr><th></th><th>Total</th><th class="n">${rp(D)}</th><th class="n">${rp(C)}</th></tr>`);
  return`<h2>Neraca Saldo</h2>${tbl(["Kode","Akun","#Debit","#Kredit"],trs)}<p class="k">${Math.round(D)===Math.round(C)?"✓ Seimbang":"⚠ Tidak seimbang"}</p>`}
 function vMst(){return subT(vMst0()+vPihak()+vPeg()+vTarifBiaya(),"mt",[["unit","Unit Usaha",null],["kas","Kas & Bank","<h2>Kas & Bank</h2>"],["coa","Akun (COA)","<h2>Chart of Accounts</h2>"],["pihak","Pihak","<h2>Pihak</h2>"],["peg","Pegawai","<h2>Pegawai</h2>"],["tarif","Tarif & Biaya","<h2>Tarif & Biaya</h2>"]])}
-function vMst0(){const sit=x=>isAct(x)?"Aktif":"Nonaktif",
- bt=(k,id,x)=>ib("edit","Edit","openM('"+k+"','"+id+"')","s")+(isAct(x)?ib("x","Nonaktifkan","togM('"+k+"','"+id+"')","s"):ib("check","Aktifkan","togM('"+k+"','"+id+"')","s"));
- return`<h2>Unit Usaha</h2>${addB("Tambah unit","u")}${tbl(["Kode","Nama","Status",""],db.business_units.map(u=>`<tr><td>${esc(u.code)}</td><td>${esc(u.name)}</td><td>${sit(u)}</td><td>${bt("u",u._id,u)}</td></tr>`))}
-<h2>Kas & Bank</h2>${addB("Tambah rekening","c")}${tbl(["Nama","Jenis","Akun","Status",""],db.cash_accounts.map(c=>`<tr><td>${esc(c.name)}</td><td>${c.type}</td><td>${c.account_id.slice(3)}</td><td>${sit(c)}</td><td>${bt("c",c._id,c)}</td></tr>`))}
-<h2>Chart of Accounts</h2>${addB("Tambah akun","a")}${tbl(["Kode","Nama","Tipe","Status",""],db.accounts.map(a=>`<tr><td>${a.parent_id?"&nbsp;&nbsp;":""}${a.code}</td><td>${esc(a.name)}</td><td>${a.type}</td><td>${sit(a)}</td><td>${bt("a",a._id,a)}</td></tr>`))}`}
+// ===== v1.1.012: daftar master ringkas (klik baris → modal rincian) =====
+const mrow=(k,id,a,sm,b,c,d,bd)=>`<button class="li" onclick="mdOpen('mdt','${k}|${id}')"><span class="l1"><b>${a}</b><small>${sm||""}</small></span><span class="l2">${b||""}</span><span class="n l3">${c||""}</span><span class="n l4">${d||""}</span><span class="l5"><span class="bdg ${bd[0]}">${bd[1]}</span></span><span class="l6">${ic("next")}</span></button>`,
+ mlist=(h,rows,empty)=>rows.length?`<div class="ll"><div class="lh" aria-hidden="true"><span>${h[0]}</span><span>${h[1]}</span><span class="n">${h[2]}</span><span class="n">${h[3]}</span><span>Status</span><span></span></div>${rows.join("")}</div>`:`<div class="empty"><p>${empty||"Belum ada data."}</p></div>`,
+ mbd=x=>isAct(x)?["ok","Aktif"]:["wr","Nonaktif"];
+function vMst0(){const all=balAll(),UT={simpan_pinjam:"Simpan Pinjam",lainnya:"Lainnya"};
+ return`<h2>Unit Usaha</h2>${addB("Tambah unit","u")}${mlist(["Unit","Jenis","","" ],db.business_units.map(u=>mrow("u",u._id,esc(u.name),"Kode "+esc(u.code),UT[u.type]||"Lainnya","","",mbd(u))),"Belum ada unit usaha.")}
+<h2>Kas & Bank</h2>${addB("Tambah rekening","c")}${mlist(["Rekening","Jenis","Saldo",""],db.cash_accounts.map(c=>{const a=acc(c.account_id);return mrow("c",c._id,esc(c.name),"Akun "+esc(a?a.code+" "+a.name:c.account_id),esc(c.type),rp(net(a,all)),"",mbd(c))}),"Belum ada rekening kas/bank.")}
+<h2>Chart of Accounts</h2>${addB("Tambah akun","a")}${mlist(["Akun","Tipe","",""],db.accounts.map(a=>mrow("a",a._id,(a.parent_id?"&nbsp;&nbsp;":"")+esc(a.code+" "+a.name),"",esc(a.type),"","",mbd(a))),"Belum ada akun.")}`}
 
 const SYSA=["ACC1100","ACC1200","ACC1300","ACC1400","ACC3300","ACC4100","ACC4200","ACC4400"],hasJ=id=>db.journal_lines.some(l=>l.account_id===id);
 function mErr(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null;render()}
