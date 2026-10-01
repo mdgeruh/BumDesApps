@@ -1,14 +1,15 @@
-# Catatan Rilis — v1.1.002
+# Catatan Rilis — v1.1.004
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
-Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rilis berikutnya: v1.1.002, v1.1.003, …). Fungsi inti sama dengan v0.1.049; yang baru: **aplikasi dapat dipasang dari browser (PWA)**, nomor versi baru, dan catatan rilis ini. v1.1.002 memperbaiki ikon gembok periode.
+Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rilis berikutnya: v1.1.002, v1.1.003, …). Fungsi inti sama dengan v0.1.049; yang baru: **aplikasi dapat dipasang dari browser (PWA)**, nomor versi baru, dan catatan rilis ini. v1.1.002 memperbaiki ikon gembok periode; v1.1.003 menambah tombol ? Catatan rilis di Setelan; v1.1.004 melanjutkan UI Simpan Pinjam (Ringkasan, urutan, simulasi).
 
 ## Sorotan
 
 **Simpan Pinjam**
 - Pengajuan lewat modal; alur Diajukan → Disetujui → Aktif → Lunas (atau Ditolak/Dibatalkan, wajib beralasan), dengan konfirmasi untuk aksi berisiko.
 - Metode jasa flat dan anuitas; jadwal angsuran, denda keterlambatan (masa tenggang, dasar hitung, batas), pembulatan, dan batas pinjaman yang dapat diatur di Setelan.
+- Sub-tab **Ringkasan** (tab bawaan): pinjaman aktif, tunggakan, jatuh tempo 7/30 hari, pengajuan menunggu, pembayaran bulan ini. Simulasi angsuran langsung saat mengajukan; daftar pinjaman bisa diurutkan dan dimuat bertahap.
 - Daftar ringkas untuk **Pinjaman, Tunggakan, Jaminan, Nasabah**; klik baris membuka modal rincian. Modal pinjaman memuat jadwal pembayaran yang bisa dibuka/ditutup per angsuran dan riwayat pembayaran (kwitansi, pembatalan).
 - Pembayaran angsuran dengan **jenis pembayaran**: pokok + bunga, bunga saja, atau nominal bebas; jumlah terisi otomatis dan ada tombol bayar langsung di kartu pembayaran.
 - Pelunasan dipercepat, bukti pencairan, kwitansi, pembatalan pencairan/pembayaran, pengelolaan jaminan.
@@ -42,11 +43,13 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Batasan yang diketahui
 - Data hanya tersimpan di browser perangkat (aplikasi terpasang memakai penyimpanan browser asalnya; data tidak berpindah antar perangkat/alamat); lakukan Export JSON berkala sebagai backup.
 - Login PIN adalah kontrol prosedur di sisi browser, bukan pengamanan server.
-- Belum ada: sub-tab Ringkasan Simpan Pinjam, pengurutan daftar, tombol "Ajukan pinjaman" dari baris nasabah, kolektibilitas dan restrukturisasi. Lihat `ROADMAP.md`.
+- Belum ada: halaman rincian dengan linimasa, jaminan ditautkan dari rincian pinjaman, kolektibilitas dan restrukturisasi. Lihat `ROADMAP.md`.
 
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.004 | Ringkasan Simpan Pinjam, urutan daftar, simulasi angsuran, ajukan dari nasabah |
+| 1.1.003 | Tombol ? Catatan rilis di Setelan |
 | 1.1.002 | Perbaikan ikon gembok periode (terbuka/tertutup) |
 | 1.1.001 | PWA, skema versi baru, catatan rilis, kode dipecah bernama jelas |
 | 0.1.049 | Kode dipecah menjadi berkas sumber + `build.js` |

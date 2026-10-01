@@ -1,6 +1,6 @@
 // Membuat bumdes.html (satu file mandiri) dari index.html + style.css + skrip yang dimuat index.html.
 //   node build.js          -> tulis bumdes.html
-//   node build.js --check  -> gagal (exit 1) bila bumdes.html tidak sinkron, versi tidak cocok, atau cache sw.js kurang berkas
+//   node build.js --check  -> gagal (exit 1) bila bumdes.html tidak sinkron, versi tidak cocok, cache sw.js kurang berkas, atau catatan rilis tertinggal
 // Urutan skrip = urutan <script src> di index.html (urutan penting: berkas berbagi lingkup global).
 // index.html dapat dibuka langsung (multi-berkas) lewat server; bumdes.html dipakai untuk satu-file/offline dan tes.
 const fs=require('fs'),path=require('path');
@@ -21,6 +21,9 @@ if(process.argv.includes('--check')){
  if(cur!==out)e('bumdes.html tidak sinkron dengan file sumber — jalankan: node build.js');
  if(!rd('config.js').includes('APP_VER="'+VER+'"'))e('APP_VER di config.js tidak sama dengan package.json ('+VER+')');
  const sw=rd('sw.js');for(const f of [...css,...js,'index.html','manifest.json'])if(!sw.includes('"./'+f+'"'))e('sw.js: berkas belum masuk daftar cache: '+f);
+ const rl=rd('releases.js'),first=(rl.match(/\{v:"([^"]+)"/)||[])[1];if(first!==VER)e('releases.js: entri paling atas ('+first+') harus '+VER);
+ if(!rd('release_notes.md').split('\n')[0].includes('v'+VER))e('release_notes.md: judul harus menyebut v'+VER);
+ if(!rd('CHANGELOG.md').includes('## ['+VER+']'))e('CHANGELOG.md: belum ada entri ['+VER+']');
  if(bad)process.exit(1);
- console.log('OK: bumdes.html sinkron ('+out.length+' byte), versi '+VER+', cache sw.js lengkap');
+ console.log('OK: bumdes.html sinkron ('+out.length+' byte), versi '+VER+', cache sw.js lengkap, catatan rilis sinkron');
 }else{fs.writeFileSync(target,out);console.log('bumdes.html dirakit ('+out.length+' byte, '+js.length+' skrip + '+css.length+' gaya)')}
