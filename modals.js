@@ -1,11 +1,11 @@
 // ===== MODAL CRUD (v0.1.032): tambah/edit master data lewat dialog modal =====
 // S.md = jenis modal terbuka; id yang diedit tetap di S.eu/ec/ea/ey/eg/en/ep/epr/ecn/ek/eus (null = baru); S.rp = id untuk reset PIN
-const MK={rn:"ern",ld:"eld",cj:"ecj",jd:"ejd",nd:"end",lp:"elp",la:"ela",lr:"elr",lb:"elb",u:"eu",c:"ec",a:"ea",py:"ey",pg:"eg",n:"en",pl:"ep",pr:"epr",cn:"ecn",pk:"ek",us:"eus",rp:"rp"};
+const MK={rn:"ern",ld:"eld",cj:"ecj",jd:"ejd",nd:"end",lp:"elp",la:"ela",lr:"elr",lb:"elb",u:"eu",c:"ec",a:"ea",py:"ey",pg:"eg",n:"en",pl:"ep",pr:"epr",cn:"ecn",pk:"ek",us:"eus",rp:"rp",tn:"etn",jm:"ejm",td:"etd"};
 const addB=(t,k)=>`<div class="fl"><button class="b ad" onclick="mdOpen('${k}','')">${ic("plus")}<span>${t}</span></button></div>`;
 const mdId=()=>S.md?(S[MK[S.md]]||""):"",mdKey=()=>S.md?S.md+"|"+mdId():"";
 function mdOpen(k,id){if(!MK[k])return;const kp=(k==="lr"||k==="lb")&&S.md==="ld"?S.eld:null;for(const x in MK)S[MK[x]]=null;if(kp)S.eld=kp;S[MK[k]]=id||null;S.md=k;S.mv=null;S.mf="";S.msg="";S.fe=null;
  if(typeof document!=="undefined"&&document.activeElement)cfFrom=tKey(document.activeElement);render()}
-function mdClose(){S.lpp=null;S.md=null;S.mv=null;S.fe=null;for(const x in MK)S[MK[x]]=null;render()}
+function mdClose(){S.lpp=null;S.cjl=null;S.md=null;S.mv=null;S.fe=null;for(const x in MK)S[MK[x]]=null;render()}
 function okM(){S.lpp=null;S.md=null;S.mv=null}
 function openM(k,id){S.mt=k==="u"?"unit":k==="c"?"kas":"coa";mdOpen(k,id)}
 function openP(id){S.mt="pihak";mdOpen("py",id)}
@@ -38,18 +38,18 @@ const MD={
  rn:()=>({t:"Catatan rilis · v"+APP_VER,s:"mdClose()",y:"Tutup",b:vRelease(),nf:1}),
  ld:()=>{const l=db.loans.find(x=>x._id===S.eld);if(!l)return{t:"Pinjaman",s:"mdClose()",y:"Tutup",b:"<p>Pinjaman tidak ditemukan.</p>",nf:1};return{t:l.loan_number+" · "+party(l.party_id).name,s:"mdClose()",y:"Tutup",b:vLoan(l),nf:1}},
  lp:()=>({t:"Pengajuan pinjaman baru",s:"ajukan()",y:"Ajukan",
-  b:fld("l-pty","Nasabah",{t:"select",req:1,opts:opt(db.parties.filter(p=>p.type==="nasabah"&&p.status!=="nonaktif"),p=>[p._id,p.name],S.lpp),hint:db.parties.some(p=>p.type==="nasabah"&&p.status!=="nonaktif")?"":"Belum ada nasabah aktif: tambahkan di sub-tab Nasabah"})
+  b:fld("l-pty","Nasabah",{t:"select",req:1,a:' onchange="simLive()"',opts:opt(db.parties.filter(p=>p.type==="nasabah"&&p.status!=="nonaktif"),p=>[p._id,p.name],S.lpp),hint:db.parties.some(p=>p.type==="nasabah"&&p.status!=="nonaktif")?"":"Belum ada nasabah aktif: tambahkan di sub-tab Nasabah"})
   +fld("l-u","Unit usaha",{t:"select",opts:opt(spUnits(),u=>[u._id,u.name])})+fld("l-d","Tanggal pengajuan",{type:"date",value:today(),req:1,a:' onchange="simLive()"'})
   +fld("l-p","Pokok (Rp)",{type:"text",a:RPA.replace('fmtR(this)','fmtR(this);simLive()'),req:1})+fld("l-r","Jasa (% per tahun)",{type:"text",a:' inputmode="decimal" autocomplete="off" oninput="simLive()"',value:"12"})
   +fld("l-m","Metode jasa",{t:"select",a:' onchange="simLive()"',opts:opt([["flat","Flat (dari pokok awal)"],["menurun","Menurun (dari sisa pokok)"],["anuitas","Anuitas (angsuran tetap)"]],x=>x,"flat")})
-  +fld("l-t","Tenor (bulan)",{type:"text",a:' inputmode="numeric" autocomplete="off" oninput="simLive()"',value:"12",req:1})+'<div class="card sim" id="sim"></div>'}),
+  +fld("l-t","Tenor (bulan)",{type:"text",a:' inputmode="numeric" autocomplete="off" oninput="simLive()"',value:"12",req:1})+'<div class="card sim" id="sim"></div><div id="sim-w" aria-live="polite"></div>'}),
  la:()=>{const e=db.loans.find(x=>x._id===S.ela);if(!e)return{t:"Ubah pengajuan",s:"mdClose()",y:"Tutup",b:"<p>Pengajuan tidak ditemukan.</p>"};return{t:"Ubah pengajuan "+e.loan_number,s:"saveAjuan()",y:"Simpan perubahan",
   b:fld("la-pty","Nasabah",{t:"select",opts:opt(db.parties.filter(p=>p.type==="nasabah"&&(p.status!=="nonaktif"||p._id===e.party_id)),p=>[p._id,p.name],e.party_id)})+fld("la-u","Unit usaha",{t:"select",opts:opt(spUnits(),u=>[u._id,u.name],e.unit_id)})
   +fld("la-d","Tanggal pengajuan",{type:"date",value:e.application_date})+fld("la-p","Pokok (Rp)",{type:"text",a:RPA,value:fm(e.principal)})+fld("la-r","Jasa (% per tahun)",{type:"text",a:' inputmode="decimal" autocomplete="off"',value:e.interest_rate})
   +fld("la-m","Metode jasa",{t:"select",opts:opt([["flat","Flat (dari pokok awal)"],["menurun","Menurun (dari sisa pokok)"],["anuitas","Anuitas (angsuran tetap)"]],x=>x,e.interest_method)})+fld("la-t","Tenor (bulan)",{type:"text",a:' inputmode="numeric" autocomplete="off"',value:e.tenor})}},
  lr:()=>{const e=db.loans.find(x=>x._id===S.elr);return{t:"Tolak pengajuan"+(e?" "+e.loan_number:""),s:"saveTolak()",y:"Tolak pengajuan",b:(e?'<p class="k">'+esc(party(e.party_id).name)+" · Rp "+fm(e.principal)+"</p>":"")+fld("lr-a","Alasan penolakan",{t:"textarea",req:1})}},
  lb:()=>{const e=db.loans.find(x=>x._id===S.elb);return{t:"Batalkan pengajuan"+(e?" "+e.loan_number:""),s:"saveBatalAjuan()",y:"Batalkan pengajuan",b:(e?'<p class="k">'+esc(party(e.party_id).name)+" · Rp "+fm(e.principal)+". Nomor pinjaman tidak dipakai ulang.</p>":"")+fld("lb-a","Alasan pembatalan",{t:"textarea",req:1})}},
- cj:()=>({t:"Tambah jaminan",s:"saveJam()",y:"Tambah jaminan",b:fld("c-l","Pinjaman",{t:"select",opts:opt(db.loans,l=>[l._id,l.loan_number+" – "+party(l.party_id).name])})+fld("c-t","Jenis",{t:"select",opts:["BPKB","Sertifikat","Emas","Lainnya"].map(x=>`<option>${x}</option>`).join("")})+fld("c-d","Deskripsi",{req:1})+fld("c-v","Nilai taksiran (Rp)",{type:"text",a:RPA})+fld("c-n","No. dokumen")}),
+ cj:()=>({t:"Tambah jaminan",s:"saveJam()",y:"Tambah jaminan",b:fld("c-l","Pinjaman",{t:"select",opts:opt(db.loans,l=>[l._id,l.loan_number+" – "+party(l.party_id).name],S.cjl)})+fld("c-t","Jenis",{t:"select",opts:["BPKB","Sertifikat","Emas","Lainnya"].map(x=>`<option>${x}</option>`).join("")})+fld("c-d","Deskripsi",{req:1})+fld("c-v","Nilai taksiran (Rp)",{type:"text",a:RPA})+fld("c-n","No. dokumen")}),
  jd:()=>{const c=db.collaterals.find(x=>x._id===S.ejd);if(!c)return{t:"Jaminan",s:"mdClose()",y:"Tutup",b:"<p>Jaminan tidak ditemukan.</p>",nf:1};const l=db.loans.find(x=>x._id===c.loan_id),R=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`;
   return{t:c.type+" · "+l.loan_number,s:"mdClose()",y:"Tutup",nf:1,b:`<div class="ldw"><div class="lds"><span class="bdg ${c.status==="dipegang"?"wr":"ok"}">${c.status==="dipegang"?"Dipegang":"Dikembalikan"}</span><b>${rp(c.estimated_value)}</b></div><div class="kvg">${R("Pinjaman",`<a href="#" onclick="event.preventDefault();openLoan('${l._id}')">${esc(l.loan_number)}</a>`)}${R("Nasabah",esc(party(l.party_id).name))}${R("Jenis",esc(c.type))}${R("Deskripsi",esc(c.description))}${R("No. dokumen",esc(c.document_number||"-"))}${R("Status pinjaman",LS[l.status]||l.status)}</div><div class="lda">${c.status==="dipegang"?ib("check","Kembalikan","kembalikan('"+c._id+"')","s"):""}</div></div>`}},
  nd:()=>{const p=db.parties.find(x=>x._id===S.end);if(!p)return{t:"Nasabah",s:"mdClose()",y:"Tutup",b:"<p>Nasabah tidak ditemukan.</p>",nf:1};const ls=db.loans.filter(l=>l.party_id===p._id),R=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`;
@@ -90,7 +90,7 @@ function mdr(){const el=$("#fm");if(!el)return;const k=mdKey(),was=S.mo||"";
  el.innerHTML=mdHtml();el.className="on";mdLock(1);
  if(S.mv&&S.mv.k===k&&document.querySelectorAll)document.querySelectorAll("#fm [id]").forEach(e=>{if(!(e.id in S.mv.v))return;const v=S.mv.v[e.id];
   if(e.type==="checkbox")e.checked=!!v;else if(e.tagName==="SELECT"){if([...e.options].some(o=>o.value===v||o.text===v))e.value=v}else e.value=v});
- S.mo=k;if(S.md==="lp")simLive();if(S.md==="ld"){const sm=$("#sp-mode");if(sm&&S.pm)sm.value=S.pm;const sa=$("#sp-amt");if(sa&&S.pm==="full"&&sm&&S.sa==="")sa.value="";amtSync()}
+ S.mo=k;if(S.md==="tn")rows();if(S.md==="jm")jlSum();if(S.md==="lp")simLive();if(S.md==="ld"){const sm=$("#sp-mode");if(sm&&S.pm)sm.value=S.pm;const sa=$("#sp-amt");if(sa&&S.pm==="full"&&sm&&S.sa==="")sa.value="";amtSync()}
  if(!S.fe&&!S.cf&&el.querySelector){const co=typeof matchMedia==="function"&&matchMedia("(pointer:coarse)").matches,f=was===k&&S.mf?$("#"+S.mf):co&&was!==k?el.querySelector(".mb"):el.querySelector(".mc input:not([disabled]):not([type=checkbox]),.mc select:not([disabled]),.mc textarea:not([disabled])");if(f&&f.focus){if(was!==k){const c=el.querySelector(".mc");if(c)c.scrollTop=0}f.focus({preventScroll:was!==k})}}vvFit()}
 if(document.addEventListener)document.addEventListener("keydown",e=>{if(S.cf||!S.md)return;const el=$("#fm");if(!el||!el.querySelectorAll)return;
  if(e.key==="Escape"){e.preventDefault();mdClose();return}
@@ -98,3 +98,13 @@ if(document.addEventListener)document.addEventListener("keydown",e=>{if(S.cf||!S
  if(e.key==="Tab"){const f=[...el.querySelectorAll("button,input,select,textarea")].filter(x=>!x.disabled&&x.getClientRects().length);if(!f.length)return;const i=f.indexOf(document.activeElement);
   if(e.shiftKey&&i<=0){e.preventDefault();f[f.length-1].focus()}else if(!e.shiftKey&&(i<0||i===f.length-1)){e.preventDefault();f[0].focus()}}});
 
+// ===== v1.1.009: transaksi lewat modal (form baru, jurnal multi-baris, rincian) =====
+MD.tn=()=>({t:"Transaksi baru",s:"submitT()",y:"Posting",b:`<div class="frm">${trxFormHtml()}<div class="prev" id="f-prev" aria-live="polite"></div></div>`});
+MD.jm=()=>({t:"Jurnal multi-baris",s:"postJnl()",y:"Posting jurnal",b:vJnl()});
+MD.td=()=>{const t=db.transactions.find(x=>x._id===S.etd);if(!t)return{t:"Transaksi",s:"mdClose()",y:"Tutup",b:"<p>Transaksi tidak ditemukan.</p>",nf:1};
+ const K=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,jes=db.journal_entries.filter(j=>j.transaction_id===t._id).sort((a,b)=>(a.reversal_of?1:0)-(b.reversal_of?1:0)),
+  au=db.audit_logs.filter(a=>a.entity_id===t._id&&["post","void"].includes(a.action)).sort((a,b)=>(a.at||"")<(b.at||"")?-1:1),
+  jl=jes.map(j=>{const ls=db.journal_lines.filter(l=>l.journal_entry_id===j._id);return`<div class="k">${j.reversal_of?"Jurnal pembalik":"Jurnal"}</div>`+tbl(["Akun","#Debit","#Kredit"],ls.map(l=>{const a=acc(l.account_id);return`<tr><td>${esc(a?a.code+" "+a.name:l.account_id)}</td><td class="n">${l.debit?rp(l.debit):""}</td><td class="n">${l.credit?rp(l.credit):""}</td></tr>`}))}).join(""),
+  can_void=t.status==="posted"&&!/^(loan|sale)/.test(t.type),
+  bdg=`<span class="bdg ${t.status==="posted"?"ok":"wr"}">${t.status==="posted"?"Diposting":t.status==="voided"?"Di-void":esc(t.status)}</span>`;
+ return{t:t.description,s:"mdClose()",y:"Tutup",nf:1,b:`<div class="ldw"><div class="lds">${bdg}<b>${rp(t.amount)}</b></div><div class="kvg">${K("Tanggal",t.date)}${K("Jenis",esc(TL[t.type]||t.type))}${K("Unit",esc(unitName(t.business_unit_id)))}${K("Keterangan",esc(t.description))}${au.map(a=>K(a.action==="void"?"Di-void":"Dicatat",esc((a.at||"").slice(0,10)+(a.by?" · "+a.by:""))).replace("<b>","<b>")).join("")}</div>${jl||'<p class="k">Tidak ada jurnal.</p>'}${can_void?`<div class="lda">${ib("undo","Void","askC('voidT','"+t._id+"')","x")}</div>`:""}</div>`}};

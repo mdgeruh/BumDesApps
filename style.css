@@ -200,3 +200,17 @@ details.rn>summary{flex-wrap:wrap;gap:4px 8px}
 .rnb .ib{min-width:44px;min-height:44px}
 /* ===== v1.1.004: simulasi angsuran di modal pengajuan, ringkasan Simpan Pinjam ===== */
 .card.sim{margin:10px 0 0}.card.sim .kvg{margin:6px 0}.card.sim details.sx{margin:6px 0 0}
+/* ===== v1.1.005: linimasa dan jaminan di rincian pinjaman ===== */
+ol.tl{list-style:none;margin:0;padding:6px 12px 10px 22px;border-left:2px solid var(--ln);margin-left:14px}
+ol.tl li{position:relative;padding:6px 0 6px 10px;display:flex;flex-direction:column;gap:1px}
+ol.tl li:before{content:"";position:absolute;left:-19px;top:11px;width:10px;height:10px;border-radius:50%;background:var(--ac);border:2px solid var(--cd)}
+ol.tl li.v:before{background:var(--mu)}ol.tl li.v b{color:var(--mu);text-decoration:line-through}
+ol.tl .tld{font-size:12px;color:var(--mu)}ol.tl small{color:var(--mu);font-size:12px}
+.li.lj{margin:6px 8px;width:calc(100% - 16px)}
+.li.lj{grid-template-columns:minmax(0,1fr) auto auto 20px;grid-template-areas:none}.li.lj>*{grid-area:auto}.li.lj .l6{display:block}
+
+/* v1.1.006: pratinjau peringatan pengajuan */
+#sim-w .warn{margin-top:8px;padding:10px 12px;border:1px solid var(--warn,#d97706);border-radius:10px;background:color-mix(in srgb,var(--warn,#d97706) 10%,transparent);font-size:.9em}#sim-w .warn ul{margin:6px 0 4px 18px;padding:0}
+
+/* v1.1.008: kotak alur pengajuan lengkap */
+.card.flb{margin-top:8px}.card.flb .fl{margin-top:8px}
