@@ -1,0 +1,8 @@
+// ===== PEMISAHAN TUGAS SIMPAN PINJAM (SP3, v1.1.016): pengaju ≠ penyetuju, penganalisis ≠ penyetuju, penyetuju ≠ pencair =====
+// Berlaku hanya bila Mode Pengguna aktif dan aturannya dinyalakan di Setelan; bawaan mati (perilaku lama).
+const SOD_L={aju_setuju:"Pengaju tidak boleh menyetujui pengajuannya sendiri",analis_setuju:"Penganalisis tidak boleh menyetujui pengajuan yang ia analisis",setuju_cair:"Penyetuju tidak boleh mencairkan pinjaman yang ia setujui"},
+ SOD_M={aju_setuju:["submitted_by","pengaju"],analis_setuju:["analysis.by_id","penganalisis"],setuju_cair:["approved_by","penyetuju"]};
+const sodCfg=()=>Object.assign({aju_setuju:false,analis_setuju:false,setuju_cair:false},(db&&db.settings&&db.settings.sp_sod)||{}),actorId=()=>(curUser()||{})._id||null;
+function sodChk(l,rule){if(!rbacOn()||!sodCfg()[rule]||l.opening)return;const cu=curUser();if(!cu)return;const[path,who]=SOD_M[rule],by=path.split(".").reduce((o,k)=>o&&o[k],l);
+ if(by&&by===cu._id){audit("akses_ditolak","aksi",rule,"Pemisahan tugas: "+SOD_L[rule]+" ("+l.loan_number+")");save();throw Error("Pemisahan tugas: "+SOD_L[rule]+". Minta pengguna lain ("+who+" berbeda) melakukannya.")}}
+function setSod(k,v){try{if(!SOD_L[k])throw Error("Aturan tidak dikenal");const on=v==="1";db.settings.sp_sod=Object.assign({},sodCfg(),{[k]:on});audit("setting","settings","sp_sod",SOD_L[k]+": "+(on?"aktif":"mati"));save();S.msg="Aturan pemisahan tugas "+(on?"diaktifkan":"dimatikan")}catch(e){S.msg="⚠ "+e.message}render()}

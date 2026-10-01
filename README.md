@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.009** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.017** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,13 +10,13 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.009)
+## Fitur (v1.1.017)
 
 | Area | Isi |
 |------|-----|
 | Master data | Unit usaha, Chart of Accounts (parent-child), rekening Kas/Bank, **Pihak** (nasabah, pelanggan, pemasok, lainnya) dan **Pegawai** (nomor PEG-NNN, jabatan, unit, tanggal mulai, gaji pokok/tunjangan/potongan tetap, komponen tetap); tambah, edit, nonaktifkan (dengan perlindungan akun sistem/bersaldo/berpiutang/berpinjaman/ber-pegawai) |
 | Transaksi | Penerimaan, Pengeluaran, Transfer, Jurnal Manual, Jurnal Multi-baris, **Saldo Awal terpandu** (piutang pelanggan dan pinjaman berjalan yang terhubung ke Unit Air / Simpan Pinjam); cari/filter (kata kunci, jenis, tanggal), 30 baris + muat lebih banyak |
-| Akuntansi | Jurnal otomatis, Debit = Kredit, void dengan jurnal pembalik, periode bulanan (tutup/buka), **Tutup Buku Tahunan** (jurnal penutup per unit ke 3300 Laba Ditahan, kunci 12 periode, bisa dibatalkan) |
+| Akuntansi | Jurnal otomatis, Debit = Kredit, pembatalan (void) dengan jurnal pembalik, periode bulanan (tutup/buka), **Tutup Buku Tahunan** (jurnal penutup per unit ke 3300 Laba Ditahan, kunci 12 periode, bisa dibatalkan) |
 | Simpan Pinjam | Sub-tab Pinjaman/Tunggakan/Jaminan/Nasabah; pengajuan **lewat modal (v0.1.043)** (dapat diubah/dibatalkan, ditolak dengan alasan) → persetujuan (konfirmasi) → pencairan; **v0.1.041: metode anuitas, basis hari, pembulatan, masa tenggang, tanggal tagih tetap, denda dengan tenggang/batas/dasar (Setelan > Profil), fungsi simulasi, snapshot per pengajuan. v0.1.040: transisi status dijaga satu tabel, urutan tanggal dan batas masukan divalidasi (batas di Setelan), peringatan duplikat dan eksposur nasabah, pinjaman hanya untuk unit berjenis Simpan Pinjam, impor memeriksa konsistensi pinjaman**; jadwal flat/menurun; bayar penuh/sebagian; pelunasan dipercepat; denda; aging tunggakan; jaminan; pembatalan terkontrol; kwitansi & bukti pencairan cetak |
 | Unit Air | **Air langganan (PAMSIMAS):** sambungan & meter (putus/sambung, ganti meter), tarif (bawaan Rp 10.000/m³ sama untuk semua + beban tetap Rp 15.000; bisa bertingkat) + minimum, **baca meter → tagihan bulanan** (Dr 1400 / Cr 4200), nota tagihan cetak, piutang dan pembayaran (penuh/sebagian), penanda tunggakan/layak diputus; **Penjualan Lain** tunai/kredit, pelanggan dan produk; jurnal otomatis; pembatalan terkontrol; **nota penjualan cetak** untuk penjualan biasa (tunai/kredit, multi-barang) |
 | Payroll | Menu **Gaji** (sub-tab Proses Gaji dan Komponen): komponen gaji fleksibel (lembur, insentif, tunjangan, kasbon; tetap per pegawai atau sekali pakai pada gaji draf), gaji dibuat per periode dari profil gaji pegawai, **slip gaji cetak**, **laporan gaji/SDM** (per periode, unit, pegawai, komponen; cetak dan CSV), alur Draf → Disetujui → Dibayar; pembayaran menjurnal Dr Beban Gaji (per unit pegawai) / Cr Kas-Bank / Cr Kewajiban Lain (potongan); batal bayar dengan jurnal pembalik |

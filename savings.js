@@ -1,0 +1,90 @@
+// ===== TABUNGAN NASABAH (v1.1.014): rekening, setoran, penarikan, bunga; jurnal ke akun 2300 (liabilitas) =====
+// Uang tabungan nasabah adalah utang BUMDes ke nasabah (bukan modal). Saldo = setoran + bunga - penarikan (mutasi berstatus posted).
+function ensureSavAcc(d){if(!Array.isArray(d.accounts))return;const add=(c,n,t)=>{if(!d.accounts.some(a=>a.code===c))d.accounts.push({_id:"ACC"+c,code:c,name:n,type:t,parent_id:"ACC"+c[0]+"000",status:"aktif"})};add("2300","Tabungan Nasabah","liability");add("5600","Beban Bunga Tabungan","expense");add("2210","Utang Pajak Bunga Tabungan","liability");add("4500","Pendapatan Administrasi Tabungan","revenue")}
+const SAV_T={setor:"Setoran",tarik:"Penarikan",bunga:"Bunga tabungan",biaya:"Biaya administrasi"},SAV_SIGN={setor:1,bunga:1,tarik:-1,biaya:-1};
+const savAccs=()=>db.savings_accounts||[],savTxOf=id=>(db.savings_tx||[]).filter(x=>x.account_id===id),
+ savLive=id=>savTxOf(id).filter(x=>x.status==="posted").sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0),
+ savBal=id=>savLive(id).reduce((s,x)=>s+SAV_SIGN[x.type]*x.amount,0),
+ savTotal=()=>savAccs().reduce((s,a)=>s+savBal(a._id),0),
+ savLast=id=>savLive(id).reduce((m,x)=>x.date>m?x.date:m,"");
+function savRun(id,skip){let b=0;return savLive(id).filter(x=>x._id!==skip).map(x=>{b+=SAV_SIGN[x.type]*x.amount;return{x,b}})}
+function savNo(){const n=savAccs().reduce((m,a)=>Math.max(m,+String(a.number||"").replace(/\D/g,"")||0),0)+1;return"TAB-"+String(n).padStart(4,"0")}
+function savCheck(){const a=acc("ACC2300"),g=a?net(a,bal(()=>true)):0,s=savTotal();return{g,s,ok:Math.round(g)===Math.round(s)}}
+
+// ----- pengaturan bunga, biaya, pajak (v1.1.017) -----
+const savCfg=()=>Object.assign({rate:0,admin_code:"",tax_code:"",tax_min:0},(db.settings&&db.settings.sav)||{});
+function savTax(gross,d){const c=savCfg();if(!c.tax_code||gross<=0||gross<=(+c.tax_min||0))return{tax:0,code:"",rate:0};const t=taxAt(c.tax_code,d);if(!t)return{tax:0,code:"",rate:0};return{tax:rd0(gross*(+t.tax_rate||0)/100),code:c.tax_code,rate:+t.tax_rate||0}}
+function setSav(k,v){try{if(!["rate","admin_code","tax_code","tax_min"].includes(k))throw Error("Pengaturan tidak dikenal");let x=v;if(k==="rate"||k==="tax_min"){x=Number(pn(v));if(String(v).trim()===""||!Number.isFinite(x)||x<0)throw Error("Isi angka nol atau lebih");if(k==="rate"&&x>100)throw Error("Bunga per tahun maksimal 100%")}
+ db.settings.sav=Object.assign({},savCfg(),{[k]:x});audit("setting","settings","sav",k+": "+x);save();S.msg="Pengaturan tabungan disimpan"}catch(e){S.msg="⚠ "+e.message}render()}
+const eom=ym=>{const[y,m]=ym.split("-").map(Number);return new Date(Date.UTC(y,m,0)).toISOString().slice(0,10)},ymList=()=>{const t=today(),o=[];let y=+t.slice(0,4),m=+t.slice(5,7);for(let i=0;i<12;i++){m--;if(m<1){m=12;y--}o.push(y+"-"+String(m).padStart(2,"0"))}return o};
+function savDaily(a,ym){const n=+eom(ym).slice(8),tx=savLive(a._id);let s=0;for(let d=1;d<=n;d++){const day=ym+"-"+String(d).padStart(2,"0");let b=0;tx.forEach(x=>{if(x.date<=day)b+=SAV_SIGN[x.type]*x.amount});if(a.opened_at<=day)s+=b}return s}
+function savPlan(ym){const c=savCfg(),d=eom(ym),P={ym,date:d,bunga:[],biaya:[],skip:[],ok:true};if(!/^\d{4}-\d{2}$/.test(ym)||d>=today())return{...P,ok:false,why:"Bulan belum berakhir"};
+ savAccs().filter(a=>a.status==="aktif"&&a.opened_at<=d&&(S.unit==="all"||a.unit_id===S.unit)).forEach(a=>{const has=t=>savTxOf(a._id).some(x=>x.type===t&&x.period===ym&&x.status==="posted");
+  if(c.rate>0&&!has("bunga")){const g=rd0(savDaily(a,ym)*c.rate/100/365);if(g>0){const t=savTax(g,d);P.bunga.push({a,gross:g,tax:t.tax,code:t.code,net:g-t.tax})}}
+  if(c.admin_code&&!has("biaya")){const bl=savBalAt(a._id,d),f=calcFees({date:d,codes:[c.admin_code],bulan:1,saldo:bl}).fee_total;if(f>0){if(bl-f>=(a.min_balance||0))P.biaya.push({a,fee:f});else P.skip.push({a,fee:f})}}});return P}
+const savBalAt=(id,d)=>savLive(id).filter(x=>x.date<=d).reduce((s,x)=>s+SAV_SIGN[x.type]*x.amount,0);
+function prosesSav(){try{const ym=S.svm||ymList()[0],P=savPlan(ym);if(!P.ok)throw Error(P.why||"Bulan tidak valid");if(!P.bunga.length&&!P.biaya.length)throw Error("Tidak ada bunga atau biaya yang perlu diproses untuk "+ym);
+ P.bunga.forEach(r=>{const lines=[{acc:"ACC5600",d:r.gross},{acc:"ACC2300",c:r.net}];if(r.tax>0)lines.push({acc:"ACC2210",c:r.tax});
+  const t=post({type:"sav_int",date:P.date,unit:r.a.unit_id,desc:"Bunga "+ym+" "+r.a.number+" – "+party(r.a.party_id).name,lines});db.savings_tx.push({_id:uid("STX"),account_id:r.a._id,type:"bunga",date:P.date,amount:r.net,gross:r.gross,tax:r.tax,tax_code:r.code,period:ym,txn_id:t._id,cash_id:null,desc:"otomatis "+ym,status:"posted",created_at:now()})});
+ P.biaya.forEach(r=>{const t=post({type:"sav_fee",date:P.date,unit:r.a.unit_id,desc:"Biaya administrasi "+ym+" "+r.a.number+" – "+party(r.a.party_id).name,lines:[{acc:"ACC2300",d:r.fee},{acc:"ACC4500",c:r.fee}]});db.savings_tx.push({_id:uid("STX"),account_id:r.a._id,type:"biaya",date:P.date,amount:r.fee,period:ym,txn_id:t._id,cash_id:null,desc:"otomatis "+ym,status:"posted",created_at:now()})});
+ audit("sav_proses","savings_account",ym,P.bunga.length+" bunga, "+P.biaya.length+" biaya, "+P.skip.length+" dilewati");save();S.msg="Proses "+ym+": bunga "+P.bunga.length+" rekening (Rp "+fm(P.bunga.reduce((s,r)=>s+r.net,0))+" bersih), biaya "+P.biaya.length+" rekening"+(P.skip.length?", "+P.skip.length+" dilewati (saldo kurang)":"")}catch(e){S.msg="⚠ "+e.message}render()}
+function saveSavAcc(){try{const v=i=>$("#"+i).value.trim(),p=db.parties.find(x=>x._id===v("sa-p")),u=db.business_units.find(x=>x._id===v("sa-u")),d=v("sa-d"),pr=v("sa-n")||"Tabungan",mn=Math.round(+pn(v("sa-m"))||0);
+ if(!p||p.type!=="nasabah")throw fe("sa-p","Pilih nasabah (tambahkan nasabah jika belum ada)");if(p.status==="nonaktif")throw fe("sa-p","Nasabah nonaktif");
+ if(!u)throw fe("sa-u","Pilih unit Simpan Pinjam");if(!isD(d))throw fe("sa-d","Tanggal buka tidak valid");if(d>today())throw fe("sa-d","Tanggal buka tidak boleh melewati hari ini");
+ if(mn<0)throw fe("sa-m","Saldo minimum tidak boleh negatif");
+ if(savAccs().some(a=>a.party_id===p._id&&a.product===pr&&a.status==="aktif"))throw fe("sa-n","Nasabah ini sudah punya rekening aktif dengan produk yang sama");
+ const a={_id:uid("SAV"),number:savNo(),party_id:p._id,unit_id:u._id,product:pr,min_balance:mn,opened_at:d,status:"aktif",created_at:now()};
+ db.savings_accounts.push(a);audit("create","savings_account",a._id,a.number+" · "+p.name);save();okM();mdOpen("sv",a._id);S.msg="Rekening "+a.number+" dibuka";render();return}catch(e){mErr(e)}}
+
+function saveSavTx(){try{const[ty,id]=String(S.est||"").split("|"),a=savAccs().find(x=>x._id===id),v=i=>$("#"+i).value.trim();
+ if(!a||!SAV_T[ty])throw Error("Rekening tidak ditemukan");if(a.status!=="aktif")throw Error("Rekening sudah ditutup");
+ negAny();const d=v("st-d"),m=Math.round(+pn(v("st-a"))||0),c=db.cash_accounts.find(x=>x._id===v("st-c")),ds=v("st-s");
+ if(!isD(d))throw fe("st-d","Tanggal tidak valid");if(d>today())throw fe("st-d","Tanggal tidak boleh melewati hari ini");if(d<a.opened_at)throw fe("st-d","Tanggal tidak boleh sebelum tanggal buka rekening ("+a.opened_at+")");
+ const lt=savLast(a._id);if(lt&&d<lt)throw fe("st-d","Tanggal tidak boleh mendahului mutasi terakhir ("+lt+")");
+ if(!(m>0))throw fe("st-a","Jumlah harus lebih dari nol");
+ const pt=party(a.party_id).name,sk=savBal(a._id);let lines,bx=null;
+ if(ty!=="bunga"&&!c)throw fe("st-c","Pilih kas/bank");
+ if(ty==="setor")lines=[{acc:c.account_id,d:m},{acc:"ACC2300",c:m}];
+ else if(ty==="tarik"){if(m>sk-(a.min_balance||0))throw fe("st-a","Penarikan melebihi saldo yang dapat ditarik (Rp "+fm(Math.max(0,sk-(a.min_balance||0)))+")");
+  const ks=net(acc(c.account_id),bal(()=>true));if(ks<m)throw fe("st-c","Saldo kas/bank tidak cukup (tersedia Rp "+fm(ks)+")");lines=[{acc:"ACC2300",d:m},{acc:c.account_id,c:m}]}
+ else{const tx=savTax(m,d);lines=[{acc:"ACC5600",d:m},{acc:"ACC2300",c:m-tx.tax}];if(tx.tax>0)lines.push({acc:"ACC2210",c:tx.tax});bx=tx}
+ const t=post({type:"sav_"+ty,date:d,unit:a.unit_id,desc:SAV_T[ty]+" "+a.number+" – "+pt+(ds?" ("+ds+")":""),lines});
+ db.savings_tx.push({_id:uid("STX"),account_id:a._id,type:ty,date:d,amount:bx?m-bx.tax:m,gross:bx?m:undefined,tax:bx?bx.tax:undefined,tax_code:bx?bx.code:undefined,txn_id:t._id,cash_id:c?c._id:null,desc:ds,status:"posted",created_at:now()});
+ audit("sav_"+ty,"savings_account",a._id,a.number+" · Rp "+fm(m)+(bx&&bx.tax?" (pajak Rp "+fm(bx.tax)+")":""));save();okM();mdOpen("sv",a._id);S.msg=SAV_T[ty]+" Rp "+fm(m)+" tercatat";render();return}catch(e){mErr(e)}}
+
+function batalSav(id){try{const x=(db.savings_tx||[]).find(q=>q._id===id);if(!x)throw Error("Mutasi tidak ditemukan");if(x.status!=="posted")throw Error("Mutasi sudah dibatalkan");
+ const bad=savRun(x.account_id,x._id).find(r=>r.b<0);if(bad)throw Error("Tidak bisa dibatalkan: saldo tabungan menjadi negatif pada "+bad.x.date+". Batalkan mutasi yang lebih baru lebih dulu.");
+ rev(x.txn_id);x.status="reversed";x.reversed_at=now();audit("sav_batal","savings_account",x.account_id,SAV_T[x.type]+" Rp "+fm(x.amount));save();S.msg="Mutasi tabungan dibatalkan dengan jurnal pembalik"}catch(e){S.msg="⚠ "+e.message}render()}
+
+function tutupSav(id){try{const a=savAccs().find(x=>x._id===id);if(!a)throw Error("Rekening tidak ditemukan");if(a.status!=="aktif")throw Error("Rekening sudah ditutup");
+ if(Math.round(savBal(id))!==0)throw Error("Rekening hanya dapat ditutup bila saldo nol (saldo Rp "+fm(savBal(id))+")");a.status="ditutup";a.closed_at=today();audit("sav_tutup","savings_account",id,a.number);save();S.msg="Rekening "+a.number+" ditutup"}catch(e){S.msg="⚠ "+e.message}render()}
+function bukaSav(id){try{const a=savAccs().find(x=>x._id===id);if(!a)throw Error("Rekening tidak ditemukan");if(a.status==="aktif")throw Error("Rekening masih aktif");
+ if(savAccs().some(x=>x._id!==id&&x.party_id===a.party_id&&x.product===a.product&&x.status==="aktif"))throw Error("Nasabah sudah punya rekening aktif dengan produk yang sama");
+ a.status="aktif";delete a.closed_at;audit("sav_buka","savings_account",id,a.number);save();S.msg="Rekening "+a.number+" dibuka kembali"}catch(e){S.msg="⚠ "+e.message}render()}
+
+// ----- tampilan -----
+function vTabungan(){const q=(S.tq||"").toLowerCase(),fs=S.tfs||"",U=a=>S.unit==="all"||a.unit_id===S.unit,all=savAccs().filter(U),
+ L=all.filter(a=>(!fs||a.status===fs)&&(!q||(a.number+" "+party(a.party_id).name+" "+a.product).toLowerCase().includes(q))).sort((x,y)=>x.number<y.number?1:-1),
+ tot=all.filter(a=>a.status==="aktif").reduce((s,a)=>s+savBal(a._id),0),ck=savCheck();
+ return`<h2>Tabungan nasabah</h2>${addB("Buka rekening","sa")}<div class="g dk"><div class="card kp"><div class="k">Total tabungan nasabah</div><div class="v">${rp(tot)}</div><div class="s2">${all.filter(a=>a.status==="aktif").length} rekening aktif · utang BUMDes ke nasabah</div></div></div>
+${savProc()}
+<div class="fl"><input type="search" placeholder="Cari no / nasabah / produk…" aria-label="Cari rekening" value="${esc(S.tq||"")}" onchange="S.tq=this.value;render()"><select aria-label="Filter status rekening" onchange="S.tfs=this.value;render()"><option value="">Semua status</option><option value="aktif"${fs==="aktif"?" selected":""}>Aktif</option><option value="ditutup"${fs==="ditutup"?" selected":""}>Ditutup</option></select>${q||fs?`<button class="b s" onclick="S.tq='';S.tfs='';render()">Reset</button>`:""}</div>
+${L.length?`<div class="ll"><div class="lh" aria-hidden="true"><span>Rekening</span><span>Produk</span><span class="n">Saldo</span><span class="n">Mutasi terakhir</span><span>Status</span><span></span></div>${L.map(a=>`<button class="li" onclick="mdOpen('sv','${a._id}')"><span class="l1"><b>${esc(a.number)}</b><small>${esc(party(a.party_id).name)}</small></span><span class="l2">${esc(a.product)} · ${esc(unitName(a.unit_id))}</span><span class="n l3">${rp(savBal(a._id))}</span><span class="n l4">${savLast(a._id)||"-"}</span><span class="l5"><span class="bdg ${a.status==="aktif"?"ok":""}">${a.status==="aktif"?"Aktif":"Ditutup"}</span></span><span class="l6">${ic("next")}</span></button>`).join("")}</div>`:`<div class="empty"><p>${all.length?"Tidak ada rekening yang cocok.":"Belum ada rekening tabungan. Buka rekening untuk nasabah."}</p></div>`}
+<p class="k">${ck.ok?"✓ Total saldo sama dengan akun 2300 Tabungan Nasabah di buku besar":"⚠ Saldo rekening (Rp "+fm(ck.s)+") berbeda dari akun 2300 (Rp "+fm(ck.g)+"); biasanya karena jurnal manual ke akun 2300"}.</p>`}
+function savProc(){const c=savCfg(),ms=ymList(),m=S.svm||ms[0];if(!(c.rate>0||c.admin_code))return`<p class="k">Bunga dan biaya administrasi bulanan belum diatur. Atur di Setelan > Tabungan dan di Master > Tarif & Pajak.</p>`;
+ return`<div class="fl"><select aria-label="Bulan proses" onchange="S.svm=this.value;render()">${opt(ms,x=>[x,x],m)}</select><button class="b" onclick="askC('prosesSav','')">Proses bunga dan biaya akhir bulan</button></div>`}
+function savCard(){const n=savAccs().filter(a=>a.status==="aktif").length;return n?`<button class="card kp" onclick="goS('sp',{st:'tabungan'})"><div class="k">Tabungan nasabah</div><div class="v">${rp(savTotal())}</div><div class="s2">${n} rekening aktif</div></button>`:""}
+
+MK.sa="esa";MK.sv="esv";MK.st="est";
+MD.sa=()=>{const ns=db.parties.filter(p=>p.type==="nasabah"&&p.status!=="nonaktif"),us=db.business_units.filter(u=>u.type==="simpan_pinjam"&&isAct(u));
+ return{t:"Buka rekening tabungan",s:"saveSavAcc()",y:"Buka rekening",b:fld("sa-p","Nasabah *",{t:"select",req:1,opts:`<option value="">— pilih —</option>`+opt(ns,p=>[p._id,p.name],"")})+fld("sa-u","Unit *",{t:"select",req:1,opts:opt(us,u=>[u._id,u.name],(us[0]||{})._id)})
+  +fld("sa-n","Produk",{value:"Tabungan",hint:"Contoh: Tabungan, Tabungan Pendidikan"})+fld("sa-m","Saldo minimum (Rp, 0 = tanpa)",{a:RPA,value:"0",hint:"Penarikan tidak boleh membuat saldo di bawah angka ini"})+fld("sa-d","Tanggal buka",{type:"date",value:today(),req:1})}};
+MD.st=()=>{const[ty,id]=String(S.est||"").split("|"),a=savAccs().find(x=>x._id===id);if(!a||!SAV_T[ty])return{t:"Tabungan",s:"mdClose()",y:"Tutup",b:"<p>Rekening tidak ditemukan.</p>",nf:1};
+ const sk=savBal(a._id),ht={setor:"Kas/bank bertambah dan saldo tabungan nasabah bertambah.",tarik:"Kas/bank berkurang dan saldo tabungan berkurang. Maksimal Rp "+fm(Math.max(0,sk-(a.min_balance||0)))+" (saldo Rp "+fm(sk)+(a.min_balance?", minimum Rp "+fm(a.min_balance):"")+").",bunga:"Dicatat sebagai beban bunga tabungan dan menambah saldo nasabah (tidak melibatkan kas)."};
+ return{t:SAV_T[ty]+" · "+a.number,s:"saveSavTx()",y:"Simpan "+SAV_T[ty].toLowerCase(),b:`<p class="k">${esc(party(a.party_id).name)}. ${ht[ty]}</p>`+fld("st-d","Tanggal",{type:"date",value:today(),req:1})+fld("st-a","Jumlah (Rp)",{a:RPA,req:1,value:""})
+  +(ty==="bunga"?"":fld("st-c","Kas/Bank",{t:"select",opts:opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name],"CASH-001")}))+fld("st-s","Catatan",{value:""})}};
+MD.sv=()=>{const a=savAccs().find(x=>x._id===S.esv);if(!a)return{t:"Rekening",s:"mdClose()",y:"Tutup",b:"<p>Rekening tidak ditemukan.</p>",nf:1};
+ const R=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,on=a.status==="aktif",run=savRun(a._id),rb=new Map(run.map(r=>[r.x._id,r.b])),tx=savTxOf(a._id).slice().reverse();
+ return{t:a.number,s:"mdClose()",y:"Tutup",nf:1,b:`<div class="ldw"><div class="lds"><span class="bdg ${on?"ok":""}">${on?"Aktif":"Ditutup"}</span></div><div class="kvg">${R("Nasabah",esc(party(a.party_id).name))}${R("Produk",esc(a.product))}${R("Unit",esc(unitName(a.unit_id)))}${R("Saldo",rp(savBal(a._id)))}${R("Saldo minimum",rp(a.min_balance||0))}${R("Dibuka",a.opened_at)}</div>
+<div class="lda">${on?ib("plus","Setor","mdOpen('st','setor|"+a._id+"')")+ib("out","Tarik","mdOpen('st','tarik|"+a._id+"')")+ib("plus","Bunga","mdOpen('st','bunga|"+a._id+"')","s")+ib("lock","Tutup rekening","tutupSav('"+a._id+"')","s"):ib("check","Buka kembali","bukaSav('"+a._id+"')","s")}</div>
+<h3>Buku tabungan</h3>${tx.length?tx.map(x=>{const ok=x.status==="posted",sg=SAV_SIGN[x.type];return`<div class="kv" style="align-items:center;gap:8px${ok?"":";opacity:.55;text-decoration:line-through"}"><span><b>${SAV_T[x.type]}</b> <span class="k">${x.date}</span>${x.gross?` <small class="k">(bruto ${fm(x.gross)}, pajak ${fm(x.tax||0)})</small>`:""}${x.desc?`<br><small class="k">${esc(x.desc)}</small>`:""}${ok?"":" <small>(Dibatalkan)</small>"}</span><span style="text-align:right;margin-left:auto"><b>${sg<0?"−":"+"}${fm(x.amount)}</b>${ok?`<br><small class="k">Saldo ${fm(rb.get(x._id))}</small>`:""}</span>${ok?ib("x","Batalkan","askC('batalSav','"+x._id+"')","s"):""}</div>`}).join(""):'<p class="k">Belum ada mutasi.</p>'}</div>`}};
