@@ -134,7 +134,7 @@ function add(fn,sel){try{fn();audit("create","master","-");save();if(sel)clrF(se
 function vDat(){return subT(vDat0(),"dt",[["bk","Backup",null],["per","Periode","<h2>Periode Akuntansi</h2>"],["aud","Audit Log","<h2>Audit Log</h2>"]])}
 function vDat0(){return`<h2>Backup & Restore</h2><div class="card"><button class="b" onclick="exp()">Export JSON</button><button class="b s" onclick="impAsk()">Import JSON</button><button class="b x" onclick="askC('rst','')">Reset data demo</button>
 <label>Isi backup (tempel JSON di sini atau pilih file)</label><textarea id="bk" rows="6"></textarea><input type="file" accept=".json" aria-label="Pilih berkas backup JSON" onchange="fl(this)"></div>
-<h2>Periode Akuntansi</h2>${tbl(["Periode","Status",""],db.accounting_periods.map(p=>`<tr><td>${p._id}</td><td>${p.status}</td><td>${p._id.slice(0,4)<=cyr()?`<span class="k">Tahun buku ditutup</span>`:ib("lock",p.status==="open"?"Tutup":"Buka","askC('tgl','"+p._id+"')","s")}</td></tr>`))}
+<h2>Periode Akuntansi</h2>${tbl(["Periode","Status",""],db.accounting_periods.map(p=>`<tr><td>${p._id}</td><td>${p.status}</td><td>${p._id.slice(0,4)<=cyr()?`<span class="k">Tahun buku ditutup</span>`:ib(p.status==="open"?"lock":"unlock",p.status==="open"?"Tutup":"Buka","askC('tgl','"+p._id+"')","s")}</td></tr>`))}
 <h2>Tutup Buku Tahunan</h2>${vFy()}
 <h2>Audit Log</h2>${audB()}`}
 const BF=[["name","Nama BUMDes"],["address","Alamat (jalan / dusun)"],["village","Desa / Kelurahan"],["district","Kecamatan"],["regency","Kabupaten / Kota"],["province","Provinsi"],["phone","Telepon","tel"],["email","Email","email"],["director","Nama Direktur"],["treasurer","Nama Bendahara"],["decree_no","No. Perdes / SK Pendirian"],["founded_date","Tanggal pendirian","date"]];
