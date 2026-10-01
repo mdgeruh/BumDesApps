@@ -1,0 +1,12 @@
+{
+  "name": "bumdes-apps",
+  "version": "1.1.1",
+  "private": true,
+  "description": "Sistem BUMDes Multi-Unit Usaha — satu file HTML, data di localStorage",
+  "scripts": {
+    "build": "node build.js",
+    "check": "node build.js --check",
+    "test": "node build.js --check",
+    "test:lokal": "node build.js --check && node tests/check-pwa.js && node tests/run.js"
+  }
+}

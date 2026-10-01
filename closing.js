@@ -1,0 +1,108 @@
+// ===== TUTUP BUKU TAHUNAN & AUDIT LOG (v0.1.013) =====
+const yrs=()=>[...new Set(db.journal_lines.map(l=>l.date.slice(0,4)))].sort(),fyNext=()=>yrs().find(y=>y>cyr())||null;
+function fyPre(y){const m={};db.journal_lines.forEach(l=>{if(l.date.slice(0,4)!==y)return;const t=acc(l.account_id).type;if(t!=="revenue"&&t!=="expense")return;const u=l.business_unit_id||"",o=m[u]??={};o[l.account_id]=(o[l.account_id]||0)+l.credit-l.debit});return m}
+function closeYear(y){
+ if(y!==fyNext())throw Error("Tahun buku yang dapat ditutup sekarang: "+(fyNext()||"tidak ada"));
+ const dec=db.accounting_periods.find(p=>p._id===y+"-12");if(dec&&dec.status==="closed")throw Error("Periode "+y+"-12 sudah ditutup; buka dulu agar jurnal penutup dapat diposting");
+ const ret=acc("ACC3300");if(!ret||ret.status==="nonaktif")throw Error("Akun 3300 Laba Ditahan tidak tersedia atau nonaktif");
+ const pre=fyPre(y),plan=[];let P=0;
+ for(const u in pre){const L=[];let p=0;for(const a in pre[u]){const v=Math.round(pre[u][a]*100)/100;if(Math.abs(v)<.005)continue;if(acc(a).status==="nonaktif")throw Error("Akun "+acc(a).code+" nonaktif tetapi masih bersaldo; aktifkan dulu");p+=v;L.push(v>0?{acc:a,d:v}:{acc:a,c:-v})}
+  p=Math.round(p*100)/100;if(!L.length)continue;if(p>0)L.push({acc:"ACC3300",c:p});else if(p<0)L.push({acc:"ACC3300",d:-p});P+=p;plan.push({u,L})}
+ const ids=plan.map(({u,L})=>post({type:"closing",date:y+"-12-31",unit:u,desc:"Jurnal penutup tahun buku "+y,lines:L})._id);
+ for(let m=1;m<=12;m++){const id=y+"-"+String(m).padStart(2,"0");let p=db.accounting_periods.find(x=>x._id===id);if(!p)db.accounting_periods.push(p={_id:id,status:"closed"});p.status="closed"}
+ db.settings.closed_through=y;db.settings.closings.push({year:y,txns:ids,profit:Math.round(P*100)/100,at:now()});
+ audit("close_year","fiscal_year",y,"Laba/rugi Rp "+Math.round(P).toLocaleString("id-ID")+" · "+ids.length+" jurnal penutup");save()}
+function reopenYear(y){const cl=db.settings.closings,c=cl[cl.length-1];
+ if(!c||c.year!==y)throw Error("Hanya tahun buku terakhir yang bisa dibatalkan penutupannya");
+ for(let m=1;m<=12;m++){const p=db.accounting_periods.find(x=>x._id===y+"-"+String(m).padStart(2,"0"));if(p)p.status="open"}
+ db.settings.closed_through=(cl[cl.length-2]||{}).year||"";
+ c.txns.forEach(id=>rev(id));cl.pop();audit("reopen_year","fiscal_year",y);save()}
+function vFy(){const cl=db.settings.closings||[],nx=fyNext(),last=cl[cl.length-1];
+ const done=cl.length?tbl(["Tahun","Ditutup","#Laba/Rugi",""],cl.slice().reverse().map(c=>`<tr><td>${c.year}</td><td>${c.at.slice(0,10)}</td><td class="n">${rp(c.profit)}</td><td>${c===last?ib("undo","Batalkan penutupan","askC('reopenYr','"+c.year+"')","s"):""}</td></tr>`)):`<p class="k">Belum ada tahun buku yang ditutup.</p>`;
+ let nxt=`<p class="k">Tidak ada tahun buku yang perlu ditutup.</p>`;
+ if(nx){const pr=fyPre(nx),rows=[];for(const u in pr){let r=0,e=0;for(const a in pr[u]){const v=pr[u][a];if(acc(a).type==="revenue")r+=v;else e-=v}rows.push(`<tr><td>${esc(unitName(u))}</td><td class="n">${rp(r)}</td><td class="n">${rp(e)}</td><td class="n">${rp(r-e)}</td></tr>`)}
+  nxt=`<p class="k">Tahun buku berikutnya yang dapat ditutup: <b>${nx}</b></p>${tbl(["Unit","#Pendapatan","#Beban","#Laba/Rugi"],rows)}<button class="b" onclick="askC('closeYr','${nx}')">Tutup Buku ${nx}</button>`}
+ return`<div class="card"><p class="k">Tutup buku memindahkan laba/rugi tahun itu ke akun 3300 Laba Ditahan lewat jurnal penutup per unit, lalu mengunci seluruh periodenya. Kebijakan penutupan final mengikuti ketentuan BUMDes.</p></div>${nxt}<h2>Riwayat Penutupan</h2>${done}`}
+function audB(){const q=(S.q||"").toLowerCase(),U=[...new Set(db.audit_logs.map(a=>a.by||"-"))].sort(),A=[...new Set(db.audit_logs.map(a=>a.action))].sort(),E=[...new Set(db.audit_logs.map(a=>a.entity))].sort();
+ const all=db.audit_logs.filter(a=>(!S.aa||a.action===S.aa)&&(!S.ae||a.entity===S.ae)&&(!S.au||(a.by||"-")===S.au)&&inD(a.at.slice(0,10))&&(!q||(a.action+" "+a.entity+" "+(a.entity_id||"")+" "+(a.detail||"")).toLowerCase().includes(q))).slice().reverse(),sh=all.slice(0,S.lim||PG);
+ return`<div class="fl"><input type="search" placeholder="Cari log…" aria-label="Cari" value="${esc(S.q)}" onchange="S.q=this.value;S.lim=0;render()"><select aria-label="Aksi" onchange="S.aa=this.value;S.lim=0;render()"><option value="">Semua aksi</option>${opt(A,x=>[x,x],S.aa)}</select><select aria-label="Entitas" onchange="S.ae=this.value;S.lim=0;render()"><option value="">Semua entitas</option>${opt(E,x=>[x,x],S.ae)}</select><select aria-label="Pengguna" onchange="S.au=this.value;S.lim=0;render()"><option value="">Semua pengguna</option>${opt(U,x=>[x,x],S.au)}</select><input type="date" aria-label="Dari tanggal" value="${S.d1||""}" onchange="S.d1=this.value;S.lim=0;render()"><input type="date" aria-label="Sampai tanggal" value="${S.d2||""}" onchange="S.d2=this.value;S.lim=0;render()">${S.q||S.d1||S.d2||S.aa||S.ae||S.au?`<button class="b s" onclick="S.q=S.d1=S.d2=S.aa=S.ae=S.au='';S.lim=0;render()">Reset filter</button>`:""}</div><p class="k">${all.length} entri${all.length>sh.length?" · tampil "+sh.length+" terbaru":""}</p>${tbl(["Waktu","Oleh","Aksi","Entitas","ID","Keterangan"],sh.map(a=>`<tr><td>${a.at.slice(0,19).replace("T"," ")}</td><td>${esc(a.by||"-")}</td><td>${esc(a.action)}</td><td>${esc(a.entity)}</td><td>${esc(a.entity_id||"")}</td><td>${esc(a.detail||"")}</td></tr>`))}${more(all.length-sh.length)}`}
+const ACT={setujui:id=>lst(id,"approved"),cairkan:id=>cairkan(id),rbacOff:()=>rbacOff(),togUser:id=>togUser(id),batalGaji:id=>batalGaji(id),closeYr:id=>{try{closeYear(id);S.msg="Tahun buku "+id+" ditutup: jurnal penutup diposting dan 12 periode dikunci"}catch(e){S.msg="⚠ "+e.message}render()},reopenYr:id=>{try{reopenYear(id);S.msg="Penutupan tahun buku "+id+" dibatalkan; periodenya kini terbuka"}catch(e){S.msg="⚠ "+e.message}render()},voidT:id=>voidT(id),batalBayar:id=>batalBayar(id),batalCair:id=>batalCair(id),tgl:id=>tgl(id),imp:()=>imp(),rst:()=>rst(),batalJual:id=>batalJual(id),batalGanti:id=>batalGanti(id),batalTerima:id=>batalTerima(id),batalAwalP:id=>batalAwalP(id),batalAwalL:id=>batalAwalL(id)};
+function cfInfo(fn,id){
+ if(fn==="rbacOff")return{t:"Matikan mode pengguna?",d:"Login PIN dan pembatasan peran dinonaktifkan",i:"Semua orang yang membuka aplikasi ini kembali dapat melakukan semua hal. Data pengguna dan peran tetap tersimpan sehingga mode dapat diaktifkan lagi. Tindakan ini dicatat di audit log.",y:"Ya, matikan"}
+ if(fn==="togUser"){const u=db.users.find(x=>x._id===id);if(!u)return null;return u.status==="aktif"?{t:"Nonaktifkan pengguna?",d:u.name,i:"Pengguna ini tidak bisa masuk lagi sampai diaktifkan kembali. Riwayat di audit log tetap ada.",y:"Ya, nonaktifkan"}:{t:"Aktifkan pengguna?",d:u.name,i:"Pengguna ini bisa masuk lagi dengan PIN-nya.",y:"Ya, aktifkan"}}
+ if(fn==="voidT"){const t=db.transactions.find(x=>x._id===id);if(!t)return null;
+  return{t:"Void transaksi?",d:t.date+" · "+t.description+" · Rp "+fm(t.amount),i:"Sistem membuat jurnal pembalik sehingga saldo kembali seperti sebelum transaksi. Transaksi tetap tercatat berstatus void dan tidak dapat dipulihkan.",y:"Ya, void"}}
+ if(fn==="batalBayar"){const p=db.loan_payments.find(x=>x._id===id);if(!p)return null;const l=db.loans.find(x=>x._id===p.loan_id)||{};
+  return{t:"Batalkan pembayaran?",d:rcNo(p)+" · "+(l.loan_number||"")+" · Rp "+fm(p.total_amount),i:"Jurnal pembayaran dibalik (kas/bank berkurang sebesar total pembayaran), status angsuran dipulihkan seperti sebelum dibayar, dan pinjaman yang sudah lunas kembali aktif. Kwitansi tidak berlaku lagi.",y:"Ya, batalkan"}}
+ if(fn==="setujui"){const l=db.loans.find(x=>x._id===id);if(!l)return null;
+  return{t:"Setujui pengajuan?",d:l.loan_number+" · "+party(l.party_id).name+" · Rp "+fm(l.principal),i:"Status menjadi Disetujui bertanggal "+($("#sp-date")?$("#sp-date").value:today())+". Pengajuan tidak dapat diubah lagi; pencairan dilakukan terpisah.",y:"Ya, setujui"}}
+ if(fn==="cairkan"){const l=db.loans.find(x=>x._id===id);if(!l)return null;const c=db.cash_accounts.find(x=>x._id===($("#sp-cash")||{}).value);
+  return{t:"Cairkan pinjaman?",d:l.loan_number+" · "+party(l.party_id).name+" · Rp "+fm(l.principal),i:"Kas/bank "+(c?c.name:"-")+" berkurang sebesar pokok pada "+($("#sp-date")?$("#sp-date").value:today())+", jadwal angsuran dibuat, dan pinjaman menjadi Aktif.",y:"Ya, cairkan"}}
+ if(fn==="batalCair"){const l=db.loans.find(x=>x._id===id);if(!l)return null;
+  return{t:"Batalkan pencairan?",d:l.loan_number+" · "+party(l.party_id).name+" · Rp "+fm(l.principal),i:"Jurnal pencairan dibalik (kas/bank bertambah sebesar pokok), jadwal angsuran dihapus, dan pinjaman kembali berstatus Disetujui.",y:"Ya, batalkan"}}
+ if(fn==="tgl"){const p=db.accounting_periods.find(x=>x._id===id);if(!p)return null;
+  return p.status==="open"?{t:"Tutup periode "+id+"?",d:"Periode "+id,i:"Transaksi, void, dan pembayaran bertanggal bulan "+id+" akan ditolak sampai periode dibuka kembali. Pastikan semua transaksi bulan ini sudah tercatat.",y:"Ya, tutup periode"}
+   :{t:"Buka kembali periode "+id+"?",d:"Periode "+id,i:"Transaksi bulan "+id+" dapat diubah lagi, sehingga laporan yang sudah dicetak untuk periode ini bisa tidak cocok.",y:"Ya, buka periode"}}
+ if(fn==="closeYr"){let R=0,E=0;Object.values(fyPre(id)).forEach(o=>Object.entries(o).forEach(([a,v])=>{if(acc(a).type==="revenue")R+=v;else E-=v}));return{t:"Tutup buku tahun "+id+"?",d:"Pendapatan Rp "+fm(R)+" · Beban Rp "+fm(E)+" · "+(R-E>=0?"Laba":"Rugi")+" Rp "+fm(Math.abs(R-E)),i:"Saldo pendapatan dan beban tahun "+id+" dipindahkan ke akun 3300 Laba Ditahan lewat jurnal penutup bertanggal 31 Desember (per unit usaha), lalu 12 periode tahun itu dikunci."+(today()<id+"-12-31"?" Perhatian: tahun ini belum berakhir.":"")+" Untuk mengoreksi, gunakan Batalkan penutupan.",y:"Ya, tutup buku"}}
+ if(fn==="reopenYr")return{t:"Batalkan penutupan tahun "+id+"?",d:"Tahun buku "+id,i:"Jurnal penutup dibalik dengan jurnal pembalik dan 12 periode tahun "+id+" dibuka kembali. Laporan yang sudah dicetak untuk tahun ini bisa tidak cocok.",y:"Ya, batalkan penutupan"}
+ if(fn==="batalGaji"){const s=db.salary_payments.find(x=>x._id===id);if(!s)return null;const p=payGet(s.payroll_id)||{};return{t:"Batalkan pembayaran gaji?",d:(p.period||"")+" · "+empName(p.employee_id)+" · Rp "+fm(s.amount),i:"Jurnal pembayaran gaji dibalik (kas/bank bertambah, beban gaji dan kewajiban potongan berkurang). Gaji kembali berstatus Disetujui dan dapat dibayar ulang.",y:"Ya, batalkan"}}
+ if(fn==="imp"){const j=S.imp;if(!j)return null;return{t:"Import backup?",d:j.transactions.length+" transaksi · "+j.loans.length+" pinjaman · "+j.accounts.length+" akun",i:"SELURUH data di browser ini akan DITIMPA dengan isi backup. Data sekarang tidak dapat dipulihkan kecuali Anda sudah mengekspornya.",y:"Ya, timpa data"}}
+ if(fn==="rst")return{t:"Reset data demo?",d:"Semua data akan dihapus",i:"Semua data (transaksi, pinjaman, master) dihapus dan diganti data demo. Export JSON dulu jika data ini perlu disimpan.",y:"Ya, reset"}
+ if(fn==="batalGanti"){const r=db.water_readings.find(q=>q._id===id);if(!r)return null;return{t:"Batalkan ganti meter?",d:(r.old_meter||"")+" → "+r.meter_no+" · "+r.date,i:"Nomor meter kembali ke meter lama dan angka awal berikutnya mengikuti bacaan terakhir sebelum penggantian. Hanya bisa jika belum ada bacaan sesudahnya.",y:"Ya, batalkan"}}
+ if(fn==="batalJual"){const x=db.sales.find(q=>q._id===id);if(!x)return null;return{t:"Batalkan penjualan?",d:x.sale_number+" · "+cust(x.party_id).name+" · Rp "+fm(x.total),i:"Jurnal penjualan dibalik (pendapatan dan kas/piutang berkurang sebesar total). Penjualan tetap tercatat berstatus batal. Hanya bisa jika tidak ada pembayaran aktif.",y:"Ya, batalkan"}}
+ if(fn==="batalTerima"){const y=db.payments.find(q=>q._id===id);if(!y)return null;const x=db.sales.find(q=>q._id===y.sale_id)||{};return{t:"Batalkan pembayaran piutang?",d:(x.sale_number||"")+" · Rp "+fm(y.amount),i:"Jurnal pembayaran dibalik (kas/bank berkurang, piutang pelanggan kembali bertambah).",y:"Ya, batalkan"}}
+ if(fn==="batalAwalP"){const x=db.sales.find(q=>q._id===id);if(!x)return null;return{t:"Batalkan saldo awal piutang?",d:x.sale_number+" · "+cust(x.party_id).name+" · Rp "+fm(x.total),i:"Jurnal saldo awal dibalik (piutang pelanggan dan akun ekuitas lawan berkurang). Hanya bisa jika belum ada pembayaran aktif.",y:"Ya, batalkan"}}
+ if(fn==="batalAwalL"){const l=db.loans.find(x=>x._id===id);if(!l)return null;return{t:"Batalkan saldo awal pinjaman?",d:l.loan_number+" · "+party(l.party_id).name+" · Rp "+fm(l.principal),i:"Jurnal saldo awal dibalik, jadwal angsuran dan data pinjaman dihapus. Hanya bisa jika belum ada pembayaran aktif.",y:"Ya, batalkan"}}
+ return null}
+let cfFrom=null;
+const tKey=el=>{if(!el||!el.getAttribute||!el.tagName||el.tagName==="BODY"||!document.querySelectorAll)return null;const t=el.tagName.toLowerCase(),nm=x=>(x.getAttribute("aria-label")||x.textContent||"").trim(),l=nm(el);return{t,l,i:Math.max(0,[...document.querySelectorAll("#main "+t)].filter(x=>nm(x)===l).indexOf(el))}};
+function cfBack(){const k=cfFrom;cfFrom=null;if(!document.querySelectorAll)return;const a=document.activeElement;if(a&&a!==document.body&&!(a.closest&&a.closest("#cf")))return;
+ let el=null;if(k)el=[...document.querySelectorAll("#main "+k.t)].filter(x=>(x.getAttribute("aria-label")||x.textContent||"").trim()===k.l)[k.i];el=el||$("#main");if(el&&el.focus)el.focus()}
+function askC(fn,id){const c=cfInfo(fn,id);if(!c)return;cfFrom=tKey(document.activeElement);S.cf={fn,id,...c};render()}
+function cfN(){S.cf=null;render();cfBack()}
+function cfY(){const c=S.cf;S.cf=null;if(c)ACT[c.fn](c.id);else render();cfBack()}
+function cfr(){const e=$("#cf"),c=S.cf;if(!e)return;e.className=c?"on":"";
+ e.innerHTML=c?`<div class="bx" onclick="event.stopPropagation()"><h3 id="cf-t">${esc(c.t)}</h3><p><b>${esc(c.d)}</b></p><p class="k" id="cf-d">${esc(c.i)}</p><button class="b s" id="cf-n" onclick="cfN()">Batal</button><button class="b x" onclick="cfY()">${esc(c.y)}</button></div>`:"";
+ if(c){const b=$("#cf-n");if(b&&b.focus)b.focus()}}
+function bkInfo(){let lb=null;try{lb=localStorage.getItem(LB)}catch(e){}const base=lb||(db.meta&&db.meta.created_at);
+ return{lb,d:base?Math.max(0,Math.floor((Date.now()-new Date(base))/864e5)):0}}
+function banners(){let h="";
+ if(S.saveErr)h+=`<div class="wn er" role="alert">⚠ Data GAGAL disimpan ke penyimpanan browser (penuh atau diblokir, mis. mode privat). Perubahan akan hilang jika halaman ditutup — segera Export JSON.<br><button class="b" onclick="exp()">Export sekarang</button></div>`;
+ const{lb,d}=bkInfo();
+ if(!S.bkHide&&d>=7&&db.transactions.length)h+=`<div class="wn"><b>Pengingat backup:</b> ${lb?"sudah "+d+" hari sejak backup terakhir.":"belum pernah export backup (data dibuat "+d+" hari lalu)."} Data hanya ada di browser ini.<br><button class="b" onclick="exp()">Export sekarang</button><button class="b s" onclick="S.bkHide=1;render()">Nanti</button></div>`;
+ return h}
+// draf form: isian disimpan per tab dan dipulihkan setelah render ulang (dibersihkan saat simpan berhasil lewat clrF)
+const dkey=(t,id)=>t+"|"+id,ed=(id,m)=>m&&m[id.split("-")[0]];
+function dSnap(){if(S.nsnap){S.nsnap=0;return}if(!S.rt||!document.querySelectorAll)return;const D=S.dr=S.dr||{};
+ document.querySelectorAll(FS).forEach(e=>{if(NB.includes(e.id)||e.type==="file"||ed(e.id,S.rn))return;D[dkey(S.rt,e.id)]=e.value})}
+function dRestore(){const D=S.dr||{};
+ document.querySelectorAll(FS).forEach(e=>{if(NB.includes(e.id)||e.type==="file"||ed(e.id,{n:S.en,pl:S.ep,pr:S.epr,u:S.eu,c:S.ec,a:S.ea,py:S.ey,pg:S.eg,pk:S.ek,cn:S.ecn,us:S.eus}))return;const k=dkey(S.tab,e.id);if(!(k in D))return;const v=D[k];
+  if(e.tagName==="SELECT"&&![...e.options].some(o=>o.value===v))return;e.value=v});
+ S.rt=S.tab;S.rn={n:S.en,pl:S.ep,pr:S.epr,u:S.eu,c:S.ec,a:S.ea,py:S.ey,pg:S.eg,pk:S.ek,cn:S.ecn,us:S.eus}}
+function dirtyFields(){if(typeof document==="undefined"||!document.querySelectorAll)return[];return[...document.querySelectorAll(FS)].filter(e=>{if(NB.includes(e.id)||e.type==="file"||e.type==="password"||e.disabled)return false;
+ if(e.tagName==="SELECT"){const o=[...e.options].findIndex(x=>x.defaultSelected);return e.selectedIndex!==(o<0?0:o)}return e.value!==e.defaultValue})}
+function draftBar(){const n=dirtyFields().length,m=$("#main");if(!n||!m||typeof m.insertAdjacentHTML!=="function")return;
+ m.insertAdjacentHTML("afterbegin",`<div class="wn dr" role="status"><b>Isian belum disimpan</b> dipulihkan di halaman ini (${n} kolom). <button class="b s" onclick="clrDraft()">Bersihkan isian</button></div>`)}
+function clrDraft(){const p=S.tab+"|";Object.keys(S.dr||{}).forEach(k=>{if(k.indexOf(p)===0)delete S.dr[k]});S.nsnap=1;S.jn=4;S.msg="Isian dibersihkan";render()}
+if(typeof window!=="undefined"&&window.addEventListener)window.addEventListener("beforeunload",e=>{if(dirtyFields().length){e.preventDefault();e.returnValue=""}});
+function clrF(sel){if(!document.querySelectorAll)return;
+ document.querySelectorAll(sel.split(",").map(x=>"#main "+x+",#fm "+x).join(",")).forEach(e=>{if(e.tagName==="SELECT"){const i=[...e.options].findIndex(o=>o.defaultSelected);e.selectedIndex=i<0?0:i}else e.value=e.defaultValue})}
+function cards(){if(!document.querySelectorAll)return;document.querySelectorAll("#main .sc>table").forEach(t=>{const th=[...t.rows[0].cells].map(c=>c.textContent);if(th.length<4||t.querySelector("tr+tr th"))return;t.classList.add("cd");[...t.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>c.setAttribute("data-l",th[i]||"")))})}
+const tglS=d=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||"");return m?m[3]+"/"+m[2]+"/"+m[1]:d||""};
+function tglView(){if(!document.querySelectorAll||!document.createTreeWalker)return;document.querySelectorAll("#main,#md,#cf,#toast").forEach(r=>{if(!r)return;const w=document.createTreeWalker(r,4),L=[];let n;while(n=w.nextNode()){const p=n.parentNode&&n.parentNode.tagName;if(p==="TEXTAREA"||p==="SCRIPT"||p==="STYLE"||p==="OPTION")continue;if(/(?<![\d-])\d{4}-\d{2}-\d{2}(?![\d])/.test(n.nodeValue))L.push(n)}L.forEach(n=>{n.nodeValue=n.nodeValue.replace(/(?<![\d-])(\d{4})-(\d{2})-(\d{2})(?!\d)/g,"$3/$2/$1")})})}
+function render(){
+ if(gate()){a11y();return}
+ if(!tabOk(S.tab)){S.tab=rbacOn()&&curUser()?(GRV()[0]||["",["set"]])[1][0]:"dash";S.doc=null}
+ dSnap();mdSnap();
+ chrome();
+ const cu0=curUser(),su=cu0&&(cu0.unit_ids||[]).length?db.business_units.filter(u=>cu0.unit_ids.includes(u._id)):null;
+ if(su&&su.length&&!su.some(u=>u._id===S.unit))S.unit=su[0]._id;
+ $("#unit").innerHTML=(su&&su.length?"":`<option value="all">Semua unit</option>`)+opt(su&&su.length?su:db.business_units,u=>[u._id,u.name],S.unit);
+ $("#unit").value=S.unit;
+ $("#main").innerHTML=banners()+(S.doc?vDoc():({dash:vDash,rep:vRep,trx:vTrx,sp:vSp,air:vAir,pay:vPay,led:vLed,tb:vTb,mst:vMst,dat:vDat,set:vSet})[S.tab]());
+ dRestore();draftBar();cfr();mdr();cards();a11y();tglView();emptyFx();badgeFx();stbFx();uiSave();
+ if(S.fe){const f=$("#"+S.fe.id);if(f&&f.insertAdjacentHTML){f.classList.add("er");f.insertAdjacentHTML("afterend",`<div class="fe" role="alert" id="fe-${S.fe.id}">${esc(S.fe.m)}</div>`);if(f.setAttribute){f.setAttribute("aria-invalid","true");f.setAttribute("aria-describedby",[f.getAttribute("aria-describedby"),"fe-"+S.fe.id].filter(Boolean).join(" "))}if(f.focus)f.focus()}S.fe=null}
+ if(S.sf||S.msg){toast((S.msg?S.msg+(S.sf?" · ":""):"")+(S.sf?"⚠ TIDAK tersimpan ke browser — Export JSON sekarang":""),S.sf||/^⚠/.test(S.msg));S.sf=0;
+  if(typeof setTimeout==="function")setTimeout(()=>{S.msg=""},0)}
+ if(S.tab==="trx"&&!S.doc&&$("#f-type"))rows();if(S.tab==="trx"&&$("#jl-sum"))jlSum()}
+
