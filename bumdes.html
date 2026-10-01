@@ -218,7 +218,7 @@ details.ix>summary:hover{background:var(--hv)}.ixn{font-weight:600}.ixd{color:va
 <script>
 // ===== CONFIG =====
 let pwaPrompt=null; // kejadian beforeinstallprompt (lihat js-15-pwa.js)
-const APP_VER="1.1.001"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
+const APP_VER="1.1.002"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
 const KEY="bumdes_db_v1";
 const KEYS="bumdes business_units users roles permissions parties employees accounts cash_accounts transactions journal_entries journal_lines general_ledger accounting_periods loans loan_installments loan_payments collaterals products sales sale_items payments payroll_components payrolls payroll_items salary_payments approvals audit_logs water_connections water_readings".split(" ");
 const NEWK=["water_connections","water_readings"],AIRDEF=()=>({unit_id:"UNIT-002",mode:"flat",abon:15000,min_m3:0,due_days:14,cut_months:3,tiers:[{upto:null,price:10000}]});
@@ -329,6 +329,7 @@ cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r
 cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
 undo:'<path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/>',
 lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+unlock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
 print:'<path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
 edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
 set:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
@@ -549,7 +550,7 @@ function add(fn,sel){try{fn();audit("create","master","-");save();if(sel)clrF(se
 function vDat(){return subT(vDat0(),"dt",[["bk","Backup",null],["per","Periode","<h2>Periode Akuntansi</h2>"],["aud","Audit Log","<h2>Audit Log</h2>"]])}
 function vDat0(){return`<h2>Backup & Restore</h2><div class="card"><button class="b" onclick="exp()">Export JSON</button><button class="b s" onclick="impAsk()">Import JSON</button><button class="b x" onclick="askC('rst','')">Reset data demo</button>
 <label>Isi backup (tempel JSON di sini atau pilih file)</label><textarea id="bk" rows="6"></textarea><input type="file" accept=".json" aria-label="Pilih berkas backup JSON" onchange="fl(this)"></div>
-<h2>Periode Akuntansi</h2>${tbl(["Periode","Status",""],db.accounting_periods.map(p=>`<tr><td>${p._id}</td><td>${p.status}</td><td>${p._id.slice(0,4)<=cyr()?`<span class="k">Tahun buku ditutup</span>`:ib("lock",p.status==="open"?"Tutup":"Buka","askC('tgl','"+p._id+"')","s")}</td></tr>`))}
+<h2>Periode Akuntansi</h2>${tbl(["Periode","Status",""],db.accounting_periods.map(p=>`<tr><td>${p._id}</td><td>${p.status}</td><td>${p._id.slice(0,4)<=cyr()?`<span class="k">Tahun buku ditutup</span>`:ib(p.status==="open"?"lock":"unlock",p.status==="open"?"Tutup":"Buka","askC('tgl','"+p._id+"')","s")}</td></tr>`))}
 <h2>Tutup Buku Tahunan</h2>${vFy()}
 <h2>Audit Log</h2>${audB()}`}
 const BF=[["name","Nama BUMDes"],["address","Alamat (jalan / dusun)"],["village","Desa / Kelurahan"],["district","Kecamatan"],["regency","Kabupaten / Kota"],["province","Provinsi"],["phone","Telepon","tel"],["email","Email","email"],["director","Nama Direktur"],["treasurer","Nama Bendahara"],["decree_no","No. Perdes / SK Pendirian"],["founded_date","Tanggal pendirian","date"]];

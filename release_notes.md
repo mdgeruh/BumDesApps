@@ -1,8 +1,8 @@
-# Catatan Rilis — v1.1.001
+# Catatan Rilis — v1.1.002
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
-Rilis ini menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rilis berikutnya: v1.1.002, v1.1.003, …). Fungsi inti sama dengan v0.1.049; yang baru: **aplikasi dapat dipasang dari browser (PWA)**, nomor versi baru, dan catatan rilis ini.
+Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rilis berikutnya: v1.1.002, v1.1.003, …). Fungsi inti sama dengan v0.1.049; yang baru: **aplikasi dapat dipasang dari browser (PWA)**, nomor versi baru, dan catatan rilis ini. v1.1.002 memperbaiki ikon gembok periode.
 
 ## Sorotan
 
@@ -44,9 +44,11 @@ Rilis ini menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rilis ber
 - Login PIN adalah kontrol prosedur di sisi browser, bukan pengamanan server.
 - Belum ada: sub-tab Ringkasan Simpan Pinjam, pengurutan daftar, tombol "Ajukan pinjaman" dari baris nasabah, kolektibilitas dan restrukturisasi. Lihat `ROADMAP.md`.
 
-## Riwayat singkat menuju v1.1.001
+## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.002 | Perbaikan ikon gembok periode (terbuka/tertutup) |
+| 1.1.001 | PWA, skema versi baru, catatan rilis, kode dipecah bernama jelas |
 | 0.1.049 | Kode dipecah menjadi berkas sumber + `build.js` |
 | 0.1.048 | Tombol bayar langsung di kartu pembayaran |
 | 0.1.047 | Jenis pembayaran angsuran + jumlah otomatis |

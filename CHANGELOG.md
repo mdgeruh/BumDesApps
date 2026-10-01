@@ -2,6 +2,9 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.002] — 2026-10-01
+**Perbaikan ikon gembok di Data → Periode.** Tombol aksi periode selalu memakai ikon gembok tertutup, sehingga setelah periode ditutup ikonnya tidak berubah. Kini periode terbuka memakai gembok tertutup (aksi *Tutup*) dan periode yang sudah ditutup memakai **gembok terbuka** (aksi *Buka*). Tes ui-p0 memeriksa pergantian ikon.
+
 ## [1.1.001] — 2026-10-01
 **Pergantian skema versi ke `1.1.NNN`, catatan rilis, dan PWA (bisa dipasang dari browser).**
 - **Versi:** skema `1.1.NNN` (sebelumnya `0.1.NNN`). Sumber tunggal versi = `package.json` (`1.1.1` ⇒ tampil `v1.1.001`); `build.js` mengisi `APP_VER` di aplikasi. Nomor rilis rencana lama di `ROADMAP.md` (`v0.1.0xx`) dibaca sebagai urutan rilis berikutnya (v1.1.002, …).
