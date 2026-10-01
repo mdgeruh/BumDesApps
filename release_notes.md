@@ -1,8 +1,8 @@
-# Catatan Rilis — v1.1.004
+# Catatan Rilis — v1.1.009
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
-Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rilis berikutnya: v1.1.002, v1.1.003, …). Fungsi inti sama dengan v0.1.049; yang baru: **aplikasi dapat dipasang dari browser (PWA)**, nomor versi baru, dan catatan rilis ini. v1.1.002 memperbaiki ikon gembok periode; v1.1.003 menambah tombol ? Catatan rilis di Setelan; v1.1.004 melanjutkan UI Simpan Pinjam (Ringkasan, urutan, simulasi).
+Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rilis berikutnya: v1.1.002, v1.1.003, …). Fungsi inti sama dengan v0.1.049; yang baru: **aplikasi dapat dipasang dari browser (PWA)**, nomor versi baru, dan catatan rilis ini. v1.1.002 memperbaiki ikon gembok periode; v1.1.003 menambah tombol ? Catatan rilis di Setelan; v1.1.004 melanjutkan UI Simpan Pinjam (Ringkasan, urutan, simulasi); v1.1.005 menambah Linimasa dan Jaminan di rincian pinjaman; v1.1.006 menampilkan pratinjau peringatan di form pengajuan; v1.1.007 menambah Master Tarif & Biaya berversi (belum dipakai transaksi); v1.1.008 menambah alur pengajuan lengkap opsional (verifikasi, analisis, akad); v1.1.009 membuat daftar transaksi ringkas dengan modal rincian dan memindahkan form transaksi ke modal.
 
 ## Sorotan
 
@@ -48,6 +48,11 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.009 | Transaksi ringkas dengan modal rincian dan form modal |
+| 1.1.008 | Alur pengajuan lengkap opsional: verifikasi, analisis, wewenang, akad |
+| 1.1.007 | Master Tarif & Biaya berversi, mesin hitung fee/pajak |
+| 1.1.006 | Pratinjau peringatan pengajuan, uji alur lengkap |
+| 1.1.005 | Rincian pinjaman: linimasa, jaminan tertaut, tagihan berikutnya |
 | 1.1.004 | Ringkasan Simpan Pinjam, urutan daftar, simulasi angsuran, ajukan dari nasabah |
 | 1.1.003 | Tombol ? Catatan rilis di Setelan |
 | 1.1.002 | Perbaikan ikon gembok periode (terbuka/tertutup) |

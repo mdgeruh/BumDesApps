@@ -74,7 +74,7 @@ function chrome(){const lb=Object.fromEntries(TABS),nm=bnm(),AT=alertTabs(),btn=
 const mo=d=>d.slice(0,7),addMo=(m,n)=>{const[y,x]=m.split("-").map(Number),t=y*12+x-1+n;return Math.floor(t/12)+"-"+String(t%12+1).padStart(2,"0")},BLS=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
 const bc=n=>n?`<i class="bc" aria-hidden="true">${n>99?"99+":n}</i><span class="sr"> — ${n} peringatan</span>`:"";
 function goS(tab,o){Object.assign(S,o||{});go(tab)}
-function qTrx(ty){S.xt="baru";S.ft=ty;go("trx")}
+function qTrx(ty){S.xt="daftar";S.ft=ty;go("trx");mdOpen("tn","")}
 function alertsAll(){const T=today(),A=[],uOk=u=>S.unit==="all"||u===S.unit;
  const tg=db.loan_installments.filter(i=>i.status!=="paid"&&i.due_date<T).map(i=>({i,l:db.loans.find(l=>l._id===i.loan_id)})).filter(x=>x.l&&x.l.status==="active"&&uOk(x.l.unit_id));
  if(tg.length){const t=tg.reduce((a,{i})=>a+i.principal_due-i.principal_paid+i.interest_due-i.interest_paid,0);A.push({k:"tg",tab:"sp",n:tg.length,sev:"er",t:tg.length+" angsuran pinjaman menunggak",d:"Sisa tagihan "+rp(t),a:"Lihat tunggakan",fn:"goS('sp',{st:'tunggakan'})"})}

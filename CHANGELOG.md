@@ -2,6 +2,44 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.009] — 2026-10-01
+**UI Transaksi: daftar ringkas + modal rincian, form lewat modal.**
+- Daftar transaksi memakai baris `.li` (keterangan, tanggal · unit, jenis, jumlah, status); klik membuka modal `td` (data, jurnal asli dan pembalik, Void dengan konfirmasi untuk transaksi yang boleh di-void; pinjaman/penjualan/gaji tetap dikoreksi dari menu masing-masing).
+- **Transaksi baru** (`tn`) dan **Jurnal multi-baris** (`jm`) menjadi modal; tombol di atas daftar; posting sukses menutup modal, galat menjaga isian. `qTrx()` (Dashboard) membuka modal dengan jenis terpilih.
+- Sub-tab Transaksi kini: Transaksi · Saldo Awal (tab Baru/Jurnal/Daftar digabung). Bilah Posting menempel diganti footer modal.
+- Uji: `ui-trx.py` (baru), `ui-form/ui-nav/ui-p0/ui-tgl/ui-dash` dan logic-3/4/7/9/28/31 disesuaikan.
+
+## [1.1.008] — 2026-10-01
+**SP2 tahap 1: alur pengajuan lengkap, opsional dan bawaan mati (`settings.sp_flow`).**
+- Berkas baru `flow.js`. Setelan > Profil > *Alur Pengajuan Lengkap*: saklar, batas Manajer, rasio maksimum, daftar dokumen wajib (`sp_flow_cfg`).
+- **Verifikasi** (`l.verif`: dokumen, survei, petugas, hasil Lolos/Perlu perbaikan/Tidak lolos) dan **Analisis** (`l.analysis`: penghasilan, kewajiban, rasio angsuran, jaminan, rekomendasi, skor 40/30/30) dari modal pinjaman.
+- Gerbang `flowGate()`: setujui memerlukan verifikasi Lolos + analisis (bukan Tolak) + hak `sp.setujui.besar` untuk pokok di atas batas Manajer (hanya bila mode pengguna aktif); cairkan memerlukan **akad** (`l.contract`: nomor unik, tanggal). Saldo awal dikecualikan; alur mati = perilaku lama.
+- Hak baru `sp.setujui.besar` (peran Direktur baru memilikinya; peran lama diberi oleh Admin).
+- Linimasa memuat Verifikasi, Analisis kelayakan, Akad.
+- **Belum:** Calon Peminjam/draf, dokumen akad cetak, jenjang lebih dari dua, bobot skor dapat diatur, fee saat cair (menunggu SP1 tahap 2).
+- Uji: `logic-46.js` (39 cek), `ui-sp2.py` (390/1280px).
+
+## [1.1.007] — 2026-10-01
+**SP1 tahap 1: Master Tarif & Biaya dan mesin hitung `calcFees`.**
+- Berkas baru `rates.js`; koleksi `rate_master` dan `tax_master` (ikut ekspor/impor lewat `NEWK`, otomatis dibuat pada data lama).
+- `calcFees(ctx[,rates,taxes])` murni: persen/tetap/per_hari/per_bulan, dasar pokok/sisa pokok/angsuran/tunggakan, minimum–maksimum, pembulatan, pajak per fee; tanggal memilih versi; snapshot dapat disuntik.
+- `addRateVersion`/`addTaxVersion`: versi baru menutup versi lama (`effective_until` = sehari sebelum), tanggal harus maju; validasi kode, nilai, min ≤ maks.
+- UI Master > **Tarif & Biaya**: daftar versi, tambah versi tarif/pajak, nonaktifkan/aktifkan, pratinjau hitung. Hak akses `master.kelola`.
+- **Belum:** jurnal fee/pajak, pemakaian saat pencairan/pembayaran, migrasi denda dan pelunasan ke Rate Master (menunggu Gerbang Keputusan akuntansi dan SP2).
+- Uji: `logic-45.js` (26 cek), `ui-tarif.py` (390/1280px).
+
+## [1.1.006] — 2026-10-01
+**SP-U (lanjutan): pratinjau peringatan di form pengajuan dan uji alur lengkap.**
+- `loanWarns(x,self)` (daftar peringatan murni) dipisah dari `loanWarn()` (perilaku tekan-dua-kali tidak berubah); `simWarn()` menampilkan peringatan di panel `#sim-w` pada modal pengajuan setiap kali nasabah, pokok, jasa, metode, tenor, atau tanggal berubah.
+- Uji: `logic-44.js` (18 cek), `ui-sp.py` (ajukan → peringatan → setujui → cairkan → bayar → linimasa, 390/1280px).
+
+## [1.1.005] — 2026-10-01
+**SP-U (lanjutan): rincian pinjaman dengan linimasa dan jaminan tertaut.**
+- **Linimasa** (`loanTimeline()`): Diajukan, Disetujui, Dicairkan/Saldo awal, tiap pembayaran (pembayaran batal ditandai), pengubahan/pembatalan dari audit log, Lunas, Ditolak/Dibatalkan beserta alasan; pelaku dari `audit_logs`.
+- **Jaminan** di modal pinjaman: baris membuka rincian jaminan; *Tambah jaminan* (`tambahJam()`) memilih pinjaman otomatis dan kembali ke modal pinjaman setelah simpan.
+- Baris ringkasan baru: **Tagihan berikutnya**, **Denda berjalan**, **Total dibayar**.
+- Uji: `logic-43.js` (11 cek), `ui-rincian.py` (390/1280px).
+
 ## [1.1.004] — 2026-10-01
 **SP-U (lanjutan): Ringkasan Simpan Pinjam, urutan daftar, simulasi angsuran, ajukan dari nasabah.**
 - **Sub-tab Ringkasan** (kini tab pertama dan bawaan): kartu *Pinjaman aktif* (sisa pokok), *Tunggakan*, *Jatuh tempo 7 hari* (30 hari), *Menunggu keputusan* (diajukan / disetujui belum cair), *Pembayaran bulan ini*; kartu membuka tab dan filter yang sesuai. Di bawahnya daftar **Akan jatuh tempo (30 hari)** (10 terdekat; klik membuka rincian pinjaman). Mengikuti filter unit di sidebar. Tombol *Ajukan pinjaman* juga ada di Ringkasan.
