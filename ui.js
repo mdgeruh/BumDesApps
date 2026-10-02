@@ -13,7 +13,7 @@ const fld=(id,label,o={})=>{const t=o.t||"input",a=o.a||"",d=o.hint?` aria-descr
  return`<label${o.lid?` id="${o.lid}"`:""} for="${id}">${label}</label>${ctl}${o.hint?`<div class="hint k" id="${id}-h">${o.hint}</div>`:""}`};
 const CTL=/^(INPUT|SELECT|TEXTAREA)$/;let lbN=0;
 // menautkan sisa <label> lama (tanpa for) ke kolom berikutnya: for/id bila kolom punya id, selain itu aria-labelledby
-function a11y(){if(!document.querySelectorAll)return;
+function a11y(){if(!document.querySelectorAll)return;if(typeof uiEnh==="function")uiEnh();
  document.querySelectorAll("#main label:not([for]),#fm label:not([for]),#lock label:not([for])").forEach(l=>{if(l.querySelector&&l.querySelector("input,select,textarea"))return;
   let c=l.nextElementSibling;if(c&&!CTL.test(c.tagName)&&c.tagName!=="LABEL"&&c.querySelector)c=c.querySelector("input,select,textarea");
   if(!c||!CTL.test(c.tagName))return;
