@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.031
+# Catatan Rilis — v1.1.038
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,13 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.038 | Portal nasabah (tampilan demo) |
+| 1.1.037 | Produk tabungan dan deposito |
+| 1.1.036 | Fee pencairan bisa diamortisasi |
+| 1.1.035 | Batas nominal untuk persetujuan restrukturisasi |
+| 1.1.034 | Calon langsung diajukan pinjaman |
+| 1.1.033 | Tampilan form lebih seragam |
+| 1.1.032 | Pengajuan bisa disimpan sebagai draf |
 | 1.1.031 | Calon peminjam sebelum menjadi nasabah |
 | 1.1.030 | Restrukturisasi bisa butuh dua orang |
 | 1.1.029 | Pajak atas biaya administrasi tabungan |

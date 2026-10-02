@@ -2,6 +2,45 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.038] — 2026-10-02
+**NSB2 (hanya UI): portal nasabah mode demo.**
+- File baru `portal.js` (ditambahkan ke `index.html` dan `sw.js`): overlay `#portal` (dipicu `#portal` pada alamat atau Pratinjau portal), `render()` memanggil `ptRender()` lebih dulu. Masuk HP (`ptKey` menormalkan +62/8xx; nomor ganda nasabah aktif tidak menemukan siapa pun) + PIN (`pinHash` dari users.js, disimpan di `party.portal`, kunci 5 menit setelah 5 kali salah, pesan galat umum). Tampilan baca-saja: Beranda, Pinjaman (+jadwal), Tabungan (+mutasi), Profil (ganti PIN); habis sesi 3 menit; pratinjau pengurus tanpa login.
+- Pengurus: `savePortalPin` (izin `sp.data`), `setPortal` (`db.settings.portal`, izin `setelan.kelola`), kartu Setelan, tombol di rincian nasabah. Audit `portal_masuk/portal_gagal/portal_pin` (PIHAK.PORTAL_*).
+- Batasan: tanpa server/OTP/sinkronisasi; data hanya di perangkat. Uji: `logic-71.js` (34), `ui-portal.py`.
+
+## [1.1.037] — 2026-10-02
+**TAB3: produk tabungan dan deposito.**
+- `db.settings.sav.prods=[{id,name,rate,term}]` (`savProds`, `addSavProd`, `delSavProd`; izin `setelan.kelola`; audit `setting`). Rekening menyimpan `prod` (snapshot bunga/jangka) dan `maturity` (`addM(opened_at,term)`). `savRate(a,b)`: bunga produk menggantikan bunga dasar/tingkat; `savPlan`/`savProc` memperhitungkan produk berbunga. `savLock(a)`: deposito (term>0) menolak penarikan sebelum jatuh tempo dan setoran tambahan.
+- Tampil: daftar (s.d. tanggal), rincian, buku tabungan; form buka rekening memilih produk bila ada. Uji: `logic-70.js` (25).
+
+## [1.1.036] — 2026-10-02
+**SP1: fee pencairan diamortisasi (akun 2240).**
+- Akun baru 2240 Pendapatan Fee Ditangguhkan (COA, `ensureSavAcc`). `db.settings.sp_fee_recog` (`langsung`/`amortisasi`, `feeRecog()`, `setFeeRecog`). Pada `cairkan`, bila amortisasi, fee pencairan (bukan pajak) dikredit ke 2240 dan `l.fee_amort={total,done,txns,months,start}`.
+- `amortRun(l,d,all)`: pengakuan lurus per bulan penuh sejak pencairan (Dr 2240 / Cr 4400, tipe `fee_amort`, audit `amort_fee` → PINJAMAN.AMORTISASI_FEE), idempoten; dipanggil dari `settle` (tiap pembayaran; sisa penuh saat lunas) dan `saveHapus` (sisa penuh); `amortAll()` untuk semua pinjaman aktif; `batalCair` membalik transaksi amortisasi. Laporan SP: baris 2240; Setelan: kartu pengakuan fee.
+- Uji: `logic-69.js` (20).
+
+## [1.1.035] — 2026-10-02
+**SP4: batas nominal aturan dua orang restrukturisasi.**
+- `db.settings.sp_restruk_min` (Rp, 0 = semua pinjaman); `rsMin()`, `rsSisa(l)`, `restrukDua(l)` kini menerima pinjaman: aturan berlaku bila Mode Pengguna aktif, saklar `restruk_dua` aktif, dan (ada usulan menunggu atau batas 0 atau sisa pokok ≥ batas). `setRsMin(v)` (izin `setelan.kelola`, audit `setting`), kolom di Setelan > Pemisahan Tugas.
+- Uji: `logic-68.js` (14).
+
+## [1.1.034] — 2026-10-02
+**SP2: tautan calon → pengajuan.**
+- `ajukanDari(id,cid)` menyimpan `S.lpc`; modal pengajuan mengisi pokok dari `amount` calon; `ajukan()`/`simpanDraf()` menyimpan `prospect_id` pada pinjaman. `S.lpc` dibersihkan di `mdClose`/`okM`. Rincian calon menampilkan "Pengajuan dari calon ini".
+- Uji: `ui-calon.py` diperluas (pokok terisi, draf bertaut, tampil di detail).
+
+## [1.1.033] — 2026-10-02
+**UI: kontrol form kustom (pengganti kontrol bawaan browser).**
+- File baru `uikit.js` (ditambahkan ke `index.html` dan `sw.js`): `select`, `input[type=date|month|file]` diberi kelas `.uh` (tersembunyi, tetap sumber nilai) dan tombol pendamping `.ub` (`sl`/`dt`/`fb`). Popup `.up` + latar `.upb` (lembar bawah bila lebar <600px), daftar opsi dengan kolom cari bila panjang, kalender (hari/bulan, Hari ini/Hapus/Tutup, min/max), pilihan bulan, keyboard (panah/Enter/Esc di fase capture sehingga Esc tidak menutup modal).
+- Nilai tetap di kontrol asli: event `input`/`change` dipicu; setter `value`/`selectedIndex` di-patch agar tombol ikut sinkron; `uiEnh()` dipanggil dari `a11y()`, fokus modal, dan MutationObserver. Centang, bullet `ul/ol`, scrollbar, reset number/search diberi gaya di `style.css`.
+- Uji: `ui-kontrol.py` (baru); `ui-a11y/form/list/modal/rincian/sod/sp/tabs/tarif` disesuaikan (tinggi/fokus diukur pada tombol kustom; sub-tab Calon).
+
+## [1.1.032] — 2026-10-02
+**SP2: status draf pada pengajuan pinjaman.**
+- `loans.js`: status `draft` ("Draf") di `LS`; `LOAN_FLOW.draft=["submitted"]`. `simpanDraf()` (validasi `loanChk`, tanpa `loanWarn`; nomor `DRF-yyyy-nnnn`, tanpa jadwal/jurnal), `kirimDraf(id)` (validasi ulang, `goLoan` → `submitted`, nomor `LN-…`, `draft_number` menyimpan nomor lama, `submitted_by`), `hapusDraf(id)` (hapus permanen, audit tetap). `saveAjuan` boleh mengubah draf; rincian pinjaman memuat tombol Kirim pengajuan/Ubah/Hapus draf; konfirmasi `kirimDraf`/`hapusDraf` di `closing.js`; tombol Simpan sebagai draf di modal `lp`.
+- Izin `sp.ajukan` mencakup fungsi draf. Audit: `kirim_draf` (PINJAMAN.KIRIM_DRAF), `hapus_draf` (PINJAMAN.HAPUS_DRAF). Draf tidak ikut hitungan pengajuan/antrean persetujuan; muncul di pipeline laporan.
+- Uji: `logic-67.js` (21), `ui-draf.py`; `logic-35.js` disesuaikan (64 pasangan status, pesan ubah). Belum: tautan calon → draf pengajuan.
+
 ## [1.1.031] — 2026-10-02
 **SP2: Calon Peminjam (tahap sebelum Nasabah).**
 - File baru `calon.js` (ditambahkan ke `index.html` dan `sw.js`): koleksi baru `db.prospects` (`NEWK`), `CL_S`/`CL_T` (Baru → Diproses → Lolos/Ditolak; Ditolak → Baru; Lolos → Jadi nasabah), `saveCalon`, `ubahCalon` (penolakan wajib beralasan, riwayat per perubahan), `jadiNasabah` (hanya dari Lolos; membuat pihak `nasabah` aktif dengan `from_prospect`, konfirmasi `askC`), `vCalon`, modal `cl` (form) dan `cd` (rincian + ubah status + Ajukan pinjaman lewat `ajukanDari`).
