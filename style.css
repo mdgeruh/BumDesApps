@@ -272,3 +272,10 @@ body.pt-on{overflow:hidden}
 button.pt-it{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;min-height:56px;margin:0 0 8px}.pt-it small{display:block;color:var(--mu)}
 @media (max-width:420px){.pt-g{grid-template-columns:1fr}}
 .pt-n .bdg,.pt-late .bdg,.pt-card .bdg{align-self:flex-start}
+/* v1.1.041 — portal: ruang lebih lega, tombol kembali */
+.pt-w{padding:20px 22px 112px}.pt-w h3{margin:26px 0 12px}.pt-w .card{padding:18px 20px;margin:0 0 14px}.pt-w .kv{padding:7px 0}
+.pt-c{padding-top:20px}.pt-bk{margin-bottom:12px}.pt-b{margin:24px 0 24px}.pt-card{gap:12px}.pt-card form{gap:12px}.pt-card .fl{margin-top:6px}
+.pt-hd{padding:14px 22px}.pt-pv{padding:12px 20px}.pt-g{gap:14px;margin-bottom:14px}.pt-n{gap:8px;margin-top:0}
+.pt-r{padding:14px 0;gap:12px}button.pt-it{padding:16px 20px;margin:0 0 14px;min-height:64px}.pt-nv button{min-height:60px}
+@media (min-width:700px){.pt-w{padding:32px 24px 120px}}
+.pt-w .pt-g .card{margin:0}

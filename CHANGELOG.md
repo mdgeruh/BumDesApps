@@ -2,6 +2,15 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.043] — 2026-10-02
+**Awan: dukung kunci Supabase format baru** (`sb_publishable_…`): diterima sebagai anon key, `sb_secret_…` ditolak, kunci non-JWT tidak dikirim sebagai Bearer saat masuk. Uji `logic-72.js` diperluas.
+
+## [1.1.042] — 2026-10-02
+**Supabase Tahap 1: cadangan dan sinkron awan.** `cloud.js` (koneksi anon key, masuk, pilih/buat BUMDes, simpan dengan kunci versi, deteksi konflik, muat dengan konfirmasi dan cadangan lokal `_prev`, simpan otomatis 8 detik; `service_role` ditolak; pengaturan di kunci `bumdes_cloud_v1`, tidak ikut export). Sub-tab Setelan > Awan; izin `setelan.kelola`. SQL: `supabase_schema.sql` (tabel, RLS, `create_bumdes`, `save_snapshot`, `add_member`, riwayat 30 versi) dan draf `supabase_tahap2.sql` (tabel ternormalisasi, jurnal seimbang, migrasi) — keduanya diuji di Postgres 16. Dokumen `SUPABASE.md`. Uji: `logic-72.js` (31), `ui-awan.py`; `ui-portal.py` memakai tombol Data berawalan judul dan isi `#bk` lewat skrip.
+
+## [1.1.041] — 2026-10-02
+**UI: portal nasabah.** Tombol "Kembali ke aplikasi" (`ptBack()`, menghapus `#portal` dari alamat) di halaman masuk; padding/jarak portal diperlebar (tepi 22px, kartu 18×20px, jarak 14px, nav 60px). Uji `ui-portal.py` diperluas.
+
 ## [1.1.040] — 2026-10-02
 **NSB2 (UI): PIN portal dari formulir nasabah.** `saveNasabah` menerima kolom opsional `#n-pin` (tampil bila `ptOn()`): wajib telepon valid, telepon unik di antara nasabah aktif, `pinChk`; menyimpan lewat `ptPin` dan audit `portal_pin`. Uji: `logic-71.js` (41), `ui-portal.py`.
 

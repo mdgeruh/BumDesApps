@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.040
+# Catatan Rilis — v1.1.043
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,9 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.043 | Kunci Supabase format baru (publishable) didukung |
+| 1.1.042 | Cadangan dan sinkron data ke Supabase (awan) |
+| 1.1.041 | Portal nasabah lebih lega dan ada tombol kembali |
 | 1.1.040 | PIN portal langsung dari formulir nasabah |
 | 1.1.039 | Portal Nasabah mudah ditemukan di Setelan |
 | 1.1.038 | Portal nasabah (tampilan demo) |
