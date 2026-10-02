@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.044
+# Catatan Rilis — v1.1.051
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,13 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.051 | Tombol Terbitkan tagihan menempel di bawah daftar meter |
+| 1.1.050 | Konfirmasi sebelum aksi berisiko (tagihan air, akui fee, hapus logo) |
+| 1.1.049 | Tombol + melayang lebih pintar dan tidak menutupi isi |
+| 1.1.048 | Riwayat cadangan awan dan pulihkan versi |
+| 1.1.047 | Panduan Supabase dilengkapi (pengurus, keamanan) |
+| 1.1.046 | Pesan hasil sinkron tampil dekat tombol Simpan |
+| 1.1.045 | Perbaikan: Simpan ke awan tidak lagi dijeda setelah memilih ulang BUMDes |
 | 1.1.044 | Nama BUMDes di header ikut BUMDes awan |
 | 1.1.043 | Kunci Supabase format baru (publishable) didukung |
 | 1.1.042 | Cadangan dan sinkron data ke Supabase (awan) |

@@ -21,13 +21,27 @@ Data utama aplikasi tetap di perangkat (`localStorage`). Supabase milik Anda men
 
 Menambah pengurus: admin menjalankan di SQL Editor `select add_member('<id bumdes>', 'email@pengurus', 'pengurus');` (peran: admin, pengurus, pembaca). Pengguna harus sudah ada di Authentication > Users.
 
+## Menambah pengurus dan peran
+
+- Buat akun di Authentication > Users > Add user (centang Auto Confirm User), lalu daftarkan: `select add_member('<id bumdes>', 'email@pengurus', 'pengurus');` di SQL Editor. Peran: `admin`, `pengurus` (simpan dan muat), `pembaca` (hanya muat). Jalankan lagi dengan peran lain untuk mengubahnya.
+- Id BUMDes ada di Table Editor > `bumdes` (kolom `id`).
+- Satu akun boleh jadi anggota banyak BUMDes; satu perangkat terhubung ke satu BUMDes awan sekaligus.
+- Akun aplikasi (Setelan > Pengguna & Peran) terpisah dari akun awan.
+
 ## Perilaku
 
+- **Riwayat cadangan:** tombol Riwayat cadangan menampilkan 30 versi terakhir; Pulihkan mengembalikan data perangkat ke versi itu (cadangan lokal disimpan), lalu klik Simpan ke awan agar menjadi versi terbaru. Hanya admin dan pengurus.
+- **Sebelum mengubah data di perangkat lain, klik Muat dari awan dulu** agar tidak terjeda konflik.
+- Jika setelah memilih ulang BUMDes versi menunjukkan 0 dan "belum", klik Muat dari awan (atau Timpa awan bila data perangkat ini yang benar).
 - **Kunci versi:** simpan hanya berhasil jika versi di awan sama dengan versi terakhir yang dipegang perangkat. Bila beda (perangkat lain sudah menyimpan), sinkron **dijeda** dan muncul **Timpa awan** (dengan konfirmasi) atau **Muat dari awan**.
 - **Muat dari awan** mengganti data perangkat; salinan lama disimpan sebagai cadangan lokal (`bumdes_db_v1_prev`).
 - Peran **pembaca** hanya boleh memuat.
 
 ## Keamanan
+
+- **Matikan pendaftaran publik:** Authentication > Sign In / Providers, matikan "Allow new users to sign up". Orang asing yang membuat akun memang tidak bisa melihat BUMDes Anda (RLS), tetapi lebih rapi ditutup.
+- Aktifkan MFA di akun Supabase Anda dan pakai kata sandi kuat; itu satu-satunya pintu masuk.
+- Anon key dan alamat proyek bukan rahasia; yang melindungi data adalah login dan RLS.
 
 - Pakai **anon key** saja. **Jangan pernah** memakai `service_role` key; aplikasi menolaknya.
 - Kata sandi tidak disimpan di perangkat; hanya token sesi, di kunci terpisah `bumdes_cloud_v1` (tidak ikut Export JSON).
