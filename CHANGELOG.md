@@ -2,6 +2,101 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.031] — 2026-10-02
+**SP2: Calon Peminjam (tahap sebelum Nasabah).**
+- File baru `calon.js` (ditambahkan ke `index.html` dan `sw.js`): koleksi baru `db.prospects` (`NEWK`), `CL_S`/`CL_T` (Baru → Diproses → Lolos/Ditolak; Ditolak → Baru; Lolos → Jadi nasabah), `saveCalon`, `ubahCalon` (penolakan wajib beralasan, riwayat per perubahan), `jadiNasabah` (hanya dari Lolos; membuat pihak `nasabah` aktif dengan `from_prospect`, konfirmasi `askC`), `vCalon`, modal `cl` (form) dan `cd` (rincian + ubah status + Ajukan pinjaman lewat `ajukanDari`).
+- Sub-tab "Calon" di Simpan Pinjam; izin `sp.data`; audit `prospect` (CALON.BUAT/UBAH, `calon_status` → CALON.UBAH_STATUS, `calon_nasabah` → CALON.JADI_NASABAH). `spRep2()`: tabel Calon peminjam + konversi.
+- Duplikat ditolak (calon dalam proses atau nasabah dengan nama + telepon sama). Uji: `logic-66.js` (31), `ui-calon.py`. Belum: status draf pada pengajuan, dokumen/lampiran calon.
+
+## [1.1.030] — 2026-10-02
+**SP4: persetujuan dua orang untuk restrukturisasi.**
+- `sod.js`: aturan `restruk_dua` (bawaan mati; `SOD_M` → `restruk_prop.by_id`). `restruct.js`: `restrukDua()`; `saveRestruk()` menyimpan `l.restruk_prop` (tanggal, jasa, tenor, metode, perlakuan tunggakan, biaya, kas, alasan) tanpa jurnal/jadwal; persetujuan oleh pengguna lain menjalankan restrukturisasi (isian boleh disesuaikan; `sodChk` menolak pengusul dan mencatat `akses_ditolak`) dan menyimpan `proposed_by`/`proposed_date` di riwayat. `tolakRestruk(id)` (konfirmasi di `cfInfo`/`ACT`, izin `sp.restruk`).
+- UI: tombol Usulkan/Setujui/Tolak usulan, modal terisi dari usulan, catatan usulan menunggu di riwayat; saklar otomatis di Setelan (daftar `SOD_L`). Audit: `usul_restruk` (PINJAMAN.RESTRUK_USUL), `tolak_restruk`.
+- Uji: `logic-65.js` (16). Belum: batas nominal (persetujuan bertingkat menurut besar pinjaman).
+
+## [1.1.029] — 2026-10-02
+**TAB3: pajak atas biaya administrasi tabungan.**
+- `savings.js`: `savPlan` memakai `tax_total` dari `calcFees` (biaya + pajak ≥ saldo minimum, bila tidak dilewati); `prosesSav` mencatat Dr 2300 (biaya+pajak) / Cr 4500 biaya / Cr 2230 pajak; mutasi `biaya` menyimpan `amount` = biaya+pajak beserta `fee` dan `tax` (data lama tanpa `tax` tetap valid). Akun baru 2230 "Utang Pajak atas Biaya Tabungan" (`ensureSavAcc`, COA di `config.js`).
+- `closing.js`: konfirmasi proses menyebut pajak biaya. `spaudit.js`: baris 2230 di Posisi pajak terutang.
+- Uji: `logic-64.js` (11). Sisa TAB3: deposito/produk berjangka, bunga per produk.
+
+## [1.1.028] — 2026-10-02
+**SP5: waktu proses per tahap alur lengkap (SP5 selesai).**
+- `spaudit.js`: `SP_TH` (pasangan tahap: pengajuan → verifikasi → analisis → persetujuan → akad → pencairan, ditambah gabungan persetujuan dan total) dan `spWaktu(ls)` (rata-rata, terlama, jumlah pinjaman; tanggal tidak valid dan pinjaman saldo awal diabaikan; tahap opsional tanpa data disembunyikan). Tabel "Waktu proses per tahap" di `spRep2()` menggantikan dua baris lama (label lama dipertahankan).
+- Uji: `logic-63.js` (10).
+
+## [1.1.027] — 2026-10-02
+**SP5: nama peristiwa audit baku.**
+- `spaudit.js`: `AUD_D` (entitas → domain), `AUD_V` (aksi → peristiwa), `audEv(a)` = `DOMAIN.PERISTIWA` (cadangan: huruf besar aksi/entitas bila belum terdaftar). Dipakai di tabel Audit Log (kolom Peristiwa, `closing.js`), CSV (kolom Peristiwa sebelum Aksi), dan pencarian `audAll()`. Nama `action`/`entity` yang tersimpan tidak berubah, jadi data lama dan filter Aksi tetap bekerja.
+- `tests/run.js`: konteks uji menyediakan `SRC` (kode aplikasi) agar uji dapat memindai pemanggilan `audit(...)`.
+- Uji: `logic-62.js` (10; termasuk pemeriksaan semua pasangan aksi/entitas di kode punya nama baku), `ui-nav.py` diperluas. Sisa SP5: waktu proses per tahap alur lengkap.
+
+## [1.1.026] — 2026-10-02
+**SP5: laporan biaya per kode.**
+- `spaudit.js`: `feeRep()` menggabungkan biaya per (sumber, kode): pencairan (`loan.disb.items`), pelunasan dipercepat (`payment.fee_items`; data lama tanpa rincian → kode `-`), restrukturisasi (`restructures[].fee_code/fee/fee_tax`). Hanya yang tidak dibatalkan, mengikuti `inD` dan filter unit. Ditampilkan di `spRep2()` sebagai tabel "Biaya per kode" dengan baris Total.
+- `loans.js`: `settle()` menyimpan `fee_items` (kode, nama, biaya, pajak) pada pembayaran pelunasan.
+- Uji: `logic-61.js` (11); `ui-sp5.py` memeriksa judul tabel. Belum: nama peristiwa audit baku, biaya diamortisasi.
+
+## [1.1.025] — 2026-10-02
+**Optimalisasi Transaksi > Saldo Awal terpandu.**
+- `reports.js`: `vAwal()` menambah kartu ringkasan (total piutang awal, total sisa pokok pinjaman awal), checklist langkah, `<details>` lipat per formulir (`S.awo`, terbuka bila daftar kosong, terlipat setelah simpan), baris Total di tabel, petunjuk bila pelanggan/nasabah kosong.
+- `awalPv(k)`: pratinjau langsung (oninput) jurnal Dr 1400/1300 – Cr ekuitas, jadwal angsuran memakai `buildSchedule` (angsuran pertama, total jasa, jatuh tempo pertama/terakhir, peringatan menunggak atau jatuh tempo lebih awal dari tanggal saldo); tidak mengubah data.
+- Validasi baru: tanggal valid dan tidak melewati hari ini, jasa ≤ 100%, tenor ≤ 360, tanggal jatuh tempo valid. ID formulir dan fungsi simpan/batal tidak berubah.
+- Uji: `logic-60.js` (17), `ui-awal.py`.
+
+## [1.1.024] — 2026-10-02
+**SP2: akad cetak dengan snapshot tarif; klausul dapat diatur.**
+- `flow.js`: `akadSnap(l,d)` (biaya pencairan + pajak + dana bersih dari `disbFee`, biaya pelunasan dari `settings.payoff_fee`, denda dan masa tenggang dari `calcOf`/`penalty_pct_day`) disimpan di `loan.contract.snap` saat `saveAkad()`; mengubah akad membuat snapshot baru. `vAkad(id)` (doc kind `ak`): kop, para pihak, pinjaman, biaya/pajak/denda dari snapshot, jaminan, jadwal (angsuran nyata bila sudah cair, perkiraan bila belum), ketentuan lain, tanda tangan; akad lama tanpa snapshot memakai tarif saat cetak. `akadBtn(l)` di modal pinjaman.
+- `settings.akad_klausul` (maks. 30 baris × 400 karakter, di-escape saat cetak; tanpa klausul bawaan karena perlu tinjauan hukum): `setKlausul`, kotak di Setelan, izin `setelan.kelola`.
+- Uji: `logic-59.js` (25), `ui-akad.py`. Belum: Calon Peminjam/status draf, tanda tangan elektronik, template akad per produk.
+
+## [1.1.023] — 2026-10-02
+**TAB3 tahap 1: bunga tabungan bertingkat dan cetak buku tabungan.**
+- `savings.js`: `settings.sav.tiers` ([{min,rate}]); `savTiers()`, `savRateAt(saldo)` (tingkat tertinggi yang tercapai, di bawah tingkat pertama = bunga dasar), `savInt(a,ym)` menggantikan `savDaily×rate` di `savPlan` (hasil sama bila tanpa tingkat); `addSavTier()` (validasi: saldo > 0, bunga 0–100, tanpa saldo kembar) dan `delSavTier(i)` (izin `setelan.kelola`, audit sebelum/sesudah). Proses bunga tersedia juga bila bunga dasar 0 tetapi ada tingkat.
+- `vBuku(id)` (doc kind `bt`): buku tabungan cetak (kop, nasabah, produk, mutasi kredit/debit/saldo, saldo akhir, tanda tangan); tombol Cetak buku di modal rekening (`docOpen('bt',id)`).
+- Setelan > Tabungan: editor tingkat. Uji: `logic-58.js` (27), `ui-tab3.py`. Belum: deposito/produk berjangka, bunga per produk, pajak atas biaya tabungan.
+
+## [1.1.022] — 2026-10-02
+**SP1 tahap 2: biaya dan pajak saat pencairan.**
+- `rates.js`: `settings.disb_codes` (kode tarif berjenis administrasi/provisi/materai/transfer/lain; `setDisb`, izin `setelan.kelola`), `disbFee(l,d)` memakai `calcFees` (dasar pokok, angsuran pertama diperkirakan dari `buildSchedule`, bulan = tenor), `disbTxt()` untuk petunjuk.
+- `cairkan()`: jurnal tunggal Dr 1300 pokok; Cr kas pokok−biaya−pajak (dana bersih); Cr 4400 biaya; Cr 2220 pajak. Saldo kas diperiksa terhadap dana bersih; biaya+pajak ≥ pokok ditolak. Rincian disimpan di `loan.disb {fee,tax,net,items}`; `batalCair` membalik jurnal dan menghapus `disb`. Audit `disburse` memuat dana bersih.
+- UI: petunjuk potongan di kartu pencairan (`#cr-hint`, ikut tanggal), kotak centang di Setelan, bukti pencairan memuat Potongan, Pajak, Dana bersih diterima.
+- Tanpa pengaturan = perilaku lama. Uji: `logic-57.js` (21), `ui-sp1b.py`. Belum: pengakuan fee diamortisasi sepanjang tenor, fee jasa per tahap, dokumen akad dengan snapshot tarif.
+
+## [1.1.021] — 2026-10-02
+**SP5: audit sebelum/sesudah, ekspor CSV, jejak audit pinjaman, laporan tambahan Simpan Pinjam.**
+- Berkas baru `spaudit.js`. `audit(a,e,id,det,by,chg)` menerima `chg={b,a}` dan menyimpan `before/after` (JSON ringkas, maks. 300 karakter); untuk `setting/settings` nilai sebelum diambil dari snapshot `_ss` (`snapSet()` dipanggil di `migr()` dan `reset()`), sehingga semua setter setelan otomatis tercatat. `chgOf(sebelum, sesudah, kunci?)` hanya menyimpan kolom yang berubah. Dipakai pada edit nasabah, edit pengajuan pinjaman, versi tarif/pajak baru, dan aktif/nonaktif tarif.
+- Audit Log: `audAll()` (filter bersama), kolom keterangan menampilkan "sebelum → sesudah" (`audX`), tombol Unduh CSV (`audCsv/audDl`, termasuk kolom Sebelum dan Sesudah).
+- `ajHtml(l)`: bagian Jejak audit di modal pinjaman (entri `entity=loan`, 50 terbaru).
+- `spRep2()` di Laporan Simpan Pinjam: pipeline per status, waktu proses rata-rata (pengajuan → persetujuan → pencairan), kolektibilitas, pendapatan 4100/4400/4500/4600 dan beban 5600/5700 pada rentang, saldo utang pajak 2210/2220, kepatuhan pemisahan tugas (status aturan, jumlah penolakan).
+- Catatan rilis (tombol ?) hanya memuat rilis terbaru dalam bahasa pengguna; `logic-41` dan `ui-rilis` disesuaikan.
+- Pratinjau artefak kini membawa data contoh kaya (`tests/gen-preview.js` → `data/bumdes-preview.html`).
+- Uji: `logic-56.js` (24), `ui-sp5.py`. Belum: nama peristiwa audit baku (`submitted/verified/...`), waktu proses per tahap alur lengkap, laporan fee per kode.
+
+## [1.1.020] — 2026-10-02
+**SP4 tahap 3: biaya + pajak pelunasan dipercepat, pajak biaya restrukturisasi, batal restrukturisasi, hapus buku dua orang.**
+- Akun baru 2220 Utang Pajak atas Biaya Pinjaman (data lama lewat `ensureSavAcc`). `feeLines()` (restruct.js) menyusun jurnal biaya: Dr Kas (biaya+pajak), Cr 4400, Cr 2220.
+- Pelunasan dipercepat: `settings.payoff_fee` (kode tarif berjenis `pelunasan`, `setPoFee`, izin `setelan.kelola`), `poFee()` memakai `calcFees` (dasar sisa pokok, tunggakan, bulan sisa, hari); kartu konfirmasi dan kwitansi menampilkan Biaya dan Pajak atas biaya; `settle(...,fr)` memposting SATU jurnal (kas = pokok+jasa+denda+biaya+pajak) sehingga `batalBayar` membalik semuanya; catatan pembayaran menyimpan `fee_code/fee_amount/fee_tax` (`total_amount` tetap pokok+jasa+denda). Tarif tidak berlaku pada tanggal itu = tanpa biaya dengan peringatan di kartu.
+- Restrukturisasi: `rsFee()` mengembalikan hasil `calcFees` penuh; pajak atas biaya ikut dijurnal dan disimpan (`fee_tax`); catatan menyimpan `new.ids`, `old.amount`, `pay_n`.
+- `batalRestruk()` + `canUndoRs()`: hanya restrukturisasi terakhir pada pinjaman aktif tanpa pembayaran di jadwal baru; jadwal lama dipulihkan dari `old.installments`, parameter pinjaman dikembalikan, jurnal biaya dibalik, audit `batal_restruk`. Izin `sp.restruk`.
+- Hapus buku dua orang: aturan SoD `hapus_dua` (bawaan mati; hanya Mode Pengguna aktif). Pengusul membuat `loan.writeoff_prop` (tanpa jurnal, audit `usul_hapus_buku`); pengguna lain ber-`sp.hapusbuku` menyetujui (jurnal dibuat, `writeoff.proposed_by`) atau menolak lewat `tolakHapus` (audit `tolak_hapus_buku`). Pengusul yang menyetujui ditolak (pemisahan tugas).
+- Perbaikan: `batalBayar` memblokir pembayaran sebelum restrukturisasi berdasarkan `restructures[].pay_n` (urutan), bukan cap waktu (rawan sama milidetik); catatan lama tanpa `pay_n` memakai cap waktu.
+- Catatan rilis di Setelan (tombol ?) kini hanya menampilkan rilis terbaru dengan bahasa pengguna akhir (`vRelease()`); riwayat teknis tetap di CHANGELOG.md. `ui-rilis.py` disesuaikan.
+- Uji: `logic-55.js` (40), `ui-sp4c.py`. Belum: pajak atas biaya tabungan, biaya per jenjang, persetujuan dua tingkat untuk restrukturisasi.
+
+## [1.1.019] — 2026-10-02
+**Optimalisasi halaman Simpan Pinjam dengan tabungan; SP4 tahap 2 (restrukturisasi, hapus buku, pemulihan).**
+- UI: label menu bawah "Simpan Pinjam"; urutan sub-tab Ringkasan, Pinjaman, Tabungan, Tunggakan, Jaminan, Nasabah; Ringkasan: tombol sejajar (Ajukan pinjaman, Buka rekening) dan kartu Tabungan selalu tampil; daftar nasabah menampilkan "Tab. Rp …"; modal nasabah: kv Tabungan, daftar rekening, Buka rekening (`mdOpen('sa',idNasabah)` memilih nasabah otomatis).
+- Berkas baru `restruct.js`: `saveRestruk()` (jadwal lama diarsipkan di `loan.restructures[].old.installments`, angsuran tanpa pembayaran dihapus, yang terbayar sebagian dipotong dan ditutup, penomoran melanjutkan, jasa dan metode diperbarui; jasa/denda tertunggak `hapus` atau `bayar` dulu; biaya kode jenis `restruk` → Dr Kas, Cr 4400 bertipe `loan_fee`), `saveHapus()` (hanya Macet; Dr 5700, Cr 1300; status baru `written_off` "Dihapus buku"), `savePulih()` (Dr Kas, Cr 4600), `batalPulih()`, `batalHapus()`. Pembayaran sebelum restrukturisasi dan pembatalan pencairan diblokir sesudahnya.
+- Izin baru `sp.restruk` (Direktur, Approver) dan `sp.hapusbuku` (Direktur) yang TIDAK ikut dari `sp.kelola`; akun 5700 Beban Kerugian Piutang dan 4600 Pendapatan Pemulihan Piutang (data lama lewat `ensureSavAcc`).
+- Uji: `logic-54.js` (36), `ui-restruk.py`; `logic-35` (49 pasangan status), `ui-tabs/ui-cal/ui-ringkasan/ui-p0` dan pemilih menu bawah disesuaikan. Belum: pelunasan dipercepat dengan Tarif & Pajak, pajak atas biaya restrukturisasi, undo restrukturisasi.
+
+## [1.1.018] — 2026-10-01
+**SP4 tahap 1: kolektibilitas, tindak lanjut penagihan, daftar kerja.**
+- Berkas baru `collection.js`: `kolOf()` (jenjang menurut hari terlambat terlama; `settings.sp_kol` dp/kl/dr = 30/90/180), `kolSummary()`, `setKol()`; koleksi `collection_notes` dengan `saveTL()` (jenis, hasil, janji bayar, pelaku, audit `tagih`), `tlStat()` (janji lewat), `tgList()` (daftar kerja per pinjaman, urut jenjang, filter), `kolBox()`.
+- Modal pinjaman: Kolektibilitas dan bagian Tindak lanjut penagihan; Setelan: Kolektibilitas Pinjaman; izin `sp.tagih` (Petugas Kredit baru; `sp.kelola` mencakup). Kolom tindak lanjut disembunyikan di ponsel seperti kolom l4 lain.
+- Uji: `logic-53.js` (24), `ui-kolek.py`. Belum (SP4 tahap berikutnya): restrukturisasi dan pelunasan dipercepat berbasis Tarif & Pajak, hapus buku.
+
 ## [1.1.017] — 2026-10-01
 **TAB2: bunga otomatis, biaya administrasi, pajak bunga untuk tabungan.**
 - `savings.js`: `savCfg/setSav` (`settings.sav`: rate, admin_code, tax_code, tax_min), `savPlan(ym)` (bunga = Σ saldo harian × rate / 365, pajak dari `taxAt`, biaya dari `calcFees` metode tetap), `prosesSav()` (jurnal per rekening: Dr 5600 / Cr 2300 bersih / Cr 2210 pajak; biaya Dr 2300 / Cr 4500). Tipe mutasi baru `biaya`; kolom `period/gross/tax`; daftar mutasi diurutkan menurut tanggal.

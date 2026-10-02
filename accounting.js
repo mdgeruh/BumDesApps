@@ -5,7 +5,7 @@ function memo(k,f){if(MC.v!==VER){for(const x in MC)delete MC[x];MC.v=VER}return
 const uid=p=>p+"-"+Date.now()+"-"+Math.random().toString(36).slice(2,7);
 const PCS=[["Lembur","earning"],["Insentif","earning"],["Tunjangan Transport","earning"],["Potongan Kasbon","deduction"]],seedPC=d=>{if(d.payroll_components&&!d.payroll_components.length)PCS.forEach(([n,t],i)=>d.payroll_components.push({_id:"PC-00"+(i+1),name:n,type:t,status:"aktif"}))};
 const now=()=>new Date().toISOString(),today=()=>now().slice(0,10);
-function migr(){db.settings=db.settings||{};seedPC(db);seedRoles(db);ensureSavAcc(db);NEWK.forEach(k=>{if(!Array.isArray(db[k]))db[k]=[]});if(!db.settings.air)db.settings.air=AIRDEF();else if(!db.settings.air.mode){if(db.sales.some(x=>x.bill))db.settings.air.mode="tier";else db.settings.air=AIRDEF()}if(!db.settings.closings)db.settings.closings=[];if(!db.settings.modules||typeof db.settings.modules!=="object")db.settings.modules={air:(db.sales||[]).length>0||(db.water_connections||[]).length>0,pay:(db.payrolls||[]).length>0||(db.employees||[]).some(e=>(e.base_salary||0)>0)};(db.business_units||[]).forEach(u=>{if(!u.type)u.type=u.code==="SP"?"simpan_pinjam":"lainnya"});if(db.accounts&&!db.accounts.some(a=>a._id==="ACC3300"))db.accounts.push({_id:"ACC3300",code:"3300",name:"Laba Ditahan",type:"equity",parent_id:"ACC3000",status:"aktif"})}
+function migr(){db.settings=db.settings||{};seedPC(db);seedRoles(db);ensureSavAcc(db);NEWK.forEach(k=>{if(!Array.isArray(db[k]))db[k]=[]});if(!db.settings.air)db.settings.air=AIRDEF();else if(!db.settings.air.mode){if(db.sales.some(x=>x.bill))db.settings.air.mode="tier";else db.settings.air=AIRDEF()}if(!db.settings.closings)db.settings.closings=[];if(!db.settings.modules||typeof db.settings.modules!=="object")db.settings.modules={air:(db.sales||[]).length>0||(db.water_connections||[]).length>0,pay:(db.payrolls||[]).length>0||(db.employees||[]).some(e=>(e.base_salary||0)>0)};(db.business_units||[]).forEach(u=>{if(!u.type)u.type=u.code==="SP"?"simpan_pinjam":"lainnya"});if(db.accounts&&!db.accounts.some(a=>a._id==="ACC3300"))db.accounts.push({_id:"ACC3300",code:"3300",name:"Laba Ditahan",type:"equity",parent_id:"ACC3000",status:"aktif"});snapSet()}
 function load(){try{const r=localStorage.getItem(KEY);if(r){db=JSON.parse(r);migr();sess();return}}catch(e){}reset();sess()}
 function save(){VER++;try{localStorage.setItem(KEY,JSON.stringify(db));S.saveErr=0;return true}catch(e){S.saveErr=1;S.sf=1;return false}}
 function blank(){const d={meta:{version:1,app:"bumdes-mvp",created_at:now()},settings:{currency:"IDR",penalty_pct_day:0.1,payoff_interest:"current",closings:[],air:AIRDEF(),modules:{air:false,pay:false}}};KEYS.forEach(k=>d[k]=[]);NEWK.forEach(k=>d[k]=[]);
@@ -14,7 +14,7 @@ function blank(){const d={meta:{version:1,app:"bumdes-mvp",created_at:now()},set
  d.accounts=COA.split("\n").map(r=>{const[c,n,t]=r.split("|");return{_id:"ACC"+c,code:c,name:n,type:t,parent_id:c.endsWith("000")?null:"ACC"+c[0]+"000",status:"aktif"}});
  d.cash_accounts=[{_id:"CASH-001",name:"Kas Tunai",type:"kas",account_id:"ACC1100",status:"aktif"},{_id:"CASH-002",name:"Bank Desa",type:"bank",account_id:"ACC1200",status:"aktif"}];
  return d}
-function reset(){db=blank();demo();S.cu=null;ssS(null);try{localStorage.removeItem(LB)}catch(e){}save()}
+function reset(){db=blank();demo();snapSet();S.cu=null;ssS(null);try{localStorage.removeItem(LB)}catch(e){}save()}
 function demo(){const t="2026-09-";
  post({type:"in",date:t+"01",unit:"",desc:"Penyertaan modal desa",lines:[{acc:"ACC1200",d:5e7},{acc:"ACC3200",c:5e7}]});
  post({type:"tf",date:t+"03",unit:"",desc:"Tarik tunai operasional",lines:[{acc:"ACC1100",d:5e6},{acc:"ACC1200",c:5e6}]});
@@ -24,7 +24,7 @@ function demo(){const t="2026-09-";
  db.parties.push({_id:"PTY-DEMO-1",type:"pelanggan",name:"Bu Aminah",phone:"",address:"Dusun I",status:"aktif"});
  db.products.push({_id:"PRD-DEMO-1",unit_id:"UNIT-002",name:"Air bersih",unit:"m³",price:3500,revenue_account:"ACC4200",status:"aktif"});
  db.water_connections.push({_id:"WCN-DEMO-1",unit_id:"UNIT-002",party_id:"PTY-DEMO-1",meter_no:"MTR-001",initial:120,installed:"2026-01-01",status:"aktif"})}
-function audit(a,e,id,det,by){const x={_id:uid("AUD"),action:a,entity:e,entity_id:id,user:"demo",at:now()};if(det)x.detail=det;{const cu=by?null:curUser();if(by)x.by=by;else if(cu){x.by=cu.name;x.by_id=cu._id}}db.audit_logs.push(x)}
+function audit(a,e,id,det,by,chg){const x={_id:uid("AUD"),action:a,entity:e,entity_id:id,user:"demo",at:now()};if(det)x.detail=det;{const cu=by?null:curUser();if(by)x.by=by;else if(cu){x.by=cu.name;x.by_id=cu._id}}try{if(a==="setting"&&e==="settings"&&id&&db.settings){const nv=audJ(db.settings[id]);if(id in _ss&&_ss[id]!==nv)x.before=_ss[id];if(!(id in _ss)||_ss[id]!==nv)x.after=nv;_ss[id]=nv}else if(chg){x.before=audJ(chg.b);x.after=audJ(chg.a)}}catch(_){}db.audit_logs.push(x)}
 // ===== ACCOUNTING ENGINE =====
 const acc=id=>memo("acc",()=>new Map(db.accounts.map(a=>[a._id,a]))).get(id);
 const postable=a=>!db.accounts.some(x=>x.parent_id===a._id);

@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.017
+# Catatan Rilis — v1.1.031
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,20 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.031 | Calon peminjam sebelum menjadi nasabah |
+| 1.1.030 | Restrukturisasi bisa butuh dua orang |
+| 1.1.029 | Pajak atas biaya administrasi tabungan |
+| 1.1.028 | Waktu proses per tahap di laporan |
+| 1.1.027 | Audit Log dengan nama peristiwa baku |
+| 1.1.026 | Laporan biaya per kode |
+| 1.1.025 | Saldo Awal Terpandu lebih mudah dan aman |
+| 1.1.024 | Akad cetak dengan tarif yang dibekukan |
+| 1.1.023 | Bunga tabungan bertingkat dan cetak buku tabungan |
+| 1.1.022 | Biaya dan pajak dipotong saat pencairan |
+| 1.1.021 | Audit sebelum/sesudah, ekspor CSV, jejak audit pinjaman, laporan Simpan Pinjam |
+| 1.1.020 | Biaya dan pajak pelunasan/restrukturisasi, batal restrukturisasi, hapus buku dua orang |
+| 1.1.019 | Halaman Simpan Pinjam + tabungan; restrukturisasi, hapus buku |
+| 1.1.018 | Kolektibilitas dan tindak lanjut penagihan |
 | 1.1.017 | Tabungan: bunga otomatis, biaya, pajak |
 | 1.1.016 | Peran Simpan Pinjam dan pemisahan tugas |
 | 1.1.015 | Ringkasan nasabah yang dapat dibagikan |
