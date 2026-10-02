@@ -2,6 +2,9 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.044] — 2026-10-02
+**Awan: nama BUMDes di header otomatis mengikuti BUMDes awan yang dipilih/dibuat** (`cloudPick`). Uji `logic-72.js`.
+
 ## [1.1.043] — 2026-10-02
 **Awan: dukung kunci Supabase format baru** (`sb_publishable_…`): diterima sebagai anon key, `sb_secret_…` ditolak, kunci non-JWT tidak dikirim sebagai Bearer saat masuk. Uji `logic-72.js` diperluas.
 
