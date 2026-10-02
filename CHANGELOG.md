@@ -2,6 +2,12 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.040] — 2026-10-02
+**NSB2 (UI): PIN portal dari formulir nasabah.** `saveNasabah` menerima kolom opsional `#n-pin` (tampil bila `ptOn()`): wajib telepon valid, telepon unik di antara nasabah aktif, `pinChk`; menyimpan lewat `ptPin` dan audit `portal_pin`. Uji: `logic-71.js` (41), `ui-portal.py`.
+
+## [1.1.039] — 2026-10-02
+**UI: pengaturan portal nasabah dipindah ke sub-tab Setelan > Portal Nasabah** (`vPortalSet()` di `portal.js`, `vSet` memakai `subT` empat tab). Uji `logic-71.js`/`ui-portal.py` disesuaikan.
+
 ## [1.1.038] — 2026-10-02
 **NSB2 (hanya UI): portal nasabah mode demo.**
 - File baru `portal.js` (ditambahkan ke `index.html` dan `sw.js`): overlay `#portal` (dipicu `#portal` pada alamat atau Pratinjau portal), `render()` memanggil `ptRender()` lebih dulu. Masuk HP (`ptKey` menormalkan +62/8xx; nomor ganda nasabah aktif tidak menemukan siapa pun) + PIN (`pinHash` dari users.js, disimpan di `party.portal`, kunci 5 menit setelah 5 kali salah, pesan galat umum). Tampilan baca-saja: Beranda, Pinjaman (+jadwal), Tabungan (+mutasi), Profil (ganti PIN); habis sesi 3 menit; pratinjau pengurus tanpa login.
