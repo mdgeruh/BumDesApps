@@ -51,7 +51,7 @@ function logoPick(inp){const f=inp.files[0];if(!f)return;
   let u=c.toDataURL("image/png");if(u.length>150000)u=c.toDataURL("image/jpeg",.85);logoSet(u);S.msg="Logo disimpan"}catch(e){S.msg="⚠ "+e.message}render()};im.onerror=()=>{S.msg="⚠ File gambar tidak dapat dibaca";render()};im.src=r.result};r.readAsDataURL(f)}
 function setSd(v){db.settings.sign_director=v!=="0";audit("setting","settings","sign_director","Tanda tangan Direktur "+(v==="0"?"disembunyikan":"ditampilkan"));save();S.msg="Pengaturan dokumen disimpan";render()}
 function setSp(v){v=String(v||"").trim().slice(0,60);db.settings.sign_place=v;audit("setting","settings","sign_place",v?"Tempat penandatanganan: "+v:"Tempat penandatanganan dikosongkan");save();S.msg="Pengaturan dokumen disimpan";render()}
-function docSet(){const b=db.bumdes[0]||{},lg=logoOk(b.logo);return`<h2>Dokumen Cetak</h2><div class="card"><label>Logo BUMDes (PNG/JPG/WebP, otomatis diperkecil; tampil di kop dokumen)</label>${lg?`<img alt="Logo" src="${b.logo}" style="max-height:64px;max-width:180px;display:block;margin:4px 0">`:`<div class="k">Belum ada logo</div>`}<input id="bd-logo" type="file" aria-label="Pilih berkas logo (PNG, JPG, atau WebP)" accept="image/png,image/jpeg,image/webp" onchange="logoPick(this)">${lg?`<button class="b s" onclick="logoDel()">Hapus logo</button>`:""}
+function docSet(){const b=db.bumdes[0]||{},lg=logoOk(b.logo);return`<h2>Dokumen Cetak</h2><div class="card"><label>Logo BUMDes (PNG/JPG/WebP, otomatis diperkecil; tampil di kop dokumen)</label>${lg?`<img alt="Logo" src="${b.logo}" style="max-height:64px;max-width:180px;display:block;margin:4px 0">`:`<div class="k">Belum ada logo</div>`}<input id="bd-logo" type="file" aria-label="Pilih berkas logo (PNG, JPG, atau WebP)" accept="image/png,image/jpeg,image/webp" onchange="logoPick(this)">${lg?`<button class="b s" onclick="askC('logoDel','')">Hapus logo</button>`:""}
 <label>Tempat penandatanganan (mis. Desa Sukamaju; kosong = tempat dan tanggal tidak dicetak)</label><input id="bd-place" maxlength="60" autocomplete="off" value="${esc(db.settings.sign_place||"")}" onchange="setSp(this.value)">
 <label>Tanda tangan Direktur pada bukti pencairan dan slip gaji</label><select onchange="setSd(this.value)"><option value="1"${db.settings.sign_director!==false?" selected":""}>Tampilkan</option><option value="0"${db.settings.sign_director===false?" selected":""}>Sembunyikan</option></select><div class="k">Nama Direktur dan Bendahara di dokumen diambil dari Profil BUMDes. Tempat penandatanganan (bila diisi) dicetak bersama tanggal dokumen di atas tanda tangan.</div></div>`}
 try{S.sbc=localStorage.getItem("bumdes_ui_sbc")==="1"}catch(e){}
@@ -69,11 +69,20 @@ function chrome(){const lb=Object.fromEntries(TABS),nm=bnm(),AT=alertTabs(),btn=
  $("#sheet").className=S.more?"sh open":"sh";
  $("#sheet").innerHTML=`<div onclick="event.stopPropagation()">`+GRV().map(([g,ks])=>{ks=ks.filter(k=>!BNV().includes(k));return ks.length?`<div class="gl"><span>${g}</span></div>`+ks.map(btn).join(""):""}).join("")+`</div>`;
  $("#ttl").textContent=lb[S.tab];$("#sbt").textContent=nm;document.title=nm+" · "+lb[S.tab];$("#unit").style.display=NU.includes(S.tab)?"none":"";
- usrChip();bkChip();$("#fab").innerHTML=ic("plus")+'<span class="fl2">Transaksi</span>';$("#fab").style.display=S.tab==="trx"||S.doc?"none":""}
+ usrChip();bkChip();fabSet()}
 // ===== F3 (v0.1.036): peringatan, tren, jalan pintas, lencana, sub-tab, keadaan kosong =====
 const mo=d=>d.slice(0,7),addMo=(m,n)=>{const[y,x]=m.split("-").map(Number),t=y*12+x-1+n;return Math.floor(t/12)+"-"+String(t%12+1).padStart(2,"0")},BLS=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
 const bc=n=>n?`<i class="bc" aria-hidden="true">${n>99?"99+":n}</i><span class="sr"> — ${n} peringatan</span>`:"";
 function goS(tab,o){Object.assign(S,o||{});go(tab)}
+// ===== FAB (v1.1.049): kontekstual, menepi saat menggulir/mengisi form, menghormati hak akses =====
+const FAB_HIDE=["trx","rep","led","tb","set","dat"];
+function fabCfg(){if(S.doc||FAB_HIDE.includes(S.tab))return null;if(S.tab==="sp")return can("sp.ajukan")?{l:"Ajukan pinjaman",t:"Ajukan pinjaman baru"}:null;return can("trx.kelola")?{l:"Transaksi",t:"Transaksi baru"}:null}
+function fabSet(){const e=$("#fab"),c=fabCfg();e.innerHTML=ic("plus")+'<span class="fl2">'+(c?c.l:"Transaksi")+'</span>';e.style.display=c?"":"none";if(c&&e.setAttribute){e.setAttribute("title",c.t);e.setAttribute("aria-label",c.t)}}
+function fabGo(){const c=fabCfg();if(!c)return;if(S.tab==="sp")mdOpen("lp","");else qTrx("")}
+function fabHide(on){const e=$("#fab");if(e&&e.classList)e.classList.toggle("fh",!!on)}
+if(typeof document.addEventListener==="function"&&typeof window.addEventListener==="function"){let ly=0;window.addEventListener("scroll",()=>{const y=window.scrollY||0;if(y>ly+8&&y>120)fabHide(1);else if(y<ly-8||y<=120)fabHide(0);ly=y},{passive:true});
+ document.addEventListener("focusin",e=>{const t=e.target;if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)&&!/^(checkbox|radio|button)$/.test(t.type||""))fabHide(1)});
+ document.addEventListener("focusout",()=>{setTimeout(()=>{const t=document.activeElement;if(!(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))fabHide(0)},150)})}
 function qTrx(ty){S.xt="daftar";S.ft=ty;go("trx");mdOpen("tn","")}
 function alertsAll(){const T=today(),A=[],uOk=u=>S.unit==="all"||u===S.unit;
  const tg=db.loan_installments.filter(i=>i.status!=="paid"&&i.due_date<T).map(i=>({i,l:db.loans.find(l=>l._id===i.loan_id)})).filter(x=>x.l&&x.l.status==="active"&&uOk(x.l.unit_id));

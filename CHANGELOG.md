@@ -2,6 +2,27 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.051] — 2026-10-03
+**UI: tombol utama menempel pada daftar panjang.** Di Unit Air > Baca Meter, tombol Terbitkan tagihan pindah dari atas ke bilah `.actb` di bawah daftar meter dan menempel (sticky; di seluler di atas navigasi bawah, di desktop di dasar layar), sehingga tidak perlu menggulir ke atas setelah mengisi banyak angka meter. FAB disembunyikan saat bilah itu ada agar tidak bertumpuk. Modal sudah punya footer menempel sejak sebelumnya. Uji `ui-konfirmasi.py` diperluas.
+
+## [1.1.050] — 2026-10-03
+**Konfirmasi seragam untuk aksi berisiko.** `askC/ACT/cfInfo` ditambah `amortAll` (Akui fee sampai hari ini), `terbitTagihan` (Terbitkan tagihan air; dialog memuat periode, tanggal, jumlah sambungan terisi) dan `logoDel` (Hapus logo). Tombol di `modules.js`, `water.js`, `layout.js` memakai `askC`. Pelunasan dipercepat tidak diubah karena rincian pelunasan sudah menjadi langkah konfirmasi. Uji: `logic-74.js` (8), `ui-konfirmasi.py` (390 dan 1280px).
+
+## [1.1.049] — 2026-10-02
+**UI: FAB (tombol + melayang) dioptimalkan.** `fabCfg/fabSet/fabGo/fabHide` (layout.js): kontekstual (Simpan Pinjam → Ajukan pinjaman; halaman lain → Transaksi baru yang langsung membuka modal lewat `qTrx`), tersembunyi di Transaksi, Laporan, Buku Besar, Neraca Saldo, Setelan, Data dan saat dokumen terbuka, mengikuti hak akses (`trx.kelola`, `sp.ajukan`), menepi saat menggulir ke bawah dan saat fokus di kolom isian (kembali saat menggulir ke atas/fokus lepas), transisi dihormati `prefers-reduced-motion`. Uji: `logic-73.js` (15), `ui-fab.py` (390 dan 1280px).
+
+## [1.1.048] — 2026-10-02
+**Awan: riwayat cadangan dan pemulihan versi.** Tombol Riwayat cadangan (`cloudHist`) memuat 30 versi terakhir dari `bumdes_snapshot_history`; Pulihkan (`cloudRestore`) mengambil data versi itu, meminta konfirmasi (`cfInfo cloudPull` varian riwayat), mengganti data perangkat (cadangan lokal `_prev`) dan menyetel versi perangkat ke versi awan terbaru agar Simpan ke awan membuatnya versi baru tanpa konflik. Hanya admin/pengurus (RLS riwayat); izin `setelan.kelola`. Uji: `logic-72.js` (41), `ui-awan.py` (langkah 6b).
+
+## [1.1.047] — 2026-10-02
+**Dokumen:** `SUPABASE.md` ditambah bagian menambah pengurus dan peran, mematikan pendaftaran publik, MFA, dan anjuran Muat dari awan sebelum mengubah data. Tidak ada perubahan kode selain nomor versi.
+
+## [1.1.046] — 2026-10-02
+**Awan: pesan hasil ditampilkan di bagian Sinkron** (`S.clm`, `role=status`), bukan hanya di atas halaman. Uji `logic-72.js`.
+
+## [1.1.045] — 2026-10-02
+**Awan: perbaikan konflik palsu setelah memilih ulang BUMDes.** Menyamakan nama header di `cloudPick` memicu simpan otomatis dengan versi 0, sehingga awan yang sudah berisi menolak (konflik) dan sinkron dijeda. Kini perubahan nama tidak memicu simpan otomatis. Uji `logic-72.js`.
+
 ## [1.1.044] — 2026-10-02
 **Awan: nama BUMDes di header otomatis mengikuti BUMDes awan yang dipilih/dibuat** (`cloudPick`). Uji `logic-72.js`.
 

@@ -279,3 +279,9 @@ button.pt-it{display:flex;justify-content:space-between;align-items:center;gap:8
 .pt-r{padding:14px 0;gap:12px}button.pt-it{padding:16px 20px;margin:0 0 14px;min-height:64px}.pt-nv button{min-height:60px}
 @media (min-width:700px){.pt-w{padding:32px 24px 120px}}
 .pt-w .pt-g .card{margin:0}
+
+/* FAB v1.1.049 */
+.fab{transition:transform .2s ease,opacity .2s ease}.fab.fh{transform:translateY(96px) scale(.85);opacity:0;pointer-events:none}@media (prefers-reduced-motion:reduce){.fab{transition:none}}
+/* v1.1.051 tombol utama menempel di bawah untuk daftar panjang */
+@media (min-width:900px){.actb{position:sticky;bottom:0;z-index:6;background:var(--cd);padding:10px 0;border-top:1px solid var(--bd)}.actb .b{margin:0}}
+body:has(#main .actb) .fab{display:none!important}
