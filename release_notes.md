@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.038
+# Catatan Rilis — v1.1.040
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,8 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.040 | PIN portal langsung dari formulir nasabah |
+| 1.1.039 | Portal Nasabah mudah ditemukan di Setelan |
 | 1.1.038 | Portal nasabah (tampilan demo) |
 | 1.1.037 | Produk tabungan dan deposito |
 | 1.1.036 | Fee pencairan bisa diamortisasi |
