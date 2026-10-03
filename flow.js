@@ -1,5 +1,5 @@
 // ===== v1.1.008 — SP2 tahap 1: alur pengajuan lengkap (opsional, bawaan mati): verifikasi, analisis, wewenang persetujuan, akad =====
-const FLOW0={manager_max:50000000,max_ratio:40,docs:"KTP, Kartu Keluarga, Surat keterangan usaha"},FLOW_L={manager_max:"Batas persetujuan Manajer (Rp); di atasnya perlu hak Persetujuan besar",max_ratio:"Rasio angsuran terhadap sisa penghasilan maksimum (%)",docs:"Daftar dokumen wajib (pisahkan dengan koma)"};
+const FLOW0={manager_max:50000000,max_ratio:40,w_ratio:40,w_col:30,w_verif:30,docs:"KTP, Kartu Keluarga, Surat keterangan usaha"},FLOW_L={manager_max:"Batas persetujuan Manajer (Rp); di atasnya perlu hak Persetujuan besar",max_ratio:"Rasio angsuran terhadap sisa penghasilan maksimum (%)",w_ratio:"Bobot skor: rasio angsuran memenuhi batas",w_col:"Bobot skor: nilai jaminan menutup pokok",w_verif:"Bobot skor: verifikasi lolos",docs:"Daftar dokumen wajib (pisahkan dengan koma)"};
 const flowOn=()=>!!(db&&db.settings&&db.settings.sp_flow===true),flowCfg=()=>Object.assign({},FLOW0,(db&&db.settings&&db.settings.sp_flow_cfg)||{}),
  flowDocs=()=>String(flowCfg().docs).split(",").map(x=>x.trim()).filter(Boolean),
  VR={lolos:"Lolos",perbaikan:"Perlu perbaikan",tidak:"Tidak lolos"},REC={setuju:"Setuju",bersyarat:"Setuju bersyarat",tolak:"Tolak"};
@@ -7,9 +7,11 @@ const flowOn=()=>!!(db&&db.settings&&db.settings.sp_flow===true),flowCfg=()=>Obj
 const needLevel=l=>l.principal>flowCfg().manager_max?"Direktur":"Manajer";
 // perkiraan angsuran pertama dari data pinjaman
 function estInst(l){try{return simulate(Object.assign({principal:l.principal,rate:l.interest_rate,tenor:l.tenor,method:l.interest_method,start:l.application_date},calcOf(l))).first_installment}catch(e){return 0}}
+// skor = bobot yang terpenuhi / total bobot x 100 (bawaan 40/30/30 = hasil lama)
+const scoreOf=(a,b,c,cfg)=>{const W=[+cfg.w_ratio||0,+cfg.w_col||0,+cfg.w_verif||0],T=W[0]+W[1]+W[2];return T>0?Math.round(((a?W[0]:0)+(b?W[1]:0)+(c?W[2]:0))/T*100):0};
 function analysisCalc(l,income,oblig){const inst=estInst(l),free=income-oblig,ratio=free>0?Math.round(inst/free*1000)/10:null,col=db.collaterals.filter(c=>c.loan_id===l._id&&c.status!=="returned").reduce((a,c)=>a+(+c.estimated_value||0),0),cfg=flowCfg();
  const ok1=ratio!==null&&ratio<=cfg.max_ratio,ok2=col>=l.principal,ok3=!!(l.verif&&l.verif.result==="lolos");
- return{installment:inst,free_income:free,ratio,collateral:col,score:(ok1?40:0)+(ok2?30:0)+(ok3?30:0),pass_ratio:ok1,pass_collateral:ok2,pass_verif:ok3}}
+ return{installment:inst,free_income:free,ratio,collateral:col,score:scoreOf(ok1,ok2,ok3,cfg),pass_ratio:ok1,pass_collateral:ok2,pass_verif:ok3}}
 // gerbang: dipanggil lst("approved") dan cairkan bila alur lengkap aktif
 function flowGate(l,to){if(!flowOn()||l.opening)return;
  if(to==="approved"){if(!l.verif||l.verif.result!=="lolos")throw Error("Alur lengkap aktif: verifikasi harus berhasil Lolos sebelum disetujui");
@@ -31,7 +33,7 @@ function saveAkad(){const id=S.eak;try{const l=db.loans.find(x=>x._id===id);if(!
  if(db.loans.some(x=>x._id!==id&&x.contract&&x.contract.no===no))throw fe("ak-n","Nomor akad sudah dipakai");
  l.contract={no,date:d,snap:akadSnap(l,d)};audit("akad","loan",id,no);save();okM();S.eld=id;S.md="ld";S.msg="Akad "+no+" dicatat"}catch(e){mErr(e);return}render()}
 function setFlow(k,v){try{if(k==="on"){const on=v==="1";db.settings.sp_flow=on;audit("setting","settings","sp_flow",on?"Alur lengkap aktif":"Alur lengkap mati");save();S.msg=on?"Alur lengkap aktif untuk pengajuan berikutnya dan yang masih berjalan":"Alur lengkap mati; Simpan Pinjam kembali seperti biasa";render();return}
- if(!(k in FLOW0))throw Error("Pengaturan tidak dikenal");let x=v;if(k!=="docs"){x=Number(pn(v));if(String(v).trim()===""||!Number.isFinite(x)||x<0)throw Error("Isi angka nol atau lebih");if(k==="max_ratio"&&(x<1||x>100))throw Error("Rasio antara 1 dan 100")}
+ if(!(k in FLOW0))throw Error("Pengaturan tidak dikenal");let x=v;if(k!=="docs"){x=Number(pn(v));if(String(v).trim()===""||!Number.isFinite(x)||x<0)throw Error("Isi angka nol atau lebih");if(k==="max_ratio"&&(x<1||x>100))throw Error("Rasio antara 1 dan 100");if(k.startsWith("w_")){if(!Number.isInteger(x)||x>100)throw Error("Bobot berupa bilangan bulat 0 sampai 100");const c0=flowCfg(),n=Object.assign({},c0,{[k]:x});if(!(n.w_ratio+n.w_col+n.w_verif>0))throw Error("Paling sedikit satu bobot harus lebih dari 0")}}
  else{x=String(v).split(",").map(s=>s.trim()).filter(Boolean).join(", ");if(!x)throw Error("Isi minimal satu dokumen")}
  db.settings.sp_flow_cfg=Object.assign({},flowCfg(),{[k]:x});audit("setting","settings","sp_flow_cfg",FLOW_L[k]+": "+x);save();S.msg="Pengaturan alur disimpan"}catch(e){S.msg="⚠ "+e.message}render()}
 MK.vf="evf";MK.an="ean";MK.ak="eak";

@@ -63,3 +63,9 @@ function ptRender(){if(typeof document==="undefined"||!document.getElementById)r
  if(S.fe){const f=document.getElementById(S.fe.id);if(f&&f.insertAdjacentHTML){f.classList.add("er");(f._b||f).insertAdjacentHTML("afterend",`<div class="fe" role="alert">${esc(S.fe.m)}</div>`)}S.fe=null}return true}
 if(typeof window!=="undefined"&&window.addEventListener){if(location.hash==="#portal")S.ptl=1;window.addEventListener("hashchange",()=>{if(location.hash==="#portal"){S.ptl=S.pt?0:1}else if(!(S.pt&&S.pt.prev)){S.ptl=0;S.pt=null}render()});
  setInterval(()=>{if(S.pt&&!S.pt.prev&&Date.now()-S.pt.at>PT_IDLE)ptOut(true)},15000);document.addEventListener("click",()=>{if(S.pt)S.pt.at=Date.now()},true)}
+
+// ===== v1.1.053: riwayat portal per nasabah (status PIN + 10 catatan audit terakhir) =====
+function ptLogHtml(p){if(!p||p.type!=="nasabah")return"";if(!(typeof ptOn==="function"&&ptOn())&&!p.portal)return"";const P=p.portal,tm=x=>esc(String(x||"").replace("T"," ").slice(0,16)),lk=!!(P&&P.locked_until&&P.locked_until>now()),
+ L=(db.audit_logs||[]).filter(a=>a.entity==="party"&&a.entity_id===p._id&&/^portal_/.test(a.action)).slice(-10).reverse(),
+ st=P?"PIN sudah diatur · "+(P.last_login?"masuk terakhir "+tm(P.last_login):"belum pernah masuk")+(lk?" · terkunci sampai "+tm(P.locked_until):"")+(P.fails?" · gagal berturut-turut "+(+P.fails):""):"Belum ada PIN portal";
+ return`<h3>Riwayat portal</h3><p class="k">${st}</p>`+(L.length?`<div class="kvg">${L.map(a=>`<div class="kv"><span class="k">${tm(a.at)}</span><b>${esc(AUD_L[a.action]||a.action)}${a.detail?" — "+esc(a.detail):""}${a.by?" · "+esc(a.by):""}</b></div>`).join("")}</div>`:`<p class="k">Belum ada catatan masuk atau perubahan PIN.</p>`)}

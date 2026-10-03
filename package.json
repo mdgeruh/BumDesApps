@@ -1,6 +1,6 @@
 {
   "name": "bumdes-apps",
-  "version": "1.1.51",
+  "version": "1.1.57",
   "private": true,
   "description": "Sistem BUMDes Multi-Unit Usaha — satu file HTML, data di localStorage",
   "scripts": {
