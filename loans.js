@@ -69,14 +69,25 @@ function togN(id){try{const p=db.parties.find(x=>x._id===id);
  else{if(db.loans.some(l=>l.party_id===id&&["submitted","approved","active"].includes(l.status)))throw Error("Nasabah masih punya pinjaman yang belum selesai (diajukan / disetujui / aktif)");
   p.status="nonaktif";if(S.en===id)S.en=null;audit("deactivate","party",id);S.msg="Nasabah dinonaktifkan"}save()}catch(e){S.msg="⚠ "+e.message}render()}
 // rujukan tarif jasa dari master (hanya bila jasa sama persis dengan tarif master pada tanggal pengajuan)
+// ===== v1.1.058: penomoran pinjaman dengan tanggal/bulan dan nomor urut otomatis; format dapat diatur di Setelan SP =====
+const NUMF0={loan:"LN-{YYYY}{MM}-{NNNN}",draft:"DRF-{YYYY}{MM}-{NNNN}",akad:"AKD/{YYYY}{MM}/{NNNN}"},NUMK={loan:"num_loan",draft:"num_draft",akad:"num_akad"};
+const numFmt=k=>{const f=(db.settings||{})[NUMK[k]||"num_loan"];return typeof f==="string"&&f?f:(typeof globalThis!=="undefined"&&globalThis.__LEGACY_NUM&&k!=="akad"?(k==="draft"?"DRF-{YYYY}-{NNNN}":"LN-{YYYY}-{NNNN}"):NUMF0[k]||NUMF0.loan)};
+function numChk(f){const m=String(f||"").trim();if(!/^[A-Za-z0-9\-_/.{}]{3,32}$/.test(m))throw Error("Format 3–32 karakter: huruf, angka, - _ / . dan kode {YYYY} {YY} {MM} {DD} {NNNN}");
+ const rest=m.replace(/\{(YYYY|YY|MM|DD)\}/g,"").replace(/\{N{2,6}\}/g,"");if(/[{}]/.test(rest))throw Error("Kode tidak dikenal. Pakai {YYYY} {YY} {MM} {DD} dan {NNNN} (2–6 huruf N)");
+ if((m.match(/\{N{2,6}\}/g)||[]).length!==1)throw Error("Wajib satu kode nomor urut, misalnya {NNNN}");return m}
+const numFill=(f,d)=>f.replace("{YYYY}",d.slice(0,4)).replace("{YY}",d.slice(2,4)).replace("{MM}",d.slice(5,7)).replace("{DD}",d.slice(8,10));
+// nomor berikutnya: urut terbesar yang cocok dengan awalan/akhiran yang sama (bulan/tanggal berganti = urut mulai 1 lagi) + 1
+function numNext(kind,date){const f=numFmt(kind),d=/^\d{4}-\d{2}-\d{2}$/.test(date||"")?date:today(),w=(f.match(/\{(N+)\}/)||[0,"NNNN"])[1].length,fl=numFill(f,d),i=fl.indexOf("{"+"N".repeat(w)+"}"),pre=fl.slice(0,i),suf=fl.slice(i+w+2);
+ let mx=0;for(const l of db.loans)for(const n of [l.loan_number,l.draft_number,l.contract&&l.contract.no]){if(typeof n==="string"&&n.startsWith(pre)&&n.endsWith(suf)&&n.length>=pre.length+suf.length){const q=n.slice(pre.length,n.length-suf.length);if(/^\d+$/.test(q))mx=Math.max(mx,+q)}}
+ let k=mx+1,no=y=>pre+String(y).padStart(w,"0")+suf;while(db.loans.some(l=>l.loan_number===no(k)||l.draft_number===no(k)||(l.contract&&l.contract.no===no(k))))k++;return no(k)}
+function setNum(kind,v){try{const f=numChk(v);db.settings[NUMK[kind]]=f;audit("setting","settings",NUMK[kind],f);save();S.msg="Format nomor disimpan; berlaku untuk nomor berikutnya"}catch(e){S.msg="⚠ "+e.message}render()}
 const rateRef=(x)=>{const c=(($("#l-rc")||{}).value)||"";if(!c)return{};const jr=(typeof jasaRates==="function"?jasaRates(x.application_date):[]).find(j=>j.code===c);return jr&&jasaFor(c,x.principal,x.application_date)===x.interest_rate?{rate_code:c,rate_version:jr.version}:{}};
 function pickJasa(c){const d=(($("#l-d")||{}).value)||today(),j=jasaRates(d).find(x=>x.code===c);if(j){const e=$("#l-r"),P=Math.round(+pn((($("#l-p")||{}).value)||0)||0),r=j.tiers?jasaFor(c,P,d):j.rate;if(e&&r!=null)e.value=String(r).replace(".",",")}jasaInfo();simLive()}
 // jasa bertingkat: ikuti pokok dan tanggal yang sedang diisi
 function jasaAuto(){const c=(($("#l-rc")||{}).value)||"";if(!c)return;const d=(($("#l-d")||{}).value)||today(),j=jasaRates(d).find(x=>x.code===c);if(j&&j.tiers)pickJasa(c);else jasaInfo()}
 function jasaInfo(){const i=$("#l-rc-i");if(!i)return;const c=(($("#l-rc")||{}).value)||"",d=(($("#l-d")||{}).value)||today(),r=c?rateAt(c,d):null,P=Math.round(+pn((($("#l-p")||{}).value)||0)||0);i.innerHTML=r&&r.tiers?(P>0?"Pokok "+rp(P)+": jasa "+esc(tierInfo(r,P))+". ":"")+"Aturan: "+esc(tierText(r))+".":""}
 function ajukan(){try{negAny();const v=i=>$("#"+i).value,x=loanChk({party:v("l-pty"),unit:v("l-u"),date:v("l-d"),P:v("l-p"),r:v("l-r"),n:v("l-t"),m:v("l-m")});loanWarn(x,null);
- let k=db.loans.length+1;const no=y=>"LN-"+x.application_date.slice(0,4)+"-"+String(y).padStart(4,"0");while(db.loans.some(l=>l.loan_number===no(k)))k++;
- const l={_id:uid("LOAN"),loan_number:no(k),...x,...rateRef(x),...(S.lpc?{prospect_id:S.lpc}:{}),calc:calcSet(),approval_date:null,disbursement_date:null,installment_amount:0,status:"submitted",submitted_by:actorId()};db.loans.push(l);
+ const l={_id:uid("LOAN"),loan_number:numNext("loan",x.application_date),...x,...rateRef(x),...(S.lpc?{prospect_id:S.lpc}:{}),calc:calcSet(),approval_date:null,disbursement_date:null,installment_amount:0,status:"submitted",submitted_by:actorId()};db.loans.push(l);
  audit("create","loan",l._id,l.loan_number+" · Rp "+fm(l.principal)+" · "+l.tenor+" bln"+(l.rate_code?" · tarif "+l.rate_code+" v"+l.rate_version:""));save();clrF("[id^='l-']");okM();S.msg="Pengajuan "+l.loan_number+" dicatat"}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
 function lst(id,st,why){try{const l=db.loans.find(x=>x._id===id);if(!l)throw Error("Pinjaman tidak ditemukan");{const np=st==="cancelled"?"sp.ajukan":"sp.setujui";if(rbacOn()&&!can(np)){deny(np,"lst");return}}
  if(!["approved","rejected","cancelled"].includes(st))throw Error(st==="active"?"Status Aktif hanya lewat Cairkan":"Status tidak dapat diubah langsung ke "+(LS[st]||st));
@@ -88,13 +99,11 @@ function saveTolak(){const id=S.elr;lst(id,"rejected",($("#lr-a")||{}).value)}
 function saveBatalAjuan(){const id=S.elb;lst(id,"cancelled",($("#lb-a")||{}).value)}
 // Draf pengajuan (v1.1.031): disimpan tanpa masuk antrean persetujuan; nomor LN baru diberikan saat dikirim
 function simpanDraf(){try{negAny();const v=i=>$("#"+i).value,x=loanChk({party:v("l-pty"),unit:v("l-u"),date:v("l-d"),P:v("l-p"),r:v("l-r"),n:v("l-t"),m:v("l-m")});
- let k=db.loans.filter(l=>l.status==="draft").length+1;const no=y=>"DRF-"+x.application_date.slice(0,4)+"-"+String(y).padStart(4,"0");while(db.loans.some(l=>l.loan_number===no(k)))k++;
- const l={_id:uid("LOAN"),loan_number:no(k),...x,...rateRef(x),...(S.lpc?{prospect_id:S.lpc}:{}),calc:calcSet(),approval_date:null,disbursement_date:null,installment_amount:0,status:"draft",drafted_by:actorId()};db.loans.push(l);
+ const l={_id:uid("LOAN"),loan_number:numNext("draft",x.application_date),...x,...rateRef(x),...(S.lpc?{prospect_id:S.lpc}:{}),calc:calcSet(),approval_date:null,disbursement_date:null,installment_amount:0,status:"draft",drafted_by:actorId()};db.loans.push(l);
  audit("create","loan",l._id,"draf "+l.loan_number+" · Rp "+fm(l.principal)+" · "+l.tenor+" bln");save();clrF("[id^='l-']");okM();S.msg="Draf "+l.loan_number+" disimpan; kirim dari rincian pinjaman bila sudah siap"}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
 function kirimDraf(id){try{negAny();const l=db.loans.find(x=>x._id===id);if(!l||l.status!=="draft")throw Error("Hanya draf yang dapat dikirim");
  const x=loanChk({party:l.party_id,unit:l.unit_id,date:l.application_date,P:String(l.principal),r:String(l.interest_rate),n:String(l.tenor),m:l.interest_method});
- let k=db.loans.length+1;const no=y=>"LN-"+x.application_date.slice(0,4)+"-"+String(y).padStart(4,"0");while(db.loans.some(q=>q.loan_number===no(k)))k++;
- const dn=l.loan_number;goLoan(l,"submitted");l.loan_number=no(k);l.draft_number=dn;l.submitted_by=actorId();delete l.drafted_by;
+ const dn=l.loan_number,nn=numNext("loan",x.application_date);goLoan(l,"submitted");l.loan_number=nn;l.draft_number=dn;l.submitted_by=actorId();delete l.drafted_by;
  audit("kirim_draf","loan",id,dn+" → "+l.loan_number);save();S.msg="Draf "+dn+" dikirim sebagai pengajuan "+l.loan_number}catch(e){S.msg="⚠ "+e.message}render()}
 function hapusDraf(id){try{const l=db.loans.find(x=>x._id===id);if(!l||l.status!=="draft")throw Error("Hanya draf yang dapat dihapus");db.loans=db.loans.filter(x=>x._id!==id);if(S.eld===id){S.eld=null;okM()}
  audit("hapus_draf","loan",id,l.loan_number+" · Rp "+fm(l.principal));save();S.msg="Draf "+l.loan_number+" dihapus"}catch(e){S.msg="⚠ "+e.message}render()}

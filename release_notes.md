@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.057
+# Catatan Rilis — v1.1.060
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,9 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.060 | Data contoh lengkap dan perbaikan impor backup pinjaman Dihapus buku |
+| 1.1.059 | Kode otomatis: biaya, pajak, unit, akun, nomor akad |
+| 1.1.058 | Nomor pinjaman dengan tahun/bulan dan urut otomatis |
 | 1.1.057 | Jasa bertingkat menurut pokok dari Master Tarif & Biaya |
 | 1.1.056 | Form pengajuan menampilkan tarif, biaya, dan pajak dari master |
 | 1.1.055 | Data contoh untuk Master Tarif & Biaya |

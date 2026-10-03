@@ -19,13 +19,13 @@ function cancelM(){mdClose()}function cancelE(){mdClose()}function cancelK(){mdC
 const RPA=' inputmode="numeric" autocomplete="off" oninput="fmtR(this)"',EN=(e,a,b)=>e?a:b;
 const MD={
  u:()=>{const e=db.business_units.find(x=>x._id===S.eu);return{t:EN(e,"Edit unit","Unit baru"),s:"saveUnit()",y:EN(e,"Simpan perubahan","Tambah unit"),
-  b:fld("u-c","Kode",{value:e?e.code:"",req:1})+fld("u-n","Nama unit",{value:e?e.name:"",req:1})+fld("u-t","Jenis unit",{t:"select",hint:"Pinjaman hanya dapat dibuat pada unit berjenis Simpan Pinjam",opts:opt([["simpan_pinjam","Simpan Pinjam"],["lainnya","Lainnya"]],x=>x,e?e.type:"lainnya")})}},
+  b:fld("u-c","Kode",{value:e?e.code:nextUnitCode(),hint:e?"":"Otomatis (UNT004, ...); boleh diganti, mis. SP atau AIR."})+fld("u-n","Nama unit",{value:e?e.name:"",req:1})+fld("u-t","Jenis unit",{t:"select",hint:"Pinjaman hanya dapat dibuat pada unit berjenis Simpan Pinjam",opts:opt([["simpan_pinjam","Simpan Pinjam"],["lainnya","Lainnya"]],x=>x,e?e.type:"lainnya")})}},
  c:()=>{const e=db.cash_accounts.find(x=>x._id===S.ec);return{t:EN(e,"Edit rekening","Rekening baru"),s:"saveCash()",y:EN(e,"Simpan perubahan","Tambah rekening"),
   b:fld("c-n","Nama rekening",{value:e?e.name:"",req:1})+fld("c-t","Jenis",{t:"select",opts:["kas","bank"].map(t=>`<option${e&&e.type===t?" selected":""}>${t}</option>`).join("")})
   +fld("c-a","Akun COA"+EN(e," (tidak dapat diubah)",""),{t:"select",a:e?" disabled":"",opts:opt(db.accounts.filter(a=>postable(a)&&isAct(a)&&a.type==="asset"),a=>[a._id,a.code+" "+a.name],e?e.account_id:"")})}},
  a:()=>{const e=acc(S.ea),lk=e&&hasJ(e._id);return{t:EN(e,"Edit akun","Akun baru"),s:"saveAcc()",y:EN(e,"Simpan perubahan","Tambah akun"),
-  b:fld("a-c","Kode"+EN(e," (tidak dapat diubah)"," (4 digit)"),{value:e?e.code:"",a:e?" disabled":"",req:1})+fld("a-n","Nama akun",{value:e?e.name:"",req:1})
-  +fld("a-t","Tipe"+(lk?" (terkunci: akun sudah dipakai jurnal)":""),{t:"select",a:lk?" disabled":"",opts:["asset","liability","equity","revenue","expense"].map(t=>`<option${e&&e.type===t?" selected":""}>${t}</option>`).join("")})}},
+  b:fld("a-c","Kode"+EN(e," (tidak dapat diubah)"," (4 digit, otomatis menurut tipe)"),{value:e?e.code:nextAccCode("asset"),a:e?" disabled":""})+fld("a-n","Nama akun",{value:e?e.name:"",req:1})
+  +fld("a-t","Tipe"+(lk?" (terkunci: akun sudah dipakai jurnal)":""),{t:"select",a:lk?" disabled":(e?"":' onchange="accTipe(this.value)"'),opts:["asset","liability","equity","revenue","expense"].map(t=>`<option${e&&e.type===t?" selected":""}>${t}</option>`).join("")})}},
  py:()=>{const e=db.parties.find(x=>x._id===S.ey),lk=e&&pRef(e._id);return{t:EN(e,"Edit pihak","Pihak baru"),s:"savePihak()",y:EN(e,"Simpan perubahan","Tambah pihak"),
   b:fld("py-t","Jenis"+(lk?" (terkunci: sudah dipakai pinjaman/penjualan)":""),{t:"select",a:lk?" disabled":"",opts:opt(Object.keys(PT),k=>[k,PT[k]],e?e.type:"pemasok")})
   +fld("py-n","Nama",{value:e?e.name:"",req:1})+fld("py-p","Telepon",{type:"tel",value:e?e.phone:""})+fld("py-a","Alamat",{value:e?e.address:""})}},
