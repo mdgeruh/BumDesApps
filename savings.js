@@ -65,14 +65,14 @@ function saveSavTx(){try{const[ty,id]=String(S.est||"").split("|"),a=savAccs().f
  const pt=party(a.party_id).name,sk=savBal(a._id);let lines,bx=null;
  if(ty!=="bunga"&&!c)throw fe("st-c","Pilih kas/bank");
  if(ty==="setor")lines=[{acc:c.account_id,d:m},{acc:"ACC2300",c:m}];
- else if(ty==="tarik"){if(m>sk-(a.min_balance||0))throw fe("st-a","Penarikan melebihi saldo yang dapat ditarik (Rp "+fm(Math.max(0,sk-(a.min_balance||0)))+")");
+ else if(ty==="tarik"){const tl=twLocked(a._id),av=Math.max(0,sk-(a.min_balance||0)-tl);if(m>av)throw fe("st-a","Penarikan melebihi saldo yang dapat ditarik (Rp "+fm(av)+")"+(tl>0?" — Rp "+fm(tl)+" tabungan wajib terkunci sampai pinjaman lunas":""));
   const ks=net(acc(c.account_id),bal(()=>true));if(ks<m)throw fe("st-c","Saldo kas/bank tidak cukup (tersedia Rp "+fm(ks)+")");lines=[{acc:"ACC2300",d:m},{acc:c.account_id,c:m}]}
  else{const tx=savTax(m,d);lines=[{acc:"ACC5600",d:m},{acc:"ACC2300",c:m-tx.tax}];if(tx.tax>0)lines.push({acc:"ACC2210",c:tx.tax});bx=tx}
  const t=post({type:"sav_"+ty,date:d,unit:a.unit_id,desc:SAV_T[ty]+" "+a.number+" – "+pt+(ds?" ("+ds+")":""),lines});
  db.savings_tx.push({_id:uid("STX"),account_id:a._id,type:ty,date:d,amount:bx?m-bx.tax:m,gross:bx?m:undefined,tax:bx?bx.tax:undefined,tax_code:bx?bx.code:undefined,txn_id:t._id,cash_id:c?c._id:null,desc:ds,status:"posted",created_at:now()});
  audit("sav_"+ty,"savings_account",a._id,a.number+" · Rp "+fm(m)+(bx&&bx.tax?" (pajak Rp "+fm(bx.tax)+")":""));save();okM();mdOpen("sv",a._id);S.msg=SAV_T[ty]+" Rp "+fm(m)+" tercatat";render();return}catch(e){mErr(e)}}
 
-function batalSav(id){try{const x=(db.savings_tx||[]).find(q=>q._id===id);if(!x)throw Error("Mutasi tidak ditemukan");if(x.status!=="posted")throw Error("Mutasi sudah dibatalkan");
+function batalSav(id){try{const x=(db.savings_tx||[]).find(q=>q._id===id);if(!x)throw Error("Mutasi tidak ditemukan");if(x.status!=="posted")throw Error("Mutasi sudah dibatalkan");if(x.via==="pencairan")throw Error("Setoran ini dibuat saat pencairan pinjaman; batalkan lewat Batalkan pencairan di pinjamannya");
  const bad=savRun(x.account_id,x._id).find(r=>r.b<0);if(bad)throw Error("Tidak bisa dibatalkan: saldo tabungan menjadi negatif pada "+bad.x.date+". Batalkan mutasi yang lebih baru lebih dulu.");
  rev(x.txn_id);x.status="reversed";x.reversed_at=now();audit("sav_batal","savings_account",x.account_id,SAV_T[x.type]+" Rp "+fm(x.amount));save();S.msg="Mutasi tabungan dibatalkan dengan jurnal pembalik"}catch(e){S.msg="⚠ "+e.message}render()}
 
