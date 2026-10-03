@@ -107,7 +107,11 @@ function vMst0(){const all=balAll(),UT={simpan_pinjam:"Simpan Pinjam",lainnya:"L
 
 const SYSA=["ACC1100","ACC1200","ACC1300","ACC1400","ACC3300","ACC4100","ACC4200","ACC4400"],hasJ=id=>db.journal_lines.some(l=>l.account_id===id);
 function mErr(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null;render()}
-function saveUnit(){try{const c=$("#u-c").value.trim(),n=$("#u-n").value.trim(),ty=($("#u-t")||{}).value==="simpan_pinjam"?"simpan_pinjam":"lainnya";if(!c)throw fe("u-c","Kode wajib diisi");if(!n)throw fe("u-n","Nama unit wajib diisi");
+// v1.1.059: kode unit (UNT004, ...) dan kode akun (4 digit menurut tipe) otomatis bila tidak diisi
+const nextUnitCode=()=>seqCode("UNT",db.business_units.map(u=>u.code)),ACC_RANGE={asset:1,liability:2,equity:3,revenue:4,expense:5};
+function nextAccCode(t){const g=ACC_RANGE[t]||1,used=new Set(db.accounts.map(a=>a.code)),cs=db.accounts.map(a=>+a.code).filter(c=>Number.isInteger(c)&&Math.floor(c/1000)===g&&c%1000!==0);let c=cs.length?Math.max(...cs)+10:g*1000+100;if(c>g*1000+999||used.has(String(c))){c=g*1000+1;while(used.has(String(c))&&c<g*1000+999)c++}return String(c)}
+function accTipe(t){const e=$("#a-c");if(e&&!e.disabled&&(!e.value.trim()||Object.keys(ACC_RANGE).some(k=>nextAccCode(k)===e.value.trim())))e.value=nextAccCode(t)}
+function saveUnit(){try{const n=$("#u-n").value.trim(),c=$("#u-c").value.trim()||nextUnitCode(),ty=($("#u-t")||{}).value==="simpan_pinjam"?"simpan_pinjam":"lainnya";if(!n)throw fe("u-n","Nama unit wajib diisi");
  if(S.eu&&ty!=="simpan_pinjam"&&db.loans.some(l=>l.unit_id===S.eu))throw fe("u-t","Unit sudah dipakai pinjaman; jenisnya tidak dapat diubah dari Simpan Pinjam");
  if(db.business_units.some(u=>u.code===c&&u._id!==S.eu))throw fe("u-c","Kode sudah dipakai");
  if(S.eu){Object.assign(db.business_units.find(u=>u._id===S.eu),{code:c,name:n,type:ty});audit("update","unit",S.eu);S.eu=null;S.msg="Unit diperbarui"}
@@ -117,7 +121,7 @@ function saveCash(){try{const n=$("#c-n").value.trim();if(!n)throw fe("c-n","Nam
  else{const c={_id:"CASH-"+String(db.cash_accounts.length+1).padStart(3,"0"),name:n,type:$("#c-t").value,account_id:$("#c-a").value,status:"aktif"};if(!c.account_id)throw fe("c-a","Pilih akun COA");db.cash_accounts.push(c);audit("create","cash_account",c._id);S.msg="Rekening ditambahkan"}save();clrF("#c-n");okM()}catch(e){mErr(e);return}render()}
 function saveAcc(){try{const n=$("#a-n").value.trim();if(!n)throw fe("a-n","Nama akun wajib diisi");
  if(S.ea){const a=acc(S.ea),t=$("#a-t").value;if(t!==a.type&&hasJ(a._id))throw fe("a-t","Tipe tidak dapat diubah: akun sudah dipakai jurnal");a.name=n;a.type=hasJ(a._id)?a.type:t;audit("update","account",a._id);S.ea=null;S.msg="Akun diperbarui"}
- else{const c=$("#a-c").value.trim();if(!/^\d{4}$/.test(c))throw fe("a-c","Kode harus 4 digit angka");if(acc("ACC"+c))throw fe("a-c","Kode akun sudah ada");
+ else{const c=$("#a-c").value.trim()||nextAccCode($("#a-t").value);if(!/^\d{4}$/.test(c))throw fe("a-c","Kode harus 4 digit angka");if(acc("ACC"+c))throw fe("a-c","Kode akun sudah ada");
   db.accounts.push({_id:"ACC"+c,code:c,name:n,type:$("#a-t").value,parent_id:"ACC"+c[0]+"000",status:"aktif"});audit("create","account","ACC"+c);S.msg="Akun ditambahkan"}save();clrF("#a-c,#a-n");okM()}catch(e){mErr(e);return}render()}
 function togM(k,id){try{const L={u:db.business_units,c:db.cash_accounts,a:db.accounts}[k],x=L.find(q=>q._id===id);
  if(!isAct(x)){x.status="aktif";audit("activate",{u:"unit",c:"cash_account",a:"account"}[k],id);save();S.msg="Diaktifkan kembali";render();return}
