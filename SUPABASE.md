@@ -19,7 +19,11 @@ Data utama aplikasi tetap di perangkat (`localStorage`). Supabase milik Anda men
 5. Di aplikasi: **Setelan > Awan**. Isi alamat proyek dan anon key, Simpan koneksi, Masuk, lalu Buat BUMDes di awan (pembuat otomatis menjadi admin) atau pilih yang sudah ada.
 6. Tombol **Simpan ke awan** / **Muat dari awan**. Opsi **Sinkron otomatis** mengirim 8 detik setelah perubahan terakhir dan mengambil data baru dari perangkat lain saat aplikasi dibuka/kembali online (bila tidak ada perubahan lokal belum terkirim; jika ada, sinkron dijeda dan Anda memilih Timpa/Muat).
 
-**Koneksi langsung dari kode:** isi `SB_KEY` (anon public key) di `config.js` bersama `SB_URL`; form koneksi di Setelan otomatis disembunyikan. Jangan pernah memakai service_role/sb_secret_.
+**Koneksi langsung dari kode:** isi `SB_KEY` (anon public key) di `config.js` bersama `SB_URL`; form koneksi di Setelan otomatis disembunyikan. Jangan pernah memakai service_role/sb_secret_. Sejak v1.1.072 `SB_URL` dan publishable key proyek BumDes-app sudah terisi.
+
+**Tabel relasional (Tahap 2):** jalankan `supabase_tahap2.sql` sekali di SQL Editor (setelah supabase_schema.sql). Di Setelan > Awan > Tabel relasional tekan Isi tabel sekarang; server memeriksa jurnal seimbang. Cek kecocokan membandingkan jumlah baris dan total debit/kredit/pokok dengan perangkat. Opsi Isi tabel otomatis menjalankannya setiap kali data tersimpan ke awan. Snapshot tetap cadangan utama; data yang dihapus di perangkat tidak otomatis dihapus dari tabel (akan terlihat sebagai selisih).
+
+**Halaman masuk:** di Setelan > Awan tekan Masuk ke akun awan (atau buka alamat aplikasi dengan akhiran `#masuk`). Lupa kata sandi ada di halaman itu.
 
 **Lupa kata sandi:** di Supabase > Authentication > URL Configuration, isi Site URL dan Redirect URLs dengan alamat Vercel aplikasi (mis. https://bumdes-app-five.vercel.app/). Tautan email membuka aplikasi dan meminta kata sandi baru.
 

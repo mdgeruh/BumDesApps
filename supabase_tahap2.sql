@@ -1,5 +1,5 @@
 -- ============================================================================
--- Sistem BUMDes — Supabase TAHAP 2 (RANCANGAN, belum dipakai aplikasi v1.1.042)
+-- Sistem BUMDes — Supabase TAHAP 2 (dipakai aplikasi sejak v1.1.075: Setelan > Awan > Tabel relasional)
 -- Tabel sungguhan per koleksi, aman untuk banyak pengguna, dengan RLS dan jurnal yang dijaga di server.
 -- Prasyarat: supabase_schema.sql (Tahap 1) sudah dijalankan (memakai tabel bumdes dan fungsi is_member).
 -- Tiap tabel menyimpan kolom penting (untuk query/laporan) + kolom doc = objek asli aplikasi (tanpa kehilangan data).
@@ -163,7 +163,7 @@ begin
   return v_id;
 end $$;
 
--- ----- fungsi: pindahkan data dari snapshot (Tahap 1) ke tabel (admin saja) -----
+-- ----- fungsi: pindahkan data dari snapshot (Tahap 1) ke tabel (admin dan pengurus; sumbernya snapshot yang memang boleh mereka simpan) -----
 -- Idempoten: menimpa baris dengan id yang sama. Koleksi lain (gaji, air, dst.) tetap di snapshot sampai dimigrasikan.
 create or replace function public.migrate_snapshot_to_tables(p_bumdes uuid)
 returns jsonb
@@ -171,7 +171,7 @@ language plpgsql security definer set search_path = public
 as $$
 declare s jsonb; r jsonb := '{}'; n int;
 begin
-  if not public.is_member(p_bumdes, array['admin']) then
+  if not public.is_member(p_bumdes, array['admin','pengurus']) then
     raise exception 'tidak_berhak' using errcode = '42501';
   end if;
   select data into s from public.bumdes_snapshots where bumdes_id = p_bumdes;
@@ -241,7 +241,36 @@ begin
   return r;
 end $$;
 
+-- ----- fungsi: ringkasan isi tabel untuk dicocokkan dengan data di perangkat (semua anggota) -----
+create or replace function public.tabel_status(p_bumdes uuid)
+returns jsonb
+language plpgsql stable security definer set search_path = public
+as $$
+declare r jsonb;
+begin
+  if not public.is_member(p_bumdes) then
+    raise exception 'tidak_berhak' using errcode = '42501';
+  end if;
+  select jsonb_build_object(
+    'business_units', (select count(*) from public.business_units where bumdes_id = p_bumdes),
+    'parties',        (select count(*) from public.parties where bumdes_id = p_bumdes),
+    'accounts',       (select count(*) from public.accounts where bumdes_id = p_bumdes),
+    'transactions',   (select count(*) from public.transactions where bumdes_id = p_bumdes),
+    'journal_lines',  (select count(*) from public.journal_lines where bumdes_id = p_bumdes),
+    'loans',          (select count(*) from public.loans where bumdes_id = p_bumdes),
+    'loan_installments', (select count(*) from public.loan_installments where bumdes_id = p_bumdes),
+    'loan_payments',  (select count(*) from public.loan_payments where bumdes_id = p_bumdes),
+    'audit_logs',     (select count(*) from public.audit_logs where bumdes_id = p_bumdes),
+    'debit',          (select coalesce(sum(debit),0) from public.journal_lines where bumdes_id = p_bumdes),
+    'credit',         (select coalesce(sum(credit),0) from public.journal_lines where bumdes_id = p_bumdes),
+    'principal',      (select coalesce(sum(principal),0) from public.loans where bumdes_id = p_bumdes)
+  ) into r;
+  return r;
+end $$;
+
 revoke all on function public.post_transaction(uuid, jsonb, jsonb) from public, anon;
 revoke all on function public.migrate_snapshot_to_tables(uuid)     from public, anon;
+revoke all on function public.tabel_status(uuid)                   from public, anon;
 grant execute on function public.post_transaction(uuid, jsonb, jsonb) to authenticated;
 grant execute on function public.migrate_snapshot_to_tables(uuid)     to authenticated;
+grant execute on function public.tabel_status(uuid)                   to authenticated;

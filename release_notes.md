@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.071
+# Catatan Rilis — v1.1.075
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,10 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.075 | Tabel relasional di Supabase |
+| 1.1.074 | Halaman masuk awan |
+| 1.1.073 | Tab Awan lebih ringkas |
+| 1.1.072 | Koneksi awan sudah tertanam |
 | 1.1.071 | Akun awan dan sinkron otomatis dua arah |
 | 1.1.070 | Pengingat penagihan dan laporan tabungan wajib |
 | 1.1.069 | Kualitas portofolio: PAR dan pinjaman bermasalah |

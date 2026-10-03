@@ -285,3 +285,27 @@ button.pt-it{display:flex;justify-content:space-between;align-items:center;gap:8
 /* v1.1.051 tombol utama menempel di bawah untuk daftar panjang */
 @media (min-width:900px){.actb{position:sticky;bottom:0;z-index:6;background:var(--cd);padding:10px 0;border-top:1px solid var(--bd)}.actb .b{margin:0}}
 body:has(#main .actb) .fab{display:none!important}
+
+/* v1.1.074 — halaman masuk awan: cover (desktop) / tumpuk (mobile) */
+#masuk{display:none}#masuk.on{display:grid;grid-template-columns:1fr;grid-auto-rows:min-content;align-content:start;position:fixed;inset:0;z-index:96;overflow:auto;background:var(--bg);color:var(--tx);-webkit-overflow-scrolling:touch}
+body.mk-on{overflow:hidden}
+.mk-cv{position:relative;overflow:hidden;color:#fff;background:linear-gradient(155deg,#238a5c,#0e4a32 75%);padding:28px 20px 84px}
+.mk-cv svg{position:absolute;left:0;right:0;bottom:0;width:100%;height:46%;pointer-events:none}
+.mk-br{display:flex;align-items:center;gap:12px;position:relative}.mk-br .pt-logo{background:rgba(255,255,255,.18);flex:none}
+.mk-n{font-weight:700;font-size:18px;line-height:1.2}.mk-s{font-size:13px;opacity:.85}
+.mk-h,.mk-ft{display:none}
+.mk-fm{position:relative;width:100%;max-width:440px;margin:-56px auto 0;padding:0 16px 32px;box-sizing:border-box}
+.mk-card{padding:20px;box-shadow:var(--sh2);display:flex;flex-direction:column;gap:6px}.mk-card form{display:flex;flex-direction:column;gap:6px}.mk-card h1{margin:0;font-size:22px}
+.mk-pw{display:flex;gap:8px;align-items:center}.mk-pw input{flex:1;min-width:0}
+.mk-bk{text-align:center;margin-top:12px}
+@media (min-width:900px){
+#masuk.on{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-content:stretch;grid-auto-rows:auto}
+.mk-cv{min-height:100vh;padding:56px 64px;display:flex;flex-direction:column;justify-content:center;gap:28px}
+.mk-cv svg{height:52%}
+.mk-n{font-size:22px}.mk-h{display:block;margin:0;font-size:38px;line-height:1.15;max-width:15ch;position:relative}
+.mk-ft{display:flex;flex-direction:column;gap:12px;list-style:none;margin:0;padding:0;position:relative;font-size:16px}
+.mk-ft li{padding-left:28px;position:relative}.mk-ft li:before{content:"";position:absolute;left:2px;top:4px;width:12px;height:7px;border-left:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(-45deg)}
+.mk-fm{margin:0 auto;align-self:center;padding:32px;max-width:460px}
+.mk-card{padding:28px;box-shadow:var(--sh)}
+}
+.mk-br .pt-logo .ic{margin:0;display:block}.mk-card .fl{margin-top:4px}.mk-card .fl .b{width:100%;justify-content:center}.mk-card .mk-pw .b{width:auto;flex:none}
