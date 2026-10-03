@@ -88,6 +88,7 @@ function banners(){let h="";
  if(S.saveErr)h+=`<div class="wn er" role="alert">⚠ Data GAGAL disimpan ke penyimpanan browser (penuh atau diblokir, mis. mode privat). Perubahan akan hilang jika halaman ditutup — segera Export JSON.<br><button class="b" onclick="exp()">Export sekarang</button></div>`;
  const{lb,d}=bkInfo();
  if(!S.bkHide&&d>=7&&db.transactions.length)h+=`<div class="wn"><b>Pengingat backup:</b> ${lb?"sudah "+d+" hari sejak backup terakhir.":"belum pernah export backup (data dibuat "+d+" hari lalu)."} Data hanya ada di browser ini.<br><button class="b" onclick="exp()">Export sekarang</button><button class="b s" onclick="S.bkHide=1;render()">Nanti</button></div>`;
+ try{const t=typeof cloudStat==="function"?cloudStat():null;if(t&&!S.clHide&&(t.k==="jeda"||t.k==="offline"||(t.k==="tunda"&&t.bad&&t.ago!==null&&t.ago>=7)||(t.ago!==null&&t.ago>=7&&t.k!=="ok")))h+=`<div class="wn"><b>Cadangan awan:</b> ${esc(t.t)}.<br><button class="b" onclick="go('set')">Buka Setelan Awan</button><button class="b s" onclick="S.clHide=1;render()">Nanti</button></div>`}catch(e){}
  return h}
 // draf form: isian disimpan per tab dan dipulihkan setelah render ulang (dibersihkan saat simpan berhasil lewat clrF)
 const dkey=(t,id)=>t+"|"+id,ed=(id,m)=>m&&m[id.split("-")[0]];

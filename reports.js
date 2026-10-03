@@ -61,13 +61,13 @@ ${D.units.length?tbl(["Unit","#Piutang pinjaman","#Piutang pelanggan","#Total"],
 function spData(){const t=today(),T=trT(),U=l=>S.unit==="all"||l.unit_id===S.unit,ls=db.loans.filter(U),lu=new Map(ls.map(l=>[l._id,l])),a=actLoans(),ins=insOf(a);
  const cair=ls.filter(l=>l.disbursement_date&&!l.opening&&["active","paid_off"].includes(l.status)&&inD(l.disbursement_date)),
   ps=db.loan_payments.filter(p=>p.status!=="voided"&&lu.has(p.loan_id)&&inD(p.payment_date)),sm=k=>ps.reduce((s,p)=>s+(p[k]||0),0),
-  gl=bal(l=>T.get(l.transaction_id)==="loan_in"&&inD(l.date)&&inUnit(l)),j4100=net(acc("ACC4100"),gl),j4400=net(acc("ACC4400"),gl);
+  gl=bal(l=>T.get(l.transaction_id)==="loan_in"&&inD(l.date)&&inUnit(l)),j4100=net(acc("ACC4100"),gl),j4400=["ACC4400","ACC4410","ACC4420","ACC4430","ACC4440","ACC4450","ACC4460"].reduce((s,a)=>s+(acc(a)?net(acc(a),gl):0),0);
  const rows=a.map(l=>{const li=ins.filter(i=>i.loan_id===l._id).sort((x,y)=>x.installment_number-y.installment_number),op=li.filter(i=>i.status!=="paid"),nx=op[0],od=op.filter(i=>i.due_date<t),mh=od.length?Math.max(...od.map(i=>dayDiff(t,i.due_date))):0;
   return{no:l.loan_number,n:party(l.party_id).name,u:unitName(l.unit_id),pk:l.principal,sisa:li.reduce((s,i)=>s+sisaPok(i),0),nx:nx?nx.due_date:"-",st:mh>0?"Menunggak "+mh+" hari":"Lancar",od:mh>0,tag:od.reduce((s,i)=>s+sisaTag(i),0)}});
  const dep=ins.filter(i=>i.status!=="paid"&&i.due_date>=t&&dayDiff(i.due_date,t)<=30);
  return{n:{aktif:a.length,lunas:ls.filter(l=>l.status==="paid_off").length,pengajuan:ls.filter(l=>["submitted","approved"].includes(l.status)).length},cair:{c:cair.length,v:cair.reduce((s,l)=>s+l.principal,0)},
   bay:{c:ps.length,p:sm("principal_amount"),n:sm("interest_amount"),d:sm("penalty_amount"),t:sm("total_amount")},j4100,j4400,
-  okJ:Math.round(j4100)===Math.round(sm("interest_amount"))&&Math.round(j4400)===Math.round(sm("penalty_amount")),
+  okJ:Math.round(j4100)===Math.round(sm("interest_amount"))&&Math.round(j4400)===Math.round(sm("penalty_amount")+sm("fee_amount")),
   sisa:rows.reduce((s,r)=>s+r.sisa,0),menung:rows.filter(r=>r.od).length,tag:rows.reduce((s,r)=>s+r.tag,0),dep:{c:dep.length,v:dep.reduce((s,i)=>s+sisaTag(i),0)},rows}}
 function vSpRep(){const D=spData(),B=(k,v)=>`<tr><td>${k}</td><td class="n">${v}</td></tr>`;
  return`<h2>Laporan Simpan Pinjam</h2>${repBar("sp")}${repHead("LAPORAN SIMPAN PINJAM",unTxt()+" · "+perTxt()+" · posisi per "+today())}

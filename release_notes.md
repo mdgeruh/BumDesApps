@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.060
+# Catatan Rilis — v1.1.071
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,17 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.071 | Akun awan dan sinkron otomatis dua arah |
+| 1.1.070 | Pengingat penagihan dan laporan tabungan wajib |
+| 1.1.069 | Kualitas portofolio: PAR dan pinjaman bermasalah |
+| 1.1.068 | Denda keterlambatan dari Master Tarif & Biaya |
+| 1.1.067 | Pendapatan fee dapat dipisah per jenis ke akun sendiri |
+| 1.1.066 | Status tabungan wajib di rincian pinjaman dan penjagaan pembatalan |
+| 1.1.065 | Ubah draf/pengajuan memakai tarif master dan ceklist biaya |
+| 1.1.064 | Tabungan wajib: bebas, terkunci, atau dikembalikan saat lunas |
+| 1.1.063 | Tabungan wajib dipotong saat pencairan |
+| 1.1.062 | Jumlah materai (dan biaya tetap lain) di form pengajuan |
+| 1.1.061 | Jasa dikunci dari master dan ceklist biaya di form pengajuan |
 | 1.1.060 | Data contoh lengkap dan perbaikan impor backup pinjaman Dihapus buku |
 | 1.1.059 | Kode otomatis: biaya, pajak, unit, akun, nomor akad |
 | 1.1.058 | Nomor pinjaman dengan tahun/bulan dan urut otomatis |

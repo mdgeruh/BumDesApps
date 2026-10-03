@@ -1,6 +1,6 @@
 // ===== UI CONTROLLER =====
 // ===== P0 (v0.1.006): toast, konfirmasi, peringatan simpan/backup, draf form =====
-const LB="bumdes_last_backup",NB=["sp-date","sp-cash","sp-amt","f-type","us-p","us-p2","cp-o","cp-n","cp-r","rp-p"],FS="#main input[id],#main select[id],#main textarea[id]";
+const LB="bumdes_last_backup",NB=["sp-date","sp-cash","sp-amt","f-type","us-p","us-p2","cp-o","cp-n","cp-r","rp-p","sp-pencode","sp-feesplit","sp-twpol","rem-due","rem-late"],FS="#main input[id],#main select[id],#main textarea[id]";
 let tT=null;
 function toast(m,er){const e=$("#toast");if(!e)return;e.textContent=m;e.className=er?"on er":"on";if(e.setAttribute)e.setAttribute("aria-live",er?"assertive":"polite");
  if(typeof clearTimeout==="function"&&tT)clearTimeout(tT);if(typeof setTimeout==="function")tT=setTimeout(()=>{e.className=""},er?7000:3500)}

@@ -57,8 +57,8 @@ function flowBox(l){if(!flowOn()||l.opening||!["submitted","approved"].includes(
 // ===== v1.1.024 — Akad cetak dengan snapshot tarif; klausul dapat diatur =====
 // Snapshot dibuat saat akad dicatat: angka biaya, pajak, dan denda yang berlaku pada tanggal akad; perubahan tarif sesudahnya tidak mengubah isi akad.
 const aklList=()=>Array.isArray(db.settings.akad_klausul)?db.settings.akad_klausul:[];
-function akadSnap(l,d){const c=calcOf(l),f=disbFee(l,d),pc=db.settings.payoff_fee,pr=pc&&rateAt(pc,d),dp=+db.settings.penalty_pct_day||0;
- return{date:d,fees:f?f.items.map(x=>({code:x.fee_code,name:x.fee_name,amount:x.amount,tax:x.tax,taxes:x.taxes})):[],fee_total:f?f.fee_total:0,tax_total:f?f.tax_total:0,net:l.principal-(f?f.fee_total+f.tax_total:0),
+function akadSnap(l,d){const c=calcOf(l),f=disbFee(l,d),pc=db.settings.payoff_fee,pr=pc&&rateAt(pc,d),dp=penPct(d);
+ return{date:d,fees:f?f.items.map(x=>({code:x.fee_code,name:x.fee_name,amount:x.amount,tax:x.tax,taxes:x.taxes})):[],fee_total:f?f.fee_total:0,tax_total:f?f.tax_total:0,savings:f?f.sav_total||0:0,net:l.principal-(f?f.fee_total+f.tax_total+(f.sav_total||0):0),
   payoff:pr&&pr.fee_type==="pelunasan"?{code:pc,name:pr.fee_name,rate:pr.rate,fixed:pr.fixed_amount,method:pr.calc_method,taxable:!!pr.taxable}:null,
   penalty:{pct_day:dp,grace:c.pen_grace,base:c.pen_base,cap_type:c.pen_cap_type,cap_val:c.pen_cap_val},payoff_interest:db.settings.payoff_interest||"current"}}
 function setKlausul(v){try{const L=String(v||"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(L.length>30)throw Error("Maksimal 30 klausul");if(L.some(x=>x.length>400))throw Error("Satu klausul maksimal 400 karakter");db.settings.akad_klausul=L;audit("setting","settings","akad_klausul",L.length+" klausul");save();S.msg="Klausul akad disimpan ("+L.length+")"}catch(e){S.msg="⚠ "+e.message}render()}

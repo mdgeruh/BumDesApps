@@ -105,7 +105,7 @@ function vMst0(){const all=balAll(),UT={simpan_pinjam:"Simpan Pinjam",lainnya:"L
 <h2>Kas & Bank</h2>${addB("Tambah rekening","c")}${mlist(["Rekening","Jenis","Saldo",""],db.cash_accounts.map(c=>{const a=acc(c.account_id);return mrow("c",c._id,esc(c.name),"Akun "+esc(a?a.code+" "+a.name:c.account_id),esc(c.type),rp(net(a,all)),"",mbd(c))}),"Belum ada rekening kas/bank.")}
 <h2>Chart of Accounts</h2>${addB("Tambah akun","a")}${mlist(["Akun","Tipe","",""],db.accounts.map(a=>mrow("a",a._id,(a.parent_id?"&nbsp;&nbsp;":"")+esc(a.code+" "+a.name),"",esc(a.type),"","",mbd(a))),"Belum ada akun.")}`}
 
-const SYSA=["ACC1100","ACC1200","ACC1300","ACC1400","ACC3300","ACC4100","ACC4200","ACC4400"],hasJ=id=>db.journal_lines.some(l=>l.account_id===id);
+const SYSA=["ACC1100","ACC1200","ACC1300","ACC1400","ACC3300","ACC4100","ACC4200","ACC4400","ACC4410","ACC4420","ACC4430","ACC4440","ACC4450","ACC4460"],hasJ=id=>db.journal_lines.some(l=>l.account_id===id);
 function mErr(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null;render()}
 // v1.1.059: kode unit (UNT004, ...) dan kode akun (4 digit menurut tipe) otomatis bila tidak diisi
 const nextUnitCode=()=>seqCode("UNT",db.business_units.map(u=>u.code)),ACC_RANGE={asset:1,liability:2,equity:3,revenue:4,expense:5};

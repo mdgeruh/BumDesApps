@@ -17,7 +17,11 @@ Data utama aplikasi tetap di perangkat (`localStorage`). Supabase milik Anda men
 3. **Authentication > Users > Add user**: buat akun email + kata sandi untuk pengurus.
 4. **Project Settings > API**: salin **Project URL** dan **anon public key**.
 5. Di aplikasi: **Setelan > Awan**. Isi alamat proyek dan anon key, Simpan koneksi, Masuk, lalu Buat BUMDes di awan (pembuat otomatis menjadi admin) atau pilih yang sudah ada.
-6. Tombol **Simpan ke awan** / **Muat dari awan**. Opsi **Simpan otomatis** mengirim 8 detik setelah perubahan terakhir.
+6. Tombol **Simpan ke awan** / **Muat dari awan**. Opsi **Sinkron otomatis** mengirim 8 detik setelah perubahan terakhir dan mengambil data baru dari perangkat lain saat aplikasi dibuka/kembali online (bila tidak ada perubahan lokal belum terkirim; jika ada, sinkron dijeda dan Anda memilih Timpa/Muat).
+
+**Koneksi langsung dari kode:** isi `SB_KEY` (anon public key) di `config.js` bersama `SB_URL`; form koneksi di Setelan otomatis disembunyikan. Jangan pernah memakai service_role/sb_secret_.
+
+**Lupa kata sandi:** di Supabase > Authentication > URL Configuration, isi Site URL dan Redirect URLs dengan alamat Vercel aplikasi (mis. https://bumdes-app-five.vercel.app/). Tautan email membuka aplikasi dan meminta kata sandi baru.
 
 Menambah pengurus: admin menjalankan di SQL Editor `select add_member('<id bumdes>', 'email@pengurus', 'pengurus');` (peran: admin, pengurus, pembaca). Pengguna harus sudah ada di Authentication > Users.
 
