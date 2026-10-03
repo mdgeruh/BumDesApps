@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.051
+# Catatan Rilis — v1.1.057
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,12 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.057 | Jasa bertingkat menurut pokok dari Master Tarif & Biaya |
+| 1.1.056 | Form pengajuan menampilkan tarif, biaya, dan pajak dari master |
+| 1.1.055 | Data contoh untuk Master Tarif & Biaya |
+| 1.1.054 | Jasa dan biaya pencairan dari Master Tarif & Biaya |
+| 1.1.053 | Riwayat portal per nasabah dan petunjuk PIN |
+| 1.1.052 | Bobot skor kelayakan dapat diatur |
 | 1.1.051 | Tombol Terbitkan tagihan menempel di bawah daftar meter |
 | 1.1.050 | Konfirmasi sebelum aksi berisiko (tagihan air, akui fee, hapus logo) |
 | 1.1.049 | Tombol + melayang lebih pintar dan tidak menutupi isi |

@@ -2,6 +2,24 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.057] — 2026-10-03
+**Master Tarif & Biaya: jasa bertingkat menurut pokok.** Metode hitung baru `bertingkat` (khusus jenis Jasa): `tiers=[{upto,rate}]` + `tier_unit` (bulan/tahun); seluruh pokok memakai satu persentase, tingkat pertama dengan `P < upto` (tingkat terakhir `upto=null`). `tierRate` mengonversi ke persen per tahun (×12 untuk per bulan), `tierInfo`/`tierText`/`jasaFor`. `jasaRates` memuat jasa bertingkat; form pengajuan mengisi kolom Jasa otomatis dan mengikuti perubahan pokok/tanggal (`jasaAuto`, kotak info `l-rc-i`); `rateRef` menyimpan kode bila jasa sama dengan hasil master. Form tambah tarif punya isian satuan, 2 tingkat, dan seterusnya. Contoh baru BUNGATGKT (<10 jt 2%/bln, <50 jt 1,75%, seterusnya 1,5%). Tes: logic-80 (28), ui-bertingkat.
+
+## [1.1.056] — 2026-10-03
+**Form pengajuan: blok Tarif, biaya & pajak dari Master.** `feeInfoHtml` (rates.js) mengisi `#sim-fee` di form pengajuan: sebelum pokok diisi menampilkan biaya pencairan aktif (rumus, min/maks, tanda kena pajak) dan pajak berlaku; setelah diisi menampilkan nominal tiap biaya, pajak (mis. PPN 11%), total, dan dana bersih. Contoh ADM dan TRF kini kena pajak; klik ulang Isi data contoh menandai contoh lama yang belum kena pajak. Blok biaya dipindah dari `#sim` ke `#sim-fee`. Tes: logic-78/79, ui-tarif.
+
+## [1.1.055] — 2026-10-03
+**Master Tarif & Biaya: tombol Isi data contoh.** `isiContohTarif()` (rates.js) menambah 8 tarif contoh (BUNGA12/18/24, ADM 1% min 25.000 maks 500.000, MATERAI 10.000, TRF 6.500, DENDA1 0,1% per hari, PELUNASAN 1%) dan pajak PPN 11%, berlaku 1 Januari tahun berjalan. Idempoten: hanya kode yang belum ada yang ditambahkan. Teks penjelasan halaman diperbarui. Tes: logic-79 (12).
+
+## [1.1.054] — 2026-10-03
+**SP: jasa dan biaya pencairan diambil dari Master Tarif & Biaya.** `jasaRates(d)` mendaftar tarif jasa persen yang berlaku; formulir pengajuan punya pilihan `l-rc` (mengisi kolom jasa menurut tanggal, tetap bisa diubah manual; pinjaman menyimpan `rate_code`/`rate_version` bila tidak diubah). `disbCodes(d)` kini bawaan semua kode biaya aktif (Administrasi, Provisi, Materai, Transfer, Lain) bila `settings.disb_codes` belum diatur; centang di Setelan mengecualikan. Simulasi menampilkan pratinjau biaya dan dana bersih. Perilaku bawaan berubah: biaya master otomatis dipotong. Tes: logic-78 (19), logic-57 disesuaikan.
+
+## [1.1.053] — 2026-10-03
+**Portal nasabah: riwayat per nasabah dan petunjuk PIN.** `ptLogHtml` (portal.js) menampilkan di rincian nasabah bagian Riwayat portal: status PIN, waktu masuk terakhir, kunci, hitungan gagal, dan 10 catatan audit `portal_*` terakhir milik nasabah itu (diatur pengurus, diganti nasabah, masuk, gagal). Kolom PIN saat edit nasabah memberi teks samar "PIN sudah diatur (kosongkan bila tidak diganti)". Uji: `logic-76.js` (11), `ui-portal.py` diperluas.
+
+## [1.1.052] — 2026-10-03
+**SP: bobot skor kelayakan dapat diatur.** `FLOW0` ditambah `w_ratio`, `w_col`, `w_verif` (bawaan 40/30/30); `scoreOf` menghitung skor = bobot terpenuhi / total bobot × 100 (bawaan identik dengan perilaku lama). `setFlow` memvalidasi bilangan bulat 0–100 dan menolak semua bobot nol; perubahan masuk audit `sp_flow_cfg`. Tiga kolom baru di Setelan > Profil > Alur Pengajuan Lengkap. Analisis yang sudah tersimpan tidak berubah. Uji: `logic-75.js` (12), `ui-bobot.py`.
+
 ## [1.1.051] — 2026-10-03
 **UI: tombol utama menempel pada daftar panjang.** Di Unit Air > Baca Meter, tombol Terbitkan tagihan pindah dari atas ke bilah `.actb` di bawah daftar meter dan menempel (sticky; di seluler di atas navigasi bawah, di desktop di dasar layar), sehingga tidak perlu menggulir ke atas setelah mengisi banyak angka meter. FAB disembunyikan saat bilah itu ada agar tidak bertumpuk. Modal sudah punya footer menempel sejak sebelumnya. Uji `ui-konfirmasi.py` diperluas.
 

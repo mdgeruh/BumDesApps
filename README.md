@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.051** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.057** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,7 +10,7 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.051)
+## Fitur (v1.1.057)
 
 | Area | Isi |
 |------|-----|
