@@ -1,6 +1,6 @@
 # ROADMAP — Sistem BUMDes Multi-Unit Usaha
 
-Sumber tunggal todolist. Posisi: **v1.1.044** (2026-10-02; nama header ikut BUMDes awan; kunci Supabase publishable didukung; Tahap 1 sinkron awan + SQL); skema versi `1.1.NNN` (sebelumnya `0.1.NNN`), naik satu tiap rilis. Nomor rilis rencana `v0.1.0xx` di bawah dibaca sebagai urutan rilis berikutnya (v1.1.002, …). Desain: Blueprint; status ringkas: `SUMMARY.md`; riwayat rilis: `CHANGELOG.md`; cara uji: `tests/README.md`.
+Sumber tunggal todolist. Posisi: **v1.1.087** (2026-10-04). Terbaru: Setelan ditata ulang, pengaturan Simpan Pinjam punya tab sendiri dengan bagian lipat (087); tabel Supabase Tahap 3 untuk pegawai dan gaji (086); pengguna dibuat dari pegawai dengan PIN awal 1234 wajib ganti, plus query SQL (085); jabatan umum terisi otomatis dan tombol Isi jabatan umum (084); dokumen dirapikan dan riwayat lama diarsipkan (083); pengguna dipilih dari daftar pegawai dengan peran bawaan per jabatan (082); komponen gaji nominal/% gaji pokok/% laba sebelum-sesudah beban gaji, ceklist pegawai, bawaan jabatan, master jabatan (081); masuk aman di perangkat berisi data dan pilihan BUMDes yang jelas (080); halaman masuk gabungan per peran, sesi offline, portal nasabah via Supabase (079, DB5); halaman dan peran developer platform (DB6); sinkron awan dua arah dan tabel relasional (DB2–DB4); Simpan Pinjam O1–O6 (audit dan tabungan wajib, fee per jenis, denda dari master tarif, PAR, laporan tabungan, templat pengingat). Skema versi `1.1.NNN`, naik satu tiap rilis. Desain: Blueprint; ringkasan: `SUMMARY.md`; riwayat rilis: `CHANGELOG.md` (rilis lama: `CHANGELOG_ARSIP.md`); cara uji: `tests/README.md`.
 Status: `[x]` selesai · `[~]` sebagian · `[ ]` belum · `[-]` ditunda · usaha: S kecil · M sedang · L besar. Panduan teknis, bukan penetapan kebijakan akuntansi/hukum BUMDes.
 
 > **FOKUS SAAT INI (permintaan pengguna 2026-10-01): unit Simpan Pinjam — logika, metode hitung, dan tampilan (UI).**
@@ -97,7 +97,7 @@ Tujuan: mudah dipakai harian di ponsel dan desktop; semua aksi jelas, aman, dan 
 - [x] (v1.1.005: modal rincian dengan Linimasa, daftar Jaminan tertaut + tambah jaminan, baris Tagihan berikutnya/Denda berjalan/Total dibayar) **Halaman rincian pinjaman** (buka dari daftar): ringkasan (nasabah, unit, pokok, jasa, metode, tenor, status), kartu sisa pokok/tagihan berikutnya/denda berjalan, jadwal, riwayat pembayaran, jaminan, dokumen cetak (bukti cair, kwitansi), **linimasa** (diajukan, disetujui, dicairkan, pembayaran, pelunasan) dari audit; tombol aksi sesuai status dan izin
 - [~] **Pengajuan lewat modal** (modal selesai v0.1.043; sisa: panel **simulasi angsuran langsung** (jadwal ringkas, total jasa, effective rate) memakai `simulate()` ✔ v1.1.004; pratinjau peringatan duplikat/eksposur sebelum kirim ✔ v1.1.006) dengan `fld()`
 - [~] Jaminan dan nasabah lewat modal ✔ (v0.1.046); jaminan ditautkan dari rincian pinjaman belum
-- [ ] Aksi berisiko seragam memakai konfirmasi; tombol mengembalikan umpan balik (toast, fokus); tombol utama menempel di mobile pada form panjang
+- [x] (v1.1.051 selesai; v1.1.049: FAB kontekstual, menepi saat menggulir/mengisi form; v1.1.050: konfirmasi untuk tagihan air, akui fee, hapus logo; v1.1.051: tombol utama menempel di Baca Meter; modal sudah punya footer menempel) Aksi berisiko seragam memakai konfirmasi; tombol mengembalikan umpan balik (toast, fokus); tombol utama menempel di mobile pada form panjang
 - [ ] Aksesibilitas: label terhubung, fokus, target sentuh 44px, uji `ui-a11y.py` tetap lulus; tanpa meluap horizontal di 360/390/1280px
 - [x] (v1.1.006; pencarian/filter/mode cetak belum tercakup) Uji browser: `ui-sp.py` (alur nasabah → simulasi → ajukan → setujui → cairkan → bayar sebagian → lunasi → kwitansi, pencarian dan filter, rincian dan linimasa, mobile dan desktop, mode cetak)
 
@@ -118,11 +118,26 @@ Tujuan: mudah dipakai harian di ponsel dan desktop; semua aksi jelas, aman, dan 
 | Tunggakan | Ada (aging, status menunggak) | Kolektibilitas, tindak lanjut/penagihan |
 | Restrukturisasi | Belum ada | Ubah tenor/jasa/jadwal terkontrol, jadwal lama tersimpan |
 | Pelunasan | Ada (jasa penuh/berjalan) | Biaya pelunasan dipercepat dari Rate Master |
-| Rate/Fee/Tax | Hanya denda % per hari dan mode jasa pelunasan di Setelan | Rate Master berversi, Tax Master, mesin hitung reusable |
+| Rate/Fee/Tax | (v1.1.054: jasa dan biaya pencairan pinjaman baru dari master; v1.1.055: tombol data contoh; v1.1.056: blok tarif/biaya/pajak di form pengajuan; v1.1.057: jasa bertingkat menurut pokok) Denda % per hari dan mode jasa pelunasan di Setelan | Rate Master berversi, Tax Master, mesin hitung reusable |
 | Peran | 5 peran (Direktur, Bendahara, Petugas Unit, Pengawas, Admin) | Tujuh peran Simpan Pinjam + pemisahan tugas |
 | Audit | Ada (siapa, kapan, aksi, keterangan) | Nilai sebelum/sesudah, peristiwa tiap tahap |
 
 **Alur target:** Calon → Nasabah → Pengajuan → Verifikasi → Analisis → Persetujuan → Akad → Pencairan → Jadwal → Pembayaran → Tunggakan → (Restrukturisasi) → Pelunasan. Status pinjaman: `draft → diajukan → diverifikasi → dianalisis → disetujui/ditolak → diakadkan → aktif → menunggak → direstrukturisasi → lunas` (status lama `submitted/approved/active/paid_off` dipetakan otomatis; pinjaman berjalan tidak berubah).
+
+### SP-O — Optimalisasi dan improvement Simpan Pinjam (usulan 2026-10-03; dikerjakan berurutan, satu rilis per butir/paket)
+Urutan: 1 → 2 (Paket A) → 3 (laporan) → sisanya.
+- [x] **O1. Tabungan wajib pada restrukturisasi, hapus buku, dan pembatalan** (v1.1.066): audit perilaku tabungan wajib saat pinjaman direstrukturisasi, dihapus buku, atau pencairan dibatalkan setelah ada pembayaran; perbaiki dan uji (tidak ada saldo yatim, ACC2300 = total tabungan, pembatalan simetris dengan pengembalian saat lunas)
+- [x] **O2. Jurnal fee per jenis:** administrasi, provisi, materai, transfer masing-masing ke akun COA sendiri (dapat diatur), pajak ke akun kewajiban; laporan laba rugi merinci
+- [x] **O3. Denda pindah ke Master Tarif & Biaya** sebagai rate berversi (v1.1.068; hasil hitung sama, tombol pindah dari Setelan). Biaya pelunasan dipercepat sudah dari master sejak sebelumnya; "mode jasa pelunasan" (jasa berjalan/penuh) tetap berupa setelan karena bukan tarif
+- [x] **O4. Laporan kualitas pinjaman** (v1.1.069): aging tunggakan dan kolektibilitas sudah ada sebelumnya; ditambah PAR 1+/30/60/90 terhadap sisa pokok, rasio pinjaman bermasalah, dan nilai hapus buku (kotak di sub-tab Tunggakan dan Laporan SP)
+- [x] **O5. Laporan fee, pajak per jenis, dan laporan tabungan wajib** (terkunci, dikembalikan); catatan: laporan fee/pajak per kode sudah ada (`feeRep`), yang belum: laporan tabungan wajib
+- [x] **O6. Penagihan:** catatan tindak lanjut dan janji bayar sudah ada; yang belum: daftar jatuh tempo/tunggakan siap kirim sebagai teks pengingat (templat)
+- [ ] **O7. Cetakan:** kartu pinjaman nasabah, bukti pembayaran, rekap tabungan wajib di portal nasabah (periksa portal dulu)
+- [ ] **O8. Wewenang persetujuan menurut nominal** (menunggu keputusan kebijakan pengurus; masuk Gerbang Keputusan)
+- [ ] **O9. Batas `localStorage`:** indikator pemakaian, pengarsipan log audit lama, peringatan sebelum penuh
+- [ ] **O10. Kecepatan:** pagination/render bertahap untuk daftar panjang (pinjaman, nasabah, jurnal) di HP
+- [ ] **O11. Waktu tes:** pecah `tests/run.js` menjadi tes cepat (pra-rilis) dan tes lengkap
+- [ ] **O12. Cadangan dan sinkronisasi:** pengingat backup berkala; sinkronisasi cloud hanya dengan kunci anon/publishable
 
 ### Rincian rilis SP1–SP5 (dari spesifikasi pengguna 2026-09-30; urutan dan nomor versi mengikuti tabel 2.2)
 Seperti RBAC, alur lengkap **opsional dan bawaan mati** (`settings.sp_flow`): bila mati, Simpan Pinjam berjalan seperti v0.1.038 dengan perbaikan SP0 dan seluruh uji lama tetap berlaku. Angka bunga, fee, dan pajak **tidak boleh di-hardcode**; semua lewat master yang dapat diubah tanpa mengubah kode. Tarif resmi dan perlakuan pajak menunggu Gerbang Keputusan; mesin dibuat lebih dulu, isinya diatur pengurus. Kerja sama dengan SP-M: `calcFees` memakai `simulate()`/`buildSchedule()`; kerja sama dengan SP-U: form SP1–SP5 memakai pola UI SP-U.
@@ -143,7 +158,7 @@ Seperti RBAC, alur lengkap **opsional dan bawaan mati** (`settings.sp_flow`): bi
 **SP2 — Alur pengajuan lengkap (L)**
 - [~] (v1.1.031: Calon Peminjam selesai; v1.1.032: status draf pada pengajuan selesai; v1.1.034: tautan calon → pengajuan selesai) Tahap **Calon Peminjam** (data awal, ubah menjadi Nasabah setelah lolos verifikasi) dan pengajuan berstatus draf
 - [x] (v1.1.008; hasil lolos/perlu perbaikan/tidak lolos, dokumen wajib dapat diatur; Lolos = semua dokumen lengkap) **Verifikasi:** daftar periksa dokumen dan survei lapangan (tanggal, petugas, catatan, hasil lolos/perlu perbaikan/tidak lolos)
-- [~] (v1.1.008: penghasilan, kewajiban, rasio angsuran, nilai jaminan, rekomendasi, skor tetap 40/30/30; bobot skor belum dapat diatur) **Analisis kelayakan:** pendapatan/usaha, kewajiban lain, kemampuan bayar (rasio angsuran terhadap pendapatan), nilai jaminan, rekomendasi (setuju/setuju bersyarat/tolak), skor sederhana yang parameternya dapat diatur (bukan keputusan otomatis)
+- [~] (v1.1.008: penghasilan, kewajiban, rasio angsuran, nilai jaminan, rekomendasi, skor tetap 40/30/30; v1.1.052: bobot skor dapat diatur) **Analisis kelayakan:** pendapatan/usaha, kewajiban lain, kemampuan bayar (rasio angsuran terhadap pendapatan), nilai jaminan, rekomendasi (setuju/setuju bersyarat/tolak), skor sederhana yang parameternya dapat diatur (bukan keputusan otomatis)
 - [~] (v1.1.008: wewenang dua tingkat menurut nominal lewat hak `sp.setujui.besar`; belum: lebih dari dua jenjang, maker-checker 8B) **Persetujuan berjenjang:** wewenang menurut nominal (mis. Manajer sampai batas tertentu, di atasnya Direktur; ambang diatur di Setelan), alasan penolakan wajib; bergabung dengan mekanisme maker-checker Fase 8B Rilis 3 (satu implementasi, bukan dua)
 - [x] (v1.1.008 nomor/tanggal akad; v1.1.024 dokumen akad cetak, klausul yang dapat diatur, snapshot biaya/pajak/denda; belum: template per produk) **Akad/Perjanjian:** nomor akad, dokumen akad cetak (kop, pihak, pokok, jasa, tenor, jadwal, fee dan pajak dari snapshot Rate Master, jaminan, denda, klausul yang dapat diatur), tanggal akad; pencairan hanya setelah akad
 - [x] (v1.1.022; fee diamortisasi: v1.1.036) Pencairan memakai `calcFees`: pokok, potongan fee, pajak, dana bersih diterima, satu jurnal seimbang; bukti pencairan menampilkan rinciannya
@@ -264,6 +279,11 @@ localStorage tidak cocok untuk banyak user, multi-perangkat, keamanan production
 - [ ] Bentuk/status hukum BUMDes; kebijakan modal dan penyertaan modal
 - [ ] Mekanisme unit simpan pinjam; metode jasa/bunga; perlakuan tunggakan dan kredit bermasalah (saat ini asumsi teknis: denda satu tarif global, alokasi denda → jasa → pokok, jasa pelunasan)
 - [ ] Kebijakan pendapatan unit air dan penggajian
+- [x] Optimalisasi Setelan: urutan tab dan pengaturan Simpan Pinjam dikelompokkan di tab sendiri (v1.1.087)
+- [x] Tabel relasional Tahap 3: pegawai dan gaji (`supabase_tahap3.sql`, v1.1.086); berikutnya tabungan, penjualan/Unit Air, jaminan, tarif, lalu peran dan pengguna tanpa PIN
+- [x] Buat pengguna dari pegawai (peran dari jabatan, PIN awal 1234 wajib ganti) lewat aplikasi dan `supabase_pengguna.sql` (v1.1.085)
+- [x] Pengguna dipilih dari daftar pegawai; peran bawaan per jabatan (v1.1.082)
+- [x] Komponen gaji dengan cara hitung nominal / persen gaji pokok / persen laba (sebelum atau sesudah beban gaji), ceklist di form pegawai, dan gaji & komponen bawaan per jabatan (v1.1.082)
 - [ ] COA final dan struktur laporan keuangan
 - [ ] Hak akses tiap jabatan dan mekanisme approval (rencana teknis di Fase 8B; peran Simpan Pinjam diusulkan pengguna, lihat Fase SP3, menunggu konfirmasi pengurus)
 - [ ] Daftar fee, pajak, dan pengakuan pendapatan fee Simpan Pinjam (lihat Gerbang Keputusan Fase SP)
@@ -467,4 +487,10 @@ Status: Rilis 1 dan 2 selesai (v0.1.028–029); Rilis 3 belum. Catatan penting: 
 - [x] **NSB1 (v1.1.015)** Ringkasan nasabah yang bisa dibagikan (teks: salin/WhatsApp/bagikan; PDF/gambar belum): pinjaman (sisa, jadwal, tunggakan) dan tabungan (saldo, mutasi). Data = posisi saat dikirim. (S)
 - [~] **NSB2** (v1.1.038: UI portal nasabah mode demo selesai: masuk HP+PIN, pinjaman, tabungan, profil, pratinjau pengurus; tanpa server) Portal nasabah sungguhan: butuh backend, login nasabah (HP + PIN/OTP), sinkronisasi dari aplikasi pengurus, persetujuan dan perlindungan data pribadi. Keputusan arsitektur dan regulasi (penghimpunan dana masyarakat, OJK/LPS) harus dipastikan lebih dulu. (L)
 - [~] **DB1** (v1.1.042: Tahap 1 selesai: `cloud.js`, `supabase_schema.sql`, panduan `SUPABASE.md`, snapshot + kunci versi + RLS; Tahap 2 draf SQL `supabase_tahap2.sql` teruji, belum disambung) Berikutnya: aplikasi memakai tabel Tahap 2 (jurnal seimbang di server), lalu NSB2 portal nasabah sungguhan (Auth/RLS per nasabah, OTP). Butuh proyek Supabase dari pengurus. (L)
+- [x] **DB2. Akun awan seperti jurnal-trading/finaaps** (v1.1.071): lupa kata sandi (email atur ulang + layar kata sandi baru dari tautan), ganti kata sandi saat masuk, status sinkron yang jelas dan pengingat cadangan awan. Pendaftaran akun baru sengaja tidak dibuka dari aplikasi (pengurus ditambahkan admin lewat `add_member`).
+- [x] **DB3. Sinkron otomatis dua arah antar perangkat** (v1.1.071): muat otomatis saat aplikasi dibuka/kembali aktif bila awan lebih baru dan tidak ada perubahan lokal belum terkirim; kirim ulang otomatis saat kembali online; konflik tetap dijeda dengan pilihan Timpa/Muat.
+- [x] **DB4. Tahap 2: tabel relasional** (v1.1.072): aplikasi memakai `supabase_tahap2.sql` (unit, pihak, akun, transaksi, jurnal seimbang dicek di server, pinjaman, audit) dengan migrasi dari snapshot; snapshot tetap sebagai cadangan.
+- [x] **DB5. Portal nasabah via Supabase** (v1.1.079): `supabase_nasabah.sql` (akun dan sesi nasabah tertutup rapat, PIN bcrypt, kunci bertahap, data proyeksi per nasabah), masuk HP + PIN dari halaman masuk gabungan, salinan offline, ganti PIN sendiri, penerbitan data oleh pengurus saat sinkron. Belum: OTP SMS/WhatsApp, persetujuan data pribadi (UU PDP) di layar pertama, cetakan kartu pinjaman di portal (O7). Keputusan regulasi (penghimpunan dana, OJK/LPS) tetap harus dipastikan pengurus.
+- [x] **DB7. Masuk gabungan dan sesi tersimpan** (v1.1.079): satu halaman masuk (email atau nomor HP), arah per peran (developer, admin/pengurus, pembaca hanya lihat, nasabah), sesi bertahan offline, perangkat lama berisi data punya jalan masuk lokal satu kali.
+- [x] **DB6. Peran developer platform** (v1.1.077): `supabase_developer.sql` + bagian Developer di Setelan > Awan: daftar semua BUMDes (metadata saja), buat BUMDes + admin pertama, tambah admin, nonaktif/aktif, hapus yang kosong, batasi pembuatan mandiri, catatan tindakan. Developer tidak membaca isi data kecuali menjadi anggota.
 - [x] **SU1** (v1.1.016) Pemisahan tugas berlaku juga untuk Superadmin bila aturan SoD diaktifkan. (S)
