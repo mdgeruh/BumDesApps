@@ -57,7 +57,7 @@ function saveUser(){try{needP("pengguna.kelola","Hanya Admin Sistem yang dapat m
  if(eu){if(lastAdm(eu)&&!role.perms.includes("pengguna.kelola"))throw fe("us-r","Ini satu-satunya Admin Sistem aktif; peran tidak boleh diubah");
   const d=[];if(eu.name!==n)d.push("nama "+eu.name+" → "+n);if(eu.role_id!==r)d.push("peran "+(roleOf(eu)||{}).name+" → "+role.name);if((eu.unit_ids||[]).join()!==un.join())d.push("unit tugas diubah");
   eu.name=n;eu.role_id=r;eu.unit_ids=un;if($("#us-e")){if(emp)eu.employee_id=emp._id;else delete eu.employee_id}audit("user_ubah","user",eu._id,d.join("; ")||"tanpa perubahan");S.eus=null;S.msg="Pengguna diperbarui"}
- else{const p=$("#us-p").value,p2=$("#us-p2").value;pinChk(p,"us-p");if(p!==p2)throw fe("us-p2","Ulangi PIN tidak sama");
+ else{let p=$("#us-p").value,p2=$("#us-p2").value;if(!p&&!p2){p=p2=PIN0}pinChk(p,"us-p");if(p!==p2)throw fe("us-p2","Ulangi PIN tidak sama");
   const u=mkUser(n,r,un,p,true);if(emp)u.employee_id=emp._id;db.users.push(u);audit("user_buat","user",u._id,n+" · "+role.name);usDr();clrF("#us-n,#us-p,#us-p2");S.msg="Pengguna ditambahkan; PIN awal wajib diganti saat masuk pertama"}
  save();okM()}catch(e){S.msg=ER(e)}render()}
 function togUser(id){try{needP("pengguna.kelola","Hanya Admin Sistem yang dapat mengelola pengguna");const u=db.users.find(x=>x._id===id);if(!u)throw Error("Pengguna tidak ditemukan");needSup(u);
@@ -94,7 +94,7 @@ function vUsr(){const on=rbacOn(),cu=curUser();let h=`<h2>Pengguna & Peran</h2>`
  h+=`<div class="card"><p><b>${esc(cu.name)}</b> · ${esc((roleOf(cu)||{}).name||"")}</p><div class="k">Ganti PIN akun Anda</div><label>PIN lama</label>${PW("cp-o","current-password")}<label>PIN baru (4–8 angka)</label>${PW("cp-n","new-password")}<label>Ulangi PIN baru</label>${PW("cp-r","new-password")}<button class="b" onclick="chgPin()">Ganti PIN</button><button class="b s" onclick="doLogout()">Keluar</button></div>`;
  if(!can("pengguna.kelola"))return h+`<p class="k">Pengelolaan pengguna dan peran hanya untuk Admin Sistem.</p>`;
  const act=db.users.filter(isAdm).length;
- h+=`<h2>Daftar Pengguna</h2>${addB("Tambah pengguna","us")}${act<2?`<p class="k">⚠ Hanya ada satu Admin Sistem aktif. Disarankan menambah satu lagi agar PIN yang terlupa bisa direset.</p>`:""}`
+ h+=`<h2>Daftar Pengguna</h2>${addB("Tambah pengguna","us")}<div class="fl"><button class="b s" id="us-dp" onclick="usDariPegawai()">Buat pengguna dari pegawai (PIN awal 1234)</button></div>${act<2?`<p class="k">⚠ Hanya ada satu Admin Sistem aktif. Disarankan menambah satu lagi agar PIN yang terlupa bisa direset.</p>`:""}`
   +tbl(["Nama","Peran","Unit","Status",""],db.users.filter(u=>!isSup(u)||cuSup()).map(u=>`<tr><td>${esc(u.name)}${u._id===S.cu?" (Anda)":""}${u.must_change?' <span class="k">PIN sementara</span>':""}${isLocked(u)?' <span class="k">Terkunci</span>':""}</td><td>${esc((roleOf(u)||{}).name||"?")}</td><td>${esc((u.unit_ids||[]).map(unitName).join(", ")||"Semua")}</td><td>${u.status==="aktif"?"Aktif":"Nonaktif"}</td><td>${ib("edit","Edit","mdOpen('us','"+u._id+"')","s")}${u._id!==S.cu?ib("key","Reset PIN","mdOpen('rp','"+u._id+"')","s")+ib(u.status==="aktif"?"x":"check",u.status==="aktif"?"Nonaktifkan":"Aktifkan","askC('togUser','"+u._id+"')","s"):""}</td></tr>`));
  return h+rolesCard()+`<h2>Mode Pengguna</h2><div class="card"><p class="k">Mematikan mode membuat aplikasi terbuka tanpa login; data pengguna tetap tersimpan.</p><button class="b x" onclick="askC('rbacOff','')">Matikan mode pengguna</button></div>`}
 
@@ -102,3 +102,11 @@ function vUsr(){const on=rbacOn(),cu=curUser();let h=`<h2>Pengguna & Peran</h2>`
 // pilih pegawai saat membuat pengguna: nama, unit, dan peran (bawaan jabatan) terisi otomatis
 function usPick(){const e=db.employees.find(x=>x._id===$("#us-e").value);if(!e)return;$("#us-n").value=e.name;const x=posGet(e.position),r=x&&x.role_id&&db.roles.find(q=>q._id===x.role_id&&q.status!=="nonaktif"&&q._id!=="ROL-SUP");if(r)$("#us-r").value=r._id;
  db.business_units.forEach(b=>{const c=$("#us-u-"+b._id);if(c)c.checked=!!e.unit_id&&e.unit_id===b._id})}
+
+// PIN awal bawaan; wajib diganti saat masuk pertama (must_change). Pengganti PIN tidak boleh sama dengan PIN lama, jadi 1234 tidak bisa dipertahankan.
+const PIN0="1234";
+// buat akun untuk semua pegawai aktif yang belum punya akun: peran dari bawaan jabatan, unit dari unit pegawai, PIN awal 1234
+function usDariPegawai(){try{needP("pengguna.kelola","Hanya Admin Sistem yang dapat mengelola pengguna");posSync();let n=0,s=0;const nm=new Set(db.users.map(x=>x.name.toLowerCase()));
+ db.employees.filter(isAct).forEach(e=>{if(db.users.some(x=>x.employee_id===e._id)||nm.has(e.name.toLowerCase()))return;const p=posGet(e.position),r=p&&p.role_id&&db.roles.find(q=>q._id===p.role_id&&q.status!=="nonaktif"&&q._id!=="ROL-SUP");if(!r){s++;return}
+  const x=mkUser(e.name,r._id,e.unit_id?[e.unit_id]:[],PIN0,true);x.employee_id=e._id;db.users.push(x);nm.add(e.name.toLowerCase());n++;audit("user_buat","user",x._id,e.name+" · "+r.name+" · dari pegawai "+e.emp_number)});
+ if(n){usDr();save()}S.msg=n?n+" pengguna dibuat dari pegawai (PIN awal "+PIN0+", wajib diganti saat masuk pertama)"+(s?"; "+s+" pegawai dilewati karena jabatannya belum punya peran bawaan":""):(s?s+" pegawai dilewati: atur peran bawaan di Daftar jabatan dulu":"Semua pegawai aktif sudah punya akun")}catch(e){S.msg="⚠ "+e.message}render()}

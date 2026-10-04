@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.083
+# Catatan Rilis — v1.1.087
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,10 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.087 | Setelan lebih rapi |
+| 1.1.086 | Pegawai dan gaji masuk tabel Supabase |
+| 1.1.085 | Pengguna dari pegawai, PIN awal 1234 |
+| 1.1.084 | Jabatan umum langsung tersedia |
 | 1.1.083 | Dokumen dirapikan, riwayat lama diarsipkan |
 | 1.1.082 | Pengguna dipilih dari daftar pegawai |
 | 1.1.081 | Daftar jabatan & komponen gaji persen/laba |
