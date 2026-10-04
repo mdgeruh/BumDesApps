@@ -2,6 +2,9 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.094] — 2026-10-04
+**Optimalisasi Buku Besar.** views.js: `ledData()` (baris, saldo berjalan, saldo awal sebelum tanggal awal, saldo akhir, total debit/kredit), `vLed` ditulis ulang: ringkasan 4 kartu (saldo akhir + saldo normal Debit/Kredit, total debit, total kredit, jumlah mutasi), pilihan akun dikelompokkan per tipe dengan jumlah mutasi `(n)`, daftar baris kompak (di HP dua baris per mutasi, di desktop kolom Debit/Kredit/Saldo) yang membuka rincian transaksi saat disentuh, tanda "dibatalkan", unit pada tampilan "Semua unit", baris Saldo awal (bila ada tanggal awal) dan Saldo akhir, pilihan urutan terlama/terbaru dulu (`S.lsd`), Cetak dan Unduh CSV (`ledCsv`/`ledDl`), kepala cetak. Tinggi halaman di HP 5291 → 3971 px. style.css: `.ks.k4`, `.li.lgr`, `.lgo`. Uji: `logic-109.js` (22); `logic-4.js` menyesuaikan pencacah baris.
+
 ## [1.1.093] — 2026-10-04
 **SQL Supabase dirapikan (tanpa perubahan fungsi).** Keenam berkas SQL kini berkepala seragam (`[n/6]` urutan pasang, Isi, Prasyarat, Dijalankan, Dipakai oleh, Catatan), judul bagian satu gaya selebar 78 kolom, nomor versi dihapus dari kepala (cepat usang). Baru: `supabase_semua.sql`, gabungan otomatis menurut urutan pasang (schema, developer, tahap2, tahap3, nasabah, pengguna) untuk proyek baru dengan sekali tempel; dibangkitkan `node build.js` dan diperiksa `node build.js --check`. `SUPABASE.md` ditulis ulang: pasang cepat, tabel berkas dan urutan, penamaan Tahap 1/2/3 tidak lagi bentrok (portal nasabah bukan "Tahap 3"), status Tahap 2 diperbarui. Uji: `tests/sql-run.sh` (Postgres 16, basis data baru per uji; mode `semua` memasang gabungan dua kali), 100 pemeriksaan lulus di kedua mode; `tests/check-sql.js` (85 pemeriksaan gaya, idempoten, tanpa rahasia, gabungan utuh dan berurutan).
 

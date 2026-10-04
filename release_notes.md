@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.093
+# Catatan Rilis — v1.1.094
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,7 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.094 | Buku Besar lebih ringkas dan lengkap |
 | 1.1.093 | SQL Supabase dirapikan |
 | 1.1.092 | Sidebar dengan tombol ciut mengambang |
 | 1.1.091 | Laporan bergaya kartu |
