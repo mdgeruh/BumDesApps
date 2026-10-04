@@ -15,17 +15,27 @@ function togP(id){try{const p=db.parties.find(x=>x._id===id),d=(PT[p.type]||p.ty
  if(p.type==="nasabah"&&db.loans.some(l=>l.party_id===id&&["submitted","approved","active"].includes(l.status)))throw Error("Nasabah masih punya pinjaman yang belum selesai (diajukan / disetujui / aktif)");
  if(p.type==="pelanggan"&&piu(id)>0.005)throw Error("Pelanggan masih punya piutang Rp "+fm(piu(id))+"; selesaikan dulu");
  p.status="nonaktif";if(S.ey===id)S.ey=null;audit("deactivate","party",id,d);save();S.msg="Pihak dinonaktifkan; data lama tetap tersimpan"}catch(e){S.msg="⚠ "+e.message}render()}
+// ----- master jabatan (v1.1.081): daftar jabatan dipilih dari database, bukan diketik tiap kali -----
+const posList=()=>((db.settings&&db.settings.positions)||[]).map(x=>x.name);
+const posCnt=n=>db.employees.filter(e=>String(e.position||"").trim().toLowerCase()===n.toLowerCase()).length;
+function posSync(){db.settings=db.settings||{};const L=db.settings.positions=Array.isArray(db.settings.positions)?db.settings.positions:[];(db.employees||[]).forEach(e=>{const n=String(e.position||"").trim();if(n&&!L.some(x=>x.name.toLowerCase()===n.toLowerCase()))L.push({name:n})});L.sort((a,b)=>a.name.localeCompare(b.name,"id"))}
+function openPs(i){mdOpen("ps",String(i))}
+function addPos(){try{const n=($("#ps-n").value||"").trim().replace(/\s+/g," ");if(!n)throw fe("ps-n","Isi nama jabatan");if(n.length>60)throw fe("ps-n","Nama jabatan terlalu panjang (maks 60 huruf)");posSync();if(posList().some(x=>x.toLowerCase()===n.toLowerCase()))throw fe("ps-n","Jabatan itu sudah ada");
+ db.settings.positions.push({name:n});posSync();audit("setting","settings","positions","Jabatan ditambah: "+n);save();clrF("#ps-n");S.msg="Jabatan "+n+" ditambahkan"}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
+function delPos(i){try{posSync();const x=db.settings.positions[+i];if(!x)throw Error("Jabatan tidak ditemukan");if(posCnt(x.name))throw Error("Jabatan "+x.name+" masih dipakai "+posCnt(x.name)+" pegawai; ubah jabatan pegawainya dulu");
+ db.settings.positions.splice(+i,1);audit("setting","settings","positions","Jabatan dihapus: "+x.name);save();S.msg="Jabatan "+x.name+" dihapus dari daftar"}catch(e){S.msg="⚠ "+e.message}render()}
 const empNo=()=>"PEG-"+String(db.employees.reduce((a,e)=>Math.max(a,parseInt((e.emp_number||"").slice(4))||0),0)+1).padStart(3,"0");
-function saveEmp(){try{negAny();const v=i=>$("#"+i).value.trim(),n=v("pg-n"),j=v("pg-j"),u=v("pg-u"),d=v("pg-d"),ee=db.employees.find(x=>x._id===S.eg);
- if(!n)throw fe("pg-n","Nama pegawai wajib diisi");if(!j)throw fe("pg-j","Jabatan wajib diisi");
+function saveEmp(){try{negAny();posSync();const v=i=>$("#"+i).value.trim(),n=v("pg-n"),jn=(($("#pg-jn")||{}).value||"").trim().replace(/\s+/g," "),u=v("pg-u"),d=v("pg-d"),ee=db.employees.find(x=>x._id===S.eg);
+ if(!n)throw fe("pg-n","Nama pegawai wajib diisi");let j=jn||v("pg-j");if(!j)throw fe("pg-j","Pilih jabatan dari daftar, atau isi Jabatan baru");if(j.length>60)throw fe("pg-jn","Nama jabatan terlalu panjang (maks 60 huruf)");const hit=posList().find(x=>x.toLowerCase()===j.toLowerCase());if(hit)j=hit;
  if(u){const x=db.business_units.find(q=>q._id===u);if(!x)throw fe("pg-u","Unit tidak ditemukan");if(!isAct(x)&&!(ee&&ee.unit_id===u))throw fe("pg-u","Unit nonaktif; pilih unit lain")}
  if(d&&!/^\d{4}-\d{2}-\d{2}$/.test(d))throw fe("pg-d","Tanggal mulai tidak valid");
  const mo=i=>{const x=pn(v(i)||"0");if(!/^\d+(\.\d+)?$/.test(x))throw fe(i,"Isi angka Rupiah (0 jika tidak ada)");return+x},g=mo("pg-g"),ta=mo("pg-t"),po=mo("pg-o");if(po>g+ta)throw fe("pg-o","Potongan tidak boleh melebihi gaji pokok + tunjangan");
- const f={name:n,position:j,unit_id:u,phone:v("pg-p"),address:v("pg-a"),start_date:d,base_salary:g,allowance:ta,deduction:po};
+ const comps=kRead("pg");const f={name:n,position:j,unit_id:u,phone:v("pg-p"),address:v("pg-a"),start_date:d,base_salary:g,allowance:ta,deduction:po};
  if(db.employees.some(x=>x._id!==S.eg&&x.name.toLowerCase()===n.toLowerCase()&&(x.position||"").toLowerCase()===j.toLowerCase()&&(x.phone||"")===f.phone))throw fe("pg-n","Pegawai dengan nama, jabatan, dan telepon yang sama sudah ada");
- if(ee){Object.assign(ee,f);audit("update","employee",ee._id,ee.emp_number+" · "+n);S.eg=null;S.msg="Data pegawai diperbarui"}
- else{const e={_id:uid("EMP"),emp_number:empNo(),...f,status:"aktif"};db.employees.push(e);audit("create","employee",e._id,e.emp_number+" · "+n+" · "+j);S.msg="Pegawai "+e.emp_number+" ditambahkan"}
- save();clrF("#pg-n,#pg-j,#pg-p,#pg-a,#pg-d,#pg-g,#pg-t,#pg-o");okM()}catch(e){mErr(e);return}render()}
+ if(!hit){db.settings.positions.push({name:j});posSync();audit("setting","settings","positions","Jabatan ditambah: "+j)}
+ if(ee){Object.assign(ee,f);if($("#pg-ks"))ee.components=comps;audit("update","employee",ee._id,ee.emp_number+" · "+n);S.eg=null;S.msg="Data pegawai diperbarui"}
+ else{const e={_id:uid("EMP"),emp_number:empNo(),...f,components:comps,status:"aktif"};db.employees.push(e);audit("create","employee",e._id,e.emp_number+" · "+n+" · "+j);S.msg="Pegawai "+e.emp_number+" ditambahkan"}
+ save();clrF("#pg-n,#pg-j,#pg-jn,#pg-p,#pg-a,#pg-d,#pg-g,#pg-t,#pg-o");okM()}catch(e){mErr(e);return}render()}
 function togG(id){try{const e=db.employees.find(x=>x._id===id),d=e.emp_number+" · "+e.name;
  if(!isAct(e)){const u=e.unit_id&&db.business_units.find(x=>x._id===e.unit_id);if(u&&!isAct(u))throw Error("Unit "+u.name+" nonaktif; pindahkan pegawai ke unit lain lewat Edit dulu");e.status="aktif";delete e.end_date;audit("activate","employee",id,d);S.msg="Pegawai diaktifkan"}
  else{if(db.payrolls.some(p=>p.employee_id===id&&["draft","approved"].includes(p.status)))throw Error("Pegawai masih punya gaji yang belum dibayar (draf / disetujui); selesaikan atau hapus dulu di menu Gaji");e.status="nonaktif";e.end_date=today();if(S.eg===id)S.eg=null;audit("deactivate","employee",id,d);S.msg="Pegawai dinonaktifkan; data lama tetap tersimpan"}save()}catch(e){S.msg="⚠ "+e.message}render()}
@@ -34,7 +44,9 @@ function vPihak(){const f=S.pf||"",L=db.parties.filter(p=>!f||p.type===f);
 ${mlist(["Pihak","Jenis","","" ],L.map(p=>mrow("py",p._id,esc(p.name),esc(p.phone||"-"),esc(PT[p.type]||p.type),"","",mbd(p))),"Belum ada pihak yang cocok.")}
 `}
 function vPeg(){const na=db.employees.filter(isAct).length;
+ posSync();const PL=posList();
  return`<h2>Pegawai</h2>${addB("Tambah pegawai","pg")}<p class="k">${na} aktif dari ${db.employees.length} pegawai. Master ini menjadi dasar modul Payroll.</p>${mlist(["Pegawai","Unit","Gaji pokok",""],db.employees.map(e=>mrow("pg",e._id,esc(e.name),esc(e.emp_number)+" · "+esc(e.position||"-"),esc(unitName(e.unit_id)),rp(e.base_salary||0),"",mbd(e))),"Belum ada pegawai.")}
+<h3>Daftar jabatan</h3><div class="card"><p class="k">Jabatan dipilih dari daftar ini saat menambah pegawai. Jabatan baru bisa ditambah di sini atau langsung dari form pegawai.</p>${PL.length?PL.map((n,i)=>`<div class="kv"><span>${esc(n)} <span class="k">· ${posCnt(n)} pegawai${posDefTxt(n)}</span></span><span>${ib("edit","Atur bawaan gaji & komponen","openPs("+i+")","s")}${posCnt(n)?"":`<button class="b s sm" onclick="delPos(${i})" aria-label="Hapus jabatan ${esc(n)}">Hapus</button>`}</span></div>`).join(""):`<p class="k">Belum ada jabatan.</p>`}${fld("ps-n","Jabatan baru",{value:""})}<div class="fl"><button class="b s" id="ps-add" onclick="addPos()">Tambah jabatan</button></div></div>
 `}
 
 // ===== PAYROLL (v0.1.015-016): profil gaji, komponen gaji, penggajian per periode, rincian draf, persetujuan, pembayaran → jurnal, slip =====
@@ -44,19 +56,48 @@ const PK=id=>db.payroll_components.find(c=>c._id===id),PKT={earning:"Pendapatan"
 function payGen(){try{const m=$("#gj-m").value;if(!/^\d{4}-\d{2}$/.test(m))throw fe("gj-m","Pilih periode gaji (bulan)");if(closed(m+"-01"))throw fe("gj-m","Periode "+m+" sudah ditutup");
  const E=db.employees.filter(e=>isAct(e)&&(e.base_salary||0)>0&&!(e.start_date&&e.start_date.slice(0,7)>m)&&!db.payrolls.some(p=>p.employee_id===e._id&&p.period===m));
  if(!E.length)throw fe("gj-m","Tidak ada pegawai aktif bergaji yang belum diproses untuk periode "+m);
- const cs=e=>ecList(e).reduce((o,x)=>{o[PK(x.component_id).type]+=x.amount;return o},{earning:0,deduction:0});
+// komponen gaji: tetap (Rp), persen_gaji (% gaji pokok), persen_laba (% laba periode; basis sebelum/sesudah beban gaji)
+ const kc=k=>CALC[k.calc]?k.calc:"tetap";
+ const cs=e=>ecList(e).reduce((o,x)=>{const k=PK(x.component_id);if(kc(k)!=="persen_laba")o[k.type]+=ecAmt(x,e);return o},{earning:0,deduction:0});
  E.forEach(e=>{const c=cs(e);if((e.deduction||0)+c.deduction>e.base_salary+(e.allowance||0)+c.earning)throw fe("gj-m","Potongan "+e.name+" melebihi pendapatannya; periksa komponen tetap pegawai")});
- E.forEach(e=>{const p={_id:uid("PAY"),period:m,employee_id:e._id,unit_id:e.unit_id||"",gross_salary:0,total_deduction:0,net_salary:0,status:"draft",created_at:now()};db.payrolls.push(p);
+ const P=[];
+ E.forEach(e=>{const p={_id:uid("PAY"),period:m,employee_id:e._id,unit_id:e.unit_id||"",gross_salary:0,total_deduction:0,net_salary:0,status:"draft",created_at:now()};db.payrolls.push(p);P.push([p,e]);
   [["Gaji Pokok",e.base_salary,"earning"],["Tunjangan",e.allowance||0,"earning"],["Potongan",e.deduction||0,"deduction"]].forEach(([n,a,t])=>{if(a>0)db.payroll_items.push({_id:uid("PIT"),payroll_id:p._id,name:n,amount:a,type:t,core:true})});
-  ecList(e).forEach(x=>{const k=PK(x.component_id);db.payroll_items.push({_id:uid("PIT"),payroll_id:p._id,component_id:k._id,name:k.name,amount:x.amount,type:k.type})});payRecalc(p)});
+  ecList(e).forEach(x=>{const k=PK(x.component_id);if(kc(k)==="persen_laba")return;const a=ecAmt(x,e);if(a>0)db.payroll_items.push({_id:uid("PIT"),payroll_id:p._id,component_id:k._id,name:k.name+(kc(k)==="persen_gaji"?" ("+rtp(x.rate)+"% gaji pokok)":""),amount:a,type:k.type})});payRecalc(p)});
+ const lc={};P.forEach(([p,e])=>{ecList(e).forEach(x=>{const k=PK(x.component_id);if(kc(k)!=="persen_laba")return;const key=(e.unit_id||"")+"|"+(k.basis==="sebelum"?"s":"e"),L=lc[key]=lc[key]||labaGaji(m,e.unit_id||"",k.basis==="sebelum"),a=Math.round(Math.max(0,L)*(+x.rate||0)/100);
+  if(a>0)db.payroll_items.push({_id:uid("PIT"),payroll_id:p._id,component_id:k._id,name:k.name+" ("+rtp(x.rate)+"% laba "+(k.basis==="sebelum"?"sebelum":"sesudah")+" beban gaji)",amount:a,type:k.type})});payRecalc(p)});
  audit("create","payroll",m,E.length+" gaji periode "+m+" dibuat (draf)");save();S.msg=E.length+" gaji periode "+m+" dibuat berstatus Draf"}catch(e){mErr(e);return}render()}
 // komponen gaji (master), komponen tetap pegawai, rincian gaji draf
+const CALC={tetap:"Nominal tetap (Rp)",persen_gaji:"Persen dari gaji pokok",persen_laba:"Persen dari laba"},BASIS={sesudah:"Laba setelah beban gaji",sebelum:"Laba sebelum beban gaji"},rtp=n=>String(+(+n).toFixed(2)).replace(".",",");
+const ecAmt=(x,e)=>{const k=PK(x.component_id);if(!k)return 0;if(k.calc==="persen_gaji")return Math.round((e.base_salary||0)*(+x.rate||0)/100);if(k.calc==="persen_laba")return 0;return +x.amount||0};
+// laba periode m (tanpa jurnal penutup), per unit bila unit diisi. sebelum=true: tanpa beban gaji; false: dikurangi beban gaji periode itu (gaji pokok + tunjangan + komponen bukan persen laba, semua pegawai pada lingkup yang sama; termasuk draf yang belum dijurnal)
+function labaGaji(m,u,sebelum){const T=trT();let L=pl(l=>l.date.slice(0,7)===m&&(!u||l.business_unit_id===u)&&T.get(l.transaction_id)!=="closing");
+ let b=0;db.journal_lines.filter(l=>cur(l)&&l.date.slice(0,7)===m&&(!u||l.business_unit_id===u)&&T.get(l.transaction_id)==="payroll"&&l.account_id==="ACC5100").forEach(l=>{b+=l.debit-l.credit});
+ const sb=L.p+b;if(sebelum)return sb;
+ let g=0;const ids=new Set(db.payrolls.filter(p=>p.period===m&&(!u||p.unit_id===u)).map(p=>p._id));db.payroll_items.forEach(i=>{if(ids.has(i.payroll_id)&&i.type==="earning"&&!/laba (sebelum|sesudah) beban gaji\)$/.test(i.name))g+=i.amount});
+ const bj=Math.max(b,0);return sb-Math.max(g,bj)}
+const kDesc=k=>{const c=k.calc||"tetap",v=+k.value||0;return c==="tetap"?"Nominal"+(v?" Rp "+fm(v):""):c==="persen_gaji"?rtp(v)+"% gaji pokok":rtp(v)+"% "+(k.basis==="sebelum"?"laba sebelum beban gaji":"laba sesudah beban gaji")};
+// ceklist komponen (pola sama dengan biaya pencairan pinjaman): sel=[{component_id,amount|rate}], px=awalan id
+function kChecklist(px,sel){const A=db.payroll_components.filter(k=>isAct(k)||sel.some(x=>x.component_id===k._id));if(!A.length)return`<p class="k">Belum ada komponen gaji. Buat dulu di Gaji &gt; Komponen.</p>`;
+ return`<label>Komponen gaji pegawai (dari Master Komponen Gaji)</label><div class="chks" id="${px}-ks">${A.map(k=>{const x=sel.find(q=>q.component_id===k._id),c=k.calc||"tetap",v=x?(c==="tetap"?x.amount:x.rate):k.value,id=esc(k._id);
+ return`<div class="fcr" style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap"><label class="chk" style="flex:1 1 12rem"><input type="checkbox" id="${px}-k-${id}"${x?" checked":""}> ${esc(k.name)} <span class="k">${PKT[k.type]} · ${esc(kDesc(k))}${isAct(k)?"":" · nonaktif"}</span></label><span class="fq k"><label class="sr" for="${px}-v-${id}">Nilai ${esc(k.name)}</label>${c==="tetap"?"Rp":"%"} <input type="text" id="${px}-v-${id}" inputmode="decimal" autocomplete="off" value="${v?(c==="tetap"?fm(v):rtp(v)):""}" style="width:7rem"${c==="tetap"?' oninput="fmtR(this)"':""}></span></div>`}).join("")}</div>`}
+function kRead(px){const o=[];db.payroll_components.forEach(k=>{const cb=$("#"+px+"-k-"+k._id);if(!cb||!cb.checked)return;const c=k.calc||"tetap",id=px+"-v-"+k._id,raw=pn((($("#"+id)||{}).value||"").trim().replace(",","."));
+  if(!/^\d+(\.\d+)?$/.test(raw)||+raw<=0)throw fe(id,"Isi nilai "+k.name+" lebih dari 0");if(c!=="tetap"&&+raw>100)throw fe(id,"Persentase "+k.name+" tidak boleh lebih dari 100");o.push(c==="tetap"?{component_id:k._id,amount:+raw}:{component_id:k._id,rate:+raw})});return o}
+// bawaan jabatan: gaji standar + komponen; dipakai mengisi form pegawai baru
+const posDefTxt=n=>{const x=posGet(n);return x&&(x.base_salary||(x.comps||[]).length)?" · gaji standar Rp "+fm(x.base_salary||0)+((x.comps||[]).length?" + "+x.comps.length+" komponen":""):""};
+const posGet=n=>((db.settings&&db.settings.positions)||[]).find(x=>x.name.toLowerCase()===String(n||"").trim().toLowerCase());
+function posPick(){if(S.eg)return;const x=posGet($("#pg-j").value);if(!x)return;[["g","base_salary"],["t","allowance"],["o","deduction"]].forEach(([k,f])=>{const el=$("#pg-"+k);if(el&&x[f]!=null)el.value=x[f]?fm(x[f]):""});
+ db.payroll_components.forEach(k=>{const cb=$("#pg-k-"+k._id);if(cb)cb.checked=false});(x.comps||[]).forEach(q=>{const k=PK(q.component_id),cb=k&&$("#pg-k-"+k._id),vi=k&&$("#pg-v-"+k._id);if(cb&&isAct(k)){cb.checked=true;if(vi){const c=k.calc||"tetap",v=c==="tetap"?q.amount:q.rate;vi.value=v?(c==="tetap"?fm(v):rtp(v)):""}}})}
+function savePosDef(){try{negAny();posSync();const x=db.settings.positions[+S.ps];if(!x)throw Error("Jabatan tidak ditemukan");const mo=i=>{const r=pn((($("#"+i)||{}).value||"").trim()||"0");if(!/^\d+(\.\d+)?$/.test(r))throw fe(i,"Isi angka Rupiah (0 jika tidak ada)");return+r},g=mo("ps-g"),ta=mo("ps-t"),po=mo("ps-o");if(po>g+ta)throw fe("ps-o","Potongan tidak boleh melebihi gaji pokok + tunjangan");
+ x.base_salary=g;x.allowance=ta;x.deduction=po;x.comps=kRead("ps");const rr=(($("#ps-r")||{}).value)||"";if(rr&&!db.roles.some(q=>q._id===rr&&q._id!=="ROL-SUP"))throw fe("ps-r","Peran tidak ditemukan");if(rr)x.role_id=rr;else delete x.role_id;audit("setting","settings","positions","Bawaan jabatan "+x.name+": gaji Rp "+fm(g)+", "+x.comps.length+" komponen");save();S.msg="Bawaan jabatan "+x.name+" disimpan (dipakai saat menambah pegawai baru)";okM()}catch(e){mErr(e);return}render()}
 const kUsed=id=>db.employees.some(e=>(e.components||[]).some(x=>x.component_id===id))||db.payroll_items.some(i=>i.component_id===id);
 function saveComp(){try{const n=$("#pk-n").value.trim(),ek=PK(S.ek),t=ek&&kUsed(ek._id)?ek.type:$("#pk-t").value;if(!n)throw fe("pk-n","Nama komponen wajib diisi");if(!PKT[t])throw fe("pk-t","Pilih jenis komponen");
+ const calc=ek&&kUsed(ek._id)?(ek.calc||"tetap"):(($("#pk-c")||{}).value||"tetap");if(!CALC[calc])throw fe("pk-c","Pilih cara hitung");const basis=calc==="persen_laba"?((($("#pk-b")||{}).value)==="sebelum"?"sebelum":"sesudah"):"";
+ const vr=pn((($("#pk-v")||{}).value||"").trim()||"0");if(!/^\d+(\.\d+)?$/.test(vr))throw fe("pk-v","Isi angka (boleh kosong atau 0)");const val=+vr;if(calc!=="tetap"&&val>100)throw fe("pk-v","Persentase tidak boleh lebih dari 100");
  if(db.payroll_components.some(c=>c._id!==S.ek&&c.name.toLowerCase()===n.toLowerCase()))throw fe("pk-n","Komponen dengan nama itu sudah ada");
- if(ek){ek.name=n;ek.type=t;audit("update","payroll_component",ek._id,PKT[t]+" · "+n);S.ek=null;S.msg="Komponen gaji diperbarui"}
- else{const c={_id:uid("PC"),name:n,type:t,status:"aktif"};db.payroll_components.push(c);audit("create","payroll_component",c._id,PKT[t]+" · "+n);S.msg="Komponen gaji ditambahkan"}
- save();clrF("#pk-n,#pk-t");okM()}catch(e){mErr(e);return}render()}
+ if(ek){ek.name=n;ek.type=t;ek.calc=calc;ek.value=val;ek.basis=basis;audit("update","payroll_component",ek._id,PKT[t]+" · "+n);S.ek=null;S.msg="Komponen gaji diperbarui"}
+ else{const c={_id:uid("PC"),name:n,type:t,calc,value:val,basis,status:"aktif"};db.payroll_components.push(c);audit("create","payroll_component",c._id,PKT[t]+" · "+n);S.msg="Komponen gaji ditambahkan"}
+ save();clrF("#pk-n,#pk-t,#pk-c,#pk-v,#pk-b");okM()}catch(e){mErr(e);return}render()}
 function togK(id){try{const k=PK(id),d=PKT[k.type]+" · "+k.name;if(!isAct(k)){k.status="aktif";audit("activate","payroll_component",id,d);S.msg="Komponen diaktifkan"}
  else{if(db.employees.some(e=>isAct(e)&&(e.components||[]).some(x=>x.component_id===id)))throw Error("Komponen masih dipakai pegawai aktif; hapus dari pegawai dulu");k.status="nonaktif";if(S.ek===id)S.ek=null;audit("deactivate","payroll_component",id,d);S.msg="Komponen dinonaktifkan; gaji lama tidak berubah"}save()}catch(e){S.msg="⚠ "+e.message}render()}
 function ecAdd(){try{negAny();const e=db.employees.find(x=>x._id===S.eg),k=PK($("#ec-c").value),raw=pn($("#ec-a").value||"");if(!e)return;if(!k||!isAct(k))throw fe("ec-c","Pilih komponen");
@@ -102,7 +143,7 @@ function vPay0(){const U=x=>S.unit==="all"||x.unit_id===S.unit,L=db.payrolls.fil
 <div class="card"><div class="k">Dipakai untuk tombol Bayar</div><label>Tanggal bayar</label><input id="gj-d" type="date" value="${today()}"><label>Kas/Bank</label><select id="gj-k">${kas}</select></div>
 <h2>Daftar Gaji</h2>${L.length?tbl(["Periode","Pegawai","Unit","#Bruto","#Potongan","#Bersih","Status",""],L.slice(0,S.lim||PG).map(p=>`<tr><td>${p.period}</td><td>${esc(empName(p.employee_id))}</td><td>${esc(unitName(p.unit_id))}</td><td class="n">${rp(p.gross_salary)}</td><td class="n">${rp(p.total_deduction)}</td><td class="n">${rp(p.net_salary)}</td><td>${PS[p.status]||p.status}</td><td>${act(p)}</td></tr>`))+more(L.length-Math.min(L.length,S.lim||PG)):'<p class="k">Belum ada gaji diproses. Isi gaji pokok pegawai di Master &gt; Pegawai, lalu buat gaji periode.</p>'}${det}`}
 function vKomp(){const P=db.payroll_components;
- return`<h2>Komponen Gaji</h2>${addB("Tambah komponen","pk")}<p class="k">Master komponen tambahan (lembur, insentif, tunjangan, potongan). Dipasang tetap per pegawai lewat Master &gt; Pegawai, atau ditambahkan sekali pakai ke gaji draf.</p>${tbl(["Nama","Jenis","Dipakai","Status",""],P.map(k=>`<tr><td>${esc(k.name)}</td><td>${PKT[k.type]}</td><td>${db.employees.filter(e=>(e.components||[]).some(x=>x.component_id===k._id)).length} pegawai</td><td>${isAct(k)?"Aktif":"Nonaktif"}</td><td>${ib("edit","Edit","openK('"+k._id+"')","s")+(isAct(k)?ib("x","Nonaktifkan","togK('"+k._id+"')","s"):ib("check","Aktifkan","togK('"+k._id+"')","s"))}</td></tr>`))}
+ return`<h2>Komponen Gaji</h2>${addB("Tambah komponen","pk")}<p class="k">Master komponen tambahan (lembur, insentif, tunjangan, potongan). Bisa berupa nominal tetap, persen dari gaji pokok, atau persen dari laba (sebelum/sesudah beban gaji). Dipasang per pegawai lewat ceklist di Master &gt; Pegawai (atau jadi bawaan jabatan), atau ditambahkan sekali pakai ke gaji draf.</p>${tbl(["Nama","Jenis","Cara hitung","Dipakai","Status",""],P.map(k=>`<tr><td>${esc(k.name)}</td><td>${PKT[k.type]}</td><td>${esc(kDesc(k))}</td><td>${db.employees.filter(e=>(e.components||[]).some(x=>x.component_id===k._id)).length} pegawai</td><td>${isAct(k)?"Aktif":"Nonaktif"}</td><td>${ib("edit","Edit","openK('"+k._id+"')","s")+(isAct(k)?ib("x","Nonaktifkan","togK('"+k._id+"')","s"):ib("check","Aktifkan","togK('"+k._id+"')","s"))}</td></tr>`))}
 `}
 // ===== LAPORAN GAJI / SDM (v0.1.017): rekap gaji per periode, unit, pegawai, dan komponen; cetak dan CSV =====
 const GG={periode:"Periode",unit:"Unit usaha",pegawai:"Pegawai",komponen:"Komponen"};
@@ -122,3 +163,4 @@ function vRepGaji(){const T=gajiTab(),s=gajiSum(),bad=S.gf&&S.gto&&S.gf>S.gto,un
 <div class="doc po">${kop()}<h3>LAPORAN GAJI</h3><div class="cn">${esc(un)} · ${esc(per)} · per ${esc(GG[T.g].toLowerCase())}</div></div>
 <div class="card"><b>${s.c} gaji</b> · Bruto ${rp(s.g)} · Potongan ${rp(s.d)} · <b>Bersih ${rp(s.n)}</b><br>Dibayar ${rp(s.pd)} · Belum dibayar ${rp(s.bp)}</div>
 ${T.r.length?tbl(T.h,T.r.map(r=>"<tr>"+r.map((v,i)=>`<td class="${T.h[i][0]==="#"?"n":""}">${cell(v,i,T.h[i])}</td>`).join("")+"</tr>")):'<p class="k">Belum ada gaji yang disetujui atau dibayar pada filter ini.</p>'}`}
+function pkCalc(){const c=$("#pk-c"),b=$("#pk-bw");if(c&&b)b.hidden=c.value!=="persen_laba"}

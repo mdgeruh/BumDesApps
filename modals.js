@@ -1,6 +1,6 @@
 // ===== MODAL CRUD (v0.1.032): tambah/edit master data lewat dialog modal =====
 // S.md = jenis modal terbuka; id yang diedit tetap di S.eu/ec/ea/ey/eg/en/ep/epr/ecn/ek/eus (null = baru); S.rp = id untuk reset PIN
-const MK={lq:"elq",rn:"ern",ld:"eld",cj:"ecj",jd:"ejd",nd:"end",lp:"elp",la:"ela",lr:"elr",lb:"elb",u:"eu",c:"ec",a:"ea",py:"ey",pg:"eg",n:"en",pl:"ep",pr:"epr",cn:"ecn",pk:"ek",us:"eus",rp:"rp",tn:"etn",jm:"ejm",td:"etd"};
+const MK={ps:"ps",lq:"elq",rn:"ern",ld:"eld",cj:"ecj",jd:"ejd",nd:"end",lp:"elp",la:"ela",lr:"elr",lb:"elb",u:"eu",c:"ec",a:"ea",py:"ey",pg:"eg",n:"en",pl:"ep",pr:"epr",cn:"ecn",pk:"ek",us:"eus",rp:"rp",tn:"etn",jm:"ejm",td:"etd"};
 const addB=(t,k)=>`<div class="fl"><button class="b ad" onclick="mdOpen('${k}','')">${ic("plus")}<span>${t}</span></button></div>`;
 const mdId=()=>S.md?(S[MK[S.md]]||""):"",mdKey=()=>S.md?S.md+"|"+mdId():"";
 function mdOpen(k,id){if(!MK[k])return;const kp=(k==="lr"||k==="lb")&&S.md==="ld"?S.eld:null;for(const x in MK)S[MK[x]]=null;if(kp)S.eld=kp;S[MK[k]]=id||null;S.md=k;if(k==="la"){const e=db.loans.find(x=>x._id===id);S.elp=e&&Array.isArray(e.disb_codes)?e.disb_codes.slice():null;S.elq=e&&e.disb_qty?Object.assign({},e.disb_qty):null}S.mv=null;S.mf="";S.msg="";S.fe=null;
@@ -29,12 +29,12 @@ const MD={
  py:()=>{const e=db.parties.find(x=>x._id===S.ey),lk=e&&pRef(e._id);return{t:EN(e,"Edit pihak","Pihak baru"),s:"savePihak()",y:EN(e,"Simpan perubahan","Tambah pihak"),
   b:fld("py-t","Jenis"+(lk?" (terkunci: sudah dipakai pinjaman/penjualan)":""),{t:"select",a:lk?" disabled":"",opts:opt(Object.keys(PT),k=>[k,PT[k]],e?e.type:"pemasok")})
   +fld("py-n","Nama",{value:e?e.name:"",req:1})+fld("py-p","Telepon",{type:"tel",value:e?e.phone:""})+fld("py-a","Alamat",{value:e?e.address:""})}},
- pg:()=>{const e=db.employees.find(x=>x._id===S.eg),us=db.business_units.filter(u=>isAct(u)||(e&&e.unit_id===u._id));return{t:EN(e,"Edit pegawai","Pegawai baru"),s:"saveEmp()",y:EN(e,"Simpan perubahan","Tambah pegawai"),
-  b:fld("pg-n","Nama pegawai",{value:e?e.name:"",req:1})+fld("pg-j","Jabatan",{value:e?e.position:"",req:1})
+ pg:()=>{posSync();const e=db.employees.find(x=>x._id===S.eg),us=db.business_units.filter(u=>isAct(u)||(e&&e.unit_id===u._id));return{t:EN(e,"Edit pegawai","Pegawai baru"),s:"saveEmp()",y:EN(e,"Simpan perubahan","Tambah pegawai"),
+  b:fld("pg-n","Nama pegawai",{value:e?e.name:"",req:1})+fld("pg-j","Jabatan",{t:"select",a:' onchange="posPick()"',opts:`<option value="">— pilih jabatan —</option>`+opt(posList(),x=>[x,x],e?e.position:"")})+fld("pg-jn","Jabatan baru (isi bila belum ada di daftar)",{value:""})
   +fld("pg-u","Unit usaha",{t:"select",opts:`<option value="">Umum (semua unit)</option>`+opt(us,u=>[u._id,u.name],e?e.unit_id:"")})
   +fld("pg-p","Telepon",{type:"tel",value:e?e.phone:""})+fld("pg-a","Alamat",{value:e?e.address:""})+fld("pg-d","Tanggal mulai bekerja",{type:"date",value:e?e.start_date:""})
   +[["g","Gaji pokok (Rp / bulan)","base_salary"],["t","Tunjangan tetap (Rp / bulan)","allowance"],["o","Potongan tetap (Rp / bulan)","deduction"]].map(([k,l,f])=>fld("pg-"+k,l,{type:"text",a:RPA,value:e&&e[f]?fm(e[f]):""})).join("")
-  +(e?vEC(e):"")}},
+  +kChecklist("pg",e?ecList(e):[])}},
  rn:()=>({t:"Catatan rilis · v"+APP_VER,s:"mdClose()",y:"Tutup",b:vRelease(),nf:1}),
  ld:()=>{const l=db.loans.find(x=>x._id===S.eld);if(!l)return{t:"Pinjaman",s:"mdClose()",y:"Tutup",b:"<p>Pinjaman tidak ditemukan.</p>",nf:1};return{t:l.loan_number+" · "+party(l.party_id).name,s:"mdClose()",y:"Tutup",b:vLoan(l),nf:1}},
  lp:()=>({t:"Pengajuan pinjaman baru",s:"ajukan()",y:"Ajukan",
@@ -67,10 +67,14 @@ const MD={
   +fld("cn-m","Nomor meter",{value:e?e.meter_no:"",req:1})
   +fld("cn-a","Angka meter saat dipasang / awal pakai",{type:"text",a:' inputmode="decimal" autocomplete="off"'+(used?" readonly":""),value:e?qf(e.initial):""})
   +fld("cn-d","Tanggal pasang",{type:"date",value:e?e.installed:today(),req:1})}},
+ ps:()=>{const x=(db.settings.positions||[])[+S.ps];if(!x)return{t:"Jabatan",s:"mdClose()",y:"Tutup",b:"<p>Jabatan tidak ditemukan.</p>",nf:1};return{t:"Bawaan jabatan · "+x.name,s:"savePosDef()",y:"Simpan bawaan",b:`<p class="k">Nilai ini mengisi otomatis form pegawai baru saat jabatan dipilih; tetap bisa diubah per pegawai.</p>`+[["g","Gaji pokok standar (Rp / bulan)","base_salary"],["t","Tunjangan tetap standar (Rp / bulan)","allowance"],["o","Potongan tetap standar (Rp / bulan)","deduction"]].map(([k,l,f])=>fld("ps-"+k,l,{type:"text",a:RPA,value:x[f]?fm(x[f]):""})).join("")+fld("ps-r","Peran pengguna bawaan (untuk akun baru dari pegawai berjabatan ini)",{t:"select",opts:`<option value="">— tidak diatur —</option>`+opt(db.roles.filter(r=>r.status!=="nonaktif"&&r._id!=="ROL-SUP"),r=>[r._id,r.name],x.role_id||"")})+kChecklist("ps",(x.comps||[]).filter(q=>PK(q.component_id)))}},
  pk:()=>{const e=PK(S.ek),lk=e&&kUsed(e._id);return{t:EN(e,"Edit komponen","Komponen baru"),s:"saveComp()",y:EN(e,"Simpan perubahan","Tambah komponen"),
-  b:fld("pk-n","Nama komponen",{value:e?e.name:"",req:1})+fld("pk-t","Jenis"+(lk?" (terkunci: sudah dipakai)":""),{t:"select",a:lk?" disabled":"",opts:opt(Object.keys(PKT),k=>[k,PKT[k]],e?e.type:"earning")})}},
+  b:fld("pk-n","Nama komponen",{value:e?e.name:"",req:1})+fld("pk-t","Jenis"+(lk?" (terkunci: sudah dipakai)":""),{t:"select",a:lk?" disabled":"",opts:opt(Object.keys(PKT),k=>[k,PKT[k]],e?e.type:"earning")})
+  +fld("pk-c","Cara hitung"+(lk?" (terkunci: sudah dipakai)":""),{t:"select",a:(lk?" disabled":"")+' onchange="pkCalc()"',opts:opt(Object.keys(CALC),k=>[k,CALC[k]],e&&e.calc||"tetap")})
+  +fld("pk-v","Nilai bawaan (Rp atau %, boleh kosong)",{type:"text",a:' inputmode="decimal" autocomplete="off"',value:e&&e.value?((e.calc||"tetap")==="tetap"?fm(e.value):rtp(e.value)):""})
+  +`<div id="pk-bw"${e&&e.calc==="persen_laba"?"":' hidden'}>`+fld("pk-b","Dasar laba",{t:"select",opts:opt(Object.keys(BASIS),k=>[k,BASIS[k]],e&&e.basis||"sesudah")})+`<p class="k">Laba = pendapatan dikurangi beban pada bulan gaji (unit pegawai bila diisi). "Sebelum beban gaji" tidak memotong gaji; "sesudah" mengurangi gaji pokok, tunjangan, dan komponen non-laba. Bila laba rugi, komponen bernilai 0.</p></div>`}},
  us:()=>{const e=db.users.find(x=>x._id===S.eus);return{t:EN(e,"Edit pengguna","Tambah pengguna"),s:"saveUser()",y:EN(e,"Simpan","Tambah pengguna"),
-  b:fld("us-n","Nama *",{a:' autocomplete="off"',value:e?e.name:"",req:1})+fld("us-r","Peran *",{t:"select",req:1,opts:opt(db.roles.filter(r=>r.status!=="nonaktif"&&(r._id!=="ROL-SUP"||cuSup()||(e&&e.role_id==="ROL-SUP"))),r=>[r._id,r.name],e?e.role_id:"ROL-PTU")})
+  b:fld("us-e","Pegawai (pilih dari daftar pegawai; nama, unit, dan peran terisi otomatis)",{t:"select",a:' onchange="usPick()"',opts:`<option value="">— bukan pegawai / isi manual —</option>`+opt(db.employees.filter(x=>isAct(x)||(e&&e.employee_id===x._id)),x=>[x._id,x.emp_number+" · "+x.name+" · "+x.position],e?e.employee_id:"")})+fld("us-n","Nama *",{a:' autocomplete="off"',value:e?e.name:"",req:1})+fld("us-r","Peran *",{t:"select",req:1,opts:opt(db.roles.filter(r=>r.status!=="nonaktif"&&(r._id!=="ROL-SUP"||cuSup()||(e&&e.role_id==="ROL-SUP"))),r=>[r._id,r.name],e?e.role_id:"ROL-PTU")})
   +`<label>Unit tugas (kosong = semua unit; bila diisi, pengguna hanya bisa memilih dan mencatat di unit ini)</label>`
   +db.business_units.map(x=>`<div><label class="ck"><input type="checkbox" id="us-u-${x._id}"${e&&(e.unit_ids||[]).includes(x._id)?" checked":""}> ${esc(x.name)}</label></div>`).join("")
   +(e?"":`<label>PIN awal (4–8 angka; wajib diganti saat masuk pertama) *</label>${PW("us-p","new-password")}<label>Ulangi PIN awal *</label>${PW("us-p2","new-password")}`)}},
