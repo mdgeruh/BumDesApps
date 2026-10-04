@@ -1,6 +1,6 @@
 # SUMMARY — Sistem BUMDes Multi-Unit Usaha
 
-Ringkasan blueprint v2.0 dan status implementasi (v1.1.044). Todolist rinci dan keputusan kebijakan ada di `ROADMAP.md`. **Fokus saat ini (2026-10-01): unit Simpan Pinjam, yaitu logika, metode hitung, dan UI (Fase SP: SP0 integritas → SP-M mesin hitung → SP-U UI → SP1–SP5).** Unit Air dan Gaji kini modul opsional **bawaan nonaktif** (*Setelan > Modul*). Fase Frontend sisa (F4–F6), Fase PC, dan RBAC Rilis 3 menunggu.
+Ringkasan blueprint v2.0 dan status implementasi (v1.1.094; Buku Besar dengan ringkasan, saldo awal/akhir, urutan, cetak dan CSV; SQL Supabase seragam dengan satu berkas pasang-semua; sidebar dengan tombol ciut mengambang; Laporan bergaya kartu dengan ringkasan dan pemilih laporan; Dashboard bergaya kartu dengan grafik area, batang per unit, pola per hari, komposisi kas; Dashboard memuat jatuh tempo 7 hari, tabungan, transaksi terakhir; halaman Master punya pencarian dan filter; komponen gaji nominal/% gaji pokok/% laba dengan basis sebelum-sesudah beban, ceklist pegawai, bawaan jabatan). Todolist rinci dan keputusan kebijakan ada di `ROADMAP.md`. **Fokus saat ini (2026-10-01): unit Simpan Pinjam, yaitu logika, metode hitung, dan UI (Fase SP: SP0 integritas → SP-M mesin hitung → SP-U UI → SP1–SP5).** Unit Air dan Gaji kini modul opsional **bawaan nonaktif** (*Setelan > Modul*). Fase Frontend sisa (F4–F6), Fase PC, dan RBAC Rilis 3 menunggu.
 
 ## 1. Tujuan dan Prinsip
 
@@ -57,7 +57,7 @@ Satu sistem untuk banyak unit usaha BUMDes; semua transaksi keuangan bermuara ke
 
 | Area | Status | Catatan |
 |------|--------|---------|
-| App Shell | [x] | Form Transaksi terpandu (v0.1.033: tiga kelompok, akun lawan wajib dipilih, ringkasan jurnal Dr/Kr, bilah Posting menempel, angka dengan kursor terjaga/tempel/negatif, penanda draf); tambah/edit master data lewat modal (v0.1.032: 12 form CRUD; tombol *Tambah* di atas daftar, lembar bawah di mobile, dialog tengah di desktop, jebakan fokus, Escape, fokus kembali ke pemicu, isian terjaga saat galat); navbar bawah (mobile; empat tombol diisi dari tab yang diizinkan per peran, v0.1.031), sidebar berkelompok (desktop), header menempel, sub-tab seragam, ikon; aksesibilitas F1 (v0.1.030): tautan lompat, fokus terlihat, `aria-current`, label terhubung, target 44px di mobile, dialog menjebak fokus, kontras AA, `prefers-reduced-motion` |
+| App Shell | [x] | Navbar bawah (mobile, empat tombol sesuai peran), sidebar berkelompok (desktop), header menempel, sub-tab seragam, ikon; Form Transaksi terpandu; tambah/edit master lewat modal (12 form CRUD, jebakan fokus, Escape); aksesibilitas F1 (tautan lompat, fokus terlihat, `aria-current`, label terhubung, target 44px, kontras AA, `prefers-reduced-motion`); PWA offline |
 | Setelan BUMDes | [x] | Nama dan detail BUMDes; tampil di menu, judul, dan dokumen cetak (v0.1.010); logo dan tanda tangan Bendahara/Direktur di dokumen cetak (v0.1.025); tempat penandatanganan + tanggal di atas tanda tangan (v0.1.027) |
 | JSON DB + localStorage | [x] | |
 | Master Data | [x] | Tambah, edit, nonaktif: unit, rekening, akun (v0.1.012); Pihak (party) dan Pegawai (v0.1.014). Komponen gaji menyusul di Payroll |
@@ -65,7 +65,7 @@ Satu sistem untuk banyak unit usaha BUMDes; semua transaksi keuangan bermuara ke
 | Audit Log | [x] | Daftar lengkap dengan filter aksi/entitas/tanggal/kata kunci dan keterangan (v0.1.013) |
 | Accounting Engine | [x] | Transaksi, jurnal, void, periode, tutup buku tahunan dengan jurnal penutup (v0.1.013; akun 3300 Laba Ditahan) |
 | Kas & Bank | [x] | |
-| Simpan Pinjam | [~] | **Fokus saat ini. SP0 (integritas logika) selesai v0.1.040:** transisi status satu tabel, urutan tanggal, batas masukan dapat diatur, duplikat/eksposur, jenis unit, ubah/batal/tolak beralasan, impor diperiksa; SP-M (mesin hitung, anuitas, simulasi, snapshot) selesai v0.1.041; berikutnya SP-U (UI Simpan Pinjam). Alur inti sudah ada: pengajuan, persetujuan, pencairan, jadwal flat/menurun, denda, sebagian, pelunasan, koreksi, jaminan, cetak, aging. Audit v0.1.038 menemukan celah: transisi status dan urutan tanggal tidak dijaga di fungsi, batas masukan dan plafon tidak ada, pengajuan tidak bisa diedit, UI satu halaman panjang tanpa rincian pinjaman dan simulasi. Dikerjakan di SP0 (integritas), SP-M (mesin hitung), SP-U (UI), lalu SP1–SP5 |
+| Simpan Pinjam | [~] | **Fokus saat ini.** SP0 (integritas) dan SP-M (mesin hitung, anuitas, simulasi) selesai; UI, Rate/Fee/Tax Engine, persetujuan, tunggakan/restrukturisasi, dan audit/laporan sebagian besar sudah berjalan (ROADMAP bagian 2 dan SP-O). Alur inti: pengajuan → persetujuan → pencairan, jadwal flat/menurun/anuitas, denda, bayar sebagian, pelunasan, koreksi, jaminan, cetak, aging. Sisa: SP-O O7, O9–O12; O8 menunggu keputusan kebijakan |
 | Modul opsional | [x] | Unit Air dan Gaji bawaan nonaktif; saklar di *Setelan > Modul* (v0.1.039); data tidak dihapus saat dinonaktifkan |
 | Backup / Restore | [x] | Dengan konfirmasi Import/Reset |
 | UX P0 & P1 | [x]/[~] | P0 selesai (v0.1.006); P1 selesai (v0.1.008); label pendek tombol aksi utama di mobile (v0.1.025) |

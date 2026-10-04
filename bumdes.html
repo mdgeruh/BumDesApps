@@ -389,6 +389,15 @@ body.dv-on{overflow:hidden}
 .gl{padding:14px 12px 5px;letter-spacing:.06em}.ni{border-radius:10px;font-size:14px;padding:9px 12px}.ni .ic{width:18px;height:18px;flex:none}.ni.on{background:color-mix(in srgb,var(--ac) 13%,var(--cd));color:var(--ac);font-weight:600}.ni.on:hover{background:color-mix(in srgb,var(--ac) 18%,var(--cd))}
 #app.col .ni{justify-content:center;padding:10px 0}#app.col .brand{justify-content:center;padding:4px 0 14px}#app.col .gl{padding:8px 0 2px;text-align:center;font-size:0;border-top:1px solid var(--bd);margin:6px 8px 0}#app.col .gl:first-of-type{border-top:0}
 @media print{#cb{display:none!important}}
+
+/* ===== Buku Besar (v1.1.094) ===== */
+.ks.k4{margin-top:8px}@media (min-width:900px){.ks.k4{grid-template-columns:repeat(4,1fr)}}
+.ll.lgl{margin-top:6px}.lgl .lgh{display:none}
+.li.lgr{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"a s" "m m"}.li.lgr .l1{grid-area:a}.li.lgr .lgs{grid-area:s;font-weight:600;text-align:right;white-space:nowrap}.li.lgr .lgd,.li.lgr .lgk{grid-area:m;font-size:13px;white-space:nowrap}.li.lgr .lgd{color:var(--c1)}.li.lgr .lgk{color:var(--c3)}.li.lgr .z{display:none}.li.lgr i{font-style:normal;color:var(--mu);font-size:11px;margin-right:6px}.li.lgr .l6{display:none}.li.lgr.vd{opacity:.55}.li.lgr.vd .l1 b{text-decoration:line-through}
+.lgo{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;border-radius:var(--r);background:color-mix(in srgb,var(--tx) 5%,var(--cd));font-size:13px;color:var(--mu)}.lgo b{color:var(--tx)}
+@media (min-width:900px){.lgl .lgh,.li.lgr{display:grid;grid-template-columns:minmax(0,2.6fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr) 20px;column-gap:12px;grid-template-areas:none}.lgl .lgh{padding:2px 14px;color:var(--mu);font-size:12px;font-weight:600}.li.lgr .lgd,.li.lgr .lgk,.li.lgr .lgs{text-align:right}.li.lgr i{display:none}.li.lgr .z{display:block;opacity:.45}.li.lgr .lgd,.li.lgr .lgk{color:inherit;font-size:inherit}.li.lgr .l6{display:block;color:var(--mu)}.li.lgr .l6 .ic{width:16px;height:16px}.li.lgr .lgs{font-weight:600}}
+.fl select[aria-label="Urutan"]{flex:0 0 auto;width:auto;min-width:150px}
+@media (min-width:900px){.li.lgr .l1{flex-direction:column!important;align-items:flex-start!important;gap:0!important}.li.lgr .l1 small{font-size:12px!important}}
 </style></head><body>
 <a class="skip" href="#main">Lewati ke konten</a>
 <div id="app"><aside id="sb" aria-label="Menu utama"></aside><button id="cb" type="button" onclick="togSb()"></button><div id="ct"><header><div><h1 id="ttl"></h1><div class="sub" id="sbt"></div></div><div class="hru"><span id="bkc"></span><span id="usr"></span><select id="unit" aria-label="Filter unit usaha" style="width:auto" onchange="S.unit=this.value;render()"></select></div></header>
@@ -406,7 +415,7 @@ let pwaPrompt=null; // kejadian beforeinstallprompt (lihat js-15-pwa.js)
 // Aman ditaruh di kode karena yang melindungi data adalah login dan RLS. JANGAN isi service_role / sb_secret_ (ditolak aplikasi).
 // Bila SB_URL dan SB_KEY terisi, kolom Koneksi di Setelan > Awan disembunyikan dan nilai ini yang dipakai.
 const SB_URL="https://smpqygmtivxsdbxuypmx.supabase.co",SB_KEY="sb_publishable_yRNGwSos4JM2wsPqPUtWyA_T9i6EXmp";
-const APP_VER="1.1.093"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
+const APP_VER="1.1.094"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
 const KEY="bumdes_db_v1";
 const KEYS="bumdes business_units users roles permissions parties employees accounts cash_accounts transactions journal_entries journal_lines general_ledger accounting_periods loans loan_installments loan_payments collaterals products sales sale_items payments payroll_components payrolls payroll_items salary_payments approvals audit_logs water_connections water_readings".split(" ");
 const NEWK=["water_connections","water_readings","rate_master","tax_master","savings_accounts","savings_tx","collection_notes","prospects"],AIRDEF=()=>({unit_id:"UNIT-002",mode:"flat",abon:15000,min_m3:0,due_days:14,cut_months:3,tiers:[{upto:null,price:10000}]});
@@ -733,12 +742,27 @@ function submitT(){try{const v=i=>$("#"+i).value,raw=v("f-amt").trim(),t=S.ft,d=
  else if(t==="tf"){if(v("f-cash")===v("f-cash2"))throw fe("f-cash2","Kas asal dan tujuan sama");L=[{acc:ca("f-cash2"),d:amt},{acc:ca("f-cash"),c:amt}]}
  else{if(!v("f-acc"))throw fe("f-acc","Pilih akun debit");if(!v("f-acc2"))throw fe("f-acc2","Pilih akun kredit");if(v("f-acc")===v("f-acc2"))throw fe("f-acc2","Akun debit dan kredit sama");L=[{acc:v("f-acc"),d:amt},{acc:v("f-acc2"),c:amt}]}
  const eo=S.etn?editChk(S.etn):null;const nt=post({type:t,date:d,unit:v("f-unit"),desc:v("f-desc")||"-",lines:L});if(eo){nt.edited_from=eo._id;rev(eo._id);eo.replaced_by=nt._id;audit("edit","transaction",nt._id,"Mengganti "+eo.description+" · "+eo.date);save()}clrF("#f-amt,#f-desc");S.msg=eo?"Transaksi diubah: yang lama dibatalkan dengan jurnal pembalik, yang baru diposting":"Transaksi berhasil diposting";okM()}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
-function vLed(){const a=acc(S.acc),ls=db.journal_lines.filter(l=>l.account_id===S.acc&&inUnit(l)).sort((x,y)=>x.date.localeCompare(y.date));
- let run=0;const dn=["asset","expense"].includes(a.type);
- const trs=ls.map(l=>{run+=dn?l.debit-l.credit:l.credit-l.debit;const t=db.transactions.find(x=>x._id===l.transaction_id);
-  return{d:l.date,t:t?t.description:"",h:`<tr><td>${l.date}</td><td>${esc(t?t.description:"")}</td><td class="n">${rp(l.debit)}</td><td class="n">${rp(l.credit)}</td><td class="n">${rp(run)}</td></tr>`}});
- const q=(S.q||"").toLowerCase(),fl2=trs.filter(x=>inD(x.d)&&(!q||x.t.toLowerCase().includes(q))),lim=S.lim||PG,sh=fl2.slice(-lim);
- return`<label>Akun</label><select onchange="S.acc=this.value;S.lim=0;render()">${accOpts(S.acc,1)}</select>${flt(0)}<h2>${esc(a.code+" "+a.name)}</h2><p class="k">${fl2.length} baris${fl2.length>sh.length?" · tampil "+sh.length+" terbaru":""} · saldo berjalan dihitung dari seluruh transaksi</p>${tbl(["Tanggal","Keterangan","#Debit","#Kredit","#Saldo"],sh.map(x=>x.h))}${more(fl2.length-sh.length)}`}
+// ===== BUKU BESAR (v1.1.094): ringkasan, saldo awal/akhir, urutan, buka transaksi, cetak dan CSV =====
+function ledData(){const a=acc(S.acc)||db.accounts.find(postable),dn=["asset","expense"].includes(a.type),TM=new Map(db.transactions.map(t=>[t._id,t]));let run=0;
+ const rows=db.journal_lines.filter(l=>l.account_id===a._id&&inUnit(l)).sort((x,y)=>x.date.localeCompare(y.date)).map(l=>{run+=dn?l.debit-l.credit:l.credit-l.debit;const t=TM.get(l.transaction_id);return{d:l.date,id:l.transaction_id,t:t?t.description:"",u:l.business_unit_id||"",db:l.debit,cr:l.credit,run,vd:!!t&&t.status==="voided"}}),
+  q=(S.q||"").toLowerCase(),inr=rows.filter(x=>inD(x.d)),fl=inr.filter(x=>!q||x.t.toLowerCase().includes(q)),before=S.d1?rows.filter(x=>x.d<S.d1):[],opening=before.length?before[before.length-1].run:0,
+  closing=inr.length?inr[inr.length-1].run:opening;
+ return{a,dn,rows,fl,opening,closing,td:fl.reduce((t,x)=>t+x.db,0),tc:fl.reduce((t,x)=>t+x.cr,0)}}
+function ledCsv(){const D=ledData();return tblCsv(["Tanggal","Keterangan","Unit","#Debit","#Kredit","#Saldo"],D.fl.map(x=>[x.d,x.t,x.u?unitName(x.u):"Umum",x.db,x.cr,x.run]))}
+function ledDl(){try{const D=ledData(),a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+ledCsv()],{type:"text/csv"}));a.download="buku-besar-"+D.a.code+"-"+today()+".csv";a.click();S.msg="Buku besar diunduh (CSV)"}catch(e){S.msg="⚠ Unduh gagal: "+e.message}render()}
+function vLed(){const D=ledData(),a=D.a,cnt={};db.journal_lines.forEach(l=>{if(inUnit(l))cnt[l.account_id]=(cnt[l.account_id]||0)+1});
+ const sel=`<select aria-label="Akun" onchange="S.acc=this.value;S.lim=0;render()">${["asset","liability","equity","revenue","expense"].map(t=>{const L=db.accounts.filter(x=>postable(x)&&x.type===t);return L.length?`<optgroup label="${ACCT_T[t]}">${opt(L,x=>[x._id,x.code+" "+x.name+(cnt[x._id]?" ("+cnt[x._id]+")":"")],S.acc)}</optgroup>`:""}).join("")}</select>`;
+ const lim=S.lim||PG,desc=S.lsd==="1",sh=desc?D.fl.slice().reverse().slice(0,lim):D.fl.slice(-lim),rest=D.fl.length-sh.length,
+  C=(ico,tn,k,v,sub)=>`<div class="kc"><div class="kh"><span class="kic ${tn}">${ic(ico)}</span><span class="k">${k}</span></div><div class="v">${v}</div><div class="s2">${sub}</div></div>`,
+  row=x=>`<button class="li lgr${x.vd?" vd":""}" onclick="mdOpen('td','${x.id}')" aria-label="Buka transaksi ${esc(x.t)}"><span class="l1"><b>${esc(x.t)}</b><small>${x.d}${S.unit==="all"&&x.u?" · "+esc(unitName(x.u)):""}${x.vd?" · dibatalkan":""}</small></span><span class="lgd${x.db?"":" z"}"><i>Debit</i>${rp(x.db)}</span><span class="lgk${x.cr?"":" z"}"><i>Kredit</i>${rp(x.cr)}</span><span class="lgs">${rp(x.run)}</span><span class="l6">${ic("next")}</span></button>`,
+  open=S.d1?`<div class="lgo"><span>Saldo awal sebelum ${S.d1}</span><b>${rp(D.opening)}</b></div>`:"",
+  per=(S.d1||S.d2)?(S.d1||"awal")+" s/d "+(S.d2||"sekarang"):"semua tanggal";
+ return`<label>Akun</label>${sel}${flt(0)}<div class="doc po">${typeof repHead==="function"?repHead("BUKU BESAR — "+esc(a.code+" "+a.name),unTxt()+" · "+perTxt()):""}</div>
+<h2>${esc(a.code+" "+a.name)}</h2>
+<div class="card ks k4" aria-label="Ringkasan akun">${C("led","t1","Saldo akhir",rp(D.closing),"Saldo normal: "+(D.dn?"Debit":"Kredit"))}${C("tup","t2","Total debit",rp(D.td),per)}${C("tdn","t3","Total kredit",rp(D.tc),per)}${C("cal","t4","Mutasi",D.fl.length,(S.q?"cocok pencarian · ":"")+(D.rows.length+" seluruhnya"))}</div>
+<div class="fl noprint"><select aria-label="Urutan" onchange="S.lsd=this.value;S.lim=0;render()"><option value="0"${desc?"":" selected"}>Terlama dulu</option><option value="1"${desc?" selected":""}>Terbaru dulu</option></select><button class="b s" onclick="window.print()">Cetak</button><button class="b s" onclick="ledDl()">Unduh CSV</button></div>
+<p class="k">${D.fl.length} baris${rest>0?" · tampil "+sh.length+(desc?" terbaru":" terbaru")+(desc?"":" (urut dari yang lama)"):""} · saldo berjalan dihitung dari seluruh transaksi</p>
+${D.fl.length?`<div class="ll lgl"><div class="lgh" aria-hidden="true"><span>Keterangan</span><span class="n">Debit</span><span class="n">Kredit</span><span class="n">Saldo</span><span></span></div>${!desc&&rest>0?more(rest).replace("lagi)","lagi, lebih lama)"):""}${desc?"":open}${sh.map(row).join("")}${desc?open:""}${desc&&rest>0?more(rest):""}${desc?"":`<div class="lgo"><span>Saldo akhir</span><b>${rp(D.closing)}</b></div>`}</div>`:`<div class="empty"><p>${D.rows.length?"Tidak ada mutasi yang cocok dengan filter.":"Belum ada mutasi pada akun ini."}</p></div>`}`}
 function vTb(){const m=balU(S.unit);let D=0,C=0;
  const trs=db.accounts.filter(postable).filter(a=>m[a._id]).map(a=>{const x=m[a._id],n=x.d-x.c,d=n>0?n:0,c=n<0?-n:0;D+=d;C+=c;
   return`<tr><td>${a.code}</td><td>${esc(a.name)}</td><td class="n">${rp(d)}</td><td class="n">${rp(c)}</td></tr>`});
@@ -2049,6 +2073,7 @@ function usDariPegawai(){try{needP("pengguna.kelola","Hanya Admin Sistem yang da
  if(n){usDr();save()}S.msg=n?n+" pengguna dibuat dari pegawai (PIN awal "+PIN0+", wajib diganti saat masuk pertama)"+(s?"; "+s+" pegawai dilewati karena jabatannya belum punya peran bawaan":""):(s?s+" pegawai dilewati: atur peran bawaan di Daftar jabatan dulu":"Semua pegawai aktif sudah punya akun")}catch(e){S.msg="⚠ "+e.message}render()}
 // ===== CATATAN RILIS (v1.1.003): data untuk modal "?" di Setelan. Tambahkan rilis baru di PALING ATAS; sinkronkan dengan release_notes.md =====
 const RELEASES=[
+ {v:"1.1.094",d:"2026-10-04",t:"Buku Besar lebih ringkas dan lengkap",i:["Ada ringkasan saldo akhir, total debit, total kredit, dan jumlah mutasi di atas daftar.","Pilihan akun dikelompokkan per tipe dan menunjukkan jumlah mutasinya.","Sentuh baris untuk membuka rincian transaksi; di HP tiap mutasi hanya dua baris.","Tampil saldo awal bila memilih tanggal awal; urutan bisa terlama atau terbaru dulu; bisa dicetak atau diunduh CSV."]},
  {v:"1.1.093",d:"2026-10-04",t:"SQL Supabase dirapikan",i:["Berkas SQL untuk Supabase kini seragam dan bernomor urutan pasang.","Tersedia satu berkas, supabase_semua.sql, untuk memasang semuanya sekaligus di proyek baru.","Panduan SUPABASE.md ditulis ulang agar lebih mudah diikuti."]},
  {v:"1.1.092",d:"2026-10-04",t:"Sidebar lebih ringan",i:["Tombol Ciutkan di dasar menu diganti tombol bulat kecil di tepi sidebar.","Menu aktif ditandai warna hijau muda, logo tampil dalam kotak, dan mode ciut lebih rapi."]},
  {v:"1.1.091",d:"2026-10-04",t:"Laporan tampil lebih rapi",i:["Halaman Laporan kini diawali kartu ringkasan: total aset, pendapatan, beban, laba atau rugi, dan kas.","Pilihan laporan berupa kartu berikon dengan angka kunci masing-masing; isi laporan tidak berubah.","Di HP, tabel dua kolom tidak lagi memotong angka."]},

@@ -377,3 +377,12 @@ body.dv-on{overflow:hidden}
 .gl{padding:14px 12px 5px;letter-spacing:.06em}.ni{border-radius:10px;font-size:14px;padding:9px 12px}.ni .ic{width:18px;height:18px;flex:none}.ni.on{background:color-mix(in srgb,var(--ac) 13%,var(--cd));color:var(--ac);font-weight:600}.ni.on:hover{background:color-mix(in srgb,var(--ac) 18%,var(--cd))}
 #app.col .ni{justify-content:center;padding:10px 0}#app.col .brand{justify-content:center;padding:4px 0 14px}#app.col .gl{padding:8px 0 2px;text-align:center;font-size:0;border-top:1px solid var(--bd);margin:6px 8px 0}#app.col .gl:first-of-type{border-top:0}
 @media print{#cb{display:none!important}}
+
+/* ===== Buku Besar (v1.1.094) ===== */
+.ks.k4{margin-top:8px}@media (min-width:900px){.ks.k4{grid-template-columns:repeat(4,1fr)}}
+.ll.lgl{margin-top:6px}.lgl .lgh{display:none}
+.li.lgr{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"a s" "m m"}.li.lgr .l1{grid-area:a}.li.lgr .lgs{grid-area:s;font-weight:600;text-align:right;white-space:nowrap}.li.lgr .lgd,.li.lgr .lgk{grid-area:m;font-size:13px;white-space:nowrap}.li.lgr .lgd{color:var(--c1)}.li.lgr .lgk{color:var(--c3)}.li.lgr .z{display:none}.li.lgr i{font-style:normal;color:var(--mu);font-size:11px;margin-right:6px}.li.lgr .l6{display:none}.li.lgr.vd{opacity:.55}.li.lgr.vd .l1 b{text-decoration:line-through}
+.lgo{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;border-radius:var(--r);background:color-mix(in srgb,var(--tx) 5%,var(--cd));font-size:13px;color:var(--mu)}.lgo b{color:var(--tx)}
+@media (min-width:900px){.lgl .lgh,.li.lgr{display:grid;grid-template-columns:minmax(0,2.6fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr) 20px;column-gap:12px;grid-template-areas:none}.lgl .lgh{padding:2px 14px;color:var(--mu);font-size:12px;font-weight:600}.li.lgr .lgd,.li.lgr .lgk,.li.lgr .lgs{text-align:right}.li.lgr i{display:none}.li.lgr .z{display:block;opacity:.45}.li.lgr .lgd,.li.lgr .lgk{color:inherit;font-size:inherit}.li.lgr .l6{display:block;color:var(--mu)}.li.lgr .l6 .ic{width:16px;height:16px}.li.lgr .lgs{font-weight:600}}
+.fl select[aria-label="Urutan"]{flex:0 0 auto;width:auto;min-width:150px}
+@media (min-width:900px){.li.lgr .l1{flex-direction:column!important;align-items:flex-start!important;gap:0!important}.li.lgr .l1 small{font-size:12px!important}}
