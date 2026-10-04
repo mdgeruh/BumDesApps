@@ -44,6 +44,10 @@ Menambah pengurus: admin menjalankan di SQL Editor `select add_member('<id bumde
 
 **Sesi offline:** sesi disimpan di perangkat (`bumdes_cloud_v1`, `bumdes_nsb_v1`). Selama belum Keluar, aplikasi dan portal terbuka tanpa internet. Masuk pertama kali butuh internet. Ini pintu masuk, bukan enkripsi: data lokal tetap bisa dibaca siapa pun yang memegang perangkat yang tidak dikunci.
 
+**Tabel pegawai dan gaji (Tahap 3):** setelah `supabase_tahap2.sql`, jalankan `supabase_tahap3.sql` di SQL Editor. Aplikasi otomatis memakainya saat *Isi tabel sekarang* atau isi otomatis (Setelan > Awan > Tabel relasional); sebelum dipasang, bagian ini disembunyikan.
+
+**Buat pengguna dari pegawai lewat SQL (opsional):** jalankan `supabase_pengguna.sql` di SQL Editor, lalu `select public.buat_pengguna_dari_pegawai('UUID-BUMDES'::uuid);` (UUID: `select id, name from public.bumdes;`). Hasilnya sama dengan tombol *Buat pengguna dari pegawai* di aplikasi: peran dari jabatan, PIN awal 1234, wajib ganti saat masuk pertama. Perangkat yang punya perubahan belum tersimpan akan diminta memilih muat/timpa.
+
 **Pasang portal nasabah:** jalankan `supabase_nasabah.sql` di SQL Editor (setelah Tahap 1 dan `supabase_developer.sql`). Di aplikasi: Setelan > Portal Nasabah > Aktif; masuk akun awan sebagai admin/pengurus; atur PIN nasabah di Master (PIN dikirim ke server dan disimpan sebagai hash bcrypt). Data nasabah diterbitkan otomatis saat Simpan ke awan, atau tekan Terbitkan data sekarang.
 
 **Keamanan nasabah:** tabel `nsb_accounts`/`nsb_sessions` tidak punya kebijakan dan hak tabel, semua lewat fungsi `security definer`. Nasabah hanya mendapat proyeksi miliknya (pinjaman, jadwal, tabungan, profil) tanpa catatan internal. Salah PIN: kunci 15 menit tiap 5 kali, kunci permanen setelah 15 kali sampai pengurus mengatur ulang PIN. Sesi 30 hari, dicabut saat PIN diganti. BUMDes nonaktif menolak masuk. Developer tidak bisa membaca tabel ini. PIN 4–8 angka memang lemah dibanding kata sandi; OTP dan persetujuan data pribadi masih keputusan pengurus (ROADMAP).

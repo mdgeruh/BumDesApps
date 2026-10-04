@@ -77,7 +77,7 @@ const MD={
   b:fld("us-e","Pegawai (pilih dari daftar pegawai; nama, unit, dan peran terisi otomatis)",{t:"select",a:' onchange="usPick()"',opts:`<option value="">— bukan pegawai / isi manual —</option>`+opt(db.employees.filter(x=>isAct(x)||(e&&e.employee_id===x._id)),x=>[x._id,x.emp_number+" · "+x.name+" · "+x.position],e?e.employee_id:"")})+fld("us-n","Nama *",{a:' autocomplete="off"',value:e?e.name:"",req:1})+fld("us-r","Peran *",{t:"select",req:1,opts:opt(db.roles.filter(r=>r.status!=="nonaktif"&&(r._id!=="ROL-SUP"||cuSup()||(e&&e.role_id==="ROL-SUP"))),r=>[r._id,r.name],e?e.role_id:"ROL-PTU")})
   +`<label>Unit tugas (kosong = semua unit; bila diisi, pengguna hanya bisa memilih dan mencatat di unit ini)</label>`
   +db.business_units.map(x=>`<div><label class="ck"><input type="checkbox" id="us-u-${x._id}"${e&&(e.unit_ids||[]).includes(x._id)?" checked":""}> ${esc(x.name)}</label></div>`).join("")
-  +(e?"":`<label>PIN awal (4–8 angka; wajib diganti saat masuk pertama) *</label>${PW("us-p","new-password")}<label>Ulangi PIN awal *</label>${PW("us-p2","new-password")}`)}},
+  +(e?"":`<label>PIN awal (4–8 angka; kosongkan untuk memakai 1234; wajib diganti saat masuk pertama)</label>${PW("us-p","new-password")}<label>Ulangi PIN awal</label>${PW("us-p2","new-password")}`)}},
  rp:()=>{const u=db.users.find(x=>x._id===S.rp)||{name:""};return{t:"Reset PIN — "+u.name,s:"resetPin()",y:"Reset PIN",
   b:`<p class="k">Isi PIN sementara. Pengguna wajib menggantinya saat masuk; kunci akun dibuka.</p><label>PIN sementara (4–8 angka)</label>${PW("rp-p","new-password")}`}}
 };
