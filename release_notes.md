@@ -1,8 +1,8 @@
-# Catatan Rilis — v1.1.079
+# Catatan Rilis — v1.1.083
 
-**Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
+**Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
-Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rilis berikutnya: v1.1.002, v1.1.003, …). Fungsi inti sama dengan v0.1.049; yang baru: **aplikasi dapat dipasang dari browser (PWA)**, nomor versi baru, dan catatan rilis ini. v1.1.002 memperbaiki ikon gembok periode; v1.1.003 menambah tombol ? Catatan rilis di Setelan; v1.1.004 melanjutkan UI Simpan Pinjam (Ringkasan, urutan, simulasi); v1.1.005 menambah Linimasa dan Jaminan di rincian pinjaman; v1.1.006 menampilkan pratinjau peringatan di form pengajuan; v1.1.007 menambah Master Tarif & Biaya berversi (belum dipakai transaksi); v1.1.008 menambah alur pengajuan lengkap opsional (verifikasi, analisis, akad); v1.1.009 membuat daftar transaksi ringkas dengan modal rincian dan memindahkan form transaksi ke modal; v1.1.010 menambah tombol Ubah transaksi (batalkan + posting ulang bertaut); v1.1.011 mengganti istilah Void menjadi Batalkan.
+Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan dengan aplikasi yang dapat dipasang dari browser (PWA). Rincian tiap rilis ada di bagian *Riwayat singkat* di bawah dan di `CHANGELOG.md`.
 
 ## Sorotan
 
@@ -32,7 +32,7 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 **Pengembangan**
 - Kode dipecah menjadi berkas bernama jelas dalam satu folder (`index.html`, `style.css`, `app.js`, `loans.js`, `reports.js`, dst.); bisa langsung di-host di Vercel/GitHub Pages tanpa build. `node build.js` tetap membuat `bumdes.html` satu-file mandiri.
 - Data dummy (`data/bumdes-data-dummy.json`) dan tes (`tests/`) disimpan lokal, tidak diunggah ke Git.
-- Tes lokal: logika (Node, 40 berkas) dan UI (Playwright, 390px dan 1280px); tidak ada CI di repo.
+- Tes lokal: logika (Node, 101 berkas) dan UI (Playwright, 390px dan 1280px); tidak ada CI di repo.
 
 ## Cara pakai singkat
 1. Buka `bumdes.html` di browser (tanpa server).
@@ -41,13 +41,17 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 4. Pengembang: ubah berkas sumber → `node build.js` → `npm test`.
 
 ## Batasan yang diketahui
-- Data hanya tersimpan di browser perangkat (aplikasi terpasang memakai penyimpanan browser asalnya; data tidak berpindah antar perangkat/alamat); lakukan Export JSON berkala sebagai backup.
+- Tanpa akun awan, data hanya tersimpan di browser perangkat (tidak berpindah antar perangkat/alamat); lakukan Export JSON berkala. Dengan akun awan (Supabase), data dicadangkan dan disinkron antar perangkat.
 - Login PIN adalah kontrol prosedur di sisi browser, bukan pengamanan server.
-- Belum ada: halaman rincian dengan linimasa, jaminan ditautkan dari rincian pinjaman, kolektibilitas dan restrukturisasi. Lihat `ROADMAP.md`.
+- Fitur yang belum ada dan rencananya: lihat `ROADMAP.md`.
 
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.083 | Dokumen dirapikan, riwayat lama diarsipkan |
+| 1.1.082 | Pengguna dipilih dari daftar pegawai |
+| 1.1.081 | Daftar jabatan & komponen gaji persen/laba |
+| 1.1.080 | Masuk lebih aman di perangkat berisi data |
 | 1.1.079 | Satu halaman masuk untuk semua peran |
 | 1.1.078 | Halaman khusus developer |
 | 1.1.077 | Peran developer platform |

@@ -52,12 +52,13 @@ function saveUser(){try{needP("pengguna.kelola","Hanya Admin Sistem yang dapat m
  const n=$("#us-n").value.trim(),r=$("#us-r").value,eu=db.users.find(x=>x._id===S.eus),role=db.roles.find(x=>x._id===r);
  if(!n)throw fe("us-n","Nama pengguna wajib diisi");if(!role)throw fe("us-r","Pilih peran");if(role._id==="ROL-SUP"&&!cuSup())throw fe("us-r","Peran Superadmin hanya dapat diberikan oleh Superadmin");needSup(eu);
  if(db.users.some(x=>x._id!==(eu&&eu._id)&&x.name.toLowerCase()===n.toLowerCase()))throw fe("us-n","Nama pengguna sudah dipakai");
+ const emp=db.employees.find(x=>x._id===(($("#us-e")||{}).value||""));if(emp&&db.users.some(x=>x._id!==(eu&&eu._id)&&x.employee_id===emp._id))throw fe("us-e","Pegawai ini sudah punya akun pengguna");
  const un=db.business_units.filter(x=>{const c=$("#us-u-"+x._id);return c&&c.checked}).map(x=>x._id);
  if(eu){if(lastAdm(eu)&&!role.perms.includes("pengguna.kelola"))throw fe("us-r","Ini satu-satunya Admin Sistem aktif; peran tidak boleh diubah");
   const d=[];if(eu.name!==n)d.push("nama "+eu.name+" → "+n);if(eu.role_id!==r)d.push("peran "+(roleOf(eu)||{}).name+" → "+role.name);if((eu.unit_ids||[]).join()!==un.join())d.push("unit tugas diubah");
-  eu.name=n;eu.role_id=r;eu.unit_ids=un;audit("user_ubah","user",eu._id,d.join("; ")||"tanpa perubahan");S.eus=null;S.msg="Pengguna diperbarui"}
+  eu.name=n;eu.role_id=r;eu.unit_ids=un;if($("#us-e")){if(emp)eu.employee_id=emp._id;else delete eu.employee_id}audit("user_ubah","user",eu._id,d.join("; ")||"tanpa perubahan");S.eus=null;S.msg="Pengguna diperbarui"}
  else{const p=$("#us-p").value,p2=$("#us-p2").value;pinChk(p,"us-p");if(p!==p2)throw fe("us-p2","Ulangi PIN tidak sama");
-  const u=mkUser(n,r,un,p,true);db.users.push(u);audit("user_buat","user",u._id,n+" · "+role.name);usDr();clrF("#us-n,#us-p,#us-p2");S.msg="Pengguna ditambahkan; PIN awal wajib diganti saat masuk pertama"}
+  const u=mkUser(n,r,un,p,true);if(emp)u.employee_id=emp._id;db.users.push(u);audit("user_buat","user",u._id,n+" · "+role.name);usDr();clrF("#us-n,#us-p,#us-p2");S.msg="Pengguna ditambahkan; PIN awal wajib diganti saat masuk pertama"}
  save();okM()}catch(e){S.msg=ER(e)}render()}
 function togUser(id){try{needP("pengguna.kelola","Hanya Admin Sistem yang dapat mengelola pengguna");const u=db.users.find(x=>x._id===id);if(!u)throw Error("Pengguna tidak ditemukan");needSup(u);
  if(u.status==="aktif"){if(u._id===S.cu)throw Error("Tidak dapat menonaktifkan akun yang sedang dipakai");if(lastAdm(u))throw Error("Tidak dapat menonaktifkan satu-satunya Admin Sistem aktif");u.status="nonaktif";audit("user_nonaktif","user",u._id,u.name);S.msg="Pengguna dinonaktifkan"}
@@ -97,3 +98,7 @@ function vUsr(){const on=rbacOn(),cu=curUser();let h=`<h2>Pengguna & Peran</h2>`
   +tbl(["Nama","Peran","Unit","Status",""],db.users.filter(u=>!isSup(u)||cuSup()).map(u=>`<tr><td>${esc(u.name)}${u._id===S.cu?" (Anda)":""}${u.must_change?' <span class="k">PIN sementara</span>':""}${isLocked(u)?' <span class="k">Terkunci</span>':""}</td><td>${esc((roleOf(u)||{}).name||"?")}</td><td>${esc((u.unit_ids||[]).map(unitName).join(", ")||"Semua")}</td><td>${u.status==="aktif"?"Aktif":"Nonaktif"}</td><td>${ib("edit","Edit","mdOpen('us','"+u._id+"')","s")}${u._id!==S.cu?ib("key","Reset PIN","mdOpen('rp','"+u._id+"')","s")+ib(u.status==="aktif"?"x":"check",u.status==="aktif"?"Nonaktifkan":"Aktifkan","askC('togUser','"+u._id+"')","s"):""}</td></tr>`));
  return h+rolesCard()+`<h2>Mode Pengguna</h2><div class="card"><p class="k">Mematikan mode membuat aplikasi terbuka tanpa login; data pengguna tetap tersimpan.</p><button class="b x" onclick="askC('rbacOff','')">Matikan mode pengguna</button></div>`}
 
+
+// pilih pegawai saat membuat pengguna: nama, unit, dan peran (bawaan jabatan) terisi otomatis
+function usPick(){const e=db.employees.find(x=>x._id===$("#us-e").value);if(!e)return;$("#us-n").value=e.name;const x=posGet(e.position),r=x&&x.role_id&&db.roles.find(q=>q._id===x.role_id&&q.status!=="nonaktif"&&q._id!=="ROL-SUP");if(r)$("#us-r").value=r._id;
+ db.business_units.forEach(b=>{const c=$("#us-u-"+b._id);if(c)c.checked=!!e.unit_id&&e.unit_id===b._id})}

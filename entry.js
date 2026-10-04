@@ -67,10 +67,10 @@ async function entRoute(L){try{await devChk()}catch(e){}const c=cloudCfg();S.lgp
  if(c.dev){lgClose();S.dvo=1;S.dvt="ringkas";S.dvc=null;try{history.replaceState(null,"","#developer")}catch(e){}if(!S.dvl)devLoad(true);return"dev"}
  try{if(location.hash==="#developer"||location.hash==="#portal")history.replaceState(null,"",location.pathname+location.search)}catch(e){}
  if(!L.length){lgClose();S.tab="set";S.su="aw";S.msg=S.clm=ENT_KOSONG;return"kosong"}
- if(L.length>1){S.lgpick={k:"stf",L};S.lgmand=1;return"pilih"}
+ if(L.length>1){L=L.slice().sort((x,y)=>(+y.version||0)-(+x.version||0));S.cll=L;S.lgpick={k:"stf",L};S.lgmand=1;return"pilih"}
  return entFinish(L[0].id)}
 async function entFinish(id){if(cloudCfg().bumdes_id!==id){const b=(S.cll||[]).find(x=>x.id===id);if(b)cloudPick(b.id)}
- const r=await entAutoLoad();lgClose();S.lgpick=null;S.lgmand=0;S.tab="dash";S.doc=null;return r||"app"}
+ const r=await entAutoLoad();lgClose();S.lgpick=null;S.lgmand=0;S.tab="dash";S.doc=null;if(typeof setTimeout==="function")setTimeout(()=>{if(typeof cloudCheck==="function")cloudCheck()},300);return r||"app"}
 async function entAutoLoad(){const c=cloudCfg();if(!c.bumdes_id)return"";
  try{const s=await cloudFetchSnap();if(s&&entBlank()&&s.data&&typeof s.data==="object"){cloudApply(s);S.msg=S.clm="Data BUMDes dimuat dari awan (versi "+s.version+")";return"muat"}}catch(e){}return""}
 async function entPickB(i){const p=S.lgpick;if(!p)return;S.clb=1;render();try{if(p.k==="nsb")await nsbEnter(p.L[i]);else await entFinish(p.L[i].id)}catch(e){S.msg=S.clm="⚠ "+e.message}S.clb=0;render()}
