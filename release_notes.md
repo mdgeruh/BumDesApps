@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.075
+# Catatan Rilis — v1.1.079
 
 **Sistem BUMDes Multi-Unit Usaha** · 1 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,10 @@ Rilis v1.1.001 menandai pergantian skema versi dari `0.1.NNN` ke `1.1.NNN` (rili
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.079 | Satu halaman masuk untuk semua peran |
+| 1.1.078 | Halaman khusus developer |
+| 1.1.077 | Peran developer platform |
+| 1.1.076 | Daftar BUMDes awan lebih jelas |
 | 1.1.075 | Tabel relasional di Supabase |
 | 1.1.074 | Halaman masuk awan |
 | 1.1.073 | Tab Awan lebih ringkas |

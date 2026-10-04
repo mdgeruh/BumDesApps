@@ -8,7 +8,7 @@ Data utama aplikasi tetap di perangkat (`localStorage`). Supabase milik Anda men
 |---|---|---|
 | 1 | Satu baris snapshot per BUMDes, kunci versi (cegah saling menimpa), peran admin/pengurus/pembaca, RLS | **Terpasang di aplikasi** (`cloud.js`, `supabase_schema.sql`) |
 | 2 | Tabel ternormalisasi (unit, pihak, akun, transaksi, jurnal seimbang, pinjaman, audit) + fungsi migrasi dari snapshot | Draf SQL teruji (`supabase_tahap2.sql`), **belum disambung ke aplikasi** |
-| 3 | Portal nasabah sungguhan (login nasabah, RLS per nasabah, OTP) | Belum |
+| 3 | Portal nasabah dari HP sendiri (HP + PIN, data milik sendiri, offline) | **Terpasang** (`entry.js`, `supabase_nasabah.sql`); OTP SMS/WhatsApp belum |
 
 ## Pasang Tahap 1
 
@@ -20,6 +20,8 @@ Data utama aplikasi tetap di perangkat (`localStorage`). Supabase milik Anda men
 6. Tombol **Simpan ke awan** / **Muat dari awan**. Opsi **Sinkron otomatis** mengirim 8 detik setelah perubahan terakhir dan mengambil data baru dari perangkat lain saat aplikasi dibuka/kembali online (bila tidak ada perubahan lokal belum terkirim; jika ada, sinkron dijeda dan Anda memilih Timpa/Muat).
 
 **Koneksi langsung dari kode:** isi `SB_KEY` (anon public key) di `config.js` bersama `SB_URL`; form koneksi di Setelan otomatis disembunyikan. Jangan pernah memakai service_role/sb_secret_. Sejak v1.1.072 `SB_URL` dan publishable key proyek BumDes-app sudah terisi.
+
+**Peran developer:** jalankan `supabase_developer.sql` setelah Tahap 1 (dan Tahap 2). Angkat developer pertama di SQL Editor: `insert into public.platform_admins(user_id) select id from auth.users where email = 'email-anda@contoh.com' on conflict do nothing;` lalu masuk ulang di aplikasi; bagian Developer muncul di Setelan > Awan. Developer mengelola daftar BUMDes (buat, admin pertama, nonaktif, hapus yang kosong, batasi pembuatan mandiri) tetapi tidak membaca isi data BUMDes. Halaman khusus dibuka lewat tombol Buka halaman Developer di Setelan > Awan, atau alamat aplikasi dengan akhiran `#developer`. Bila supabase_schema.sql dijalankan ulang, jalankan berkas developer lagi.
 
 **Tabel relasional (Tahap 2):** jalankan `supabase_tahap2.sql` sekali di SQL Editor (setelah supabase_schema.sql). Di Setelan > Awan > Tabel relasional tekan Isi tabel sekarang; server memeriksa jurnal seimbang. Cek kecocokan membandingkan jumlah baris dan total debit/kredit/pokok dengan perangkat. Opsi Isi tabel otomatis menjalankannya setiap kali data tersimpan ke awan. Snapshot tetap cadangan utama; data yang dihapus di perangkat tidak otomatis dihapus dari tabel (akan terlihat sebagai selisih).
 
@@ -35,6 +37,16 @@ Menambah pengurus: admin menjalankan di SQL Editor `select add_member('<id bumde
 - Id BUMDes ada di Table Editor > `bumdes` (kolom `id`).
 - Satu akun boleh jadi anggota banyak BUMDes; satu perangkat terhubung ke satu BUMDes awan sekaligus.
 - Akun aplikasi (Setelan > Pengguna & Peran) terpisah dari akun awan.
+
+## Halaman masuk gabungan dan portal nasabah (v1.1.079)
+
+**Alur:** buka aplikasi tanpa sesi → halaman masuk. Isian berisi `@` = akun pengurus/developer (Supabase Auth); berbentuk nomor HP = nasabah. Setelah cocok: developer → `#developer`; admin/pengurus/pembaca → aplikasi (pembaca hanya melihat); nasabah → portal. Akun di banyak BUMDes memilih dulu. Perangkat baru memuat data dari awan otomatis; perangkat yang sudah berisi data tidak ditimpa.
+
+**Sesi offline:** sesi disimpan di perangkat (`bumdes_cloud_v1`, `bumdes_nsb_v1`). Selama belum Keluar, aplikasi dan portal terbuka tanpa internet. Masuk pertama kali butuh internet. Ini pintu masuk, bukan enkripsi: data lokal tetap bisa dibaca siapa pun yang memegang perangkat yang tidak dikunci.
+
+**Pasang portal nasabah:** jalankan `supabase_nasabah.sql` di SQL Editor (setelah Tahap 1 dan `supabase_developer.sql`). Di aplikasi: Setelan > Portal Nasabah > Aktif; masuk akun awan sebagai admin/pengurus; atur PIN nasabah di Master (PIN dikirim ke server dan disimpan sebagai hash bcrypt). Data nasabah diterbitkan otomatis saat Simpan ke awan, atau tekan Terbitkan data sekarang.
+
+**Keamanan nasabah:** tabel `nsb_accounts`/`nsb_sessions` tidak punya kebijakan dan hak tabel, semua lewat fungsi `security definer`. Nasabah hanya mendapat proyeksi miliknya (pinjaman, jadwal, tabungan, profil) tanpa catatan internal. Salah PIN: kunci 15 menit tiap 5 kali, kunci permanen setelah 15 kali sampai pengurus mengatur ulang PIN. Sesi 30 hari, dicabut saat PIN diganti. BUMDes nonaktif menolak masuk. Developer tidak bisa membaca tabel ini. PIN 4–8 angka memang lemah dibanding kata sandi; OTP dan persetujuan data pribadi masih keputusan pengurus (ROADMAP).
 
 ## Perilaku
 

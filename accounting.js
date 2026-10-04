@@ -14,7 +14,7 @@ function blank(){const d={meta:{version:1,app:"bumdes-mvp",created_at:now()},set
  d.accounts=COA.split("\n").map(r=>{const[c,n,t]=r.split("|");return{_id:"ACC"+c,code:c,name:n,type:t,parent_id:c.endsWith("000")?null:"ACC"+c[0]+"000",status:"aktif"}});
  d.cash_accounts=[{_id:"CASH-001",name:"Kas Tunai",type:"kas",account_id:"ACC1100",status:"aktif"},{_id:"CASH-002",name:"Bank Desa",type:"bank",account_id:"ACC1200",status:"aktif"}];
  return d}
-function reset(){db=blank();demo();snapSet();S.cu=null;ssS(null);try{localStorage.removeItem(LB)}catch(e){}save()}
+function reset(){db=blank();demo();snapSet();S.cu=null;ssS(null);try{localStorage.removeItem(LB)}catch(e){}save();if(typeof entSeed==="function")entSeed()}
 function demo(){const t="2026-09-";
  post({type:"in",date:t+"01",unit:"",desc:"Penyertaan modal desa",lines:[{acc:"ACC1200",d:5e7},{acc:"ACC3200",c:5e7}]});
  post({type:"tf",date:t+"03",unit:"",desc:"Tarik tunai operasional",lines:[{acc:"ACC1100",d:5e6},{acc:"ACC1200",c:5e6}]});
