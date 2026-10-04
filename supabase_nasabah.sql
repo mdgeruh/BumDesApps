@@ -1,16 +1,19 @@
 -- ============================================================================
--- Sistem BUMDes — PORTAL NASABAH via Supabase (DB5, v1.1.079)
--- Prasyarat: supabase_schema.sql (Tahap 1) dan supabase_developer.sql (kolom bumdes.status) sudah dijalankan.
--- Idempoten. Tidak ada rahasia di berkas ini. Jangan pernah memakai service_role key di aplikasi.
---
--- Prinsip:
---  * Nasabah TIDAK memakai Supabase Auth. Ia masuk dengan nomor HP + PIN lewat fungsi server (security definer).
---  * PIN disimpan sebagai hash bcrypt (pgcrypto) di server. Salah PIN dihitung di server (terkunci bertahap).
---  * Tabel nsb_* dikunci rapat (RLS aktif, tanpa kebijakan, tanpa hak tabel). Semua akses lewat fungsi.
---  * Data portal = proyeksi milik nasabah itu SAJA (pinjaman, jadwal, tabungan, profil), diterbitkan oleh pengurus
---    saat sinkron. Nasabah hanya bisa membaca, tidak bisa mengubah data BUMDes.
---  * Developer platform tidak dapat membaca tabel ini (tanpa kebijakan).
+-- Sistem BUMDes · Supabase · [5/6] PORTAL NASABAH
+-- ----------------------------------------------------------------------------
+-- Isi         : Tabel nsb_accounts dan nsb_sessions (dikunci rapat: RLS aktif, tanpa kebijakan, tanpa hak tabel);
+--               fungsi nsb_login, nsb_data, nsb_logout, nsb_change_pin (sisi nasabah) dan nsb_set_pin, nsb_publish, nsb_list (sisi pengurus).
+-- Prasyarat   : supabase_schema.sql dan supabase_developer.sql (memakai kolom bumdes.status)
+-- Dijalankan  : Supabase > SQL Editor > New query > tempel seluruh berkas > Run. Idempoten (aman diulang). Tanpa rahasia.
+-- Dipakai oleh: Portal Nasabah (portal.js, entry.js)
+-- Catatan
+--   Prinsip:
+--   * Nasabah TIDAK memakai Supabase Auth: masuk dengan nomor HP + PIN lewat fungsi server (security definer).
+--   * PIN disimpan sebagai hash bcrypt (pgcrypto); salah PIN dihitung di server (terkunci bertahap).
+--   * Data portal = proyeksi milik nasabah itu SAJA (pinjaman, jadwal, tabungan, profil), diterbitkan pengurus saat sinkron.
+--     Nasabah hanya bisa membaca. Developer platform tidak dapat membaca tabel ini (tanpa kebijakan).
 -- ============================================================================
+
 create extension if not exists pgcrypto;
 
 create table if not exists public.nsb_accounts (
@@ -44,7 +47,7 @@ alter table public.nsb_sessions enable row level security;
 revoke all on public.nsb_accounts from public, anon, authenticated;
 revoke all on public.nsb_sessions from public, anon, authenticated;
 
--- ---------- pembantu ----------
+-- ----- pembantu ------------------------------------------------------------
 create or replace function public.nsb_hp(p text) returns text
 language sql immutable set search_path = public as $$
   select case
@@ -84,7 +87,7 @@ begin
   return a;
 end $$;
 
--- ---------- sisi nasabah (boleh dipanggil tanpa login Supabase) ----------
+-- ----- sisi nasabah (boleh dipanggil tanpa login Supabase) -----------------
 -- Kembalian: {ok:true, sessions:[{token,bumdes,nama}]} atau {ok:false, err:'...'}.
 -- Tidak melempar galat agar hitungan salah PIN tetap tersimpan.
 create or replace function public.nsb_login(p_hp text, p_pin text)
@@ -169,7 +172,7 @@ begin
   return jsonb_build_object('ok', true);
 end $$;
 
--- ---------- sisi pengurus (harus login Supabase, admin/pengurus BUMDes itu) ----------
+-- ----- sisi pengurus (harus login Supabase, admin/pengurus BUMDes itu) -----
 -- Atur PIN (dan buka kunci). Nomor HP dipakai untuk masuk; harus unik per BUMDes.
 create or replace function public.nsb_set_pin(p_bumdes uuid, p_party text, p_hp text, p_nama text, p_pin text)
 returns void
@@ -239,7 +242,7 @@ begin
                from public.nsb_accounts c where c.bumdes_id = p_bumdes order by c.nama;
 end $$;
 
--- ---------- hak eksekusi ----------
+-- ----- hak eksekusi --------------------------------------------------------
 revoke all on function public.nsb_mk_session(uuid) from public, anon, authenticated;
 revoke all on function public.nsb_acc_of(text) from public, anon, authenticated;
 revoke all on function public.nsb_login(text, text) from public;

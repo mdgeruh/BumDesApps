@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.087
+# Catatan Rilis — v1.1.093
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,12 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.093 | SQL Supabase dirapikan |
+| 1.1.092 | Sidebar dengan tombol ciut mengambang |
+| 1.1.091 | Laporan bergaya kartu |
+| 1.1.090 | Dashboard bergaya kartu analitik |
+| 1.1.089 | Dashboard lebih informatif |
+| 1.1.088 | Halaman Master lebih ringkas |
 | 1.1.087 | Setelan lebih rapi |
 | 1.1.086 | Pegawai dan gaji masuk tabel Supabase |
 | 1.1.085 | Pengguna dari pegawai, PIN awal 1234 |
