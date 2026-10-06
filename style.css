@@ -386,3 +386,10 @@ body.dv-on{overflow:hidden}
 @media (min-width:900px){.lgl .lgh,.li.lgr{display:grid;grid-template-columns:minmax(0,2.6fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr) 20px;column-gap:12px;grid-template-areas:none}.lgl .lgh{padding:2px 14px;color:var(--mu);font-size:12px;font-weight:600}.li.lgr .lgd,.li.lgr .lgk,.li.lgr .lgs{text-align:right}.li.lgr i{display:none}.li.lgr .z{display:block;opacity:.45}.li.lgr .lgd,.li.lgr .lgk{color:inherit;font-size:inherit}.li.lgr .l6{display:block;color:var(--mu)}.li.lgr .l6 .ic{width:16px;height:16px}.li.lgr .lgs{font-weight:600}}
 .fl select[aria-label="Urutan"]{flex:0 0 auto;width:auto;min-width:150px}
 @media (min-width:900px){.li.lgr .l1{flex-direction:column!important;align-items:flex-start!important;gap:0!important}.li.lgr .l1 small{font-size:12px!important}}
+
+/* Setelan > Profil (v1.1.095): dua kolom di desktop */
+.pff{min-width:0}
+@media (min-width:900px){.pfw{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:0 24px;align-items:start}.pfw section>.card{max-width:none}.pfg{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}.pff.w{grid-column:1/-1}.pfc>.b{margin-top:14px}}
+
+/* Setelan semua sub-tab (v1.1.096): kartu berdampingan di desktop */
+@media (min-width:900px){.mdg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;align-items:start}.mdg .card{max-width:none}.spg{columns:2;column-gap:20px}.spc{break-inside:avoid}.spc .card{max-width:none}.spc h3{margin-top:14px}}
