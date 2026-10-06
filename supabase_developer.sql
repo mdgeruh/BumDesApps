@@ -1,14 +1,16 @@
 -- ============================================================================
--- Sistem BUMDes — Supabase PERAN DEVELOPER (platform) (v1.1.077)
--- Prasyarat: supabase_schema.sql (Tahap 1) sudah dijalankan. Jalankan SETELAH Tahap 1 (dan setelah Tahap 2 bila dipakai).
--- Bila supabase_schema.sql dijalankan ulang, jalankan berkas ini lagi (ia menimpa is_member dan create_bumdes).
--- Idempoten. Tidak ada rahasia di berkas ini.
---
--- Prinsip: developer mengelola WADAH (daftar BUMDes, admin pertama, status, hapus yang kosong),
--- BUKAN isi data. Developer tidak bisa membaca snapshot/tabel BUMDes kecuali ia sendiri menjadi anggotanya.
---
--- Mengangkat developer pertama (jalankan sendiri di SQL Editor, ganti emailnya):
---   insert into public.platform_admins(user_id) select id from auth.users where email = 'email-developer@contoh.com' on conflict do nothing;
+-- Sistem BUMDes · Supabase · [2/6] PERAN DEVELOPER (platform)
+-- ----------------------------------------------------------------------------
+-- Isi         : Tabel platform_admins, platform_settings, platform_audit; fungsi dev_* (daftar/buat/nonaktifkan/hapus BUMDes kosong,
+--               tambah admin pertama, pengaturan, audit); kolom bumdes.status; menimpa is_member dan create_bumdes agar menghormati status.
+-- Prasyarat   : supabase_schema.sql (jalankan SETELAH Tahap 1; sebelum Tahap 2 atau sesudahnya sama saja)
+-- Dijalankan  : Supabase > SQL Editor > New query > tempel seluruh berkas > Run. Idempoten (aman diulang). Tanpa rahasia.
+-- Dipakai oleh: halaman Developer (#developer)
+-- Catatan
+--   Prinsip: developer mengelola WADAH (daftar BUMDes, admin pertama, status), BUKAN isi data. Ia tidak bisa membaca
+--   snapshot/tabel BUMDes kecuali ia sendiri menjadi anggota.
+--   Mengangkat developer pertama (jalankan sendiri di SQL Editor, ganti emailnya):
+--    insert into public.platform_admins(user_id) select id from auth.users where email = 'email-developer@contoh.com' on conflict do nothing;
 -- ============================================================================
 
 alter table public.bumdes add column if not exists status text not null default 'aktif';

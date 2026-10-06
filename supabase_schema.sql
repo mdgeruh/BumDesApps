@@ -1,13 +1,19 @@
 -- ============================================================================
--- Sistem BUMDes — Supabase TAHAP 1: cadangan dan sinkron awan (v1.1.042)
--- Jalankan SELURUH berkas ini sekali di Supabase > SQL Editor > New query > Run.
--- Aman dijalankan ulang (idempoten). Tidak ada rahasia di berkas ini.
--- Hanya "anon key" yang boleh dipakai di aplikasi. JANGAN pernah memakai service_role key di aplikasi.
+-- Sistem BUMDes · Supabase · [1/6] TAHAP 1 · Cadangan dan sinkron awan
+-- ----------------------------------------------------------------------------
+-- Isi         : Tabel bumdes, bumdes_members, bumdes_snapshots, bumdes_snapshot_history; kebijakan RLS;
+--               fungsi is_member, create_bumdes, save_snapshot (kunci versi), add_member.
+-- Prasyarat   : proyek Supabase baru (tidak ada prasyarat)
+-- Dijalankan  : Supabase > SQL Editor > New query > tempel seluruh berkas > Run. Idempoten (aman diulang). Tanpa rahasia.
+-- Dipakai oleh: Setelan > Awan (cloud.js)
+-- Catatan
+--   Hanya "anon key" yang boleh dipakai di aplikasi. JANGAN pernah memakai service_role key.
+--   Bila berkas ini dijalankan ulang, jalankan lagi supabase_developer.sql (ia menimpa is_member dan create_bumdes).
 -- ============================================================================
 
 create extension if not exists pgcrypto;
 
--- ----- tabel -----------------------------------------------------------------
+-- ----- tabel ---------------------------------------------------------------
 create table if not exists public.bumdes (
   id          uuid primary key default gen_random_uuid(),
   name        text not null check (char_length(name) between 1 and 120),
@@ -46,7 +52,7 @@ create table if not exists public.bumdes_snapshot_history (
   unique (bumdes_id, version)
 );
 
--- ----- fungsi bantu keanggotaan ----------------------------------------------
+-- ----- fungsi bantu keanggotaan --------------------------------------------
 create or replace function public.is_member(b uuid, roles text[] default array['admin','pengurus','pembaca'])
 returns boolean
 language sql stable security definer set search_path = public
@@ -57,7 +63,7 @@ as $$
   );
 $$;
 
--- ----- keamanan baris (RLS) ---------------------------------------------------
+-- ----- keamanan baris (RLS) ------------------------------------------------
 alter table public.bumdes                  enable row level security;
 alter table public.bumdes_members          enable row level security;
 alter table public.bumdes_snapshots        enable row level security;
@@ -95,7 +101,7 @@ grant select on public.bumdes, public.bumdes_members, public.bumdes_snapshots, p
 grant update (name) on public.bumdes to authenticated;
 grant insert, update, delete on public.bumdes_members to authenticated;
 
--- ----- fungsi: buat BUMDes baru (pembuat otomatis menjadi admin) --------------
+-- ----- fungsi: buat BUMDes baru (pembuat otomatis menjadi admin) -----------
 create or replace function public.create_bumdes(p_name text)
 returns uuid
 language plpgsql security definer set search_path = public
@@ -114,7 +120,7 @@ begin
 end;
 $$;
 
--- ----- fungsi: simpan snapshot dengan kunci versi (cegah saling menimpa) -------
+-- ----- fungsi: simpan snapshot dengan kunci versi (cegah saling menimpa) ---
 -- p_expected = versi yang dipegang aplikasi (0 untuk simpanan pertama).
 -- Jika versi di server berbeda: galat 'version_conflict:<versi_server>' (kode 40001).
 create or replace function public.save_snapshot(p_bumdes uuid, p_expected bigint, p_data jsonb, p_app_ver text default null)
@@ -159,7 +165,7 @@ begin
 end;
 $$;
 
--- ----- fungsi: tambah anggota berdasarkan email (hanya admin) ------------------
+-- ----- fungsi: tambah anggota berdasarkan email (hanya admin) --------------
 -- Pengguna harus sudah mendaftar/diundang di Supabase > Authentication > Users.
 create or replace function public.add_member(p_bumdes uuid, p_email text, p_role text default 'pengurus')
 returns void
@@ -182,7 +188,7 @@ begin
 end;
 $$;
 
--- ----- hak eksekusi fungsi ----------------------------------------------------
+-- ----- hak eksekusi fungsi -------------------------------------------------
 revoke all on function public.create_bumdes(text)                      from public, anon;
 revoke all on function public.save_snapshot(uuid, bigint, jsonb, text) from public, anon;
 revoke all on function public.add_member(uuid, text, text)             from public, anon;
@@ -192,6 +198,6 @@ grant execute on function public.save_snapshot(uuid, bigint, jsonb, text) to aut
 grant execute on function public.add_member(uuid, text, text)             to authenticated;
 grant execute on function public.is_member(uuid, text[])                  to authenticated;
 
--- ----- selesai ----------------------------------------------------------------
+-- ----- selesai -------------------------------------------------------------
 -- Cek cepat setelah dijalankan:
 --   select table_name from information_schema.tables where table_schema='public' and table_name like 'bumdes%';

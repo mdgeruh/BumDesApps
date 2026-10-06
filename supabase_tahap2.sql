@@ -1,12 +1,17 @@
 -- ============================================================================
--- Sistem BUMDes — Supabase TAHAP 2 (dipakai aplikasi sejak v1.1.075: Setelan > Awan > Tabel relasional)
--- Tabel sungguhan per koleksi, aman untuk banyak pengguna, dengan RLS dan jurnal yang dijaga di server.
--- Prasyarat: supabase_schema.sql (Tahap 1) sudah dijalankan (memakai tabel bumdes dan fungsi is_member).
--- Tiap tabel menyimpan kolom penting (untuk query/laporan) + kolom doc = objek asli aplikasi (tanpa kehilangan data).
--- Idempoten: aman dijalankan ulang.
+-- Sistem BUMDes · Supabase · [3/6] TAHAP 2 · Tabel relasional (akuntansi dan Simpan Pinjam)
+-- ----------------------------------------------------------------------------
+-- Isi         : Tabel business_units, parties, accounts, cash_accounts, transactions, journal_lines (jurnal dijaga seimbang di server),
+--               loans, loan_installments, loan_payments, audit_logs (hanya tambah); RLS; fungsi post_transaction,
+--               migrate_snapshot_to_tables, tabel_status. Tiap tabel: kolom penting untuk query + doc = objek asli aplikasi.
+-- Prasyarat   : supabase_schema.sql (memakai tabel bumdes dan fungsi is_member)
+-- Dijalankan  : Supabase > SQL Editor > New query > tempel seluruh berkas > Run. Idempoten (aman diulang). Tanpa rahasia.
+-- Dipakai oleh: Setelan > Awan > Tabel relasional (cloud.js)
+-- Catatan
+--   Koleksi lain (tabungan, penjualan/air, jaminan, tarif, pengguna) tetap di snapshot sampai dimigrasikan.
 -- ============================================================================
 
--- ----- tabel master ----------------------------------------------------------
+-- ----- tabel master --------------------------------------------------------
 create table if not exists public.business_units (
   bumdes_id uuid not null references public.bumdes(id) on delete cascade,
   id text not null, code text, name text not null, type text, status text,
@@ -29,7 +34,7 @@ create table if not exists public.cash_accounts (
   doc jsonb not null default '{}', primary key (bumdes_id, id)
 );
 
--- ----- akuntansi: transaksi dan baris jurnal ----------------------------------
+-- ----- akuntansi: transaksi dan baris jurnal -------------------------------
 create table if not exists public.transactions (
   bumdes_id uuid not null references public.bumdes(id) on delete cascade,
   id text not null, date date not null, type text, business_unit_id text, description text,
@@ -66,7 +71,7 @@ drop trigger if exists journal_lines_balanced on public.journal_lines;
 create constraint trigger journal_lines_balanced after insert or update or delete on public.journal_lines
   deferrable initially deferred for each row execute function public.trg_check_balanced();
 
--- ----- Simpan Pinjam ----------------------------------------------------------
+-- ----- Simpan Pinjam -------------------------------------------------------
 create table if not exists public.loans (
   bumdes_id uuid not null references public.bumdes(id) on delete cascade,
   id text not null, loan_number text, party_id text not null, unit_id text, status text not null,
@@ -92,14 +97,14 @@ create table if not exists public.loan_payments (
   doc jsonb not null default '{}', primary key (bumdes_id, id)
 );
 
--- ----- audit log: hanya tambah, tidak bisa diubah/hapus ------------------------
+-- ----- audit log: hanya tambah, tidak bisa diubah/hapus --------------------
 create table if not exists public.audit_logs (
   bumdes_id uuid not null references public.bumdes(id) on delete cascade,
   id text not null, at timestamptz, action text, entity text, entity_id text, detail text, "user" text,
   doc jsonb not null default '{}', primary key (bumdes_id, id)
 );
 
--- ----- RLS --------------------------------------------------------------------
+-- ----- RLS -----------------------------------------------------------------
 do $$
 declare t text;
 begin
@@ -133,7 +138,7 @@ drop policy if exists transactions_upd on public.transactions;
 create policy transactions_upd on public.transactions for update to authenticated
   using (public.is_member(bumdes_id, array['admin','pengurus'])) with check (public.is_member(bumdes_id, array['admin','pengurus']));
 
--- ----- fungsi: catat transaksi + baris jurnal secara atomik --------------------
+-- ----- fungsi: catat transaksi + baris jurnal secara atomik ----------------
 -- p_txn   : {"id","date","type","business_unit_id","description","amount","status","created_by"}
 -- p_lines : [{"id","account_id","debit","credit","business_unit_id"}, ...]
 create or replace function public.post_transaction(p_bumdes uuid, p_txn jsonb, p_lines jsonb)
@@ -163,7 +168,8 @@ begin
   return v_id;
 end $$;
 
--- ----- fungsi: pindahkan data dari snapshot (Tahap 1) ke tabel (admin dan pengurus; sumbernya snapshot yang memang boleh mereka simpan) -----
+-- ----- fungsi: pindahkan data dari snapshot (Tahap 1) ke tabel -------------
+-- Hanya admin dan pengurus; sumbernya snapshot yang memang boleh mereka simpan.
 -- Idempoten: menimpa baris dengan id yang sama. Koleksi lain (gaji, air, dst.) tetap di snapshot sampai dimigrasikan.
 create or replace function public.migrate_snapshot_to_tables(p_bumdes uuid)
 returns jsonb
@@ -241,7 +247,8 @@ begin
   return r;
 end $$;
 
--- ----- fungsi: ringkasan isi tabel untuk dicocokkan dengan data di perangkat (semua anggota) -----
+-- ----- fungsi: ringkasan isi tabel untuk dicocokkan dengan perangkat -------
+-- Boleh dipanggil semua anggota.
 create or replace function public.tabel_status(p_bumdes uuid)
 returns jsonb
 language plpgsql stable security definer set search_path = public

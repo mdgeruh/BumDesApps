@@ -2,6 +2,18 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.097] — 2026-10-06
+### Diperbaiki
+- Memilih atau membuat BUMDes awan kedua di perangkat yang sama tidak lagi menyalin data perangkat ke BUMDes itu (sebelumnya dua BUMDes awan berisi database yang sama, hanya beda nama). Kini data perangkat dipisah per BUMDes: BUMDes baru/kosong dimulai kosong, BUMDes yang sudah berisi dimuat dari awan, data sebelumnya dicadangkan lokal (`bumdes_db_v1_prev`) dan tetap aman di awan. Perpindahan ditahan bila ada perubahan belum tersimpan. Pilihan pertama kali (perangkat belum tertaut) tetap membawa data perangkat ke awan. BUMDes asal data dicatat di `meta.cloud_bid`.
+
+## [1.1.096] — 2026-10-06
+### Diubah
+- Setelan dioptimalkan untuk desktop di semua sub-tab (≥900px): kartu Modul dua kolom; pengaturan Simpan Pinjam di tiap kelompok tersusun dua kolom kartu. Profil dan Awan sudah berdampingan/lebar; Pengguna & Peran dan Portal Nasabah tetap. Ponsel tetap satu kolom. Tidak ada perubahan data.
+
+## [1.1.095] — 2026-10-06
+### Diubah
+- Setelan > Profil dioptimalkan untuk desktop (≥900px): isian Profil BUMDes dua kolom (nama, alamat, No. Perdes melebar penuh) dengan kartu Dokumen Cetak di sampingnya; di ponsel tetap satu kolom. Setiap isian kini punya label terhubung (`for`). Tidak ada perubahan data.
+
 ## [1.1.094] — 2026-10-04
 **Optimalisasi Buku Besar.** views.js: `ledData()` (baris, saldo berjalan, saldo awal sebelum tanggal awal, saldo akhir, total debit/kredit), `vLed` ditulis ulang: ringkasan 4 kartu (saldo akhir + saldo normal Debit/Kredit, total debit, total kredit, jumlah mutasi), pilihan akun dikelompokkan per tipe dengan jumlah mutasi `(n)`, daftar baris kompak (di HP dua baris per mutasi, di desktop kolom Debit/Kredit/Saldo) yang membuka rincian transaksi saat disentuh, tanda "dibatalkan", unit pada tampilan "Semua unit", baris Saldo awal (bila ada tanggal awal) dan Saldo akhir, pilihan urutan terlama/terbaru dulu (`S.lsd`), Cetak dan Unduh CSV (`ledCsv`/`ledDl`), kepala cetak. Tinggi halaman di HP 5291 → 3971 px. style.css: `.ks.k4`, `.li.lgr`, `.lgo`. Uji: `logic-109.js` (22); `logic-4.js` menyesuaikan pencacah baris.
 
