@@ -2,6 +2,11 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.110] — 2026-10-07
+
+### Diperbaiki
+- Nama BUMDes bisa berbeda antara Profil (data perangkat) dan awan (tabel `bumdes`, mis. "Sumber Rejeki" vs "Mertha Bhuana"). Kini Siapkan BUMDes menjadikan nama yang diisi sebagai nama Profil, dan admin yang menyimpan Profil atau memuat data awan memperbarui nama awan (`cloudRenameChk`). Pengurus/pembaca tidak mengubah nama awan.
+
 ## [1.1.109] — 2026-10-07
 
 ### Diubah
