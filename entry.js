@@ -1,9 +1,9 @@
 // ===== MASUK GABUNGAN + SESI TERSIMPAN + PORTAL NASABAH SERVER (v1.1.079) =====
-// Satu halaman masuk (#masuk): isian berbentuk email = akun pengurus/developer (Supabase Auth), berbentuk nomor HP = nasabah (PIN, fungsi server nsb_*).
-// Setelah cocok, pengguna diarahkan menurut peran: developer -> konsol #developer, admin/pengurus/pembaca -> aplikasi, nasabah -> portal.
+// Satu halaman masuk (#masuk): isian berbentuk email = akun pengurus (Supabase Auth), berbentuk nomor HP = nasabah (PIN, fungsi server nsb_*).
+// Setelah cocok, pengguna diarahkan menurut peran: admin/pengurus/pembaca -> aplikasi, nasabah -> portal.
 // Sesi disimpan di perangkat (localStorage): selama belum Keluar, aplikasi tetap terbuka walau offline. Ini pintu masuk, BUKAN enkripsi data lokal.
 // Sesi nasabah disimpan di kunci terpisah (NSB_KEY) bersama salinan datanya sendiri, supaya bisa dilihat offline.
-const ENT_KOSONG="Akun ini belum terdaftar di BUMDes mana pun. Minta admin BUMDes menambahkan email Anda, atau buat BUMDes baru bila diizinkan";
+const ENT_KOSONG="Akun ini belum menjadi anggota BUMDes. Minta admin BUMDes menambahkan email Anda di Setelan > Pengguna & Peran";
 const ENT_KEY="bumdes_ent_v1",NSB_KEY="bumdes_nsb_v1";
 const entGet=()=>{try{return JSON.parse(localStorage.getItem(ENT_KEY)||"{}")||{}}catch(e){return{}}};
 const entPut=o=>{try{localStorage.setItem(ENT_KEY,JSON.stringify(Object.assign(entGet(),o)))}catch(e){}};
@@ -63,15 +63,31 @@ function nsbDb(d){const h=blank();h.bumdes=[{name:d.bumdes||"BUMDes"}];h.parties
 function nsbWrap(f){if(!S.pt||!S.pt.srv)return f();const n=nsbGet();if(!n||!n.data||!n.data.party)return f();const bk=db;db=nsbDb(Object.assign({bumdes:n.bumdes},n.data));try{return f()}finally{db=bk}}
 function nsbInfo(){if(!S.pt||!S.pt.srv)return"";const n=nsbGet()||{},t=String(n.at||"").replace("T"," ").slice(0,16);return`<small>${S.pt.off?"Offline · ":""}Data per ${esc(tglS(t.slice(0,10)))} ${esc(t.slice(11))}</small>`}
 // ----- arah per peran setelah masuk akun awan -----
-async function entRoute(L){try{await devChk()}catch(e){}const c=cloudCfg();S.lgpick=null;S.lgmand=0;
- {const tg=S.lgtg;S.lgtg=null;if(tg){const m=(L||[]).find(x=>x.id===tg.id);
-  if(m){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}S.dvo=0;return entFinish(m.id)}
-  await cloudLogout();S.lgtg=tg;S.lgn=1;S.lgem="";S.fe=null;S.msg=S.clm="⚠ Akun itu bukan anggota "+tg.name+". Masuk dengan akun admin atau pengurus BUMDes ini";return"bukan"}}
- if(c.dev){lgClose();S.dvo=1;S.dvt="ringkas";S.dvc=null;try{history.replaceState(null,"","#developer")}catch(e){}if(!S.dvl)devLoad(true);return"dev"}
- try{if(location.hash==="#developer"||location.hash==="#portal")history.replaceState(null,"",location.pathname+location.search)}catch(e){}
- if(!L.length){lgClose();S.tab="set";S.su="aw";S.msg=S.clm=ENT_KOSONG;return"kosong"}
+async function entRoute(L){const c=cloudCfg();S.lgpick=null;S.lgmand=0;
+ try{if(location.hash==="#portal")history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+ if(!L.length){let siap=true;try{const st=await cloudReq("/rest/v1/rpc/setup_status",{method:"POST",body:{}});siap=!!(st&&st.siap)}catch(e){}
+  if(!siap){S.lgsiap=false;S.lgsetup=2;S.lgmand=1;S.lgn=1;S.fe=null;S.msg=S.clm="Database ini belum punya BUMDes. Isi nama BUMDes untuk menyiapkannya; akun Anda otomatis menjadi admin";return"siapkan"}
+  lgClose();S.tab="set";S.su="aw";S.msg=S.clm=ENT_KOSONG;return"kosong"}
  if(L.length>1){L=L.slice().sort((x,y)=>(+y.version||0)-(+x.version||0));S.cll=L;S.lgpick={k:"stf",L};S.lgmand=1;return"pilih"}
  return entFinish(L[0].id)}
+// ----- penyiapan BUMDes: 1 aplikasi = 1 database = 1 BUMDes; pendaftar pertama menjadi admin -----
+async function entSetupChk(){const c=cloudCfg();if(!(c.url&&c.key)||c.token||S.lgsiap!==undefined||entSetupChk.b)return;entSetupChk.b=1;
+ try{const st=await cloudReq("/rest/v1/rpc/setup_status",{method:"POST",body:{},auth:false,timeout:12000});S.lgsiap=!!(st&&st.siap)}catch(e){S.lgsiap=undefined}
+ entSetupChk.b=0;if(S.lgsiap===false&&S.lgn)render()}
+function entSetupOpen(){S.lgsetup=1;S.fe=null;render()}
+function entSetupBack(){S.lgsetup=0;S.fe=null;render()}
+async function entSetup(){const logged=!!cloudCfg().token,v=i=>String((($("#"+i)||{}).value)||"").trim(),nm=v("su-n"),em=v("su-em"),pw=(($("#su-pw")||{}).value)||"",pw2=(($("#su-pw2")||{}).value)||"";
+ S.lgsn=nm;if(em)S.lgem=em;
+ try{if(!nm)throw fe("su-n","Nama BUMDes wajib diisi");if(nm.length>120)throw fe("su-n","Nama BUMDes maksimal 120 karakter");
+  if(!logged){if(!/^\S+@\S+\.\S+$/.test(em))throw fe("su-em","Isi email yang valid");cloudPwChk(pw,pw2,"su-pw","su-pw2")}
+  S.clb=1;render();
+  if(!logged){const j=await cloudReq("/auth/v1/signup",{method:"POST",body:{email:em,password:pw},auth:false});
+   if(!j||!j.access_token){S.lgsetup=0;S.lgem=em;S.clb=0;S.msg=S.clm="Akun dibuat. Buka email Anda untuk konfirmasi, lalu masuk di sini dan lanjutkan penyiapan BUMDes";render();return}
+   cloudSet({token:j.access_token,refresh:j.refresh_token,exp:Date.now()+(+j.expires_in||3600)*1000,email:(j.user&&j.user.email)||em})}
+  const id=await cloudReq("/rest/v1/rpc/setup_bumdes",{method:"POST",body:{p_name:nm}});
+  S.cll=await cloudList();if(!S.cll.some(b=>b.id===id))throw Error("BUMDes sudah dibuat tetapi belum terbaca. Masuk ulang dengan akun yang sama");
+  S.lgsetup=0;S.lgsn="";S.lgsiap=true;entPut({seen:1});const r=await entFinish(id);S.clb=0;S.msg=S.clm="BUMDes "+nm+" siap. Anda masuk sebagai admin. Langkah berikut: lengkapi profil dan data di Setelan, lalu Simpan ke awan";render();return r}
+ catch(e){S.msg=S.clm="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}S.clb=0;render()}
 async function entFinish(id){if(cloudCfg().bumdes_id!==id){const b=(S.cll||[]).find(x=>x.id===id);if(b)cloudPick(b.id)}
  const r=await entAutoLoad();lgClose();S.lgpick=null;S.lgmand=0;S.tab="dash";S.doc=null;if(typeof setTimeout==="function")setTimeout(()=>{if(typeof cloudCheck==="function")cloudCheck()},300);return r||"app"}
 async function entAutoLoad(){const c=cloudCfg();if(!c.bumdes_id)return"";
