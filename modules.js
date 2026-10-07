@@ -36,9 +36,9 @@ function saveBd(){try{const v=k=>$("#bd-"+k).value.trim(),n=v("name");
  if(v("phone")&&!/^[\d\s+()\-]{5,20}$/.test(v("phone")))throw fe("bd-phone","Telepon hanya boleh angka, spasi, +, -, ( )");
  const b=db.bumdes[0]||(db.bumdes[0]={_id:"BUMDES-001"});
  BF.forEach(([k])=>{b[k]=v(k)});b.updated_at=now();audit("update","bumdes",b._id);
- if(S.dr)BF.forEach(([k])=>delete S.dr["set|bd-"+k]);S.nsnap=1;save();S.msg="Profil BUMDes disimpan";if(typeof cloudRenameChk==="function")cloudRenameChk()}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
+ if(S.dr)BF.forEach(([k])=>delete S.dr["set|bd-"+k]);S.nsnap=1;save();S.msg="Profil BUMDes disimpan"}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
 function tgl(id){const p=db.accounting_periods.find(x=>x._id===id);if(p.status==="closed"&&id.slice(0,4)<=cyr()){S.msg="⚠ Periode tahun buku yang sudah ditutup hanya bisa dibuka lewat Batalkan penutupan tahun";render();return}p.status=p.status==="open"?"closed":"open";audit(p.status,"period",id,"Periode "+id);save();render()}
-function exp(){const s=JSON.stringify(db,null,1),t=$("#bk");if(t)t.value=s;try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([s],{type:"application/json"}));a.download="bumdes-backup-"+(String(bnm()).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,30)||"data")+"-"+today()+".json";a.click();try{localStorage.setItem(LB,now())}catch(e){}S.msg="Backup diunduh — simpan file di tempat aman"}catch(e){S.msg="⚠ Export gagal: "+e.message}render()}
+function exp(){const s=JSON.stringify(db,null,1),t=$("#bk");if(t)t.value=s;try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([s],{type:"application/json"}));a.download="bumdes-backup-"+today()+".json";a.click();try{localStorage.setItem(LB,now())}catch(e){}S.msg="Backup diunduh — simpan file di tempat aman"}catch(e){S.msg="⚠ Export gagal: "+e.message}render()}
 function fl(i){const f=i.files[0];if(f)f.text().then(t=>{$("#bk").value=t})}
 function chk(j){
  NEWK.forEach(k=>{if(j[k]===undefined)j[k]=[]});
@@ -63,12 +63,5 @@ function chkLoans(j){const ins={},pay={};j.loan_installments.forEach(i=>(ins[i.l
    if(!l.disbursement_date)throw w("tanggal pencairan kosong")}
   else{if(is.length)throw w("berstatus "+LS[l.status]+" tetapi memiliki jadwal angsuran");if(ps.length)throw w("berstatus "+LS[l.status]+" tetapi memiliki pembayaran")}})}
 function impAsk(){try{dataP();const j=JSON.parse($("#bk").value);chk(j);S.imp=j;askC("imp","")}catch(e){S.imp=null;S.msg="⚠ Import gagal: "+e.message;render()}}
-function imp(){try{dataP();const j=S.imp||JSON.parse($("#bk").value);chk(j);const pf=db.bumdes&&db.bumdes.length?db.bumdes:null,cb=db.meta&&db.meta.cloud_bid;try{localStorage.setItem(KEY+"_prev",JSON.stringify(db))}catch(e){}if(pf)j.bumdes=pf;db=j;db.meta=db.meta||{};if(cb)db.meta.cloud_bid=cb;migr();S.imp=null;save();S.msg="Data berhasil diimpor. Profil BUMDes (nama, alamat, logo) tidak diubah"}catch(e){S.msg="⚠ Import gagal: "+e.message}render()}
-// v1.1.111: kosongkan semua data (profil BUMDes, pengguna, peran, dan pengaturan dipertahankan; salinan lama disimpan sebagai cadangan lokal)
-const WIPE_WORD="KOSONGKAN";
-function wipeAsk(){try{dataP();const v=String((($("#bk-x")||{}).value)||"").trim().toUpperCase();if(v!==WIPE_WORD)throw fe("bk-x","Ketik "+WIPE_WORD+" untuk melanjutkan");askC("wipe","")}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null;render()}}
-function wipeData(){try{dataP();const o=db;try{localStorage.setItem(KEY+"_prev",JSON.stringify(o))}catch(e){}
- const nd=blank();nd.bumdes=o.bumdes&&o.bumdes.length?o.bumdes:nd.bumdes;["users","roles","permissions"].forEach(k=>{if(Array.isArray(o[k])&&o[k].length)nd[k]=o[k]});
- nd.settings=Object.assign({},o.settings||nd.settings,{closings:[]});nd.meta=Object.assign({},nd.meta,{cloud_bid:o.meta&&o.meta.cloud_bid});if(!nd.meta.cloud_bid)delete nd.meta.cloud_bid;
- db=nd;migr();audit("delete","data","-","Semua data dikosongkan");snapSet();S.nsnap=1;S.imp=null;S.sel=null;save();S.msg="Semua data dikosongkan. Profil BUMDes, pengguna, dan pengaturan tetap. Salinan lama disimpan sebagai cadangan lokal"}catch(e){S.msg=ER(e)}render()}
-function rst(){try{dataP();const pf=db.bumdes&&db.bumdes.length?db.bumdes:null,cb=db.meta&&db.meta.cloud_bid;try{localStorage.setItem(KEY+"_prev",JSON.stringify(db))}catch(e){}reset();if(pf)db.bumdes=pf;if(cb){db.meta=db.meta||{};db.meta.cloud_bid=cb}save();S.msg="Data contoh diisi. Profil BUMDes tidak diubah"}catch(e){S.msg=ER(e)}render()}
+function imp(){try{dataP();const j=S.imp||JSON.parse($("#bk").value);chk(j);db=j;migr();S.imp=null;save();S.msg="Import berhasil"}catch(e){S.msg="⚠ Import gagal: "+e.message}render()}
+function rst(){try{dataP();reset();S.msg="Data demo direset"}catch(e){S.msg=ER(e)}render()}

@@ -2,27 +2,6 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
-## [1.1.111] — 2026-10-07
-
-### Diubah
-- Data > Backup ditata ulang menjadi Cadangkan, Pulihkan, dan Kosongkan semua data.
-- Import JSON tidak lagi menimpa profil BUMDes (nama, alamat, logo); salinan data sebelum impor disimpan sebagai cadangan lokal.
-- Nama berkas export memuat nama BUMDes.
-
-### Ditambah
-- Kosongkan semua data: kata kunci KOSONGKAN, dialog konfirmasi dengan rincian, profil BUMDes, pengguna, peran, dan pengaturan dipertahankan, audit log mencatat, salinan lama disimpan lokal.
-- "Reset data demo" menjadi "Isi data contoh" (disembunyikan dalam rincian); profil BUMDes tidak ikut berubah dan salinan lama disimpan lokal.
-
-## [1.1.110] — 2026-10-07
-
-### Diperbaiki
-- Nama BUMDes bisa berbeda antara Profil (data perangkat) dan awan (tabel `bumdes`, mis. "Sumber Rejeki" vs "Mertha Bhuana"). Kini Siapkan BUMDes menjadikan nama yang diisi sebagai nama Profil, dan admin yang menyimpan Profil atau memuat data awan memperbarui nama awan (`cloudRenameChk`). Pengurus/pembaca tidak mengubah nama awan.
-
-## [1.1.109] — 2026-10-07
-
-### Diubah
-- Layar Siapkan BUMDes: galat validasi dan galat server tampil di kotak merah permanen (`role=alert`), semua masalah isian ditampilkan sekaligus, kata sandi dipertahankan saat gagal, ikon mata tampilkan/sembunyikan kata sandi (juga di layar Masuk), batas waktu 25 detik untuk daftar dan penyiapan.
-
 ## [1.1.108] — 2026-10-07
 
 ### Diubah

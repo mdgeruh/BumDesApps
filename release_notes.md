@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.111
+# Catatan Rilis — v1.1.108
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,9 +48,6 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
-| 1.1.111 | Data & Cadangan: impor tidak mengubah profil BUMDes; kosongkan semua data |
-| 1.1.110 | Nama BUMDes di Profil dan di awan disamakan |
-| 1.1.109 | Validasi layar Siapkan BUMDes: kotak galat menetap, sandi tidak terhapus, ikon mata tampilkan sandi |
 | 1.1.108 | SQL dipindah ke folder sql/ dengan nama bernomor berurutan |
 | 1.1.107 | Satu aplikasi satu database satu BUMDes; penyiapan admin pertama; peran developer dihapus; reset SQL |
 | 1.1.106 | Tombol Cek peran akun; galat deteksi developer ditampilkan |
