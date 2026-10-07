@@ -1,5 +1,5 @@
 -- ============================================================================
--- Sistem BUMDes · Supabase · [3/6] TAHAP 2 · Tabel relasional (akuntansi dan Simpan Pinjam)
+-- Sistem BUMDes · Supabase · [3/8] TAHAP 2 · Tabel relasional (akuntansi dan Simpan Pinjam)
 -- ----------------------------------------------------------------------------
 -- Isi         : Tabel business_units, parties, accounts, cash_accounts, transactions, journal_lines (jurnal dijaga seimbang di server),
 --               loans, loan_installments, loan_payments, audit_logs (hanya tambah); RLS; fungsi post_transaction,

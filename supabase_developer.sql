@@ -1,5 +1,5 @@
 -- ============================================================================
--- Sistem BUMDes · Supabase · [2/6] PERAN DEVELOPER (platform)
+-- Sistem BUMDes · Supabase · [2/8] PERAN DEVELOPER (platform)
 -- ----------------------------------------------------------------------------
 -- Isi         : Tabel platform_admins, platform_settings, platform_audit; fungsi dev_* (daftar/buat/nonaktifkan/hapus BUMDes kosong,
 --               tambah admin pertama, pengaturan, audit); kolom bumdes.status; menimpa is_member dan create_bumdes agar menghormati status.

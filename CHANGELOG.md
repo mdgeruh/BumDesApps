@@ -2,6 +2,27 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.103] — 2026-10-07
+### Ditambahkan
+- **Tabel relasional Tahap 5.** `supabase_tahap5.sql` (baru, berkas [6/8]): `products`, `sales`, `sale_items`, `payments`, `water_connections`, `water_readings`, `collaterals`, `rate_master`, `tax_master`, `collection_notes`, `prospects` (kolom penting + `doc` utuh), RLS seperti tahap lain, fungsi `migrate_snapshot_to_tables5` dan `tabel_status5` (jumlah baris, total penjualan dan pembayaran berstatus posted, nilai jaminan).
+- Setelan > Awan > Tabel relasional: baris Tahap 5 dan 3 total pembanding muncul otomatis bila SQL terpasang; bila belum, tidak dianggap selisih dan pesan menunjuk `supabase_tahap5.sql`. `TBL5`, `tbl5`.
+- Berkas SQL kini **8** bernomor `[1/8]`…`[8/8]` (nasabah jadi [7/8], pengguna [8/8]); `supabase_semua.sql` ikut.
+- Tes: `logic-118.js` (12), `supabase-test6.sql` (24; total SQL 141 cek), `ui-awan2.py` diperluas.
+- Proyek Supabase yang sudah ada: jalankan `supabase_tahap5.sql` sekali.
+
+## [1.1.102] — 2026-10-07
+### Ditambahkan
+- **Konsol Developer: tombol "Masuk ke BUMDes".** Di tab BUMDes, tiap BUMDes aktif punya tombol itu: sesi developer ditutup, layar login terbuka dengan spanduk "Masuk ke {nama}" (+ "Bukan BUMDes ini"). Login dengan akun anggota langsung membuka BUMDes tujuan; akun bukan anggota ditolak dengan pesan jelas dan layar tetap bertarget. BUMDes nonaktif tidak bisa dimasuki. `dvMasuk`, `lgTgOff`, `S.lgtg`, cabang di `entRoute`.
+- Tes: `logic-117.js` (8), `ui-dev.py` diperluas.
+
+## [1.1.101] — 2026-10-07
+### Ditambahkan
+- **Tabel relasional Tahap 4: tabungan.** `supabase_tahap4.sql` (baru, berkas [5/7]): `savings_accounts` dan `savings_tx` (kolom penting + `doc` utuh), RLS seperti tahap lain (anggota baca, admin/pengurus tulis, admin hapus, `anon` tanpa akses), fungsi `migrate_snapshot_to_tables4` (samakan dengan snapshot, idempoten) dan `tabel_status4` (jumlah baris dan **saldo tabungan** = setor + bunga − tarik − biaya, hanya mutasi posted). Setelan > Awan > Tabel relasional otomatis ikut mengisi dan membandingkan rekening, mutasi, dan total saldo bila berkas terpasang; bila belum, baris tabungan disembunyikan dan pesan jelas menunjuk `supabase_tahap4.sql`.
+### Diperbaiki
+- **Daftar BUMDes awan** (Setelan > Awan dan halaman masuk) kini hanya memuat BUMDes milik akun yang masuk. Sebelumnya permintaan tidak memfilter `user_id`, padahal kebijakan RLS memperlihatkan semua anggota dari BUMDes yang sama: BUMDes dengan beberapa anggota bisa muncul berulang, dan perannya bisa terbaca dari anggota lain (admin terbaca "pembaca" dan gagal menyimpan). Kini difilter menurut `sub` token akun sendiri, duplikat digabung dengan peran tertinggi.
+### Diubah
+- Berkas SQL kini **7** dan bernomor berurutan `[1/7]`…`[7/7]` (schema, developer, tahap2, tahap3, tahap4, nasabah, pengguna); `supabase_semua.sql` memuat ketujuhnya. Sisa yang belum jadi tabel: penjualan/Unit Air, jaminan, tarif dan pajak, produk tabungan, pengguna dan peran.
+
 ## [1.1.100] — 2026-10-07
 ### Ditambahkan
 - Alamat per halaman kini mencakup **sub-tab semua menu**: `/transaksi/saldo-awal`; `/master/kas-bank|akun|pihak|pegawai|tarif-biaya`; `/data/periode|audit-log`; `/gaji/komponen|laporan`; `/simpan-pinjam/pinjaman|tabungan|tunggakan|jaminan|nasabah|calon`; `/unit-air/sambungan|piutang|tarif|penjualan-lain|pelanggan|produk`; `/laporan/laba-rugi|arus-kas|piutang|simpan-pinjam|unit-air` (selain `/setelan/...` dari v1.1.098). Sub-tab bawaan tidak diberi akhiran (mis. `/laporan` = Neraca). Back/Forward, refresh, dan buka langsung berfungsi untuk semuanya; sub-rute tak dikenal jatuh ke sub-tab bawaan. Peta rute ada di `RT_SUB` (layout.js); `vercel.json` tidak perlu diubah.

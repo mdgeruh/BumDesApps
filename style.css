@@ -422,3 +422,6 @@ body.dv-on{overflow:hidden}
  .repend{margin-top:18px}.repend .cn{margin-top:12px;font-size:8pt;color:#555}
  .doc .sg{display:flex;gap:24px;justify-content:space-around;margin-top:8px}
 }
+
+/* Masuk dari Konsol Developer (v1.1.102) */
+.mk-tg{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border:1px solid var(--ac);background:color-mix(in srgb,var(--ac) 8%,var(--cd));border-radius:10px;padding:8px 12px;margin:0 0 12px}

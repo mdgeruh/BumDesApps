@@ -64,6 +64,9 @@ function nsbWrap(f){if(!S.pt||!S.pt.srv)return f();const n=nsbGet();if(!n||!n.da
 function nsbInfo(){if(!S.pt||!S.pt.srv)return"";const n=nsbGet()||{},t=String(n.at||"").replace("T"," ").slice(0,16);return`<small>${S.pt.off?"Offline · ":""}Data per ${esc(tglS(t.slice(0,10)))} ${esc(t.slice(11))}</small>`}
 // ----- arah per peran setelah masuk akun awan -----
 async function entRoute(L){try{await devChk()}catch(e){}const c=cloudCfg();S.lgpick=null;S.lgmand=0;
+ {const tg=S.lgtg;S.lgtg=null;if(tg){const m=(L||[]).find(x=>x.id===tg.id);
+  if(m){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}S.dvo=0;return entFinish(m.id)}
+  await cloudLogout();S.lgtg=tg;S.lgn=1;S.lgem="";S.fe=null;S.msg=S.clm="⚠ Akun itu bukan anggota "+tg.name+". Masuk dengan akun admin atau pengurus BUMDes ini";return"bukan"}}
  if(c.dev){lgClose();S.dvo=1;S.dvt="ringkas";S.dvc=null;try{history.replaceState(null,"","#developer")}catch(e){}if(!S.dvl)devLoad(true);return"dev"}
  try{if(location.hash==="#developer"||location.hash==="#portal")history.replaceState(null,"",location.pathname+location.search)}catch(e){}
  if(!L.length){lgClose();S.tab="set";S.su="aw";S.msg=S.clm=ENT_KOSONG;return"kosong"}

@@ -1,5 +1,5 @@
 -- ============================================================================
--- Sistem BUMDes · Supabase · [1/6] TAHAP 1 · Cadangan dan sinkron awan
+-- Sistem BUMDes · Supabase · [1/8] TAHAP 1 · Cadangan dan sinkron awan
 -- ----------------------------------------------------------------------------
 -- Isi         : Tabel bumdes, bumdes_members, bumdes_snapshots, bumdes_snapshot_history; kebijakan RLS;
 --               fungsi is_member, create_bumdes, save_snapshot (kunci versi), add_member.

@@ -1,5 +1,5 @@
 -- ============================================================================
--- Sistem BUMDes · Supabase · [5/6] PORTAL NASABAH
+-- Sistem BUMDes · Supabase · [7/8] PORTAL NASABAH
 -- ----------------------------------------------------------------------------
 -- Isi         : Tabel nsb_accounts dan nsb_sessions (dikunci rapat: RLS aktif, tanpa kebijakan, tanpa hak tabel);
 --               fungsi nsb_login, nsb_data, nsb_logout, nsb_change_pin (sisi nasabah) dan nsb_set_pin, nsb_publish, nsb_list (sisi pengurus).
