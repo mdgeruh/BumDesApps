@@ -1,18 +1,18 @@
 -- ============================================================================
 -- Sistem BUMDes · Supabase · SEMUA SEKALIGUS (proyek baru)
 -- ----------------------------------------------------------------------------
--- Gabungan otomatis dari 6 berkas di bawah, urutan pasang sudah benar. JANGAN diedit di sini:
+-- Gabungan otomatis dari 8 berkas di bawah, urutan pasang sudah benar. JANGAN diedit di sini:
 -- ubah berkas bagiannya, lalu jalankan: node build.js
 -- Cara pakai: Supabase > SQL Editor > New query > tempel SELURUH berkas ini > Run. Idempoten (aman diulang).
--- Bagian: 1=schema, 2=developer, 3=tahap2, 4=tahap3, 5=nasabah, 6=pengguna
+-- Bagian: 1=schema, 2=developer, 3=tahap2, 4=tahap3, 5=tahap4, 6=tahap5, 7=nasabah, 8=pengguna
 -- Setelah selesai: angkat developer pertama dengan perintah di bagian 2 (lihat catatan di sana).
 -- ============================================================================
 
 
--- >>>>> BAGIAN 1/6: supabase_schema.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+-- >>>>> BAGIAN 1/8: supabase_schema.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 -- ============================================================================
--- Sistem BUMDes · Supabase · [1/6] TAHAP 1 · Cadangan dan sinkron awan
+-- Sistem BUMDes · Supabase · [1/8] TAHAP 1 · Cadangan dan sinkron awan
 -- ----------------------------------------------------------------------------
 -- Isi         : Tabel bumdes, bumdes_members, bumdes_snapshots, bumdes_snapshot_history; kebijakan RLS;
 --               fungsi is_member, create_bumdes, save_snapshot (kunci versi), add_member.
@@ -216,10 +216,10 @@ grant execute on function public.is_member(uuid, text[])                  to aut
 --   select table_name from information_schema.tables where table_schema='public' and table_name like 'bumdes%';
 
 
--- >>>>> BAGIAN 2/6: supabase_developer.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+-- >>>>> BAGIAN 2/8: supabase_developer.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 -- ============================================================================
--- Sistem BUMDes · Supabase · [2/6] PERAN DEVELOPER (platform)
+-- Sistem BUMDes · Supabase · [2/8] PERAN DEVELOPER (platform)
 -- ----------------------------------------------------------------------------
 -- Isi         : Tabel platform_admins, platform_settings, platform_audit; fungsi dev_* (daftar/buat/nonaktifkan/hapus BUMDes kosong,
 --               tambah admin pertama, pengaturan, audit); kolom bumdes.status; menimpa is_member dan create_bumdes agar menghormati status.
@@ -413,10 +413,10 @@ grant execute on function public.create_bumdes(text) to authenticated;
 grant execute on function public.is_member(uuid, text[]) to authenticated;
 
 
--- >>>>> BAGIAN 3/6: supabase_tahap2.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+-- >>>>> BAGIAN 3/8: supabase_tahap2.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 -- ============================================================================
--- Sistem BUMDes · Supabase · [3/6] TAHAP 2 · Tabel relasional (akuntansi dan Simpan Pinjam)
+-- Sistem BUMDes · Supabase · [3/8] TAHAP 2 · Tabel relasional (akuntansi dan Simpan Pinjam)
 -- ----------------------------------------------------------------------------
 -- Isi         : Tabel business_units, parties, accounts, cash_accounts, transactions, journal_lines (jurnal dijaga seimbang di server),
 --               loans, loan_installments, loan_payments, audit_logs (hanya tambah); RLS; fungsi post_transaction,
@@ -700,10 +700,10 @@ grant execute on function public.migrate_snapshot_to_tables(uuid)     to authent
 grant execute on function public.tabel_status(uuid)                   to authenticated;
 
 
--- >>>>> BAGIAN 4/6: supabase_tahap3.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+-- >>>>> BAGIAN 4/8: supabase_tahap3.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 -- ============================================================================
--- Sistem BUMDes · Supabase · [4/6] TAHAP 3 · Tabel pegawai dan gaji
+-- Sistem BUMDes · Supabase · [4/8] TAHAP 3 · Tabel pegawai dan gaji
 -- ----------------------------------------------------------------------------
 -- Isi         : Tabel employees, payroll_components, payrolls, payroll_items, salary_payments; fungsi migrate_snapshot_to_tables3,
 --               tabel_status3. Tiap tabel: kolom penting + doc = objek asli aplikasi.
@@ -821,10 +821,318 @@ grant execute on function public.migrate_snapshot_to_tables3(uuid) to authentica
 grant execute on function public.tabel_status3(uuid) to authenticated;
 
 
--- >>>>> BAGIAN 5/6: supabase_nasabah.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+-- >>>>> BAGIAN 5/8: supabase_tahap4.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 -- ============================================================================
--- Sistem BUMDes · Supabase · [5/6] PORTAL NASABAH
+-- Sistem BUMDes · Supabase · [5/8] TAHAP 4 · Tabel tabungan
+-- ----------------------------------------------------------------------------
+-- Isi         : Tabel savings_accounts dan savings_tx; fungsi migrate_snapshot_to_tables4, tabel_status4.
+--               Tiap tabel: kolom penting + doc = objek asli aplikasi.
+-- Prasyarat   : supabase_schema.sql dan supabase_tahap2.sql
+-- Dijalankan  : Supabase > SQL Editor > New query > tempel seluruh berkas > Run. Idempoten (aman diulang). Tanpa rahasia.
+-- Dipakai oleh: Setelan > Awan > Tabel relasional (otomatis bila fungsi di bawah ada)
+-- Catatan
+--   Saldo tabungan = setoran + bunga - penarikan - biaya, hanya mutasi berstatus posted (sama dengan aplikasi).
+--   Cara "samakan dengan snapshot": baris yang sudah tidak ada di data aplikasi ikut dihapus dari tabel.
+--   Produk tabungan dan pengaturan bunga ada di pengaturan aplikasi (snapshot), belum jadi tabel.
+-- ============================================================================
+
+create table if not exists public.savings_accounts (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, number text, party_id text, unit_id text, product text, status text,
+  min_balance numeric(18,2), opened_at date, doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create index if not exists savings_accounts_party_idx on public.savings_accounts(bumdes_id, party_id);
+create table if not exists public.savings_tx (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, account_id text not null, type text not null, date date, amount numeric(18,2) not null default 0,
+  txn_id text, cash_id text, via text, loan_id text, status text,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create index if not exists savings_tx_acc_idx on public.savings_tx(bumdes_id, account_id);
+
+do $$
+declare t text;
+begin
+  foreach t in array array['savings_accounts','savings_tx'] loop
+    execute format('alter table public.%I enable row level security', t);
+    execute format('revoke all on public.%I from anon, public', t);
+    execute format('grant select, insert, update, delete on public.%I to authenticated', t);
+    execute format('drop policy if exists %I on public.%I', t||'_sel', t);
+    execute format('create policy %I on public.%I for select to authenticated using (public.is_member(bumdes_id))', t||'_sel', t);
+    execute format('drop policy if exists %I on public.%I', t||'_ins', t);
+    execute format('create policy %I on public.%I for insert to authenticated with check (public.is_member(bumdes_id, array[''admin'',''pengurus'']))', t||'_ins', t);
+    execute format('drop policy if exists %I on public.%I', t||'_upd', t);
+    execute format('create policy %I on public.%I for update to authenticated using (public.is_member(bumdes_id, array[''admin'',''pengurus''])) with check (public.is_member(bumdes_id, array[''admin'',''pengurus'']))', t||'_upd', t);
+    execute format('drop policy if exists %I on public.%I', t||'_del', t);
+    execute format('create policy %I on public.%I for delete to authenticated using (public.is_member(bumdes_id, array[''admin'']))', t||'_del', t);
+  end loop;
+end $$;
+
+create or replace function public.migrate_snapshot_to_tables4(p_bumdes uuid)
+returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare s jsonb; r jsonb := '{}'; n int;
+begin
+  if not public.is_member(p_bumdes, array['admin','pengurus']) then
+    raise exception 'tidak_berhak' using errcode = '42501';
+  end if;
+  select data into s from public.bumdes_snapshots where bumdes_id = p_bumdes;
+  if s is null then raise exception 'snapshot_belum_ada' using errcode = 'P0002'; end if;
+
+  delete from public.savings_accounts where bumdes_id = p_bumdes;
+  insert into public.savings_accounts select p_bumdes, o->>'_id', o->>'number', o->>'party_id', o->>'unit_id', o->>'product', o->>'status',
+      nullif(o->>'min_balance','')::numeric, nullif(o->>'opened_at','')::date, o
+    from jsonb_array_elements(coalesce(s->'savings_accounts','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('savings_accounts', n);
+
+  delete from public.savings_tx where bumdes_id = p_bumdes;
+  insert into public.savings_tx select p_bumdes, o->>'_id', o->>'account_id', o->>'type', nullif(o->>'date','')::date,
+      coalesce((o->>'amount')::numeric,0), o->>'txn_id', o->>'cash_id', o->>'via', o->>'loan_id', o->>'status', o
+    from jsonb_array_elements(coalesce(s->'savings_tx','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('savings_tx', n);
+  return r;
+end $$;
+
+create or replace function public.tabel_status4(p_bumdes uuid)
+returns jsonb
+language plpgsql stable security definer set search_path = public as $$
+begin
+  if not public.is_member(p_bumdes) then raise exception 'tidak_berhak' using errcode = '42501'; end if;
+  return jsonb_build_object(
+    'savings_accounts', (select count(*) from public.savings_accounts where bumdes_id = p_bumdes),
+    'savings_tx',       (select count(*) from public.savings_tx where bumdes_id = p_bumdes),
+    'saldo_tabungan',   (select coalesce(sum(case when type in ('setor','bunga') then amount when type in ('tarik','biaya') then -amount else 0 end),0)
+                           from public.savings_tx where bumdes_id = p_bumdes and status = 'posted'));
+end $$;
+
+revoke all on function public.migrate_snapshot_to_tables4(uuid) from public, anon;
+revoke all on function public.tabel_status4(uuid) from public, anon;
+grant execute on function public.migrate_snapshot_to_tables4(uuid) to authenticated;
+grant execute on function public.tabel_status4(uuid) to authenticated;
+
+
+-- >>>>> BAGIAN 6/8: supabase_tahap5.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+-- ============================================================================
+-- Sistem BUMDes · Supabase · [6/8] TAHAP 5 · Tabel penjualan, Unit Air, jaminan, tarif dan pajak
+-- ----------------------------------------------------------------------------
+-- Isi         : Tabel products, sales, sale_items, payments, water_connections, water_readings, collaterals,
+--               rate_master, tax_master, collection_notes, prospects; fungsi migrate_snapshot_to_tables5, tabel_status5.
+--               Tiap tabel: kolom penting + doc = objek asli aplikasi.
+-- Prasyarat   : supabase_schema.sql dan supabase_tahap2.sql
+-- Dijalankan  : Supabase > SQL Editor > New query > tempel seluruh berkas > Run. Idempoten (aman diulang). Tanpa rahasia.
+-- Dipakai oleh: Setelan > Awan > Tabel relasional (otomatis bila fungsi di bawah ada)
+-- Catatan
+--   Total penjualan = jumlah sales berstatus posted; pembayaran = jumlah payments berstatus posted (sama dengan aplikasi).
+--   Cara "samakan dengan snapshot": baris yang sudah tidak ada di data aplikasi ikut dihapus dari tabel.
+--   Pengguna dan peran, produk tabungan, pengaturan bunga ada di pengaturan aplikasi (snapshot), belum jadi tabel.
+-- ============================================================================
+
+create table if not exists public.products (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, unit_id text, name text, unit text, price numeric(18,2), revenue_account text, status text,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create table if not exists public.sales (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, sale_number text, unit_id text, party_id text, date date, payment_type text,
+  total numeric(18,2) not null default 0, cash_id text, transaction_id text, status text, opening boolean not null default false,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create index if not exists sales_party_idx on public.sales(bumdes_id, party_id);
+create table if not exists public.sale_items (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, sale_id text not null, product_id text, label text, unit text,
+  qty numeric(18,4), price numeric(18,4), subtotal numeric(18,2) not null default 0,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create index if not exists sale_items_sale_idx on public.sale_items(bumdes_id, sale_id);
+create table if not exists public.payments (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, sale_id text not null, date date, amount numeric(18,2) not null default 0,
+  cash_id text, transaction_id text, status text,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create index if not exists payments_sale_idx on public.payments(bumdes_id, sale_id);
+create table if not exists public.water_connections (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, unit_id text, party_id text, meter_no text, initial numeric(18,3), installed date, status text,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create table if not exists public.water_readings (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, conn_id text not null, kind text, period text, date date,
+  prev numeric(18,3), curr numeric(18,3), usage numeric(18,3), sale_id text, meter_no text, status text,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create index if not exists water_readings_conn_idx on public.water_readings(bumdes_id, conn_id);
+create table if not exists public.collaterals (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, loan_id text not null, type text, description text, estimated_value numeric(18,2),
+  document_number text, status text,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create index if not exists collaterals_loan_idx on public.collaterals(bumdes_id, loan_id);
+create table if not exists public.rate_master (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, fee_code text not null, fee_name text, fee_type text, calc_method text, base text,
+  rate numeric(18,6), fixed_amount numeric(18,2), minimum numeric(18,2), maximum numeric(18,2), taxable boolean,
+  version int, effective_from date, effective_until date, active boolean,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create index if not exists rate_master_code_idx on public.rate_master(bumdes_id, fee_code, version);
+create table if not exists public.tax_master (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, tax_code text not null, tax_name text, tax_type text, tax_rate numeric(18,6),
+  version int, effective_from date, effective_until date, active boolean,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create index if not exists tax_master_code_idx on public.tax_master(bumdes_id, tax_code, version);
+create table if not exists public.collection_notes (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, loan_id text not null, date date, type text, result text, promise_date date, note text,
+  by_name text, created_at timestamptz,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+create index if not exists collection_notes_loan_idx on public.collection_notes(bumdes_id, loan_id);
+create table if not exists public.prospects (
+  bumdes_id uuid not null references public.bumdes(id) on delete cascade,
+  id text not null, name text, phone text, purpose text, amount numeric(18,2), status text, created_at timestamptz,
+  doc jsonb not null default '{}', primary key (bumdes_id, id)
+);
+
+do $$
+declare t text;
+begin
+  foreach t in array array['products','sales','sale_items','payments','water_connections','water_readings','collaterals','rate_master','tax_master','collection_notes','prospects'] loop
+    execute format('alter table public.%I enable row level security', t);
+    execute format('revoke all on public.%I from anon, public', t);
+    execute format('grant select, insert, update, delete on public.%I to authenticated', t);
+    execute format('drop policy if exists %I on public.%I', t||'_sel', t);
+    execute format('create policy %I on public.%I for select to authenticated using (public.is_member(bumdes_id))', t||'_sel', t);
+    execute format('drop policy if exists %I on public.%I', t||'_ins', t);
+    execute format('create policy %I on public.%I for insert to authenticated with check (public.is_member(bumdes_id, array[''admin'',''pengurus'']))', t||'_ins', t);
+    execute format('drop policy if exists %I on public.%I', t||'_upd', t);
+    execute format('create policy %I on public.%I for update to authenticated using (public.is_member(bumdes_id, array[''admin'',''pengurus''])) with check (public.is_member(bumdes_id, array[''admin'',''pengurus'']))', t||'_upd', t);
+    execute format('drop policy if exists %I on public.%I', t||'_del', t);
+    execute format('create policy %I on public.%I for delete to authenticated using (public.is_member(bumdes_id, array[''admin'']))', t||'_del', t);
+  end loop;
+end $$;
+
+create or replace function public.migrate_snapshot_to_tables5(p_bumdes uuid)
+returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare s jsonb; r jsonb := '{}'; n int;
+begin
+  if not public.is_member(p_bumdes, array['admin','pengurus']) then
+    raise exception 'tidak_berhak' using errcode = '42501';
+  end if;
+  select data into s from public.bumdes_snapshots where bumdes_id = p_bumdes;
+  if s is null then raise exception 'snapshot_belum_ada' using errcode = 'P0002'; end if;
+
+  delete from public.products where bumdes_id = p_bumdes;
+  insert into public.products select p_bumdes, o->>'_id', o->>'unit_id', o->>'name', o->>'unit',
+      nullif(o->>'price','')::numeric, o->>'revenue_account', o->>'status', o
+    from jsonb_array_elements(coalesce(s->'products','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('products', n);
+
+  delete from public.sales where bumdes_id = p_bumdes;
+  insert into public.sales select p_bumdes, o->>'_id', o->>'sale_number', o->>'unit_id', o->>'party_id', nullif(o->>'date','')::date, o->>'payment_type',
+      coalesce(nullif(o->>'total','')::numeric,0), o->>'cash_id', o->>'transaction_id', o->>'status', coalesce((o->>'opening')::boolean,false), o
+    from jsonb_array_elements(coalesce(s->'sales','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('sales', n);
+
+  delete from public.sale_items where bumdes_id = p_bumdes;
+  insert into public.sale_items select p_bumdes, o->>'_id', o->>'sale_id', o->>'product_id', o->>'label', o->>'unit',
+      nullif(o->>'qty','')::numeric, nullif(o->>'price','')::numeric, coalesce(nullif(o->>'subtotal','')::numeric,0), o
+    from jsonb_array_elements(coalesce(s->'sale_items','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('sale_items', n);
+
+  delete from public.payments where bumdes_id = p_bumdes;
+  insert into public.payments select p_bumdes, o->>'_id', o->>'sale_id', nullif(o->>'date','')::date, coalesce(nullif(o->>'amount','')::numeric,0),
+      o->>'cash_id', o->>'transaction_id', o->>'status', o
+    from jsonb_array_elements(coalesce(s->'payments','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('payments', n);
+
+  delete from public.water_connections where bumdes_id = p_bumdes;
+  insert into public.water_connections select p_bumdes, o->>'_id', o->>'unit_id', o->>'party_id', o->>'meter_no',
+      nullif(o->>'initial','')::numeric, nullif(o->>'installed','')::date, o->>'status', o
+    from jsonb_array_elements(coalesce(s->'water_connections','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('water_connections', n);
+
+  delete from public.water_readings where bumdes_id = p_bumdes;
+  insert into public.water_readings select p_bumdes, o->>'_id', o->>'conn_id', o->>'kind', o->>'period', nullif(o->>'date','')::date,
+      nullif(o->>'prev','')::numeric, nullif(o->>'curr','')::numeric, nullif(o->>'usage','')::numeric, o->>'sale_id', o->>'meter_no', o->>'status', o
+    from jsonb_array_elements(coalesce(s->'water_readings','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('water_readings', n);
+
+  delete from public.collaterals where bumdes_id = p_bumdes;
+  insert into public.collaterals select p_bumdes, o->>'_id', o->>'loan_id', o->>'type', o->>'description',
+      nullif(o->>'estimated_value','')::numeric, o->>'document_number', o->>'status', o
+    from jsonb_array_elements(coalesce(s->'collaterals','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('collaterals', n);
+
+  delete from public.rate_master where bumdes_id = p_bumdes;
+  insert into public.rate_master select p_bumdes, o->>'_id', o->>'fee_code', o->>'fee_name', o->>'fee_type', o->>'calc_method', o->>'base',
+      nullif(o->>'rate','')::numeric, nullif(o->>'fixed_amount','')::numeric, nullif(o->>'minimum','')::numeric, nullif(o->>'maximum','')::numeric,
+      (o->>'taxable')::boolean, nullif(o->>'version','')::int, nullif(o->>'effective_from','')::date, nullif(o->>'effective_until','')::date,
+      (o->>'active')::boolean, o
+    from jsonb_array_elements(coalesce(s->'rate_master','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('rate_master', n);
+
+  delete from public.tax_master where bumdes_id = p_bumdes;
+  insert into public.tax_master select p_bumdes, o->>'_id', o->>'tax_code', o->>'tax_name', o->>'tax_type', nullif(o->>'tax_rate','')::numeric,
+      nullif(o->>'version','')::int, nullif(o->>'effective_from','')::date, nullif(o->>'effective_until','')::date, (o->>'active')::boolean, o
+    from jsonb_array_elements(coalesce(s->'tax_master','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('tax_master', n);
+
+  delete from public.collection_notes where bumdes_id = p_bumdes;
+  insert into public.collection_notes select p_bumdes, o->>'_id', o->>'loan_id', nullif(o->>'date','')::date, o->>'type', o->>'result',
+      nullif(o->>'promise_date','')::date, o->>'note', o->>'by', nullif(o->>'created_at','')::timestamptz, o
+    from jsonb_array_elements(coalesce(s->'collection_notes','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('collection_notes', n);
+
+  delete from public.prospects where bumdes_id = p_bumdes;
+  insert into public.prospects select p_bumdes, o->>'_id', o->>'name', o->>'phone', o->>'purpose', nullif(o->>'amount','')::numeric,
+      o->>'status', nullif(o->>'created_at','')::timestamptz, o
+    from jsonb_array_elements(coalesce(s->'prospects','[]')) o;
+  get diagnostics n = row_count; r := r || jsonb_build_object('prospects', n);
+  return r;
+end $$;
+
+create or replace function public.tabel_status5(p_bumdes uuid)
+returns jsonb
+language plpgsql stable security definer set search_path = public as $$
+begin
+  if not public.is_member(p_bumdes) then raise exception 'tidak_berhak' using errcode = '42501'; end if;
+  return jsonb_build_object(
+    'products',          (select count(*) from public.products where bumdes_id = p_bumdes),
+    'sales',             (select count(*) from public.sales where bumdes_id = p_bumdes),
+    'sale_items',        (select count(*) from public.sale_items where bumdes_id = p_bumdes),
+    'payments',          (select count(*) from public.payments where bumdes_id = p_bumdes),
+    'water_connections', (select count(*) from public.water_connections where bumdes_id = p_bumdes),
+    'water_readings',    (select count(*) from public.water_readings where bumdes_id = p_bumdes),
+    'collaterals',       (select count(*) from public.collaterals where bumdes_id = p_bumdes),
+    'rate_master',       (select count(*) from public.rate_master where bumdes_id = p_bumdes),
+    'tax_master',        (select count(*) from public.tax_master where bumdes_id = p_bumdes),
+    'collection_notes',  (select count(*) from public.collection_notes where bumdes_id = p_bumdes),
+    'prospects',         (select count(*) from public.prospects where bumdes_id = p_bumdes),
+    'total_penjualan',   (select coalesce(sum(total),0) from public.sales where bumdes_id = p_bumdes and status = 'posted'),
+    'total_pembayaran',  (select coalesce(sum(amount),0) from public.payments where bumdes_id = p_bumdes and status = 'posted'),
+    'nilai_jaminan',     (select coalesce(sum(estimated_value),0) from public.collaterals where bumdes_id = p_bumdes));
+end $$;
+
+revoke all on function public.migrate_snapshot_to_tables5(uuid) from public, anon;
+revoke all on function public.tabel_status5(uuid) from public, anon;
+grant execute on function public.migrate_snapshot_to_tables5(uuid) to authenticated;
+grant execute on function public.tabel_status5(uuid) to authenticated;
+
+
+-- >>>>> BAGIAN 7/8: supabase_nasabah.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+-- ============================================================================
+-- Sistem BUMDes · Supabase · [7/8] PORTAL NASABAH
 -- ----------------------------------------------------------------------------
 -- Isi         : Tabel nsb_accounts dan nsb_sessions (dikunci rapat: RLS aktif, tanpa kebijakan, tanpa hak tabel);
 --               fungsi nsb_login, nsb_data, nsb_logout, nsb_change_pin (sisi nasabah) dan nsb_set_pin, nsb_publish, nsb_list (sisi pengurus).
@@ -1086,10 +1394,10 @@ grant execute on function public.nsb_publish(uuid, jsonb, text[]) to authenticat
 grant execute on function public.nsb_list(uuid) to authenticated;
 
 
--- >>>>> BAGIAN 6/6: supabase_pengguna.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+-- >>>>> BAGIAN 8/8: supabase_pengguna.sql >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 -- ============================================================================
--- Sistem BUMDes · Supabase · [6/6] PENGGUNA aplikasi dari data pegawai (opsional)
+-- Sistem BUMDes · Supabase · [8/8] PENGGUNA aplikasi dari data pegawai (opsional)
 -- ----------------------------------------------------------------------------
 -- Isi         : Fungsi app_pin_hash (hash PIN identik dengan aplikasi) dan buat_pengguna_dari_pegawai.
 -- Prasyarat   : supabase_schema.sql (dan data BUMDes yang sudah tersimpan ke awan)

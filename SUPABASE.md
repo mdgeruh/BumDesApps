@@ -1,77 +1,91 @@
-# Supabase — cadangan dan sinkron awan (v1.1.042)
+# Supabase — cadangan, sinkron awan, dan tabel relasional
 
-Data utama aplikasi tetap di perangkat (`localStorage`). Supabase milik Anda menyimpan **salinan terbaru** dan **30 riwayat** per BUMDes.
+Data utama aplikasi tetap di perangkat (`localStorage`). Supabase milik Anda menyimpan **salinan terbaru**, **30 riwayat** per BUMDes, dan (opsional) **tabel relasional** untuk query dan laporan.
 
-## Tahap
-
-| Tahap | Isi | Status |
-|---|---|---|
-| 1 | Satu baris snapshot per BUMDes, kunci versi (cegah saling menimpa), peran admin/pengurus/pembaca, RLS | **Terpasang di aplikasi** (`cloud.js`, `supabase_schema.sql`) |
-| 2 | Tabel ternormalisasi (unit, pihak, akun, transaksi, jurnal seimbang, pinjaman, audit) + fungsi migrasi dari snapshot | Draf SQL teruji (`supabase_tahap2.sql`), **belum disambung ke aplikasi** |
-| 3 | Portal nasabah dari HP sendiri (HP + PIN, data milik sendiri, offline) | **Terpasang** (`entry.js`, `supabase_nasabah.sql`); OTP SMS/WhatsApp belum |
-
-## Pasang Tahap 1
+## Pasang cepat (proyek baru)
 
 1. Buat proyek di supabase.com.
-2. Buka **SQL Editor > New query**, tempel seluruh `supabase_schema.sql`, klik **Run** (aman diulang).
-3. **Authentication > Users > Add user**: buat akun email + kata sandi untuk pengurus.
+2. **SQL Editor > New query**, tempel **seluruh `supabase_semua.sql`**, klik **Run**. Berkas ini gabungan otomatis ketujuh berkas di bawah dalam urutan yang benar, dan aman diulang.
+3. **Authentication > Users > Add user**: buat akun email + kata sandi untuk pengurus (centang Auto Confirm User).
 4. **Project Settings > API**: salin **Project URL** dan **anon public key**.
-5. Di aplikasi: **Setelan > Awan**. Isi alamat proyek dan anon key, Simpan koneksi, Masuk, lalu Buat BUMDes di awan (pembuat otomatis menjadi admin) atau pilih yang sudah ada.
-6. Tombol **Simpan ke awan** / **Muat dari awan**. Opsi **Sinkron otomatis** mengirim 8 detik setelah perubahan terakhir dan mengambil data baru dari perangkat lain saat aplikasi dibuka/kembali online (bila tidak ada perubahan lokal belum terkirim; jika ada, sinkron dijeda dan Anda memilih Timpa/Muat).
+5. Di aplikasi: **Setelan > Awan**. Isi alamat proyek dan anon key, Simpan koneksi, Masuk, lalu **Buat BUMDes di awan** (pembuat otomatis menjadi admin) atau pilih yang sudah ada.
+6. (Opsional) angkat developer pertama, lihat bagian *Peran developer*.
 
-**Koneksi langsung dari kode:** isi `SB_KEY` (anon public key) di `config.js` bersama `SB_URL`; form koneksi di Setelan otomatis disembunyikan. Jangan pernah memakai service_role/sb_secret_. Sejak v1.1.072 `SB_URL` dan publishable key proyek BumDes-app sudah terisi.
+**Koneksi langsung dari kode:** isi `SB_URL` dan `SB_KEY` (anon/publishable key) di `config.js`; form koneksi di Setelan otomatis disembunyikan. Proyek BumDes-app sudah terisi sejak v1.1.072.
 
-**Peran developer:** jalankan `supabase_developer.sql` setelah Tahap 1 (dan Tahap 2). Angkat developer pertama di SQL Editor: `insert into public.platform_admins(user_id) select id from auth.users where email = 'email-anda@contoh.com' on conflict do nothing;` lalu masuk ulang di aplikasi; bagian Developer muncul di Setelan > Awan. Developer mengelola daftar BUMDes (buat, admin pertama, nonaktif, hapus yang kosong, batasi pembuatan mandiri) tetapi tidak membaca isi data BUMDes. Halaman khusus dibuka lewat tombol Buka halaman Developer di Setelan > Awan, atau alamat aplikasi dengan akhiran `#developer`. Bila supabase_schema.sql dijalankan ulang, jalankan berkas developer lagi.
+## Berkas SQL dan urutan pasang
 
-**Tabel relasional (Tahap 2):** jalankan `supabase_tahap2.sql` sekali di SQL Editor (setelah supabase_schema.sql). Di Setelan > Awan > Tabel relasional tekan Isi tabel sekarang; server memeriksa jurnal seimbang. Cek kecocokan membandingkan jumlah baris dan total debit/kredit/pokok dengan perangkat. Opsi Isi tabel otomatis menjalankannya setiap kali data tersimpan ke awan. Snapshot tetap cadangan utama; data yang dihapus di perangkat tidak otomatis dihapus dari tabel (akan terlihat sebagai selisih).
+| No | Berkas | Isi | Prasyarat | Dipakai oleh |
+|---|---|---|---|---|
+| 1 | `supabase_schema.sql` | **Tahap 1**: snapshot per BUMDes, riwayat 30 versi, kunci versi, peran admin/pengurus/pembaca, RLS | — | Setelan > Awan |
+| 2 | `supabase_developer.sql` | **Peran developer**: kelola daftar BUMDes (buat, admin pertama, status, hapus yang kosong), kolom `bumdes.status` | 1 | halaman `#developer` |
+| 3 | `supabase_tahap2.sql` | **Tahap 2**: tabel akuntansi dan Simpan Pinjam (unit, mitra, akun, kas, transaksi, jurnal seimbang, pinjaman, angsuran, pembayaran, audit) + fungsi migrasi dan status | 1 | Setelan > Awan > Tabel relasional |
+| 4 | `supabase_tahap3.sql` | **Tahap 3**: tabel pegawai dan gaji (pegawai, komponen, penggajian, rincian, pembayaran gaji) | 1, 3 | Tabel relasional (otomatis bila ada) |
+| 5 | `supabase_tahap4.sql` | **Tahap 4**: tabel tabungan (rekening tabungan, mutasi tabungan) | 1, 3 | Tabel relasional (otomatis bila ada) |
+| 6 | `supabase_nasabah.sql` | **Portal nasabah**: login HP + PIN, data milik sendiri, kunci bertahap | 1, 2 | Portal Nasabah |
+| 7 | `supabase_pengguna.sql` | **Pengguna dari pegawai** (opsional): fungsi pembuat pengguna dengan PIN awal 1234 | 1 | Pengguna > Buat pengguna dari pegawai |
 
-**Halaman masuk:** di Setelan > Awan tekan Masuk ke akun awan (atau buka alamat aplikasi dengan akhiran `#masuk`). Lupa kata sandi ada di halaman itu.
-
-**Lupa kata sandi:** di Supabase > Authentication > URL Configuration, isi Site URL dan Redirect URLs dengan alamat Vercel aplikasi (mis. https://bumdes-app-five.vercel.app/). Tautan email membuka aplikasi dan meminta kata sandi baru.
-
-Menambah pengurus: admin menjalankan di SQL Editor `select add_member('<id bumdes>', 'email@pengurus', 'pengurus');` (peran: admin, pengurus, pembaca). Pengguna harus sudah ada di Authentication > Users.
+- Tiap berkas diawali kepala seragam: *Isi, Prasyarat, Dijalankan, Dipakai oleh, Catatan*; semuanya **idempoten** dan tanpa rahasia.
+- **Pasang bertahap** (mis. proyek lama yang sudah berjalan): jalankan hanya berkas yang belum dipasang, sesuai nomor. Bila `supabase_schema.sql` dijalankan ulang, jalankan lagi `supabase_developer.sql` (ia menimpa `is_member` dan `create_bumdes`).
+- **`supabase_semua.sql` dibangkitkan otomatis** oleh `node build.js` (dan diperiksa `node build.js --check`). Jangan diedit; ubah berkas bagiannya.
 
 ## Menambah pengurus dan peran
 
-- Buat akun di Authentication > Users > Add user (centang Auto Confirm User), lalu daftarkan: `select add_member('<id bumdes>', 'email@pengurus', 'pengurus');` di SQL Editor. Peran: `admin`, `pengurus` (simpan dan muat), `pembaca` (hanya muat). Jalankan lagi dengan peran lain untuk mengubahnya.
-- Id BUMDes ada di Table Editor > `bumdes` (kolom `id`).
-- Satu akun boleh jadi anggota banyak BUMDes; satu perangkat terhubung ke satu BUMDes awan sekaligus.
+- Buat akun di Authentication > Users > Add user, lalu daftarkan di SQL Editor: `select add_member('<id bumdes>', 'email@pengurus', 'pengurus');`
+- Peran: `admin`, `pengurus` (simpan dan muat), `pembaca` (hanya muat). Jalankan lagi dengan peran lain untuk mengubahnya.
+- Id BUMDes: Table Editor > `bumdes` (kolom `id`), atau `select id, name from public.bumdes;`
+- Satu akun boleh jadi anggota banyak BUMDes; satu perangkat terhubung ke satu BUMDes awan sekaligus. Berpindah BUMDes (v1.1.097) memisahkan data: BUMDes baru mulai kosong, yang sudah berisi dimuat dari awan, data lama dicadangkan lokal; simpan dulu bila ada perubahan belum terkirim. Untuk mengelola dua BUMDes bersamaan, pakai browser atau profil berbeda.
 - Akun aplikasi (Setelan > Pengguna & Peran) terpisah dari akun awan.
 
-## Halaman masuk gabungan dan portal nasabah (v1.1.079)
+## Peran developer
 
-**Alur:** buka aplikasi tanpa sesi → halaman masuk. Isian berisi `@` = akun pengurus/developer (Supabase Auth); berbentuk nomor HP = nasabah. Setelah cocok: developer → `#developer`; admin/pengurus/pembaca → aplikasi (pembaca hanya melihat); nasabah → portal. Akun di banyak BUMDes memilih dulu. Perangkat baru memuat data dari awan otomatis; perangkat yang sudah berisi data tidak ditimpa.
+Angkat developer pertama di SQL Editor: `insert into public.platform_admins(user_id) select id from auth.users where email = 'email-anda@contoh.com' on conflict do nothing;` lalu masuk ulang di aplikasi; bagian Developer muncul di Setelan > Awan. Developer mengelola daftar BUMDes (buat, admin pertama, nonaktif, hapus yang kosong, batasi pembuatan mandiri) tetapi **tidak membaca isi data BUMDes**. Halaman khusus: tombol *Buka halaman Developer* di Setelan > Awan, atau alamat aplikasi berakhiran `#developer`.
 
-**Sesi offline:** sesi disimpan di perangkat (`bumdes_cloud_v1`, `bumdes_nsb_v1`). Selama belum Keluar, aplikasi dan portal terbuka tanpa internet. Masuk pertama kali butuh internet. Ini pintu masuk, bukan enkripsi: data lokal tetap bisa dibaca siapa pun yang memegang perangkat yang tidak dikunci.
+## Tabel relasional (Tahap 2 dan 3)
 
-**Tabel pegawai dan gaji (Tahap 3):** setelah `supabase_tahap2.sql`, jalankan `supabase_tahap3.sql` di SQL Editor. Aplikasi otomatis memakainya saat *Isi tabel sekarang* atau isi otomatis (Setelan > Awan > Tabel relasional); sebelum dipasang, bagian ini disembunyikan.
+- Di Setelan > Awan > Tabel relasional tekan **Isi tabel sekarang**; server memeriksa jurnal seimbang. **Cek kecocokan** membandingkan jumlah baris dan total debit/kredit/pokok dengan perangkat. **Isi tabel otomatis** menjalankannya tiap data tersimpan ke awan.
+- Bagian pegawai dan gaji (Tahap 3) dipakai otomatis bila `supabase_tahap3.sql` sudah dipasang; sebelum itu disembunyikan. PIN pengguna tidak disalin ke tabel.
+- Snapshot tetap cadangan utama. Tahap 2: data yang dihapus di perangkat tidak otomatis dihapus dari tabel (terlihat sebagai selisih). Tahap 3: baris yang sudah tidak ada di aplikasi ikut dihapus.
+- Bagian tabungan (Tahap 4) dipakai otomatis bila `supabase_tahap4.sql` sudah dipasang; saldo tabungan di server dibandingkan dengan perangkat (setoran + bunga − penarikan − biaya, hanya mutasi berstatus posted).
+- Masih hanya di snapshot: penjualan/Unit Air, jaminan, tarif dan pajak, produk tabungan, pengguna dan peran.
 
-**Buat pengguna dari pegawai lewat SQL (opsional):** jalankan `supabase_pengguna.sql` di SQL Editor, lalu `select public.buat_pengguna_dari_pegawai('UUID-BUMDES'::uuid);` (UUID: `select id, name from public.bumdes;`). Hasilnya sama dengan tombol *Buat pengguna dari pegawai* di aplikasi: peran dari jabatan, PIN awal 1234, wajib ganti saat masuk pertama. Perangkat yang punya perubahan belum tersimpan akan diminta memilih muat/timpa.
+## Pengguna dari pegawai lewat SQL (opsional)
 
-**Pasang portal nasabah:** jalankan `supabase_nasabah.sql` di SQL Editor (setelah Tahap 1 dan `supabase_developer.sql`). Di aplikasi: Setelan > Portal Nasabah > Aktif; masuk akun awan sebagai admin/pengurus; atur PIN nasabah di Master (PIN dikirim ke server dan disimpan sebagai hash bcrypt). Data nasabah diterbitkan otomatis saat Simpan ke awan, atau tekan Terbitkan data sekarang.
+Dari SQL Editor: `select public.buat_pengguna_dari_pegawai('UUID-BUMDES'::uuid);`. Hasilnya sama dengan tombol *Buat pengguna dari pegawai* di aplikasi: peran dari jabatan, PIN awal 1234, wajib ganti saat masuk pertama. Pegawai tanpa peran bawaan jabatan dilewati dan dilaporkan; Superadmin tidak pernah dibuat lewat jalur ini. Perangkat yang punya perubahan belum tersimpan diminta memilih muat/timpa.
 
-**Keamanan nasabah:** tabel `nsb_accounts`/`nsb_sessions` tidak punya kebijakan dan hak tabel, semua lewat fungsi `security definer`. Nasabah hanya mendapat proyeksi miliknya (pinjaman, jadwal, tabungan, profil) tanpa catatan internal. Salah PIN: kunci 15 menit tiap 5 kali, kunci permanen setelah 15 kali sampai pengurus mengatur ulang PIN. Sesi 30 hari, dicabut saat PIN diganti. BUMDes nonaktif menolak masuk. Developer tidak bisa membaca tabel ini. PIN 4–8 angka memang lemah dibanding kata sandi; OTP dan persetujuan data pribadi masih keputusan pengurus (ROADMAP).
+## Halaman masuk dan portal nasabah
 
-## Perilaku
+- **Halaman masuk:** di Setelan > Awan tekan *Masuk ke akun awan*, atau buka alamat aplikasi berakhiran `#masuk`. Isian berisi `@` = akun pengurus/developer (Supabase Auth); berbentuk nomor HP = nasabah. Developer → `#developer`; admin/pengurus/pembaca → aplikasi (pembaca hanya melihat); nasabah → portal. Akun di banyak BUMDes memilih dulu. Perangkat baru memuat data dari awan otomatis; perangkat yang sudah berisi data tidak ditimpa.
+- **Lupa kata sandi:** di Supabase > Authentication > URL Configuration, isi Site URL dan Redirect URLs dengan alamat Vercel aplikasi (mis. https://bumdes-app-five.vercel.app/). Tautan email membuka aplikasi dan meminta kata sandi baru.
+- **Sesi offline:** sesi disimpan di perangkat (`bumdes_cloud_v1`, `bumdes_nsb_v1`). Selama belum Keluar, aplikasi dan portal terbuka tanpa internet; masuk pertama butuh internet. Ini pintu masuk, bukan enkripsi: data lokal tetap bisa dibaca siapa pun yang memegang perangkat yang tidak dikunci.
+- **Pasang portal nasabah:** jalankan berkas no. 5 (sudah ada di `supabase_semua.sql`). Di aplikasi: Setelan > Portal Nasabah > Aktif; masuk akun awan sebagai admin/pengurus; atur PIN nasabah di Master (PIN dikirim ke server dan disimpan sebagai hash bcrypt). Data nasabah diterbitkan otomatis saat Simpan ke awan, atau tekan *Terbitkan data sekarang*.
+- **Keamanan nasabah:** tabel `nsb_accounts`/`nsb_sessions` tanpa kebijakan dan hak tabel; semua lewat fungsi `security definer`. Nasabah hanya mendapat proyeksi miliknya (pinjaman, jadwal, tabungan, profil) tanpa catatan internal. Salah PIN: kunci 15 menit tiap 5 kali, kunci permanen setelah 15 kali sampai pengurus mengatur ulang PIN. Sesi 30 hari, dicabut saat PIN diganti. BUMDes nonaktif menolak masuk. Developer tidak bisa membaca tabel ini. PIN 4–8 angka lemah dibanding kata sandi; OTP dan persetujuan data pribadi masih keputusan pengurus (ROADMAP).
 
-- **Riwayat cadangan:** tombol Riwayat cadangan menampilkan 30 versi terakhir; Pulihkan mengembalikan data perangkat ke versi itu (cadangan lokal disimpan), lalu klik Simpan ke awan agar menjadi versi terbaru. Hanya admin dan pengurus.
+## Perilaku sinkron
+
+- **Simpan ke awan / Muat dari awan.** *Sinkron otomatis* mengirim 8 detik setelah perubahan terakhir dan mengambil data baru dari perangkat lain saat aplikasi dibuka atau kembali online (bila tidak ada perubahan lokal belum terkirim; jika ada, sinkron dijeda dan Anda memilih Timpa/Muat).
+- **Kunci versi:** simpan hanya berhasil bila versi di awan sama dengan versi terakhir yang dipegang perangkat. Bila beda (perangkat lain sudah menyimpan), sinkron **dijeda** dan muncul **Timpa awan** (dengan konfirmasi) atau **Muat dari awan**.
 - **Sebelum mengubah data di perangkat lain, klik Muat dari awan dulu** agar tidak terjeda konflik.
-- Jika setelah memilih ulang BUMDes versi menunjukkan 0 dan "belum", klik Muat dari awan (atau Timpa awan bila data perangkat ini yang benar).
-- **Kunci versi:** simpan hanya berhasil jika versi di awan sama dengan versi terakhir yang dipegang perangkat. Bila beda (perangkat lain sudah menyimpan), sinkron **dijeda** dan muncul **Timpa awan** (dengan konfirmasi) atau **Muat dari awan**.
 - **Muat dari awan** mengganti data perangkat; salinan lama disimpan sebagai cadangan lokal (`bumdes_db_v1_prev`).
+- **Riwayat cadangan:** menampilkan 30 versi terakhir; *Pulihkan* mengembalikan data perangkat ke versi itu (cadangan lokal disimpan), lalu klik Simpan ke awan agar menjadi versi terbaru. Hanya admin dan pengurus.
+- Jika setelah memilih ulang BUMDes versi menunjukkan 0 dan "belum", klik Muat dari awan (atau Timpa awan bila data perangkat ini yang benar).
 - Peran **pembaca** hanya boleh memuat.
+
+## Alamat halaman dan Vercel
+
+- Sejak v1.1.098 tiap menu punya alamat (mis. `/laporan`, `/setelan/awan`). Hosting harus mengarahkan alamat itu ke `index.html`: sudah diatur di `vercel.json` (`rewrites`). Di hosting statis lain, tambahkan aturan serupa (semua alamat rute → `index.html`).
+- Tautan pemulihan kata sandi memakai alamat dasar aplikasi (mis. `https://bumdes-app-five.vercel.app/`), jadi Redirect URLs di Supabase tidak perlu diubah.
 
 ## Keamanan
 
-- **Matikan pendaftaran publik:** Authentication > Sign In / Providers, matikan "Allow new users to sign up". Orang asing yang membuat akun memang tidak bisa melihat BUMDes Anda (RLS), tetapi lebih rapi ditutup.
-- Aktifkan MFA di akun Supabase Anda dan pakai kata sandi kuat; itu satu-satunya pintu masuk.
-- Anon key dan alamat proyek bukan rahasia; yang melindungi data adalah login dan RLS.
-
-- Pakai **anon key** saja. **Jangan pernah** memakai `service_role` key; aplikasi menolaknya.
+- Pakai **anon key** saja. **Jangan pernah** memakai `service_role`/`sb_secret_`; aplikasi menolaknya. Anon key dan alamat proyek bukan rahasia; yang melindungi data adalah login dan RLS.
+- **Matikan pendaftaran publik:** Authentication > Sign In / Providers, matikan "Allow new users to sign up" (orang asing memang tidak bisa melihat BUMDes Anda karena RLS, tetapi lebih rapi ditutup).
+- Aktifkan MFA di akun Supabase Anda dan pakai kata sandi kuat.
 - Kata sandi tidak disimpan di perangkat; hanya token sesi, di kunci terpisah `bumdes_cloud_v1` (tidak ikut Export JSON).
-- Snapshot berisi seluruh data, termasuk **hash PIN** pengguna dan data pribadi nasabah. Batasi anggota, aktifkan kata sandi kuat, dan pertimbangkan MFA Supabase.
-- Tabel dilindungi RLS; `anon` tidak punya akses apa pun; tulis snapshot hanya lewat fungsi `save_snapshot`.
+- Snapshot berisi seluruh data, termasuk **hash PIN** pengguna dan data pribadi nasabah. Batasi anggota.
+- Tabel dilindungi RLS; `anon` tidak punya akses apa pun; snapshot ditulis hanya lewat fungsi `save_snapshot`.
 
 ## Uji
 
-`tests/logic-72.js` (pembantu), `tests/ui-awan.py` (Supabase palsu via Playwright). SQL diuji di Postgres 16: `tests/supabase-test.sql`, `tests/supabase-stub.sql`, `tests/supabase-test2.sql`.
+- Aplikasi: `tests/logic-72.js` (pembantu awan), `tests/ui-awan.py` dan `ui-awan2.py` (Supabase palsu via Playwright).
+- SQL (Postgres 16 lokal): `sh tests/sql-run.sh` memasang berkas terpisah pada basis data baru lalu menjalankan `tests/supabase-test.sql`, `-test2`, `-test3`, `-test4`, `-test5` (117 pemeriksaan). `sh tests/sql-run.sh semua` memasang **hanya** `supabase_semua.sql` dua kali (uji idempoten) lalu menjalankan uji yang sama. Stub Supabase: `tests/supabase-stub.sql`.

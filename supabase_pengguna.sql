@@ -1,5 +1,5 @@
 -- ============================================================================
--- Sistem BUMDes · Supabase · [6/6] PENGGUNA aplikasi dari data pegawai (opsional)
+-- Sistem BUMDes · Supabase · [8/8] PENGGUNA aplikasi dari data pegawai (opsional)
 -- ----------------------------------------------------------------------------
 -- Isi         : Fungsi app_pin_hash (hash PIN identik dengan aplikasi) dan buat_pengguna_dari_pegawai.
 -- Prasyarat   : supabase_schema.sql (dan data BUMDes yang sudah tersimpan ke awan)
