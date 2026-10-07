@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8">
+<script id="rt">/* v1.1.098: alamat per halaman. Di http(s), <base> menjaga berkas relatif (skrip, gaya, ikon) tetap terbaca dari /setelan/awan dst. */
+(function(){try{if(!/^https?:$/.test(location.protocol))return;var R=["dashboard","laporan","transaksi","simpan-pinjam","unit-air","gaji","buku-besar","neraca-saldo","master","data","setelan"],p=location.pathname.split("/"),i=1;for(;i<p.length;i++)if(R.indexOf(p[i])>=0)break;var b=(i<p.length?p.slice(0,i):p.slice(0,-1)).join("/")+"/";window.RT_BASE=b;var e=document.createElement("base");e.href=b;document.head.appendChild(e)}catch(x){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>BUMDes MVP</title>
 <meta name="theme-color" content="#1f7a52">
@@ -10,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="BUMDes">
 <link rel="stylesheet" href="style.css"></head><body>
-<a class="skip" href="#main">Lewati ke konten</a>
+<a class="skip" href="#main" onclick="event.preventDefault();var m=document.getElementById('main');if(m)m.focus()">Lewati ke konten</a>
 <div id="app"><aside id="sb" aria-label="Menu utama"></aside><button id="cb" type="button" onclick="togSb()"></button><div id="ct"><header><div><h1 id="ttl"></h1><div class="sub" id="sbt"></div></div><div class="hru"><span id="bkc"></span><span id="usr"></span><select id="unit" aria-label="Filter unit usaha" style="width:auto" onchange="S.unit=this.value;render()"></select></div></header>
 <main id="main" tabindex="-1"></main></div></div>
 <button id="fab" class="fab" title="Transaksi baru" aria-label="Transaksi baru" onclick="fabGo()"></button>

@@ -393,3 +393,32 @@ body.dv-on{overflow:hidden}
 
 /* Setelan semua sub-tab (v1.1.096): kartu berdampingan di desktop */
 @media (min-width:900px){.mdg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;align-items:start}.mdg .card{max-width:none}.spg{columns:2;column-gap:20px}.spc{break-inside:avoid}.spc .card{max-width:none}.spc h3{margin-top:14px}}
+
+/* ===== Cetak laporan (v1.1.099) ===== */
+@page{size:A4;margin:14mm 12mm 16mm;@bottom-center{content:"Halaman " counter(page) " dari " counter(pages);font:8pt system-ui,sans-serif;color:#555}}
+@media print{
+ :root:root:root{--bg:#fff;--cd:#fff;--tx:#000;--mu:#444;--bd:#bbb;--ln:#bbb;--ac:#1f6b49;--rd:#a02a1e;--sh:none;--sh2:none}
+ body{background:#fff;color:#000;font-size:10.5pt;line-height:1.35;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .ks,.rsel,.qa,.dgr,.tabs,h2:has(+.card.noprint),h2:has(+.fl.noprint){display:none!important}
+ .sc{overflow:visible!important;border:0!important;box-shadow:none!important;background:none!important;border-radius:0!important}
+ table{font-size:10pt;width:100%;border-collapse:collapse}
+ th,td{padding:3px 6px!important}
+ th{background:#eee!important;position:static!important;color:#000!important;border-bottom:1px solid #000}
+ td{border-bottom:1px solid #ddd}
+ tr+tr th{background:#f4f4f4!important}
+ thead{display:table-header-group}tfoot{display:table-footer-group}
+ tr,.doc,.sg{break-inside:avoid;page-break-inside:avoid}
+ h2,h3{break-after:avoid;page-break-after:avoid}
+ h2{font-size:12pt;margin:14px 0 6px;border-bottom:1px solid #000;padding-bottom:2px}
+ .doc h2{border:0;font-size:15pt}
+ .card{border:0;padding:0;margin:0 0 8px;box-shadow:none}
+ .k{color:#333;font-size:9pt}
+ /* tabel kartu (tampilan ponsel) kembali jadi tabel saat dicetak */
+ table.cd{display:table!important}table.cd tbody{display:table-row-group!important}
+ table.cd tr,table.cd tr:first-child{display:table-row!important;border:0!important;border-radius:0!important;box-shadow:none!important;margin:0!important;padding:0!important;background:none!important}
+ table.cd td{display:table-cell!important;text-align:left!important;white-space:normal;padding:3px 6px!important;border-bottom:1px solid #ddd!important}
+ table.cd td.n{text-align:right!important;white-space:nowrap}
+ table.cd td:before{content:none!important}table.cd td:empty{display:table-cell!important}
+ .repend{margin-top:18px}.repend .cn{margin-top:12px;font-size:8pt;color:#555}
+ .doc .sg{display:flex;gap:24px;justify-content:space-around;margin-top:8px}
+}

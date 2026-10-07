@@ -56,13 +56,32 @@ function docSet(){const b=db.bumdes[0]||{},lg=logoOk(b.logo);return`<h2>Dokumen 
 <label>Tempat penandatanganan (mis. Desa Sukamaju; kosong = tempat dan tanggal tidak dicetak)</label><input id="bd-place" maxlength="60" autocomplete="off" value="${esc(db.settings.sign_place||"")}" onchange="setSp(this.value)">
 <label>Tanda tangan Direktur pada bukti pencairan dan slip gaji</label><select onchange="setSd(this.value)"><option value="1"${db.settings.sign_director!==false?" selected":""}>Tampilkan</option><option value="0"${db.settings.sign_director===false?" selected":""}>Sembunyikan</option></select><div class="k">Nama Direktur dan Bendahara di dokumen diambil dari Profil BUMDes. Tempat penandatanganan (bila diisi) dicetak bersama tanggal dokumen di atas tanda tangan.</div></div>`}
 try{S.sbc=localStorage.getItem("bumdes_ui_sbc")==="1"}catch(e){}
+// ===== Alamat per halaman (v1.1.098): /dashboard, /laporan, /setelan/awan, ... lewat History API (hanya di http/https; file:// tidak berubah) =====
+const ROUTES=[["dash","dashboard"],["rep","laporan"],["trx","transaksi"],["sp","simpan-pinjam"],["air","unit-air"],["pay","gaji"],["led","buku-besar"],["tb","neraca-saldo"],["mst","master"],["dat","data"],["set","setelan"]];
+const RT_SUB={set:["su","pf",[["usr","pengguna"],["mod","modul"],["sp","simpan-pinjam"],["pt","portal"],["aw","awan"]]],
+ trx:["xt","daftar",[["awal","saldo-awal"]]],
+ mst:["mt","unit",[["kas","kas-bank"],["coa","akun"],["pihak","pihak"],["peg","pegawai"],["tarif","tarif-biaya"]]],
+ dat:["dt","bk",[["per","periode"],["aud","audit-log"]]],
+ pay:["gt","proses",[["komp","komponen"],["rekap","laporan"]]],
+ sp:["st","ringkasan",[["pinjaman","pinjaman"],["tabungan","tabungan"],["tunggakan","tunggakan"],["jaminan","jaminan"],["nasabah","nasabah"],["calon","calon"]]],
+ air:["at","baca",[["samb","sambungan"],["piutang","piutang"],["tarif","tarif"],["jual","penjualan-lain"],["pel","pelanggan"],["prod","produk"]]],
+ rep:["rp","neraca",[["lr","laba-rugi"],["kas","arus-kas"],["piu","piutang"],["sp","simpan-pinjam"],["air","unit-air"]]]};
+const rtOn=()=>typeof window!=="undefined"&&window.RT_BASE!==undefined&&typeof location!=="undefined"&&/^https?:$/.test(location.protocol)&&typeof history!=="undefined"&&!!history.pushState;
+const rtBase=()=>(typeof window!=="undefined"&&window.RT_BASE)||"/";
+function rtPath(){const r=ROUTES.find(x=>x[0]===S.tab);if(!r)return null;let p=rtBase()+r[1];const m=RT_SUB[S.tab];if(m){const q=m[2].find(x=>x[0]===S[m[0]]);if(q)p+="/"+q[1]}return p}
+function rtParse(path){const b=rtBase();if(path.indexOf(b)!==0)return null;const sg=path.slice(b.length).split("/").filter(Boolean),r=ROUTES.find(x=>x[1]===sg[0]);if(!r)return null;const o={tab:r[0]},m=RT_SUB[r[0]];if(m){const q=m[2].find(x=>x[1]===sg[1]);o.sk=m[0];o.sv=q?q[0]:m[1]}return o}
+function rtSync(){try{if(!rtOn()||location.hash||S.dvo||S.lgn||S.pt)return;const p=rtPath();if(!p)return;if(location.pathname===p){S.rtPop=0;S.rtInit=1;return}
+ if(S.rtInit&&!S.rtPop)history.pushState(null,"",p+location.search);else history.replaceState(null,"",p+location.search);S.rtInit=1;S.rtPop=0}catch(e){}}
+function rtApply(){const o=rtParse(location.pathname);if(!o)return false;S.tab=o.tab;if(o.sk)S[o.sk]=o.sv;return true}
+function rtPop(){S.rtPop=1;const o=rtParse(location.pathname);if(!o){render();return}if(o.sk)S[o.sk]=o.sv;if(o.tab!==S.tab)go(o.tab);else render()}
+if(typeof window!=="undefined"&&window.addEventListener)window.addEventListener("popstate",()=>{if(typeof rtPop==="function"&&rtOn())rtPop()});
 function go(k){const dn=dirtyFields().length,pl=(TABS.find(x=>x[0]===S.tab)||[0,""])[1],same=k===S.tab;S.md=null;S.mv=null;S.ecn=S.eus=S.rp=null;S.eu=S.ec=S.ea=S.ey=S.eg=S.ek=S.pd=null;S.gf=S.gto="";S.pf="";S.tab=k;S.msg=dn&&!same?"Isian di "+pl+" belum diposting; disimpan sementara":"";S.doc=null;S.rc=0;S.more=0;S.q="";S.d1="";S.d2="";S.tt="";S.aa="";S.ae="";S.au="";S.lim=0;render();window.scrollTo(0,0)}
 const unitMQ=()=>typeof matchMedia==="function"&&matchMedia("(min-width:900px)").matches;
 function unitHome(){const u=$("#unit"),h=document.querySelector(".hru");if(u&&h&&u.parentNode&&u.parentNode!==h&&h.appendChild)h.appendChild(u)}
 function unitPlace(){const u=$("#unit"),w=$("#sbu");if(u&&w&&u.parentNode&&w.appendChild&&unitMQ()&&!S.sbc)w.appendChild(u);if(w&&w.style)w.style.display=NU.includes(S.tab)||S.sbc?"none":""}
 if(typeof matchMedia==="function"&&matchMedia("(min-width:900px)").addEventListener)matchMedia("(min-width:900px)").addEventListener("change",()=>render());
 function togSb(){S.sbc=!S.sbc;try{localStorage.setItem("bumdes_ui_sbc",S.sbc?"1":"0")}catch(e){}render()}
-function chrome(){const lb=Object.fromEntries(TABS),nm=bnm(),AT=alertTabs(),btn=(k,c)=>`<button class="ni ${S.tab===k?"on":""}"${S.tab===k?' aria-current="page"':""} title="${lb[k]}${AT[k]?" — "+AT[k]+" peringatan":""}" onclick="go('${k}')">${ic(k)}<span>${lb[k]}</span>${bc(AT[k])}</button>`;
+function chrome(){rtSync();const lb=Object.fromEntries(TABS),nm=bnm(),AT=alertTabs(),btn=(k,c)=>`<button class="ni ${S.tab===k?"on":""}"${S.tab===k?' aria-current="page"':""} title="${lb[k]}${AT[k]?" — "+AT[k]+" peringatan":""}" onclick="go('${k}')">${ic(k)}<span>${lb[k]}</span>${bc(AT[k])}</button>`;
  $("#app").className=S.sbc?"col":"";
  unitHome();$("#sb").innerHTML=`<div class="brand">${ic("mst")}<span><b title="${esc(nm)}">${esc(nm)}</b><small>v${APP_VER}</small></span></div><div class="sbu" id="sbu"><label for="unit">Unit usaha</label></div>`+GRV().map(([g,ks])=>`<div class="gl"><span>${g}</span></div>`+ks.map(btn).join("")).join("")+`<div class="grow"></div>${pwaPrompt?`<button class="ni" id="pwa" title="Pasang aplikasi di perangkat" onclick="pwaInstall()">${ic("plus")}<span>Pasang aplikasi</span></button>`:""}`;
  {const cb=$("#cb");if(cb){const t=(S.sbc?"Perluas":"Ciutkan")+" menu";cb.innerHTML=ic("chev");cb.title=t;if(cb.setAttribute){cb.setAttribute("aria-label",t);cb.setAttribute("aria-expanded",String(!S.sbc))}}}
