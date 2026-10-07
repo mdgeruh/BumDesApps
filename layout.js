@@ -70,7 +70,7 @@ const rtOn=()=>typeof window!=="undefined"&&window.RT_BASE!==undefined&&typeof l
 const rtBase=()=>(typeof window!=="undefined"&&window.RT_BASE)||"/";
 function rtPath(){const r=ROUTES.find(x=>x[0]===S.tab);if(!r)return null;let p=rtBase()+r[1];const m=RT_SUB[S.tab];if(m){const q=m[2].find(x=>x[0]===S[m[0]]);if(q)p+="/"+q[1]}return p}
 function rtParse(path){const b=rtBase();if(path.indexOf(b)!==0)return null;const sg=path.slice(b.length).split("/").filter(Boolean),r=ROUTES.find(x=>x[1]===sg[0]);if(!r)return null;const o={tab:r[0]},m=RT_SUB[r[0]];if(m){const q=m[2].find(x=>x[1]===sg[1]);o.sk=m[0];o.sv=q?q[0]:m[1]}return o}
-function rtSync(){try{if(!rtOn()||location.hash||S.dvo||S.lgn||S.pt)return;const p=rtPath();if(!p)return;if(location.pathname===p){S.rtPop=0;S.rtInit=1;return}
+function rtSync(){try{if(!rtOn()||location.hash||S.lgn||S.pt)return;const p=rtPath();if(!p)return;if(location.pathname===p){S.rtPop=0;S.rtInit=1;return}
  if(S.rtInit&&!S.rtPop)history.pushState(null,"",p+location.search);else history.replaceState(null,"",p+location.search);S.rtInit=1;S.rtPop=0}catch(e){}}
 function rtApply(){const o=rtParse(location.pathname);if(!o)return false;S.tab=o.tab;if(o.sk)S[o.sk]=o.sv;return true}
 function rtPop(){S.rtPop=1;const o=rtParse(location.pathname);if(!o){render();return}if(o.sk)S[o.sk]=o.sv;if(o.tab!==S.tab)go(o.tab);else render()}

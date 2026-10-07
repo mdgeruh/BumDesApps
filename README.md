@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.105** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.108** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,13 +10,16 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.105)
+## Fitur (v1.1.108)
+- **SQL bertahap (v1.1.108):** semua berkas SQL pindah ke folder `sql/` dengan nama berurut: `00_semua`, `01_inti`, `02_akuntansi`, `03_pegawai`, `04_tabungan`, `05_penjualan`, `06_nasabah`, `07_pengguna`, dan `99_reset`.
+- **Satu aplikasi, satu database (v1.1.107):** model diubah menjadi 1 hosting = 1 proyek Supabase = 1 BUMDes. Peran developer, daftar BUMDes dan pemilih BUMDes dihapus (`supabase_developer.sql` dibuang). Pendaftar pertama lewat layar "Siapkan BUMDes" otomatis menjadi admin lalu penyiapan terkunci; `sql/99_reset.sql` mengosongkan database untuk mulai dari awal.
+- **Cek peran akun (v1.1.106):** Setelan > Awan punya tombol "Cek peran akun" yang menyebut apakah akun developer platform, akun BUMDes biasa, atau pengecekan gagal. Galat pengecekan developer (mis. `supabase_developer.sql` belum terpasang) kini ditampilkan, tidak lagi diam-diam menganggap akun sebagai admin biasa.
 - **Setelan > Awan beda untuk developer dan admin (v1.1.105):** akun developer melihat kartu Konsol Developer (buka halaman Developer, jumlah BUMDes klien, peran "Developer (platform)") tanpa Sinkron, Riwayat cadangan, Tabel relasional, dan pemilih BUMDes; akun admin/pengurus/pembaca melihat sinkron dan tabel BUMDes-nya tanpa konsol developer.
 - **Setelan > Awan di desktop (v1.1.104):** dua kolom berdampingan (kiri: Sinkron, Riwayat cadangan, Tabel relasional; kanan: Koneksi, BUMDes di awan, Ganti kata sandi, Developer, Tentang awan), kartu Sinkron selebar kolom, label "Tabel relasional" tidak lagi menyebut Tahap 2 dan ada lencana status. Di HP tetap satu kolom.
-- **Tabel relasional Tahap 5 (v1.1.103):** penjualan, rincian, pembayaran, produk, sambungan dan catatan meter Unit Air, jaminan, tarif dan pajak berversi, catatan penagihan, dan calon peminjam kini ikut disalin ke tabel Supabase (`supabase_tahap5.sql`, berkas [6/8]) dengan pengecekan jumlah baris serta total penjualan, pembayaran, dan nilai jaminan. Berkas SQL kini 8.
+- **Tabel relasional Tahap 5 (v1.1.103):** penjualan, rincian, pembayaran, produk, sambungan dan catatan meter Unit Air, jaminan, tarif dan pajak berversi, catatan penagihan, dan calon peminjam kini ikut disalin ke tabel Supabase (`sql/05_penjualan.sql`, berkas [5/7]) dengan pengecekan jumlah baris serta total penjualan, pembayaran, dan nilai jaminan. Berkas SQL kini 8.
 - **Konsol Developer: Masuk ke BUMDes (v1.1.102):** tiap BUMDes aktif punya tombol "Masuk ke BUMDes"; developer keluar dari konsol dan layar login menampilkan nama BUMDes itu. Setelah masuk dengan akun admin/pengurus BUMDes tersebut, aplikasi langsung membuka BUMDes itu (tanpa pemilih). Akun bukan anggota ditolak. Developer tetap tidak bisa membaca data klien.
 
-> **Masuk (v1.1.079):** satu halaman masuk untuk semua peran (email = pengurus/developer, nomor HP = nasabah) dengan arah otomatis menurut peran, sesi tersimpan sehingga bisa dipakai offline, dan portal nasabah di HP sendiri lewat Supabase (`supabase_nasabah.sql`).
+> **Masuk (v1.1.079):** satu halaman masuk untuk semua peran (email = pengurus/developer, nomor HP = nasabah) dengan arah otomatis menurut peran, sesi tersimpan sehingga bisa dipakai offline, dan portal nasabah di HP sendiri lewat Supabase (`sql/06_nasabah.sql`).
 >
 > **Awan (v1.1.078):** koneksi Supabase dapat ditanam di `config.js` (`SB_URL`, `SB_KEY` anon); lupa/ganti kata sandi, status sinkron, dan sinkron otomatis dua arah.
 
@@ -92,15 +95,15 @@ Satu folder datar (tanpa subfolder sumber). Halaman utama `index.html` memuat ga
 | `reports.js` | Laporan keuangan, piutang, saldo awal terpandu, laporan air |
 | `uikit.js` | Kontrol form kustom (v1.1.033): dropdown, kalender, bulan, berkas |
 | `cloud.js` | Sinkron awan Supabase Tahap 1 (v1.1.042): koneksi, masuk, simpan/muat dengan kunci versi |
-| `supabase_semua.sql` | **Pasang semua sekaligus** untuk proyek baru: gabungan otomatis 8 berkas di bawah (dibangkitkan `node build.js`, jangan diedit) |
-| `supabase_schema.sql` | [1/8] Tahap 1: snapshot, riwayat, kunci versi, peran, RLS |
-| `supabase_developer.sql` | [2/8] Peran developer (kelola daftar BUMDes) |
-| `supabase_tahap2.sql` | [3/8] Tahap 2: tabel akuntansi dan Simpan Pinjam + migrasi |
-| `supabase_tahap3.sql` | [4/8] Tahap 3: tabel pegawai dan gaji |
-| `supabase_tahap4.sql` | [5/8] Tahap 4: tabel tabungan (rekening dan mutasi) |
-| `supabase_tahap5.sql` | [6/8] Tahap 5: tabel penjualan, Unit Air, jaminan, tarif dan pajak |
-| `supabase_nasabah.sql` | [7/8] Portal nasabah (HP + PIN) |
-| `supabase_pengguna.sql` | [8/8] Pengguna dari pegawai (opsional) |
+| `sql/00_semua.sql` | **Pasang semua sekaligus** untuk proyek baru: gabungan otomatis 7 berkas di bawah (dibangkitkan `node build.js`, jangan diedit) |
+| `sql/99_reset.sql` | Kosongkan database (hapus semua tabel dan fungsi) untuk mulai dari awal |
+| `sql/01_inti.sql` | [1/7] Tahap 1: snapshot, riwayat, kunci versi, peran, RLS |
+| `sql/02_akuntansi.sql` | [2/7] Tahap 2: tabel akuntansi dan Simpan Pinjam + migrasi |
+| `sql/03_pegawai.sql` | [3/7] Tahap 3: tabel pegawai dan gaji |
+| `sql/04_tabungan.sql` | [4/7] Tahap 4: tabel tabungan (rekening dan mutasi) |
+| `sql/05_penjualan.sql` | [5/7] Tahap 5: tabel penjualan, Unit Air, jaminan, tarif dan pajak |
+| `sql/06_nasabah.sql` | [6/7] Portal nasabah (HP + PIN) |
+| `sql/07_pengguna.sql` | [7/7] Pengguna dari pegawai (opsional) |
 | `SUPABASE.md` | Panduan pasang cepat, urutan berkas SQL, peran, keamanan, uji |
 | `portal.js` | Portal nasabah mode demo (v1.1.038): masuk HP + PIN, pinjaman, tabungan, profil |
 | `calon.js` | Calon peminjam (v1.1.031): sub-tab Calon, status, jadikan nasabah |

@@ -309,33 +309,6 @@ body.mk-on{overflow:hidden}
 .mk-card{padding:28px;box-shadow:var(--sh)}
 }
 .mk-br .pt-logo .ic{margin:0;display:block}.mk-card .fl{margin-top:4px}.mk-card .fl .b{width:100%;justify-content:center}.mk-card .mk-pw .b{width:auto;flex:none}
-/* v1.1.078 — halaman khusus developer (overlay #developer): sidebar di desktop, menu bawah di HP */
-#dev{display:none}#dev.on{display:flex;flex-direction:column;position:fixed;inset:0;z-index:97;background:var(--bg);color:var(--tx)}
-body.dv-on{overflow:hidden}
-.dv-mn{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}
-.dv-sd{order:2}.dv-br,.dv-ft{display:none}
-.dv-nv{display:grid;grid-template-columns:repeat(4,1fr);background:var(--cd);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom)}
-.dv-nv button{min-height:56px;border:0;background:none;color:var(--mu);font:inherit;font-weight:600;cursor:pointer}.dv-nv button.on{color:var(--ac);box-shadow:inset 0 3px 0 var(--ac)}
-.dv-hd{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--bd)}.dv-hd h1{flex:1;margin:0;font-size:20px}
-.dv-bd{width:100%;max-width:920px;box-sizing:border-box;margin:0 auto;padding:12px 16px 32px}.dv-bd h3{margin:18px 0 8px}
-.dv-gr{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-.dv-st{background:var(--cd);border:1px solid var(--bd);border-radius:var(--r,10px);padding:12px;display:flex;flex-direction:column;gap:2px}.dv-st b{font-size:24px;line-height:1.1}.dv-st span{color:var(--mu);font-size:13px}.dv-st.w{border-color:#d99a00;background:color-mix(in srgb,#d99a00 10%,var(--cd))}
-.dv-at{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:10px}
-.dv-fl{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.dv-fl .b.on{background:var(--ac);color:var(--on)}
-#dv-q{width:100%;box-sizing:border-box}
-.dv-c{margin:8px 0;display:flex;flex-direction:column;gap:6px}
-.dv-lg{border-bottom:1px solid var(--bd);padding:4px 0;font-size:13px}
-.dv-cf{position:fixed;inset:0;z-index:5;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px}
-.dv-cd{background:var(--cd);color:var(--tx);border-radius:14px;padding:20px;max-width:420px;width:100%;box-shadow:var(--sh2)}.dv-cd h3{margin:0 0 6px}
-@media (min-width:900px){
-#dev.on{flex-direction:row}
-.dv-sd{order:0;width:260px;flex:none;background:linear-gradient(170deg,#1b6e49,#0e4a32);color:#fff;display:flex;flex-direction:column;padding:20px 14px;gap:18px}
-.dv-br{display:flex;align-items:center;gap:10px}.dv-br b{display:block}.dv-br small{display:block;opacity:.8;word-break:break-all}.dv-br .pt-logo{width:44px;height:44px;background:rgba(255,255,255,.18);flex:none}
-.dv-nv{display:flex;flex-direction:column;background:none;border:0;padding:0;gap:4px}.dv-nv button{text-align:left;color:#fff;opacity:.85;min-height:44px;padding:0 14px;border-radius:10px;box-shadow:none}.dv-nv button.on{background:rgba(255,255,255,.16);opacity:1;box-shadow:none;color:#fff}
-.dv-ft{display:flex;flex-direction:column;gap:8px;margin-top:auto}.dv-ft .b{width:100%;justify-content:center}
-.dv-bk{display:none}
-.dv-hd{padding:14px 28px}.dv-bd{padding:16px 28px 40px}
-}
 /* v1.1.079: pilihan BUMDes di halaman masuk */
 .mk-pk{display:block;width:100%;text-align:left;margin:0 0 8px;min-height:44px}
 
@@ -423,8 +396,8 @@ body.dv-on{overflow:hidden}
  .doc .sg{display:flex;gap:24px;justify-content:space-around;margin-top:8px}
 }
 
-/* Masuk dari Konsol Developer (v1.1.102) */
-.mk-tg{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border:1px solid var(--ac);background:color-mix(in srgb,var(--ac) 8%,var(--cd));border-radius:10px;padding:8px 12px;margin:0 0 12px}
+/* Penyiapan BUMDes di layar masuk (v1.1.107) */
+.mk-su{margin-top:14px;padding:12px;border:1px solid var(--ac);background:color-mix(in srgb,var(--ac) 8%,var(--cd));border-radius:10px}.mk-su .b{width:100%;justify-content:center;margin-top:6px}.mk-su p{margin:4px 0}
 
 /* Setelan > Awan: dua kolom di desktop (v1.1.104) */
 .awc{min-width:0}.awc .sx{margin-bottom:10px}

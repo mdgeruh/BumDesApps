@@ -113,7 +113,6 @@ const tglS=d=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||"");return m?m[3]+"/"
 function tglView(){if(!document.querySelectorAll||!document.createTreeWalker)return;document.querySelectorAll("#main,#md,#fm,#cf,#toast").forEach(r=>{if(!r)return;const w=document.createTreeWalker(r,4),L=[];let n;while(n=w.nextNode()){const p=n.parentNode&&n.parentNode.tagName;if(p==="TEXTAREA"||p==="SCRIPT"||p==="STYLE"||p==="OPTION")continue;if(/(?<![\d-])\d{4}-\d{2}-\d{2}(?![\d])/.test(n.nodeValue))L.push(n)}L.forEach(n=>{n.nodeValue=n.nodeValue.replace(/(?<![\d-])(\d{4})-(\d{2})-(\d{2})(?!\d)/g,"$3/$2/$1")})})}
 function render(){
  if(typeof lgRender==="function"&&lgRender())return;
- if(typeof dvRender==="function"&&dvRender())return;
  if(typeof ptRender==="function"&&ptRender())return;
  if(gate()){a11y();return}
  if(!tabOk(S.tab)){S.tab=rbacOn()&&curUser()?(GRV()[0]||["",["set"]])[1][0]:"dash";S.doc=null}

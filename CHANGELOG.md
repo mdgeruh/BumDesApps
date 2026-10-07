@@ -2,6 +2,31 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.108] — 2026-10-07
+
+### Diubah
+- Berkas SQL dipindah ke folder `sql/` dengan nama bernomor menurut urutan pasang (`00_semua`, `01_inti` … `07_pengguna`, `99_reset`). Build, tes, pesan galat aplikasi, dan dokumen disesuaikan. Isi SQL tidak berubah.
+
+## [1.1.107] — 2026-10-07
+
+### Diubah
+- Model awan: 1 aplikasi (hosting) = 1 database Supabase = 1 BUMDes. Tabel `bumdes` dibatasi satu baris; `create_bumdes` diganti `setup_status()` dan `setup_bumdes(nama)` (sekali saja, penyiap menjadi admin).
+- Layar masuk: "Siapkan BUMDes" (email, kata sandi, nama); mendukung konfirmasi email Supabase.
+- Portal nasabah tidak lagi memeriksa status BUMDes.
+
+### Dihapus
+- Peran developer, daftar/pemilih BUMDes, `supabase_developer.sql` (hapus juga dari repositori Git).
+
+### Ditambah
+- `supabase_reset.sql` (dengan kunci konfirmasi), `tests/sql-reset.sh`, `tests/supabase-test7.sql`, `logic-121.js`, `ui-siapkan.py`.
+
+## [1.1.106] — 2026-10-07
+### Diperbaiki
+- **Developer dan admin tampak sama karena deteksi developer gagal diam-diam.** `devChk` kini mengembalikan `dev`/`bukan`/`galat` dan menyimpan `dev_err` (mis. "Fungsi developer belum terpasang. Jalankan supabase_developer.sql"); peringatan tampil di Setelan > Awan.
+### Ditambahkan
+- Tombol **Cek peran akun** (`devCek`) di Setelan > Awan: pesan jelas "Akun ini DEVELOPER platform", "Akun ini BUKAN developer (belum ada di platform_admins)", atau penyebab galat.
+- Tes: `logic-120.js` (8).
+
 ## [1.1.105] — 2026-10-07
 ### Diubah
 - **Setelan > Awan kini membedakan akun developer dan admin BUMDes.** Developer (tanpa BUMDes terpilih): kartu "Konsol Developer" di kolom kiri (tombol buka halaman Developer + penjelasan), ringkasan berisi Peran "Developer (platform)" dan jumlah BUMDes klien; Sinkron, Riwayat cadangan, Tabel relasional, dan pemilih "BUMDes di awan" disembunyikan karena khusus akun BUMDes. Admin/pengurus/pembaca: tampilan seperti sebelumnya tanpa konsol developer. Akun yang developer sekaligus anggota BUMDes mendapat keduanya. `isDev`, `devC` di `vCloudSet`.
