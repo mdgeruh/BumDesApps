@@ -24,7 +24,7 @@ const cloudRO=()=>{const c=cloudCfg();return!!(c.token&&c.bumdes_id&&c.role==="p
 function entNeed(){try{if(typeof navigator!=="undefined"&&navigator.webdriver&&!globalThis.__ENT_TEST)return false}catch(e){}if(!entOn()||!(cloudFixed()||entGet().wajib))return false;if(S.pt)return false;if(cloudCfg().token)return false;if(nsbGet())return false;if(entGet().lokal)return false;return true}
 // tautan "pakai data lokal" hanya untuk perangkat lama: ada data, belum pernah masuk akun
 const entLocalOk=()=>entOn()&&!entBlank()&&!entGet().seen&&!cloudCfg().email;
-function entLocal(){entPut({lokal:1,seen:1});S.lgmand=0;lgClose();S.msg="Memakai data lokal perangkat ini. Masuk akun awan dari Setelan > Awan kapan saja";render()}
+function entLocal(){entPut({lokal:1,seen:1});S.lgmand=0;lgClose();S.msg="Memakai data lokal perangkat ini. Masuk akun awan dari Data > Backup kapan saja";render()}
 function entInit(){if(entInit.d)return;entInit.d=1;try{const n=nsbGet();if(n&&n.data&&n.data.party&&n.data.party._id&&!cloudCfg().token&&!S.pt){S.pt={pid:n.data.party._id,tab:"home",sel:null,prev:false,srv:1,at:Date.now()};S.ptl=0}}catch(e){}}
 // ----- masuk -----
 function entLogin(){const em=$("#ln-em"),pw=$("#ln-pw"),v=((em&&em.value)||"").trim();S.lgem=v;
@@ -67,27 +67,30 @@ async function entRoute(L){const c=cloudCfg();S.lgpick=null;S.lgmand=0;
  try{if(location.hash==="#portal")history.replaceState(null,"",location.pathname+location.search)}catch(e){}
  if(!L.length){let siap=true;try{const st=await cloudReq("/rest/v1/rpc/setup_status",{method:"POST",body:{}});siap=!!(st&&st.siap)}catch(e){}
   if(!siap){S.lgsiap=false;S.lgsetup=2;S.lgmand=1;S.lgn=1;S.fe=null;S.msg=S.clm="Database ini belum punya BUMDes. Isi nama BUMDes untuk menyiapkannya; akun Anda otomatis menjadi admin";return"siapkan"}
-  lgClose();S.tab="set";S.su="aw";S.msg=S.clm=ENT_KOSONG;return"kosong"}
+  lgClose();S.tab="dat";S.dt="bk";S.msg=S.clm=ENT_KOSONG;return"kosong"}
  if(L.length>1){L=L.slice().sort((x,y)=>(+y.version||0)-(+x.version||0));S.cll=L;S.lgpick={k:"stf",L};S.lgmand=1;return"pilih"}
  return entFinish(L[0].id)}
 // ----- penyiapan BUMDes: 1 aplikasi = 1 database = 1 BUMDes; pendaftar pertama menjadi admin -----
 async function entSetupChk(){const c=cloudCfg();if(!(c.url&&c.key)||c.token||S.lgsiap!==undefined||entSetupChk.b)return;entSetupChk.b=1;
  try{const st=await cloudReq("/rest/v1/rpc/setup_status",{method:"POST",body:{},auth:false,timeout:12000});S.lgsiap=!!(st&&st.siap)}catch(e){S.lgsiap=undefined}
  entSetupChk.b=0;if(S.lgsiap===false&&S.lgn)render()}
-function entSetupOpen(){S.lgsetup=1;S.fe=null;render()}
-function entSetupBack(){S.lgsetup=0;S.fe=null;render()}
+function entSetupOpen(){S.lgsetup=1;S.fe=null;S.sue="";S.lgp1=S.lgp2="";render()}
+function entSetupBack(){S.lgsetup=0;S.fe=null;S.sue="";S.lgp1=S.lgp2="";render()}
 async function entSetup(){const logged=!!cloudCfg().token,v=i=>String((($("#"+i)||{}).value)||"").trim(),nm=v("su-n"),em=v("su-em"),pw=(($("#su-pw")||{}).value)||"",pw2=(($("#su-pw2")||{}).value)||"";
- S.lgsn=nm;if(em)S.lgem=em;
- try{if(!nm)throw fe("su-n","Nama BUMDes wajib diisi");if(nm.length>120)throw fe("su-n","Nama BUMDes maksimal 120 karakter");
-  if(!logged){if(!/^\S+@\S+\.\S+$/.test(em))throw fe("su-em","Isi email yang valid");cloudPwChk(pw,pw2,"su-pw","su-pw2")}
-  S.clb=1;render();
-  if(!logged){const j=await cloudReq("/auth/v1/signup",{method:"POST",body:{email:em,password:pw},auth:false});
-   if(!j||!j.access_token){S.lgsetup=0;S.lgem=em;S.clb=0;S.msg=S.clm="Akun dibuat. Buka email Anda untuk konfirmasi, lalu masuk di sini dan lanjutkan penyiapan BUMDes";render();return}
+ S.lgsn=nm;if(em)S.lgem=em;S.lgp1=pw;S.lgp2=pw2;S.sue="";
+ const er=[],bad=(f,m)=>er.push([f,m]);
+ if(!nm)bad("su-n","Nama BUMDes wajib diisi");else if(nm.length>120)bad("su-n","Nama BUMDes maksimal 120 karakter");
+ if(!logged){if(!/^\S+@\S+\.\S+$/.test(em))bad("su-em","Isi email yang valid");if(pw.length<8)bad("su-pw","Kata sandi minimal 8 karakter");else if(pw!==pw2)bad("su-pw2","Ulangi kata sandi dengan sama persis")}
+ if(er.length){S.fe={id:er[0][0],m:er[0][1]};S.sue=er.map(x=>x[1]).join(". ");S.msg=S.clm="";S.clb=0;render();entSuShow(er[0][0]);return}
+ try{S.fe=null;S.clb=1;render();
+  if(!logged){const j=await cloudReq("/auth/v1/signup",{method:"POST",body:{email:em,password:pw},auth:false,timeout:25000});
+   if(!j||!j.access_token){S.lgsetup=0;S.lgem=em;S.lgp1=S.lgp2="";S.clb=0;S.msg=S.clm="Akun dibuat. Buka email Anda untuk konfirmasi, lalu masuk di sini dan lanjutkan penyiapan BUMDes";render();return}
    cloudSet({token:j.access_token,refresh:j.refresh_token,exp:Date.now()+(+j.expires_in||3600)*1000,email:(j.user&&j.user.email)||em})}
-  const id=await cloudReq("/rest/v1/rpc/setup_bumdes",{method:"POST",body:{p_name:nm}});
+  const id=await cloudReq("/rest/v1/rpc/setup_bumdes",{method:"POST",body:{p_name:nm},timeout:25000});
   S.cll=await cloudList();if(!S.cll.some(b=>b.id===id))throw Error("BUMDes sudah dibuat tetapi belum terbaca. Masuk ulang dengan akun yang sama");
-  S.lgsetup=0;S.lgsn="";S.lgsiap=true;entPut({seen:1});const r=await entFinish(id);S.clb=0;S.msg=S.clm="BUMDes "+nm+" siap. Anda masuk sebagai admin. Langkah berikut: lengkapi profil dan data di Setelan, lalu Simpan ke awan";render();return r}
- catch(e){S.msg=S.clm="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}S.clb=0;render()}
+  if(db.bumdes[0]&&db.bumdes[0].name!==nm){db.bumdes[0].name=nm;S.clpl=1;try{save()}finally{S.clpl=0}}S.lgsetup=0;S.lgsn="";S.lgp1=S.lgp2="";S.sue="";S.lgsiap=true;entPut({seen:1});const r=await entFinish(id);S.clb=0;S.msg=S.clm="BUMDes "+nm+" siap. Anda masuk sebagai admin. Langkah berikut: lengkapi profil dan data di Setelan, lalu Simpan ke awan";render();return r}
+ catch(e){S.sue=e.message;S.msg=S.clm="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null;S.clb=0;render();entSuShow("su-er")}}
+function entSuShow(id){try{const x=$("#"+id);if(x){if(x.scrollIntoView)x.scrollIntoView({block:"center"});if(id!=="su-er"&&x.focus)x.focus()}}catch(e){}}
 async function entFinish(id){if(cloudCfg().bumdes_id!==id){const b=(S.cll||[]).find(x=>x.id===id);if(b)cloudPick(b.id)}
  const r=await entAutoLoad();lgClose();S.lgpick=null;S.lgmand=0;S.tab="dash";S.doc=null;if(typeof setTimeout==="function")setTimeout(()=>{if(typeof cloudCheck==="function")cloudCheck()},300);return r||"app"}
 async function entAutoLoad(){const c=cloudCfg();if(!c.bumdes_id)return"";

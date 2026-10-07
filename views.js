@@ -179,8 +179,16 @@ function togM(k,id){try{const L={u:db.business_units,c:db.cash_accounts,a:db.acc
  x.status="nonaktif";if(S["e"+k]===id)S["e"+k]=null;audit("deactivate",{u:"unit",c:"cash_account",a:"account"}[k],id);save();S.msg="Dinonaktifkan; data lama tetap tersimpan"}catch(e){S.msg="⚠ "+e.message}render()}
 function add(fn,sel){try{fn();audit("create","master","-");save();if(sel)clrF(sel);S.msg="Data ditambahkan"}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
 function vDat(){return subT(vDat0(),"dt",[["bk","Backup",null],["per","Periode","<h2>Periode Akuntansi</h2>"],["aud","Audit Log","<h2>Audit Log</h2>"]])}
-function vDat0(){return`<h2>Backup & Restore</h2><div class="card"><button class="b" onclick="exp()">Export JSON</button><button class="b s" onclick="impAsk()">Import JSON</button><button class="b x" onclick="askC('rst','')">Reset data demo</button>
-<label>Isi backup (tempel JSON di sini atau pilih file)</label><textarea id="bk" rows="6"></textarea><input type="file" accept=".json" aria-label="Pilih berkas backup JSON" onchange="fl(this)"></div>
+function vDat0(){const bi=bkInfo(),n=[["transaksi",db.transactions.length],["pinjaman",db.loans.length],["pihak",db.parties.length],["tabungan",(db.savings_accounts||[]).length]];
+ return`<h2>Data &amp; Cadangan</h2><p class="k">Profil BUMDes: <b>${esc(bnm())}</b>. Impor dan kosongkan hanya mengubah data, bukan nama, alamat, atau logo BUMDes.</p>
+<div class="card"><h3>1. Cadangkan data</h3><p class="k">${n.map(x=>x[1]+" "+x[0]).join(" · ")}. ${bi.lb?"Cadangan terakhir: "+esc(String(bi.lb).slice(0,10))+" ("+bi.d+" hari lalu).":"Belum pernah dicadangkan di perangkat ini."}</p><button class="b" onclick="exp()">Export JSON</button></div>
+<div class="card"><h3>2. Pulihkan dari cadangan</h3><p class="k">Pilih berkas JSON atau tempel isinya. Hanya data yang diganti; profil BUMDes tetap. Salinan data sekarang disimpan otomatis sebagai cadangan lokal.</p>
+<label for="bk-f">Berkas cadangan</label><input id="bk-f" type="file" accept=".json" aria-label="Pilih berkas backup JSON" onchange="fl(this)">
+<label for="bk">Atau tempel isi cadangan (JSON)</label><textarea id="bk" rows="5"></textarea><button class="b s" onclick="impAsk()">Import JSON</button></div>
+<h3 class="awh">3. Sinkron ke awan (Supabase)</h3><p class="k">Cadangan online di proyek Supabase milik BUMDes: simpan ke awan, muat dari awan, riwayat versi, dan akun. Profil BUMDes ikut tersinkron bersama data.</p>${vCloudSet()}
+<div class="card dz"><h3>4. Kosongkan semua data</h3><p class="k">Menghapus transaksi, pinjaman, tabungan, penjualan, gaji, pihak, dan audit log. Profil BUMDes, pengguna, dan pengaturan tetap. Export dulu bila data perlu disimpan.</p>
+<label for="bk-x">Ketik ${WIPE_WORD} untuk membuka tombol hapus</label><input id="bk-x" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="${WIPE_WORD}"><button class="b x" onclick="wipeAsk()">Kosongkan semua data</button>
+<details class="k"><summary>Isi data contoh (untuk mencoba aplikasi)</summary><p class="k">Mengganti data dengan data contoh. Profil BUMDes tetap.</p><button class="b s" onclick="askC('rst','')">Isi data contoh</button></details></div>
 <h2>Periode Akuntansi</h2>${tbl(["Periode","Status",""],db.accounting_periods.map(p=>`<tr><td>${p._id}</td><td>${p.status}</td><td>${p._id.slice(0,4)<=cyr()?`<span class="k">Tahun buku ditutup</span>`:ib(p.status==="open"?"lock":"unlock",p.status==="open"?"Tutup":"Buka","askC('tgl','"+p._id+"')","s")}</td></tr>`))}
 <h2>Tutup Buku Tahunan</h2>${vFy()}
 <h2>Audit Log</h2>${audB()}`}
