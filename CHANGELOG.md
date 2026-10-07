@@ -2,6 +2,17 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.105] — 2026-10-07
+### Diubah
+- **Setelan > Awan kini membedakan akun developer dan admin BUMDes.** Developer (tanpa BUMDes terpilih): kartu "Konsol Developer" di kolom kiri (tombol buka halaman Developer + penjelasan), ringkasan berisi Peran "Developer (platform)" dan jumlah BUMDes klien; Sinkron, Riwayat cadangan, Tabel relasional, dan pemilih "BUMDes di awan" disembunyikan karena khusus akun BUMDes. Admin/pengurus/pembaca: tampilan seperti sebelumnya tanpa konsol developer. Akun yang developer sekaligus anggota BUMDes mendapat keduanya. `isDev`, `devC` di `vCloudSet`.
+- Tes: `logic-119.js` (7).
+
+## [1.1.104] — 2026-10-07
+### Diubah
+- **Setelan > Awan dioptimalkan untuk desktop.** Di layar ≥900px isi dibagi dua kolom (`.awg/.awc`): kiri Sinkron, Riwayat cadangan, Tabel relasional; kanan Koneksi, BUMDes di awan, Ganti kata sandi, Developer, Tentang awan. Kartu Sinkron kini selebar kolom (sebelumnya lebih sempit dari kartu lain). Di HP tetap satu kolom, urutan: Sinkron, Riwayat, Tabel, lalu pengaturan.
+- Judul "Tabel relasional (Tahap 2)" menjadi "Tabel relasional" (sudah mencakup Tahap 2–5) dengan lencana "terisi", "galat", atau jumlah selisih.
+- Tes: `ui-awan2.py` diperluas (dua kolom desktop, satu kolom HP, tanpa overflow).
+
 ## [1.1.103] — 2026-10-07
 ### Ditambahkan
 - **Tabel relasional Tahap 5.** `supabase_tahap5.sql` (baru, berkas [6/8]): `products`, `sales`, `sale_items`, `payments`, `water_connections`, `water_readings`, `collaterals`, `rate_master`, `tax_master`, `collection_notes`, `prospects` (kolom penting + `doc` utuh), RLS seperti tahap lain, fungsi `migrate_snapshot_to_tables5` dan `tabel_status5` (jumlah baris, total penjualan dan pembayaran berstatus posted, nilai jaminan).

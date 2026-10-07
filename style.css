@@ -425,3 +425,7 @@ body.dv-on{overflow:hidden}
 
 /* Masuk dari Konsol Developer (v1.1.102) */
 .mk-tg{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border:1px solid var(--ac);background:color-mix(in srgb,var(--ac) 8%,var(--cd));border-radius:10px;padding:8px 12px;margin:0 0 12px}
+
+/* Setelan > Awan: dua kolom di desktop (v1.1.104) */
+.awc{min-width:0}.awc .sx{margin-bottom:10px}
+@media (min-width:900px){.awg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;align-items:start}.awg .card{max-width:none}.awc h3:first-child{margin-top:14px}.awc>.sx:first-child{margin-top:14px}}
