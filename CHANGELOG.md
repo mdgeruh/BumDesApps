@@ -2,6 +2,11 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.109] — 2026-10-07
+
+### Diubah
+- Layar Siapkan BUMDes: galat validasi dan galat server tampil di kotak merah permanen (`role=alert`), semua masalah isian ditampilkan sekaligus, kata sandi dipertahankan saat gagal, ikon mata tampilkan/sembunyikan kata sandi (juga di layar Masuk), batas waktu 25 detik untuk daftar dan penyiapan.
+
 ## [1.1.108] — 2026-10-07
 
 ### Diubah
