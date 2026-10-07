@@ -88,7 +88,7 @@ async function entSetup(){const logged=!!cloudCfg().token,v=i=>String((($("#"+i)
    cloudSet({token:j.access_token,refresh:j.refresh_token,exp:Date.now()+(+j.expires_in||3600)*1000,email:(j.user&&j.user.email)||em})}
   const id=await cloudReq("/rest/v1/rpc/setup_bumdes",{method:"POST",body:{p_name:nm},timeout:25000});
   S.cll=await cloudList();if(!S.cll.some(b=>b.id===id))throw Error("BUMDes sudah dibuat tetapi belum terbaca. Masuk ulang dengan akun yang sama");
-  S.lgsetup=0;S.lgsn="";S.lgp1=S.lgp2="";S.sue="";S.lgsiap=true;entPut({seen:1});const r=await entFinish(id);S.clb=0;S.msg=S.clm="BUMDes "+nm+" siap. Anda masuk sebagai admin. Langkah berikut: lengkapi profil dan data di Setelan, lalu Simpan ke awan";render();return r}
+  if(db.bumdes[0]&&db.bumdes[0].name!==nm){db.bumdes[0].name=nm;S.clpl=1;try{save()}finally{S.clpl=0}}S.lgsetup=0;S.lgsn="";S.lgp1=S.lgp2="";S.sue="";S.lgsiap=true;entPut({seen:1});const r=await entFinish(id);S.clb=0;S.msg=S.clm="BUMDes "+nm+" siap. Anda masuk sebagai admin. Langkah berikut: lengkapi profil dan data di Setelan, lalu Simpan ke awan";render();return r}
  catch(e){S.sue=e.message;S.msg=S.clm="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null;S.clb=0;render();entSuShow("su-er")}}
 function entSuShow(id){try{const x=$("#"+id);if(x){if(x.scrollIntoView)x.scrollIntoView({block:"center"});if(id!=="su-er"&&x.focus)x.focus()}}catch(e){}}
 async function entFinish(id){if(cloudCfg().bumdes_id!==id){const b=(S.cll||[]).find(x=>x.id===id);if(b)cloudPick(b.id)}

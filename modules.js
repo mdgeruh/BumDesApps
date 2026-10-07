@@ -36,7 +36,7 @@ function saveBd(){try{const v=k=>$("#bd-"+k).value.trim(),n=v("name");
  if(v("phone")&&!/^[\d\s+()\-]{5,20}$/.test(v("phone")))throw fe("bd-phone","Telepon hanya boleh angka, spasi, +, -, ( )");
  const b=db.bumdes[0]||(db.bumdes[0]={_id:"BUMDES-001"});
  BF.forEach(([k])=>{b[k]=v(k)});b.updated_at=now();audit("update","bumdes",b._id);
- if(S.dr)BF.forEach(([k])=>delete S.dr["set|bd-"+k]);S.nsnap=1;save();S.msg="Profil BUMDes disimpan"}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
+ if(S.dr)BF.forEach(([k])=>delete S.dr["set|bd-"+k]);S.nsnap=1;save();S.msg="Profil BUMDes disimpan";if(typeof cloudRenameChk==="function")cloudRenameChk()}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
 function tgl(id){const p=db.accounting_periods.find(x=>x._id===id);if(p.status==="closed"&&id.slice(0,4)<=cyr()){S.msg="⚠ Periode tahun buku yang sudah ditutup hanya bisa dibuka lewat Batalkan penutupan tahun";render();return}p.status=p.status==="open"?"closed":"open";audit(p.status,"period",id,"Periode "+id);save();render()}
 function exp(){const s=JSON.stringify(db,null,1),t=$("#bk");if(t)t.value=s;try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([s],{type:"application/json"}));a.download="bumdes-backup-"+today()+".json";a.click();try{localStorage.setItem(LB,now())}catch(e){}S.msg="Backup diunduh — simpan file di tempat aman"}catch(e){S.msg="⚠ Export gagal: "+e.message}render()}
 function fl(i){const f=i.files[0];if(f)f.text().then(t=>{$("#bk").value=t})}
