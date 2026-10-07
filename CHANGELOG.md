@@ -2,6 +2,22 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.100] — 2026-10-07
+### Ditambahkan
+- Alamat per halaman kini mencakup **sub-tab semua menu**: `/transaksi/saldo-awal`; `/master/kas-bank|akun|pihak|pegawai|tarif-biaya`; `/data/periode|audit-log`; `/gaji/komponen|laporan`; `/simpan-pinjam/pinjaman|tabungan|tunggakan|jaminan|nasabah|calon`; `/unit-air/sambungan|piutang|tarif|penjualan-lain|pelanggan|produk`; `/laporan/laba-rugi|arus-kas|piutang|simpan-pinjam|unit-air` (selain `/setelan/...` dari v1.1.098). Sub-tab bawaan tidak diberi akhiran (mis. `/laporan` = Neraca). Back/Forward, refresh, dan buka langsung berfungsi untuk semuanya; sub-rute tak dikenal jatuh ke sub-tab bawaan. Peta rute ada di `RT_SUB` (layout.js); `vercel.json` tidak perlu diubah.
+
+## [1.1.099] — 2026-10-07
+### Diubah
+- **Cetak laporan dioptimalkan** (Neraca, Laba Rugi, Arus Kas, Piutang, Simpan Pinjam, Unit Air, Laporan Gaji): kartu ringkasan dan kartu pemilih laporan tidak ikut tercetak; judul layar ganda disembunyikan sehingga kertas diawali kop BUMDes; tabel kembali berbentuk tabel (sebelumnya tercetak sebagai kartu tampilan ponsel); kepala tabel berulang di tiap halaman dan baris tidak terpotong; ukuran huruf 10,5pt; halaman A4 dengan margin dan nomor halaman ("Halaman 1 dari 3", Chrome/Edge); tema gelap selalu tercetak hitam di atas putih.
+- Ditambah blok penutup yang hanya tampil saat cetak: tanggal tempat penandatanganan (Setelan > Profil), kolom Bendahara dan Direktur (nama dari Profil; Direktur bisa disembunyikan), serta catatan "Dicetak … oleh … · Sistem BUMDes vX".
+
+## [1.1.098] — 2026-10-06
+### Ditambahkan
+- **Alamat per halaman (web route)** lewat History API: `/dashboard`, `/laporan`, `/transaksi`, `/simpan-pinjam`, `/unit-air`, `/gaji`, `/buku-besar`, `/neraca-saldo`, `/master`, `/data`, `/setelan`, dan sub-tab Setelan (`/setelan/pengguna|modul|simpan-pinjam|portal|awan`). Tombol Back/Forward browser berfungsi, halaman bisa di-bookmark/dibagikan dan refresh tetap di halaman yang sama. Menu yang tidak diizinkan atau modul nonaktif tetap dialihkan seperti biasa.
+- `vercel.json`: `rewrites` agar semua alamat rute membuka `index.html`. Tautan lama `#developer`, `#masuk`, `#portal` tetap bekerja.
+### Diubah
+- `index.html`: skrip kecil di kepala memasang `<base>` dinamis (hanya di http/https) supaya skrip, gaya, dan ikon tetap termuat dari alamat bersarang; tautan "Lewati ke konten" memakai fokus, bukan `#main`. Tautan pemulihan kata sandi memakai alamat dasar aplikasi, bukan alamat halaman. Di `file://` dan berkas `bumdes.html` mandiri, alamat tidak berubah.
+
 ## [1.1.097] — 2026-10-06
 ### Diperbaiki
 - Memilih atau membuat BUMDes awan kedua di perangkat yang sama tidak lagi menyalin data perangkat ke BUMDes itu (sebelumnya dua BUMDes awan berisi database yang sama, hanya beda nama). Kini data perangkat dipisah per BUMDes: BUMDes baru/kosong dimulai kosong, BUMDes yang sudah berisi dimuat dari awan, data sebelumnya dicadangkan lokal (`bumdes_db_v1_prev`) dan tetap aman di awan. Perpindahan ditahan bila ada perubahan belum tersimpan. Pilihan pertama kali (perangkat belum tertaut) tetap membawa data perangkat ke awan. BUMDes asal data dicatat di `meta.cloud_bid`.

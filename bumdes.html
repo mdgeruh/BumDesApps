@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8">
+<script id="rt">/* v1.1.098: alamat per halaman. Di http(s), <base> menjaga berkas relatif (skrip, gaya, ikon) tetap terbaca dari /setelan/awan dst. */
+(function(){try{if(!/^https?:$/.test(location.protocol))return;var R=["dashboard","laporan","transaksi","simpan-pinjam","unit-air","gaji","buku-besar","neraca-saldo","master","data","setelan"],p=location.pathname.split("/"),i=1;for(;i<p.length;i++)if(R.indexOf(p[i])>=0)break;var b=(i<p.length?p.slice(0,i):p.slice(0,-1)).join("/")+"/";window.RT_BASE=b;var e=document.createElement("base");e.href=b;document.head.appendChild(e)}catch(x){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>BUMDes MVP</title>
 <meta name="theme-color" content="#1f7a52">
@@ -405,8 +407,37 @@ body.dv-on{overflow:hidden}
 
 /* Setelan semua sub-tab (v1.1.096): kartu berdampingan di desktop */
 @media (min-width:900px){.mdg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;align-items:start}.mdg .card{max-width:none}.spg{columns:2;column-gap:20px}.spc{break-inside:avoid}.spc .card{max-width:none}.spc h3{margin-top:14px}}
+
+/* ===== Cetak laporan (v1.1.099) ===== */
+@page{size:A4;margin:14mm 12mm 16mm;@bottom-center{content:"Halaman " counter(page) " dari " counter(pages);font:8pt system-ui,sans-serif;color:#555}}
+@media print{
+ :root:root:root{--bg:#fff;--cd:#fff;--tx:#000;--mu:#444;--bd:#bbb;--ln:#bbb;--ac:#1f6b49;--rd:#a02a1e;--sh:none;--sh2:none}
+ body{background:#fff;color:#000;font-size:10.5pt;line-height:1.35;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .ks,.rsel,.qa,.dgr,.tabs,h2:has(+.card.noprint),h2:has(+.fl.noprint){display:none!important}
+ .sc{overflow:visible!important;border:0!important;box-shadow:none!important;background:none!important;border-radius:0!important}
+ table{font-size:10pt;width:100%;border-collapse:collapse}
+ th,td{padding:3px 6px!important}
+ th{background:#eee!important;position:static!important;color:#000!important;border-bottom:1px solid #000}
+ td{border-bottom:1px solid #ddd}
+ tr+tr th{background:#f4f4f4!important}
+ thead{display:table-header-group}tfoot{display:table-footer-group}
+ tr,.doc,.sg{break-inside:avoid;page-break-inside:avoid}
+ h2,h3{break-after:avoid;page-break-after:avoid}
+ h2{font-size:12pt;margin:14px 0 6px;border-bottom:1px solid #000;padding-bottom:2px}
+ .doc h2{border:0;font-size:15pt}
+ .card{border:0;padding:0;margin:0 0 8px;box-shadow:none}
+ .k{color:#333;font-size:9pt}
+ /* tabel kartu (tampilan ponsel) kembali jadi tabel saat dicetak */
+ table.cd{display:table!important}table.cd tbody{display:table-row-group!important}
+ table.cd tr,table.cd tr:first-child{display:table-row!important;border:0!important;border-radius:0!important;box-shadow:none!important;margin:0!important;padding:0!important;background:none!important}
+ table.cd td{display:table-cell!important;text-align:left!important;white-space:normal;padding:3px 6px!important;border-bottom:1px solid #ddd!important}
+ table.cd td.n{text-align:right!important;white-space:nowrap}
+ table.cd td:before{content:none!important}table.cd td:empty{display:table-cell!important}
+ .repend{margin-top:18px}.repend .cn{margin-top:12px;font-size:8pt;color:#555}
+ .doc .sg{display:flex;gap:24px;justify-content:space-around;margin-top:8px}
+}
 </style></head><body>
-<a class="skip" href="#main">Lewati ke konten</a>
+<a class="skip" href="#main" onclick="event.preventDefault();var m=document.getElementById('main');if(m)m.focus()">Lewati ke konten</a>
 <div id="app"><aside id="sb" aria-label="Menu utama"></aside><button id="cb" type="button" onclick="togSb()"></button><div id="ct"><header><div><h1 id="ttl"></h1><div class="sub" id="sbt"></div></div><div class="hru"><span id="bkc"></span><span id="usr"></span><select id="unit" aria-label="Filter unit usaha" style="width:auto" onchange="S.unit=this.value;render()"></select></div></header>
 <main id="main" tabindex="-1"></main></div></div>
 <button id="fab" class="fab" title="Transaksi baru" aria-label="Transaksi baru" onclick="fabGo()"></button>
@@ -422,7 +453,7 @@ let pwaPrompt=null; // kejadian beforeinstallprompt (lihat js-15-pwa.js)
 // Aman ditaruh di kode karena yang melindungi data adalah login dan RLS. JANGAN isi service_role / sb_secret_ (ditolak aplikasi).
 // Bila SB_URL dan SB_KEY terisi, kolom Koneksi di Setelan > Awan disembunyikan dan nilai ini yang dipakai.
 const SB_URL="https://smpqygmtivxsdbxuypmx.supabase.co",SB_KEY="sb_publishable_yRNGwSos4JM2wsPqPUtWyA_T9i6EXmp";
-const APP_VER="1.1.097"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
+const APP_VER="1.1.100"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
 const KEY="bumdes_db_v1";
 const KEYS="bumdes business_units users roles permissions parties employees accounts cash_accounts transactions journal_entries journal_lines general_ledger accounting_periods loans loan_installments loan_payments collaterals products sales sale_items payments payroll_components payrolls payroll_items salary_payments approvals audit_logs water_connections water_readings".split(" ");
 const NEWK=["water_connections","water_readings","rate_master","tax_master","savings_accounts","savings_tx","collection_notes","prospects"],AIRDEF=()=>({unit_id:"UNIT-002",mode:"flat",abon:15000,min_m3:0,due_days:14,cut_months:3,tiers:[{upto:null,price:10000}]});
@@ -577,13 +608,32 @@ function docSet(){const b=db.bumdes[0]||{},lg=logoOk(b.logo);return`<h2>Dokumen 
 <label>Tempat penandatanganan (mis. Desa Sukamaju; kosong = tempat dan tanggal tidak dicetak)</label><input id="bd-place" maxlength="60" autocomplete="off" value="${esc(db.settings.sign_place||"")}" onchange="setSp(this.value)">
 <label>Tanda tangan Direktur pada bukti pencairan dan slip gaji</label><select onchange="setSd(this.value)"><option value="1"${db.settings.sign_director!==false?" selected":""}>Tampilkan</option><option value="0"${db.settings.sign_director===false?" selected":""}>Sembunyikan</option></select><div class="k">Nama Direktur dan Bendahara di dokumen diambil dari Profil BUMDes. Tempat penandatanganan (bila diisi) dicetak bersama tanggal dokumen di atas tanda tangan.</div></div>`}
 try{S.sbc=localStorage.getItem("bumdes_ui_sbc")==="1"}catch(e){}
+// ===== Alamat per halaman (v1.1.098): /dashboard, /laporan, /setelan/awan, ... lewat History API (hanya di http/https; file:// tidak berubah) =====
+const ROUTES=[["dash","dashboard"],["rep","laporan"],["trx","transaksi"],["sp","simpan-pinjam"],["air","unit-air"],["pay","gaji"],["led","buku-besar"],["tb","neraca-saldo"],["mst","master"],["dat","data"],["set","setelan"]];
+const RT_SUB={set:["su","pf",[["usr","pengguna"],["mod","modul"],["sp","simpan-pinjam"],["pt","portal"],["aw","awan"]]],
+ trx:["xt","daftar",[["awal","saldo-awal"]]],
+ mst:["mt","unit",[["kas","kas-bank"],["coa","akun"],["pihak","pihak"],["peg","pegawai"],["tarif","tarif-biaya"]]],
+ dat:["dt","bk",[["per","periode"],["aud","audit-log"]]],
+ pay:["gt","proses",[["komp","komponen"],["rekap","laporan"]]],
+ sp:["st","ringkasan",[["pinjaman","pinjaman"],["tabungan","tabungan"],["tunggakan","tunggakan"],["jaminan","jaminan"],["nasabah","nasabah"],["calon","calon"]]],
+ air:["at","baca",[["samb","sambungan"],["piutang","piutang"],["tarif","tarif"],["jual","penjualan-lain"],["pel","pelanggan"],["prod","produk"]]],
+ rep:["rp","neraca",[["lr","laba-rugi"],["kas","arus-kas"],["piu","piutang"],["sp","simpan-pinjam"],["air","unit-air"]]]};
+const rtOn=()=>typeof window!=="undefined"&&window.RT_BASE!==undefined&&typeof location!=="undefined"&&/^https?:$/.test(location.protocol)&&typeof history!=="undefined"&&!!history.pushState;
+const rtBase=()=>(typeof window!=="undefined"&&window.RT_BASE)||"/";
+function rtPath(){const r=ROUTES.find(x=>x[0]===S.tab);if(!r)return null;let p=rtBase()+r[1];const m=RT_SUB[S.tab];if(m){const q=m[2].find(x=>x[0]===S[m[0]]);if(q)p+="/"+q[1]}return p}
+function rtParse(path){const b=rtBase();if(path.indexOf(b)!==0)return null;const sg=path.slice(b.length).split("/").filter(Boolean),r=ROUTES.find(x=>x[1]===sg[0]);if(!r)return null;const o={tab:r[0]},m=RT_SUB[r[0]];if(m){const q=m[2].find(x=>x[1]===sg[1]);o.sk=m[0];o.sv=q?q[0]:m[1]}return o}
+function rtSync(){try{if(!rtOn()||location.hash||S.dvo||S.lgn||S.pt)return;const p=rtPath();if(!p)return;if(location.pathname===p){S.rtPop=0;S.rtInit=1;return}
+ if(S.rtInit&&!S.rtPop)history.pushState(null,"",p+location.search);else history.replaceState(null,"",p+location.search);S.rtInit=1;S.rtPop=0}catch(e){}}
+function rtApply(){const o=rtParse(location.pathname);if(!o)return false;S.tab=o.tab;if(o.sk)S[o.sk]=o.sv;return true}
+function rtPop(){S.rtPop=1;const o=rtParse(location.pathname);if(!o){render();return}if(o.sk)S[o.sk]=o.sv;if(o.tab!==S.tab)go(o.tab);else render()}
+if(typeof window!=="undefined"&&window.addEventListener)window.addEventListener("popstate",()=>{if(typeof rtPop==="function"&&rtOn())rtPop()});
 function go(k){const dn=dirtyFields().length,pl=(TABS.find(x=>x[0]===S.tab)||[0,""])[1],same=k===S.tab;S.md=null;S.mv=null;S.ecn=S.eus=S.rp=null;S.eu=S.ec=S.ea=S.ey=S.eg=S.ek=S.pd=null;S.gf=S.gto="";S.pf="";S.tab=k;S.msg=dn&&!same?"Isian di "+pl+" belum diposting; disimpan sementara":"";S.doc=null;S.rc=0;S.more=0;S.q="";S.d1="";S.d2="";S.tt="";S.aa="";S.ae="";S.au="";S.lim=0;render();window.scrollTo(0,0)}
 const unitMQ=()=>typeof matchMedia==="function"&&matchMedia("(min-width:900px)").matches;
 function unitHome(){const u=$("#unit"),h=document.querySelector(".hru");if(u&&h&&u.parentNode&&u.parentNode!==h&&h.appendChild)h.appendChild(u)}
 function unitPlace(){const u=$("#unit"),w=$("#sbu");if(u&&w&&u.parentNode&&w.appendChild&&unitMQ()&&!S.sbc)w.appendChild(u);if(w&&w.style)w.style.display=NU.includes(S.tab)||S.sbc?"none":""}
 if(typeof matchMedia==="function"&&matchMedia("(min-width:900px)").addEventListener)matchMedia("(min-width:900px)").addEventListener("change",()=>render());
 function togSb(){S.sbc=!S.sbc;try{localStorage.setItem("bumdes_ui_sbc",S.sbc?"1":"0")}catch(e){}render()}
-function chrome(){const lb=Object.fromEntries(TABS),nm=bnm(),AT=alertTabs(),btn=(k,c)=>`<button class="ni ${S.tab===k?"on":""}"${S.tab===k?' aria-current="page"':""} title="${lb[k]}${AT[k]?" — "+AT[k]+" peringatan":""}" onclick="go('${k}')">${ic(k)}<span>${lb[k]}</span>${bc(AT[k])}</button>`;
+function chrome(){rtSync();const lb=Object.fromEntries(TABS),nm=bnm(),AT=alertTabs(),btn=(k,c)=>`<button class="ni ${S.tab===k?"on":""}"${S.tab===k?' aria-current="page"':""} title="${lb[k]}${AT[k]?" — "+AT[k]+" peringatan":""}" onclick="go('${k}')">${ic(k)}<span>${lb[k]}</span>${bc(AT[k])}</button>`;
  $("#app").className=S.sbc?"col":"";
  unitHome();$("#sb").innerHTML=`<div class="brand">${ic("mst")}<span><b title="${esc(nm)}">${esc(nm)}</b><small>v${APP_VER}</small></span></div><div class="sbu" id="sbu"><label for="unit">Unit usaha</label></div>`+GRV().map(([g,ks])=>`<div class="gl"><span>${g}</span></div>`+ks.map(btn).join("")).join("")+`<div class="grow"></div>${pwaPrompt?`<button class="ni" id="pwa" title="Pasang aplikasi di perangkat" onclick="pwaInstall()">${ic("plus")}<span>Pasang aplikasi</span></button>`:""}`;
  {const cb=$("#cb");if(cb){const t=(S.sbc?"Perluas":"Ciutkan")+" menu";cb.innerHTML=ic("chev");cb.title=t;if(cb.setAttribute){cb.setAttribute("aria-label",t);cb.setAttribute("aria-expanded",String(!S.sbc))}}}
@@ -1683,7 +1733,7 @@ function vRepGaji(){const T=gajiTab(),s=gajiSum(),bad=S.gf&&S.gto&&S.gf>S.gto,un
  return`<h2>Laporan Gaji</h2><div class="card noprint"><div class="k">Hanya gaji Disetujui dan Dibayar; draf tidak dihitung. Filter unit memakai pilihan di header.</div><div class="fl"><input type="month" aria-label="Dari periode" value="${esc(S.gf||"")}" onchange="S.gf=this.value;S.lim=0;render()"><input type="month" aria-label="Sampai periode" value="${esc(S.gto||"")}" onchange="S.gto=this.value;S.lim=0;render()"><select aria-label="Kelompokkan" onchange="S.gg=this.value;render()">${opt(Object.keys(GG),k=>[k,"Per "+GG[k].toLowerCase()],T.g)}</select>${S.gf||S.gto?`<button class="b s" onclick="S.gf=S.gto='';render()">Reset filter</button>`:""}</div>${bad?'<div class="fe" role="alert">Periode awal sesudah periode akhir</div>':""}<button class="b" onclick="window.print()">Cetak</button><button class="b s" onclick="gajiDl()">Unduh CSV</button></div>
 <div class="doc po">${kop()}<h3>LAPORAN GAJI</h3><div class="cn">${esc(un)} · ${esc(per)} · per ${esc(GG[T.g].toLowerCase())}</div></div>
 <div class="card"><b>${s.c} gaji</b> · Bruto ${rp(s.g)} · Potongan ${rp(s.d)} · <b>Bersih ${rp(s.n)}</b><br>Dibayar ${rp(s.pd)} · Belum dibayar ${rp(s.bp)}</div>
-${T.r.length?tbl(T.h,T.r.map(r=>"<tr>"+r.map((v,i)=>`<td class="${T.h[i][0]==="#"?"n":""}">${cell(v,i,T.h[i])}</td>`).join("")+"</tr>")):'<p class="k">Belum ada gaji yang disetujui atau dibayar pada filter ini.</p>'}`}
+${T.r.length?tbl(T.h,T.r.map(r=>"<tr>"+r.map((v,i)=>`<td class="${T.h[i][0]==="#"?"n":""}">${cell(v,i,T.h[i])}</td>`).join("")+"</tr>")):'<p class="k">Belum ada gaji yang disetujui atau dibayar pada filter ini.</p>'}${typeof repEnd==="function"?repEnd():""}`}
 function pkCalc(){const c=$("#pk-c"),b=$("#pk-bw");if(c&&b)b.hidden=c.value!=="persen_laba"}
 // ===== LAPORAN KEUANGAN (v0.1.018): Neraca, Laba Rugi (per akun / per unit), Arus Kas; membaca jurnal, cetak dan CSV =====
 const trT=()=>memo("trt",()=>new Map(db.transactions.map(t=>[t._id,t.type])));
@@ -1724,10 +1774,11 @@ function repKpi(){const L=lrData(),N=neracaData(),kas=db.cash_accounts.reduce((a
  C=(ico,tn,k,v,sub)=>`<div class="kc"><div class="kh"><span class="kic ${tn}">${ic(ico)}</span><span class="k">${k}</span></div><div class="v">${v}</div><div class="s2">${sub}</div></div>`;
  return`<div class="card ks" aria-label="Ringkasan laporan">${C("tb","t1","Total Aset",rp(N.ta),"per "+(S.d2||"tanggal terakhir"))}${C("tup","t2","Pendapatan",rp(L.r),per)}${C("tdn","t3","Beban",rp(L.e),per)}${C("chart","t4",L.p<0?"Rugi bersih":"Laba bersih",rp(L.p),per)}${C("cash","t5","Kas & Bank",rp(kas),db.cash_accounts.length+" rekening")}</div>`}
 function repSel(defs,cur){return`<div class="rsel" role="tablist" aria-label="Pilih laporan">${defs.map(([k,t,,ico,ds,st])=>`<button class="rcd${k===cur?" on":""}" role="tab" aria-selected="${k===cur}" tabindex="${k===cur?0:-1}" onclick="tabAct(this,()=>{S.rp='${k}';S.lim=0;render()})"><span class="rh"><span class="kic t${k===cur?"1":"0"}">${ic(ico)}</span><span class="rt"><b>${t}</b><small>${ds}</small></span></span><span class="rf">${st}</span></button>`).join("")}</div>`}
+const repEnd=()=>{const u=curUser&&curUser(),b=db.bumdes[0]||{};return`<div class="doc po repend">${sig([["Bendahara",b.treasurer]],1,today())}<div class="cn">Dicetak ${esc(tglId(today()))} ${esc(now().slice(11,16))}${u&&typeof rbacOn==="function"&&rbacOn()?" oleh "+esc(u.name):""} · Sistem BUMDes v${APP_VER}</div></div>`};
 function vRep(){const A=modOn("air"),L=lrData(),N=neracaData(),pu=net(acc("ACC1300"),balU(S.unit))+(A?net(acc("ACC1400"),balU(S.unit)):0),
  defs=[["neraca","Neraca",null,"tb","Aset, kewajiban, ekuitas","Total aset "+rp(N.ta)],["lr","Laba Rugi","<h2>Laba Rugi</h2>","chart","Pendapatan dan beban",(L.p<0?"Rugi ":"Laba ")+rp(L.p)],["kas","Arus Kas","<h2>Arus Kas</h2>","cash","Kas masuk dan keluar","Kas akhir "+rp(db.cash_accounts.reduce((a,c)=>a+net(acc(c.account_id),balAll()),0))],["piu","Piutang","<h2>Piutang</h2>","user","Aging dan kecocokan","Piutang "+rp(pu)],["sp","Simpan Pinjam","<h2>Laporan Simpan Pinjam</h2>","sp","Pinjaman dan tunggakan",actLoans().length+" pinjaman aktif"]].concat(A?[["air","Unit Air","<h2>Laporan Unit Air</h2>","air","Penjualan dan piutang air",airSales().length+" penjualan"]]:[]),
  cur=defs.some(d=>d[0]===S.rp)?S.rp:defs[0][0],H=subT(vNeraca()+vLR()+vKas()+vPiu()+vSpRep()+(A?vAirRep():""),"rp",defs.map(d=>d.slice(0,3)));
- return repKpi()+H.replace(/^<div class="stb"[\s\S]*?<\/div>/,repSel(defs,cur))}
+ return repKpi()+H.replace(/^<div class="stb"[\s\S]*?<\/div>/,repSel(defs,cur))+repEnd()}
 // ===== LAPORAN PIUTANG & SIMPAN PINJAM (v0.1.019) =====
 const AGP=[["Belum jatuh tempo",-1e9,0],["1–30 hari",1,30],["31–60 hari",31,60],["61–90 hari",61,90],["> 90 hari",91,1e9]],AGC=[["0–30 hari",0,30],["31–60 hari",31,60],["61–90 hari",61,90],["> 90 hari",91,1e9]];
 const actLoans=()=>db.loans.filter(l=>l.status==="active"&&(S.unit==="all"||l.unit_id===S.unit));
@@ -2080,6 +2131,9 @@ function usDariPegawai(){try{needP("pengguna.kelola","Hanya Admin Sistem yang da
  if(n){usDr();save()}S.msg=n?n+" pengguna dibuat dari pegawai (PIN awal "+PIN0+", wajib diganti saat masuk pertama)"+(s?"; "+s+" pegawai dilewati karena jabatannya belum punya peran bawaan":""):(s?s+" pegawai dilewati: atur peran bawaan di Daftar jabatan dulu":"Semua pegawai aktif sudah punya akun")}catch(e){S.msg="⚠ "+e.message}render()}
 // ===== CATATAN RILIS (v1.1.003): data untuk modal "?" di Setelan. Tambahkan rilis baru di PALING ATAS; sinkronkan dengan release_notes.md =====
 const RELEASES=[
+ {v:"1.1.100",d:"2026-10-07",t:"Alamat untuk semua sub-tab",i:["Sub-tab di Laporan, Simpan Pinjam, Master, Transaksi, Gaji, Unit Air, dan Data kini punya alamat sendiri, misalnya /laporan/laba-rugi atau /simpan-pinjam/tunggakan.","Tombol Kembali, refresh, dan tautan langsung membuka sub-tab yang sama."]},
+ {v:"1.1.099",d:"2026-10-07",t:"Cetak laporan lebih rapi",i:["Laporan tercetak di kertas A4 dengan kop BUMDes, tabel yang jelas, kepala tabel berulang di tiap halaman, dan nomor halaman.","Kartu ringkasan dan tombol pilihan tidak lagi ikut tercetak, dan tema gelap tetap tercetak hitam di atas putih.","Di akhir laporan ada kolom tanda tangan Bendahara dan Direktur serta catatan tanggal cetak."]},
+ {v:"1.1.098",d:"2026-10-06",t:"Alamat per halaman",i:["Setiap menu kini punya alamat sendiri, misalnya /laporan atau /setelan/awan.","Tombol Kembali di browser berfungsi, halaman bisa disimpan sebagai bookmark atau dibagikan, dan refresh tetap di halaman yang sama."]},
  {v:"1.1.097",d:"2026-10-06",t:"Dua BUMDes di awan kini punya data terpisah",i:["Memilih atau membuat BUMDes lain di Setelan > Awan tidak lagi menyalin data perangkat ke BUMDes itu.","BUMDes baru mulai kosong; BUMDes yang sudah berisi dimuat dari awan. Data sebelumnya tetap aman di awan dan dicadangkan di perangkat.","Berpindah ditahan bila masih ada perubahan yang belum disimpan ke awan."]},
  {v:"1.1.096",d:"2026-10-06",t:"Setelan lebih lega di semua tab",i:["Di layar lebar, kartu Modul dan pengaturan Simpan Pinjam kini tampil dua kolom sehingga tidak perlu menggulir panjang.","Di ponsel tampilan tetap satu kolom."]},
  {v:"1.1.095",d:"2026-10-06",t:"Setelan Profil lebih lega di desktop",i:["Di layar lebar, isian Profil BUMDes tampil dua kolom dengan pengaturan Dokumen Cetak di sebelahnya.","Di ponsel tampilan tetap satu kolom seperti biasa."]},
@@ -3060,7 +3114,7 @@ function cloudBoot(){if(typeof window==="undefined"||!window.addEventListener||c
  if(typeof setInterval==="function")setInterval(()=>{if(typeof document==="undefined"||document.visibilityState!=="hidden")go()},60000);
  if(typeof setTimeout==="function")setTimeout(go,1500);cloudRecBoot();try{if(location.hash==="#masuk"){if(cloudCfg().token)lgClose();else{S.lgn=1;render()}}else if(location.hash==="#developer"){if(cloudCfg().token){devChk().then(()=>{if(cloudCfg().dev)devOpen();else{try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}})}else{S.lgnext="dev";S.lgn=1;render()}}}catch(e){}}
 async function cloudForgot(p){p=typeof p==="string"?p:"ln";try{const em=($("#"+p+"-em")||{}).value||"";const e=em.trim();S.lgem=e;if(!/^\S+@\S+\.\S+$/.test(e))throw fe(p+"-em","Isi email pengurus dulu");S.clb=1;render();
-  const ret=typeof location!=="undefined"?location.origin+location.pathname:"";await cloudReq("/auth/v1/recover"+(ret?"?redirect_to="+encodeURIComponent(ret):""),{method:"POST",body:{email:e},auth:false});
+  const ret=typeof location!=="undefined"?location.origin+(typeof rtBase==="function"?rtBase():location.pathname):"";await cloudReq("/auth/v1/recover"+(ret?"?redirect_to="+encodeURIComponent(ret):""),{method:"POST",body:{email:e},auth:false});
   S.msg=S.clm="Jika email terdaftar, tautan untuk mengatur ulang kata sandi sudah dikirim. Buka tautan itu di perangkat ini"}catch(e){S.msg=S.clm="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}S.clb=0;render()}
 function cloudPwChk(a,b,fa,fb){a=String(a||"");b=String(b||"");if(a.length<8)throw fe(fa,"Kata sandi minimal 8 karakter");if(a!==b)throw fe(fb,"Ulangi kata sandi baru dengan sama persis");return a}
 async function cloudChangePw(){try{const p=cloudPwChk(($("#cl-p1")||{}).value,($("#cl-p2")||{}).value,"cl-p1","cl-p2");S.clb=1;render();await cloudReq("/auth/v1/user",{method:"PUT",body:{password:p}});$("#cl-p1").value="";$("#cl-p2").value="";S.msg=S.clm="Kata sandi diganti"}catch(e){S.msg=S.clm="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}S.clb=0;render()}
@@ -3328,5 +3382,5 @@ if(typeof window!=="undefined"&&typeof navigator!=="undefined"&&navigator.servic
 }
 function pwaInstall(){if(!pwaPrompt)return;const p=pwaPrompt;pwaPrompt=null;p.prompt();if(p.userChoice)p.userChoice.then(()=>render())}
 // ===== MULAI APLIKASI: dimuat paling akhir, setelah semua berkas lain =====
-uiLoad();load();render();if(typeof cloudBoot==="function")cloudBoot();
+uiLoad();load();if(rtOn())rtApply();render();if(typeof cloudBoot==="function")cloudBoot();
 </script></body></html>
