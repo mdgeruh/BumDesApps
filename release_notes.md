@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.103
+# Catatan Rilis — v1.1.105
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,8 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.105 | Setelan Awan dibedakan untuk akun developer dan admin |
+| 1.1.104 | Halaman Setelan > Awan lebih rapi di desktop (dua kolom) |
 | 1.1.103 | Data penjualan, Unit Air, jaminan, tarif dan pajak masuk tabel Supabase |
 | 1.1.102 | Konsol Developer: Masuk ke BUMDes membuka layar login BUMDes itu |
 | 1.1.101 | Data tabungan masuk tabel Supabase; daftar BUMDes awan hanya milik akun |
