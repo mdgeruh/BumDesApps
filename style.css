@@ -405,3 +405,4 @@ body.mk-on{overflow:hidden}
 
 .mk-er{margin:10px 0 0;padding:10px 12px;border:1px solid var(--rd,#b3261e);border-radius:10px;background:color-mix(in srgb,var(--rd,#b3261e) 9%,var(--cd));color:var(--rd,#b3261e);font-size:.9rem;line-height:1.4}.mk-sh{display:flex;align-items:center;gap:8px;margin:10px 0 0;font-size:.9rem;cursor:pointer}.mk-sh input{width:auto;margin:0}
 .mk-eye{padding:0 10px;min-width:44px;justify-content:center}.mk-eye .ic{width:20px;height:20px;margin:0}
+.card.dz{border-color:var(--rd)}.card.dz h3{color:var(--rd)}

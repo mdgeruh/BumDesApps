@@ -2,6 +2,17 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.111] — 2026-10-07
+
+### Diubah
+- Data > Backup ditata ulang menjadi Cadangkan, Pulihkan, dan Kosongkan semua data.
+- Import JSON tidak lagi menimpa profil BUMDes (nama, alamat, logo); salinan data sebelum impor disimpan sebagai cadangan lokal.
+- Nama berkas export memuat nama BUMDes.
+
+### Ditambah
+- Kosongkan semua data: kata kunci KOSONGKAN, dialog konfirmasi dengan rincian, profil BUMDes, pengguna, peran, dan pengaturan dipertahankan, audit log mencatat, salinan lama disimpan lokal.
+- "Reset data demo" menjadi "Isi data contoh" (disembunyikan dalam rincian); profil BUMDes tidak ikut berubah dan salinan lama disimpan lokal.
+
 ## [1.1.110] — 2026-10-07
 
 ### Diperbaiki
