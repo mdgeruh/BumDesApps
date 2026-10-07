@@ -402,7 +402,3 @@ body.mk-on{overflow:hidden}
 /* Setelan > Awan: dua kolom di desktop (v1.1.104) */
 .awc{min-width:0}.awc .sx{margin-bottom:10px}
 @media (min-width:900px){.awg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;align-items:start}.awg .card{max-width:none}.awc h3:first-child{margin-top:14px}.awc>.sx:first-child{margin-top:14px}}
-
-.mk-er{margin:10px 0 0;padding:10px 12px;border:1px solid var(--rd,#b3261e);border-radius:10px;background:color-mix(in srgb,var(--rd,#b3261e) 9%,var(--cd));color:var(--rd,#b3261e);font-size:.9rem;line-height:1.4}.mk-sh{display:flex;align-items:center;gap:8px;margin:10px 0 0;font-size:.9rem;cursor:pointer}.mk-sh input{width:auto;margin:0}
-.mk-eye{padding:0 10px;min-width:44px;justify-content:center}.mk-eye .ic{width:20px;height:20px;margin:0}
-.card.dz{border-color:var(--rd)}.card.dz h3{color:var(--rd)}
