@@ -2,6 +2,21 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.150] — 2026-10-08
+
+### Ditambah
+- **Tampilan sesuai akun dan peran** (permissions.js `roleFx`, `noPerm`, `FN_P`, `KPERM`): setelah tiap render, tombol aksi (`.b`, `.ib`, `.ad`) di halaman dan di modal yang memanggil fungsi berizin atau membuka modal tulis disembunyikan bila akun tidak punya izinnya (peran lokal) atau berperan pembaca di awan. `FN_P` diturunkan dari `GUARD`; `KPERM` memetakan jenis modal ke izin (`pg`→master, `lc`→cairkan, `lw`/`lz`→bayar, `ls`/`lr`→setujui, `vf`/`an`/`ak`/`tl`/`rs`/`hb`, dan seterusnya); `lst` mengikuti status. Wadah `.fl` yang jadi kosong ikut dibuang; di modal tanpa tombol simpan, Batal menjadi Tutup. Baris daftar yang membuka rincian tidak disembunyikan (tetap bisa dilihat).
+- Menu **Setelan** hanya untuk akun dengan `setelan.kelola` atau `pengguna.kelola` (`TP.set`). Akun lain memakai halaman Profil untuk ganti PIN dan ubah data sendiri.
+- Menu **Simpan Pinjam** tersembunyi untuk akun yang hanya ditugaskan ke unit non-Simpan Pinjam (`spScope`, layout.js).
+- Halaman **Data**: sub-tab dan kartu menurut izin (Backup = `data.backup`/`data.kelola`/`setelan.kelola`; Periode = `periode.kelola`/`audit.lihat`; Audit Log = `audit.lihat`; kartu Export `data.backup`, Import dan Kosongkan `data.kelola`, Cadangan online `setelan.kelola`). `subT` menerima kolom ke-4 `false` untuk menyembunyikan sub-tab.
+- Sub-tab **Calon** dan **Tabungan** Simpan Pinjam menurut izin; kartu Tabungan di Ringkasan tidak lagi berupa tautan bagi akun tanpa izin; tombol Bayar Angsuran di dashboard hanya untuk `sp.bayar`; FAB mengikuti `noPerm` (termasuk pembaca awan).
+
+### Diubah
+- Uji disesuaikan dengan perilaku baru: `logic-23`, `logic-24`, `logic-26`, `ui-izin.py`, `ui-rbac.py` (Setelan tidak ada untuk non-admin; Petugas Unit unit Air tanpa Simpan Pinjam).
+
+### Tes
+- `logic-154.js` (31), `ui-roles.py` (baru: matriks peran × halaman × sub-tab di 390 dan 1280px, modal, FAB, pembaca awan).
+
 ## [1.1.149] — 2026-10-08
 
 ### Ditambah

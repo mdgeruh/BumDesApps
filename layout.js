@@ -32,9 +32,11 @@ tup:'<path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>',tdn:'<path d="m22 
 const ic=n=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC_P[n]}</svg>`;
 const ib=(i,t,f,c)=>`<button class="ib ${c||""}" title="${t}" aria-label="${t}" onclick="${f}">${ic(i)}<span>${t}</span></button>`;
 const BN=["dash","trx","sp","air"],GR=[["Ringkasan",["dash","rep"]],["Operasional",["trx","sp","air","pay"]],["Akuntansi",["led","tb"]],["Sistem",["mst","dat","set"]]],NU=["mst","dat","set","prof"];
-const TP={dash:["lihat"],rep:["lihat"],trx:["trx.kelola"],sp:["sp.kelola","sp.data","sp.ajukan","sp.verifikasi","sp.analisis","sp.setujui","sp.akad","sp.tagih","sp.restruk","sp.hapusbuku","sp.cairkan","sp.bayar"],air:["air.kelola"],pay:["gaji.kelola","gaji.setuju"],led:["trx.kelola","audit.lihat"],tb:["trx.kelola","audit.lihat"],mst:["master.kelola"],dat:["data.backup","data.kelola","periode.kelola","audit.lihat"]};
+const TP={dash:["lihat"],rep:["lihat"],trx:["trx.kelola"],sp:["sp.kelola","sp.data","sp.ajukan","sp.verifikasi","sp.analisis","sp.setujui","sp.akad","sp.tagih","sp.restruk","sp.hapusbuku","sp.cairkan","sp.bayar"],air:["air.kelola"],pay:["gaji.kelola","gaji.setuju"],led:["trx.kelola","audit.lihat"],tb:["trx.kelola","audit.lihat"],mst:["master.kelola"],dat:["data.backup","data.kelola","periode.kelola","audit.lihat"],set:["setelan.kelola","pengguna.kelola"]};
 const MODS=[["air","Unit Air","Pelanggan, sambungan dan meter, tagihan air, penjualan, piutang pelanggan, laporan Unit Air"],["pay","Gaji (Payroll)","Proses gaji, komponen gaji, slip gaji, laporan gaji"]],modOn=k=>!!((db&&db.settings&&db.settings.modules)||{})[k],
- tabOk=k=>(!MODS.some(m=>m[0]===k)||modOn(k))&&(!rbacOn()||!curUser()||!TP[k]||TP[k].some(p=>can(p))),GRV=()=>GR.map(([g,ks])=>[g,ks.filter(tabOk)]).filter(x=>x[1].length),BNP=BN.concat(["rep","pay","led","tb","mst","dat","set"]),BNV=()=>BNP.filter(tabOk).slice(0,4);
+ tabOk=k=>(!MODS.some(m=>m[0]===k)||modOn(k))&&(!rbacOn()||!curUser()||!TP[k]||TP[k].some(p=>can(p)))&&(k!=="sp"||spScope()),GRV=()=>GR.map(([g,ks])=>[g,ks.filter(tabOk)]).filter(x=>x[1].length),BNP=BN.concat(["rep","pay","led","tb","mst","dat","set"]),BNV=()=>BNP.filter(tabOk).slice(0,4);
+// akun yang ditugaskan hanya ke unit non-Simpan Pinjam tidak memerlukan menu Simpan Pinjam
+const spScope=()=>{if(!rbacOn())return true;const u=curUser(),ids=(u&&u.unit_ids)||[];return!ids.length||ids.some(id=>(db.business_units||[]).some(x=>x._id===id&&x.type==="simpan_pinjam"))};
 const bnm=()=>(db.bumdes[0]||{}).name||"BUMDes";
 function bAddr(){const b=db.bumdes[0]||{},a=[b.address,b.village&&"Desa "+b.village,b.district&&"Kec. "+b.district,b.regency,b.province].filter(Boolean).join(", "),c=[b.phone&&"Telp. "+b.phone,b.email].filter(Boolean).join(" · ");return(a||c)?`<div class="cn">${esc(a)}${a&&c?"<br>":""}${esc(c)}</div>`:""}
 const logoOk=u=>typeof u==="string"&&u.length<=200000&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(u);
@@ -101,7 +103,7 @@ const bc=n=>n?`<i class="bc" aria-hidden="true">${n>99?"99+":n}</i><span class="
 function goS(tab,o){Object.assign(S,o||{});go(tab)}
 // ===== FAB (v1.1.049): kontekstual, menepi saat menggulir/mengisi form, menghormati hak akses =====
 const FAB_HIDE=["trx","rep","led","tb","set","dat"];
-function fabCfg(){if(S.doc||FAB_HIDE.includes(S.tab))return null;if(S.tab==="sp")return can("sp.ajukan")?{l:"Ajukan pinjaman",t:"Ajukan pinjaman baru"}:null;return can("trx.kelola")?{l:"Transaksi",t:"Transaksi baru"}:null}
+function fabCfg(){if(S.doc||FAB_HIDE.includes(S.tab))return null;if(S.tab==="sp")return can("sp.ajukan")&&!noPerm("sp.ajukan")?{l:"Ajukan pinjaman",t:"Ajukan pinjaman baru"}:null;return can("trx.kelola")&&!noPerm("trx.kelola")?{l:"Transaksi",t:"Transaksi baru"}:null}
 function fabSet(){const e=$("#fab"),c=fabCfg();e.innerHTML=ic("plus")+'<span class="fl2">'+(c?c.l:"Transaksi")+'</span>';e.style.display=c?"":"none";if(c&&e.setAttribute){e.setAttribute("title",c.t);e.setAttribute("aria-label",c.t)}}
 function fabGo(){const c=fabCfg();if(!c)return;if(S.tab==="sp")mdOpen("lp","");else qTrx("")}
 function fabHide(on){const e=$("#fab");if(e&&e.classList)e.classList.toggle("fh",!!on)}
