@@ -124,7 +124,7 @@ function render(){
  $("#unit").innerHTML=(su&&su.length?"":`<option value="all">Semua unit</option>`)+opt(su&&su.length?su:db.business_units,u=>[u._id,u.name],S.unit);
  $("#unit").value=S.unit;
  $("#main").innerHTML=banners()+(S.doc?vDoc():({dash:vDash,rep:vRep,trx:vTrx,sp:vSp,air:vAir,pay:vPay,led:vLed,tb:vTb,mst:vMst,dat:vDat,set:vSet,prof:vProf})[S.tab]());
- dRestore();draftBar();cfr();mdr();cards();a11y();tglView();emptyFx();badgeFx();stbFx();uiSave();
+ dRestore();draftBar();cfr();mdr();roleFx();cards();a11y();tglView();emptyFx();badgeFx();stbFx();uiSave();
  if(S.fe){const f=$("#"+S.fe.id);if(f&&f.insertAdjacentHTML){f.classList.add("er");(f._b||f).insertAdjacentHTML("afterend",`<div class="fe" role="alert" id="fe-${S.fe.id}">${esc(S.fe.m)}</div>`);if(f.setAttribute){f.setAttribute("aria-invalid","true");f.setAttribute("aria-describedby",[f.getAttribute("aria-describedby"),"fe-"+S.fe.id].filter(Boolean).join(" "))}if(f.focus)f.focus()}S.fe=null}
  if(S.sf||S.msg){toast((S.msg?S.msg+(S.sf?" · ":""):"")+(S.sf?"⚠ TIDAK tersimpan ke browser — Export JSON sekarang":""),S.sf||/^⚠/.test(S.msg));S.sf=0;
   if(typeof setTimeout==="function")setTimeout(()=>{S.msg=""},0)}

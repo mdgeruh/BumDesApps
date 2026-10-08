@@ -10,7 +10,8 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.149)
+## Fitur (v1.1.150)
+- **Tampilan sesuai akun dan peran (v1.1.150):** menu, sub-tab, kartu, dan tombol aksi hanya tampil bila peran akun mengizinkan (termasuk peran pembaca di awan); Setelan hanya untuk Admin Sistem; akun yang hanya bertugas di unit non-Simpan Pinjam tidak melihat menu Simpan Pinjam.
 - **Ubah data sendiri (v1.1.149):** di halaman Profil, pengguna yang login dapat mengubah nama, telepon, dan alamat (ikut ke data pegawai tertaut); tercatat di jejak audit.
 - **Dialog per aksi pinjaman (v1.1.149):** Setujui, Cairkan, Bayar angsuran, dan Lunasi dibuka sebagai dialog dengan nilai bawaan dan galat per kolom.
 - **Profil pengguna yang login (v1.1.148):** chip profil di header (avatar inisial, nama, peran; hanya avatar di HP) membuka halaman Profil: identitas, akses saya, ganti PIN (mode pengguna) atau atur ulang kata sandi (akun awan), aktivitas terakhir, dan Keluar. Alamat `#profil`.

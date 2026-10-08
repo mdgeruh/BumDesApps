@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.149
+# Catatan Rilis — v1.1.150
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,7 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.150 | Tampilan sesuai akun dan peran |
 | 1.1.149 | Ubah data profil sendiri dan dialog per aksi pinjaman |
 | 1.1.148 | Profil pengguna di header dan halaman Profil |
 | 1.1.147 | Sidebar dan header lebih jelas; pilihan unit tampil lagi di desktop |
