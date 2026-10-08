@@ -2,6 +2,196 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.148] — 2026-10-08
+
+### Ditambah
+- Halaman Profil (`vProf`, users.js; tab `prof` di `TABS`/`ROUTES`, tidak masuk menu samping/bawah, `NU` tanpa filter unit). `profWho()` menentukan pengguna yang login: pengguna mode lokal (`curUser`) diutamakan, kalau tidak akun awan (email + peran). Isi: kartu profil, Identitas, Akses saya (menu yang boleh dibuka + jumlah izin), Ganti PIN (lokal) / atur ulang kata sandi lewat email (`profReset`, awan), Aktivitas terakhir (audit pengguna), Keluar.
+- Chip profil di header (`usrChip` ditulis ulang): avatar `avA`, nama dan peran (`.usn`); tombol Keluar header tetap ada untuk mode pengguna lokal.
+
+### Diperbaiki
+- Titik status awan tidak lagi menimpa tulisan "Awan" (padding diperlebar).
+
+### Tes
+- `tests/ui-profil.py` (baru), `logic-151.js` (13); `logic-113` tetap lulus (rute `profil`).
+
+## [1.1.147] — 2026-10-08
+
+### Diperbaiki
+- Filter unit di sidebar desktop: `unitHome/unitPlace` hanya memindah `<select id="unit">` sehingga tombol kustom `.ub` buatan `uikit.js` hilang saat `#sb` dirender ulang; kini `unitMv(u,p)` memindah select beserta tombolnya.
+- Titik status awan menimpa teks "Awan".
+
+### Diubah
+- `index.html`: header mendapat `#hic` (ikon halaman) dan `#hdt` (tanggal). `layout.js`: `unitLbl()`, `hdrDate()`, subjudul `nama · unit`, merek dua baris. CSS blok v1.1.147 (kartu `.sbu`, `.hic`, `.hdt`); `header>div:first-of-type` menggantikan `:first-child`.
+
+### Tes
+- `tests/ui-chrome.py` (baru), `logic-150.js` (6).
+
+## [1.1.146] — 2026-10-08
+
+### Diubah
+- UI-15: `style.css` dipangkas ±2 KB — selektor yang kelasnya tidak ada di JS/HTML atau kombinasi lama (`.li.lgr…`, `.ll.lgl`, `.pt-r`, `.awg`, `.ks.k4`, `.mk-sh`, `.dg…`) dihapus; kelas yang diaktifkan dinamis (`.sh.open`, `.stb.ml/mr`, `.up.sheet`, `.upb.dim`) sengaja dipertahankan. Aturan `@media print{.dc{…}}` baru. Tampilan tidak berubah: 48 screenshot (11 tab + portal × 390/1280 × terang/gelap) identik piksel demi piksel.
+
+### Tes
+- `tests/check-css.js` (baru): tak ada kelas CSS tak terpakai, aturan lama tidak muncul lagi, aturan cetak ada.
+
+## [1.1.145] — 2026-10-08
+
+### Diubah
+- UI-14: `portal.js` — `ptHomeV` (dua `.card.kp.pt-k` berikon via `ptKp`, dcard tagihan dan mutasi dengan `.upl` + `.tri`), `ptLoansV`/`ptSavV` (dcard berisi `button.upr.pt-it`, avatar `avA`), `ptLoanV`, `ptProfV`, `ptLoginV` (dcard `pt-card`) memakai `dcard`; helper baru `ptKp`, `ptMut`. `cloud.js` — helper `mkH(ico,t)` memberi ikon `.kic` pada judul Masuk, Siapkan BUMDes, Pilih BUMDes; daftar Pilih BUMDes memakai `.upl > button.upr.mk-pk`. CSS blok v1.1.145 di `style.css`. ID, fungsi, dan teks yang diuji tidak berubah.
+
+### Tes
+- `logic-149.js` (12): struktur kartu portal dan header layar masuk.
+
+## [1.1.144] — 2026-10-08
+
+### Diubah
+- UI-13c: `vSetSP()` (modules.js) memakai pembungkus baru `spCard(t)` yang mengubah tiap `SPK[t]()` (h3 + `.card` berisi `.k` penjelasan dan isian) menjadi `dcard` (judul `h3.ct`, penjelasan jadi subjudul `.cs`; tanpa penjelasan memakai `.dc0`). Isi `SPK` (ID `spc-*`, `fl-*`, `kol-*`, `sv-*`, `sod-*`, dll.) dan fungsi `set*` tidak berubah; bagian lipat `sxG` dan `.spg/.spc` dipertahankan; tombol di dalam dcard boleh membungkus teks.
+- Tes: `logic-148.js` baru; `logic-111` disesuaikan (`<h3 class="ct">`).
+
+## [1.1.143] — 2026-10-08
+
+### Diubah
+- UI-13b: `vUsr()`, `rolesCard()` (users.js) dan `vPortalSet()` (portal.js) memakai `dcard`. Pengguna: "Aktifkan mode pengguna" (form `us-*` tetap), "Akun saya" (`cp-*`, `chgPin/doLogout`), "Pengguna aplikasi" (`.upr.alr.usr`, avatar `avA`, `.alb` aksi edit / reset PIN / nonaktifkan, lencana status), "Matriks izin" (tabel `tbl` tetap karena matriks, kotak centang `togPerm`), "Matikan mode pengguna" (`.dz`); Portal: "Pengaturan portal" (`sp-portal`) dan "Status penerbitan" (`nsbPubNow`, `ptOpen`). Penanda `<h2>` subT dipertahankan.
+- Tes: `logic-147.js` baru; `ui-modal.py` disesuaikan (baris pengguna `.upr`, bukan `tr`).
+
+## [1.1.142] — 2026-10-08
+
+### Diubah
+- UI-13a: `vSet0()` dan `vMod()` (modules.js) serta `docSet()` (layout.js) memakai `dcard`. Profil: "Identitas BUMDes" (`.pfc`, grid `.pfg` tetap, ID `bd-*`, `saveBd()`), Dokumen Cetak: "Kop dan tanda tangan" (ID `bd-logo`, `bd-place`, fungsi `logoPick/setSp/setSd`); Modul: "Cara kerja modul" (`.dc0`) dan satu dcard `.mdm` per modul (lencana status, saklar `setMod`). Penanda `<h2>` subT dipertahankan.
+- Tes: `logic-146.js` baru.
+
+## [1.1.141] — 2026-10-08
+
+### Diubah
+- UI-12: `vDat0()` (views.js), `vFy()` dan `audB()` (closing.js) memakai `dcard`. Backup: kartu "1. Cadangkan data", "2. Pulihkan dari cadangan", "3. Cadangan online (awan)" (`.dwc`, isi `vCloudSet()` tak berubah), "4. Kosongkan semua data" (`.dz`); Periode: "Daftar Periode" (`.upr.dpr`, terurut, ikon `.tri` kunci, aksi `askC('tgl')`); Tutup Buku: "Penutupan tahun buku" (baris unit) dan "Riwayat Penutupan" (baris tahun + batalkan); Audit Log: "Log aktivitas" (`.upr.adr`, avatar pengguna, `<code>` peristiwa, `.aby`, `.ent`). ID form (`bk-f`, `bk`, `bk-x`) dan fungsi tidak berubah; penanda `<h2>` subT dipertahankan. Tabel Periode/Tutup Buku/Audit Log diganti baris.
+- Tes: `logic-145.js` baru; `logic-10`, `logic-23`, `logic-62` disesuaikan dengan markup baru Audit Log.
+
+## [1.1.140] — 2026-10-08
+
+### Diubah
+- UI-11b: `vPihak`, `vPeg` (payroll.js) dan `vTarifBiaya` (rates.js) memakai `dcard` dan baris `mrw` (`.upr.mdr`, onclick `mdOpen('mdt','k|id')` tetap). Pihak/Pegawai: filter `mq` dan select di dalam dcard, avatar `avA`, Pegawai menampilkan gaji pokok; Tarif/Pajak: avatar, kode versi, jenis, metode, tarif (bertingkat diringkas "Bertingkat" dengan rincian di subjudul), masa berlaku, lencana status; Pratinjau hitung dalam dcard. Daftar jabatan tetap `sxG` (isi memakai `.mpj`). Penanda `<h2>` subT dan semua ID/fungsi form dipertahankan. `mrow/mlist` kini tak dipakai lagi di Master (CSS `.li` dibersihkan di UI-15).
+- Tes: `logic-144.js` baru.
+
+## [1.1.139] — 2026-10-08
+
+### Diubah
+- UI-11a: `vMst0()` (views.js) bagian Unit Usaha, Kas & Bank, COA memakai `dcard` dan helper baru `mrw` (baris `button.upr.mdr`, onclick `mdOpen('mdt','k|id')` tetap). Unit: avatar `avA`, kode dan jenis, lencana status; Kas: saldo `rp(net())`; COA: filter `mq("aq")` + select `S.aqt` di dalam dcard, chip `.kic.acc`, induk `.mdh`, anak `.mdc`. Teks "N dari M akun" dan "Tidak ada akun yang cocok." dipertahankan; `mrow/mlist` tetap dipakai Pihak/Pegawai/Tarif. Penanda `<h2>` subT dipertahankan.
+- Tes: `logic-143.js` baru.
+
+## [1.1.138] — 2026-10-08
+
+### Diubah
+- UI-10: `vPay0`, `vKomp`, `vRepGaji` (payroll.js) memakai `dcard`. Proses Gaji: "Buat gaji periode", "Pembayaran gaji", "Daftar Gaji" (`.upr.alr.gjr`, aksi `.alb.gjb` di baris sendiri, lencana status), rincian gaji dalam dcard (`<span id="pd-h">`, ikon `.tri` +/−, form tambah komponen `.gjf`); Komponen: "Master Komponen" berbaris; Laporan: "Filter dan cetak" (`.rpb`), 4 `.card.kp` (`.gjk`), rekap dalam `dcard` `.rpc`. ID form (`gj-*`, `pi-*`) dan fungsi tidak berubah; penanda `<h2>` subT dipertahankan.
+- Tes: `logic-142.js` baru.
+
+## [1.1.137] — 2026-10-08
+
+### Diubah
+- UI-9b: `vBaca`, `vSamb`, `vTarif` (water.js) memakai `dcard`. Baca Meter: kartu "Periode tagihan" dan "Angka Meter" dengan baris `.upr.bmr` (input `bm_<id>` dan petunjuk `-h` tetap, atau lencana "Sudah ditagih"); Sambungan: "Daftar Sambungan" dengan `.upr.smr` (lencana, `.smw` menunggak), "Ganti Meter", "Riwayat Ganti Meter"; Tarif: "Pengaturan Tarif" dan "Simulasi Tagihan". Helper `avA` dipindah ke tingkat global. ID form (`bm-*`, `gm-*`, `tw-*`) dan fungsi tidak berubah.
+- Tes: `logic-141.js` baru.
+
+## [1.1.136] — 2026-10-08
+
+### Diubah
+- UI-9a: `vAir()` (water.js) — tab `jual`, `piutang`, `pel`, `prod` memakai `dcard` (form dalam `.alf`; daftar dalam kartu "Daftar Penjualan", "Piutang Pelanggan", "Riwayat Pembayaran", "Daftar Pelanggan", "Daftar Produk") dengan baris `.upr.alr` (avatar `avA`, lencana `stB`, ikon `.tri in` untuk pembayaran, tombol aksi `.alb`). ID form (`j-*`, `ar-*`) dan fungsi (`jual`, `jAdd`, `terima`, `batalJual`, `batalTerima`, `openE`, `togPel`, `togProd`) tidak berubah. Judul `<h2>` ganda di Penjualan/Piutang/Riwayat dihapus karena sudah ada judul kartu. Tab Baca Meter, Sambungan, Tarif belum diubah (UI-9b).
+- Tes: `logic-140.js` baru.
+
+## [1.1.135] — 2026-10-08
+
+### Diubah
+- Buku Besar desktop (≥900px): baris `.upr.lgr` menjadi grid 7 kolom (ikon D/K, `.lgdd` tanggal, keterangan, `.lgdu` unit, `.lgdb` debit, `.lgkr` kredit, `.lgsa` saldo) dengan header `.upr.lgh`; sel `.lgx` hanya tampil di desktop (disembunyikan di HP dan cetak). Filter dibagi `.lgfg` (akun | cari dan tanggal) sebaris di desktop. Kontrol Mutasi: pilihan urutan 200px, tombol Cetak/CSV di kanan. HP: ringkasan akun 18px agar nominal besar muat, jarak label filter.
+- Tes: `logic-138.js` (+3), `ui-nav.py` (kolom hanya di desktop).
+
+## [1.1.134] — 2026-10-08
+
+### Diubah
+- UI-8: `vTb()` (Neraca Saldo) memakai `.g.dk.tbk` berisi 3 `.card.kp` (Total debit, Total kredit, Status) dan `dcard` "Saldo per Akun" (`.tbc`) dengan baris `.upr.tbr` (ikon `.tri` D/K, nama, kode · jenis, nominal + Debit/Kredit) dan dua baris total `.upr.lgo`; tabel diganti. Status ✓/⚠ memakai `.rck`.
+- Tes: `logic-139.js` baru.
+
+## [1.1.133] — 2026-10-08
+
+### Diubah
+- UI-7: `vLed()` (Buku Besar) memakai `dcard` "Akun dan filter" (`.lgf`), ringkasan `.g.dk` berisi 4 `.card.kp` (menggantikan `.card.ks.k4`), dan `dcard` "Mutasi" (`.lgc`) dengan baris `.upr.lgr` (ikon `.tri` D/K, keterangan 2 baris, tanggal · unit, "Saldo …", nominal dan Debit/Kredit) serta baris `.upr.lgo` saldo awal/akhir. Tata letak kolom desktop lama (`.li.lgr`, `.lgh`) tidak dipakai lagi; aturan CSS-nya dibersihkan di UI-15. ID dan fungsi (`ledData`, `ledCsv`, `ledDl`, `mdOpen('td')`) tidak berubah.
+- Tes: `logic-138.js` baru; `logic-109.js`, `logic-4.js`, `ui-nav.py` disesuaikan.
+
+## [1.1.132] — 2026-10-08
+
+### Diubah
+- UI-6: `repBar` jadi `dcard` "Filter dan cetak" / "Cetak dan unduh" (`.rpb`, `.rbt`); helper `rcard` (dcard + `.rpc`) membungkus Neraca, Laba Rugi (akun dan per unit), Arus Kas, tiap bagian laporan Piutang, Simpan Pinjam (termasuk `spRep2`), dan Unit Air. Aging Piutang memakai `kvr` dengan bar, Piutang terbesar `.upr.rpr`, Kecocokan memakai `kvr` dengan `.rck ok/bad`. Penanda `<h2>` hub (`subT`) dipertahankan; judul bagian dalam berubah dari `<h2>` ke `h3.ct`. Saat cetak: kartu polos, judul dan sub kartu disembunyikan (kop dari `repHead`).
+- Gaya: `.rck.ok` dan `.awl li.ok .aws` memakai `--ac` (hijau).
+- Tes: `logic-137.js` baru; `logic-66.js` disesuaikan.
+
+## [1.1.131] — 2026-10-08
+
+### Diubah
+- UI-5b: `vAwal()` (Transaksi > Saldo Awal) memakai `dcard` "Mulai dari saldo lama" (kartu `kp` berikon, checklist `.awl`), `dcard` "Piutang pelanggan awal" dan "Pinjaman berjalan awal" masing-masing berisi `details.sx.awd` (form; ID `aw-*`/`ap-*`, `awalPv`, `awalPiutang`, `awalPinjam` tidak berubah) dan daftar `.upr.awr` (avatar, sisa, Batalkan, baris Total `.awt`) menggantikan tabel. Penanda `<h2>Saldo Awal Terpandu</h2>` untuk `subT` dipertahankan.
+- Tes: `logic-136.js` baru; `logic-60.js` disesuaikan (selektor `details.sx.awd`, checklist).
+
+## [1.1.130] — 2026-10-08
+
+### Diubah
+- UI-5: halaman *Transaksi > Transaksi* memakai `dcard` "Daftar Transaksi" dengan baris `.upr.txr` (ikon arus `.tri` dari `TDIR`, keterangan 2 baris, tanggal · unit · jenis `TLX`, nominal; lencana hanya bila bukan diposting; dibatalkan dicoret). Muat lebih banyak dan "tampil n" tetap. Tab *Saldo Awal* dipisah ke UI-5b.
+
+### Diuji
+- `logic-135.js` (5); `logic-4.js` disesuaikan (penghitung baris).
+
+## [1.1.129] — 2026-10-08
+
+### Diubah
+- UI-4d: tab *Simpan Pinjam > Calon* memakai `dcard` "Daftar Calon" dengan baris `.upr.clr` (avatar, nama, telepon · keperluan · dicatat, rencana pinjaman, status); keterangan kosong tidak lagi menampilkan "- · -"; kosong memakai `.empty`. Dengan ini seluruh sub-tab Simpan Pinjam (UI-1 sampai UI-4) selesai.
+
+### Diuji
+- `logic-134.js` (6).
+
+## [1.1.128] — 2026-10-08
+
+### Diperbaiki
+- Tautan nomor pinjaman di modal *Jaminan* tampil sebagai tautan biru bawaan browser. Kini memakai kelas `a.lkx` (warna aksen, tebal, ikon panah, area sentuh 36px, fokus terlihat, ikut mode gelap); baris `.kv` dengan tautan rata tengah.
+
+### Diuji
+- `logic-132.js` ditambah satu pemeriksaan (total 5).
+
+## [1.1.127] — 2026-10-08
+
+### Diubah
+- UI-4c: tab *Simpan Pinjam > Nasabah* memakai `dcard` "Daftar Nasabah" dengan baris `.upr.nsr` (avatar, nama, telepon · tabungan · alamat, jumlah pinjaman aktif, sisa pokok, status); kosong memakai `.empty`.
+
+### Diuji
+- `logic-133.js` (4); `logic-39.js` disesuaikan.
+
+## [1.1.126] — 2026-10-08
+
+### Diubah
+- UI-4b: tab *Simpan Pinjam > Jaminan* memakai `dcard` "Daftar Jaminan" dengan baris `.upr.jmr` (avatar, nama nasabah, nomor pinjaman · jenis · deskripsi, nilai taksiran, status); kosong memakai `.empty`.
+
+### Diuji
+- `logic-132.js` (4); `logic-39.js` disesuaikan.
+
+## [1.1.125] — 2026-10-08
+
+### Diubah
+- UI-4a: tab *Simpan Pinjam > Tunggakan* memakai gaya dashboard. `tgList`, `kolBox`, `parBox`, `remBox` (dan *Aging Tunggakan* di `loans.js`) menghasilkan `dcard`; tabel diganti baris `kvr` (helper baru di `layout.js`: judul, nilai, keterangan, bar `lru-b`) dan daftar `.upr` (`.tgr`, `.rmr`). `parBox` juga dipakai di laporan Simpan Pinjam, sehingga tampil sebagai kartu di sana.
+
+### Diuji
+- `logic-131.js` (5); `logic-39.js` disesuaikan.
+
+## [1.1.124] — 2026-10-08
+
+### Diubah
+- UI-3: tab *Simpan Pinjam > Tabungan* memakai gaya dashboard: kartu total berikon (`kic t6`), `dcard` *Proses akhir bulan* (`savProc`), `dcard` *Daftar Rekening* dengan baris `.upr.snr` (avatar, nama, nomor · produk · unit · mutasi terakhir, saldo, status) dan keterangan akun 2300 di dasar kartu; kosong memakai `.empty`.
+
+### Diuji
+- `logic-130.js` (6).
+
+## [1.1.123] — 2026-10-08
+
+### Diubah
+- UI-2: tab *Simpan Pinjam > Pinjaman* memakai `dcard` "Daftar Pinjaman" berisi filter dan daftar baris `.upr.lnr` (avatar, nama nasabah, nomor · tenor× · bunga, label sisa pokok/pokok, nominal, lencana status). Muat lebih banyak dan "Menampilkan x dari y" tetap; kosong memakai `.empty`.
+
+### Diuji
+- `logic-129.js` (5); `logic-38.js` dan `logic-42.js` disesuaikan; selektor `.li` di tes UI diperluas menjadi `:is(.li,.upr)`.
+- Catatan: `ui-cal.py` (Saldo Awal 390px, gulir 618→612) dan `ui-a11y.py` (mencari tombol "Reset data demo" yang sudah tidak ada) gagal juga pada v1.1.121, bukan akibat rilis ini; masuk daftar perbaikan tes.
+
 ## [1.1.122] — 2026-10-08
 
 ### Diubah

@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.122
+# Catatan Rilis — v1.1.148
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,32 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.148 | Profil pengguna di header dan halaman Profil |
+| 1.1.147 | Sidebar dan header lebih jelas; pilihan unit tampil lagi di desktop |
+| 1.1.146 | Perapian akhir tampilan seragam; cetak lebih rapi |
+| 1.1.145 | Layar masuk dan portal nasabah lebih rapi |
+| 1.1.144 | Setelan Simpan Pinjam: tiap pengaturan dalam kartu |
+| 1.1.143 | Setelan: pengguna & peran dan portal nasabah dalam kartu |
+| 1.1.142 | Setelan: profil, dokumen cetak, modul dalam kartu |
+| 1.1.141 | Data: cadangan, periode, tutup buku, audit log dalam kartu dan daftar berbaris |
+| 1.1.140 | Master: pihak, pegawai, tarif & pajak dalam kartu dan daftar berbaris |
+| 1.1.139 | Master: unit usaha, kas & bank, akun dalam kartu dan daftar berbaris |
+| 1.1.138 | Gaji: proses, komponen, laporan dalam kartu dan daftar berbaris |
+| 1.1.137 | Unit Air: Baca Meter, Sambungan, Tarif dalam kartu dan daftar berbaris |
+| 1.1.136 | Unit Air: Penjualan Lain, Piutang, Pelanggan, Produk dalam kartu dan daftar berbaris |
+| 1.1.135 | Buku Besar desktop: kolom Tanggal, Keterangan, Unit, Debit, Kredit, Saldo; filter sebaris |
+| 1.1.134 | Neraca Saldo: ringkasan dan saldo per akun berbaris seragam dashboard |
+| 1.1.133 | Buku Besar: filter, ringkasan, dan mutasi berbaris dengan ikon debit/kredit seragam dashboard |
+| 1.1.132 | Laporan: filter, tiap bagian, aging, dan kecocokan dalam kartu seragam dashboard |
+| 1.1.131 | Saldo Awal: kartu, form lipat, dan entri berbaris seragam dashboard |
+| 1.1.130 | Transaksi: daftar dalam kartu dengan ikon arus, seragam dashboard |
+| 1.1.129 | Simpan Pinjam > Calon seragam dengan dashboard |
+| 1.1.128 | Tautan nomor pinjaman di modal Jaminan bergaya aksen |
+| 1.1.127 | Simpan Pinjam > Nasabah seragam dengan dashboard |
+| 1.1.126 | Simpan Pinjam > Jaminan seragam dengan dashboard |
+| 1.1.125 | Simpan Pinjam > Tunggakan seragam dengan dashboard |
+| 1.1.124 | Simpan Pinjam > Tabungan seragam dengan dashboard |
+| 1.1.123 | Simpan Pinjam > Pinjaman: daftar pinjaman dalam kartu seragam dashboard |
 | 1.1.122 | Simpan Pinjam > Ringkasan seragam dengan dashboard (kartu berikon, daftar jatuh tempo) |
 | 1.1.121 | Transaksi terakhir di dashboard jadi kartu seragam dengan ikon arus |
 | 1.1.120 | Dashboard: grafik Pendapatan per Unit dihapus (duplikat), Laba Rugi per Unit naik |
