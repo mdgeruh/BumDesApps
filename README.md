@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.148** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.149** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,7 +10,9 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.148)
+## Fitur (v1.1.149)
+- **Ubah data sendiri (v1.1.149):** di halaman Profil, pengguna yang login dapat mengubah nama, telepon, dan alamat (ikut ke data pegawai tertaut); tercatat di jejak audit.
+- **Dialog per aksi pinjaman (v1.1.149):** Setujui, Cairkan, Bayar angsuran, dan Lunasi dibuka sebagai dialog dengan nilai bawaan dan galat per kolom.
 - **Profil pengguna yang login (v1.1.148):** chip profil di header (avatar inisial, nama, peran; hanya avatar di HP) membuka halaman Profil: identitas, akses saya, ganti PIN (mode pengguna) atau atur ulang kata sandi (akun awan), aktivitas terakhir, dan Keluar. Alamat `#profil`.
 - **Sidebar dan header lebih jelas (v1.1.147):** pilihan unit usaha tampil lagi di sidebar desktop (sebelumnya hilang), nama BUMDes dua baris, header memuat ikon halaman, subjudul nama BUMDes · unit, dan tanggal hari ini; saat sidebar diciutkan pilihan unit pindah ke header.
 - **Penutup seragam UI (v1.1.146, UI-15):** CSS lama yang tak lagi dipakai (daftar lama Buku Besar, baris mutasi portal, grid awan, dll.) dihapus tanpa mengubah tampilan (48 tangkapan layar terang/gelap identik); kartu `dc` tidak terpotong saat dicetak; penjaga baru `node tests/check-css.js`.
