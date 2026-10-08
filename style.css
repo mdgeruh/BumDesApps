@@ -602,3 +602,6 @@ header .hic{display:none}
 .pfm{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
 .pfw2 .fl .b{flex:0 0 auto}
 @media print{#usr{display:none!important}}
+
+/* v1.1.149 — Profil: jarak catatan sebelum tombol simpan */
+.pfw2 .k+.fl{margin-top:12px}

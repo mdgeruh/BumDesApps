@@ -2,6 +2,19 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.149] — 2026-10-08
+
+### Ditambah
+- Profil: pengguna yang login (mode pengguna lokal) dapat mengubah data sendiri lewat kartu **Ubah data saya** (`saveProf`, users.js): nama, telepon, alamat. Berlaku untuk semua peran, termasuk peran hanya-lihat, karena hanya menyentuh akun sendiri (tidak termasuk `GUARD`). Peran, unit tugas, status, dan PIN tidak berubah dari sini. Pegawai yang tertaut (`employee_id`) ikut diperbarui. Validasi: nama wajib (maks 60, unik tanpa peka huruf), telepon 6–20 karakter angka, alamat maks 200. Tercatat di jejak audit (`user_ubah`, "oleh pemilik akun"); tanpa perubahan tidak mencatat apa pun. Baris Telepon dan Alamat tampil di Identitas.
+- Simpan Pinjam (SP-U): **dialog per aksi** Setujui, Cairkan, Bayar angsuran, dan Lunasi (modal `ls`, `lc`, `lw`, `lz`, modals.js). Kartu global Tanggal/Kas-Bank/Jumlah di rincian pinjaman dihapus. Nilai bawaan terisi, galat tampil per kolom, Batal kembali ke rincian, sukses kembali ke rincian. ID kolom (`sp-date`, `sp-cash`, `sp-mode`, `sp-amt`, `sp-hint`, `cr-hint`, `sp-pay`) dipertahankan sehingga fungsi aksi tidak berubah.
+- Data contoh `data/bumdes-data-pihak-pegawai.json` (21 pihak, 8 pegawai, 8 pengguna dengan peran, PIN 246813, tanpa transaksi), pembuatnya `tests/gen-pihak-pegawai.js`, dan panduan `data/setup.md`.
+
+### Diperbaiki
+- Uji usang: `ui-a11y.py` (tombol Reset data demo), `ui-cal.py` (geser 6px akibat header menciut), `ui-p0.py` (teks "closed" menjadi "Ditutup").
+
+### Tes
+- `logic-152.js` (23, dialog aksi), `logic-153.js` (17, ubah profil), `ui-profil.py` diperluas, `ui-import-pihak-pegawai.py` (baru).
+
 ## [1.1.148] — 2026-10-08
 
 ### Ditambah

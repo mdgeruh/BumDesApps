@@ -1,5 +1,6 @@
 // ===== CATATAN RILIS (v1.1.003): data untuk modal "?" di Setelan. Tambahkan rilis baru di PALING ATAS; sinkronkan dengan release_notes.md =====
 const RELEASES=[
+ {v:"1.1.149",d:"2026-10-08",t:"Ubah profil dan dialog aksi pinjaman",i:["Di halaman Profil Anda kini dapat mengubah nama, telepon, dan alamat sendiri.","Menyetujui, mencairkan, membayar angsuran, dan melunasi pinjaman kini lewat dialog tersendiri dengan isian bawaan dan pesan galat per kolom."]},
  {v:"1.1.148",d:"2026-10-08",t:"Profil pengguna",i:["Di bagian atas kini ada profil Anda (inisial, nama, dan peran); ketuk untuk membuka halaman Profil berisi identitas, menu yang boleh Anda buka, ganti PIN atau kata sandi, aktivitas terakhir, dan tombol Keluar."]},
  {v:"1.1.147",d:"2026-10-08",t:"Menu samping dan bagian atas lebih jelas",i:["Pilihan unit usaha tampil lagi di menu samping pada layar lebar, bagian atas halaman kini menampilkan ikon halaman, nama BUMDes dengan unit yang dipilih, dan tanggal hari ini, dan titik status awan tidak lagi menutupi tulisan."]},
  {v:"1.1.146",d:"2026-10-08",t:"Tampilan seragam selesai",i:["Seluruh halaman kini memakai gaya kartu yang sama dengan dashboard; sisa tampilan lama dibersihkan sehingga aplikasi sedikit lebih ringan, dan hasil cetak tidak lagi terpotong di tepi kartu."]},
