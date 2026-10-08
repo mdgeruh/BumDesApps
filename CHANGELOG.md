@@ -2,6 +2,76 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.122] — 2026-10-08
+
+### Diubah
+- UI-1: tab *Simpan Pinjam > Ringkasan* memakai gaya dashboard. `spk` dan kartu Tabungan nasabah (`savCard`, `savings.js`) kini memakai ikon `kic` (sp, flag, cal, user, cash); kartu rata atas.
+- *Akan jatuh tempo (30 hari)* menjadi `dcard` dengan daftar `.upr` (avatar, nama nasabah, nomor pinjaman · angsuran ke-n · tanggal, tagihan, lencana); keadaan kosong memakai `.empty`. Jangkar `#sp-upc` dipertahankan.
+
+### Diperbaiki
+- Banner pengingat backup (`.wn.bn`) di HP terpotong menjadi satu baris; kini membungkus dan rata kiri.
+
+### Diuji
+- `logic-128.js` (4); `logic-42.js` disesuaikan.
+
+## [1.1.121] — 2026-10-08
+
+### Diubah
+- *Transaksi terakhir* di dashboard memakai gaya kartu yang sama dengan kartu lain (`dcard`, kelas `rc trl`): ikon arus (`TDIR`), keterangan satu baris dengan elipsis, nominal tebal, tombol lihat semua selebar kartu.
+- Label jenis transaksi di kartu ini lebih ramah lewat `TLX` (config.js), mis. `sav_setor` menjadi "Setoran Tabungan", `loan_fee` menjadi "Biaya Pinjaman". `TL` (audit dan daftar transaksi) tidak berubah.
+
+### Diuji
+- `logic-127.js` (10), `logic-106.js` disesuaikan.
+
+## [1.1.120] — 2026-10-08
+
+### Dihapus
+- Grafik *Pendapatan per Unit* di dashboard (sama informasinya dengan *Laba Rugi per Unit*). CSS varian halus `.bars.bpu` dari v1.1.119 ikut dihapus.
+
+### Diubah
+- Kartu *Laba Rugi per Unit* dipindah ke grup dua kolom bersama *Ringkasan Bulan Ini* (sebelum Tren 6 Bulan); catatan *Umum (tanpa unit)* ditaruh di bawah grup.
+
+### Diuji
+- `logic-127.js` (7) dan `logic-107.js` disesuaikan.
+
+## [1.1.119] — 2026-10-08
+
+### Diubah
+- Grafik *Pendapatan per Unit* di dashboard dibuat lebih halus (`.bars.bpu`): tinggi 210px menjadi 132px, batang lebih ramping dengan sudut lebih kecil, warna sorotan lembut tanpa gradien, avatar dan teks lebih kecil. Grafik Pola Transaksi per Hari tidak berubah.
+
+### Diuji
+- `logic-127.js` ditambah satu pemeriksaan.
+
+## [1.1.118] — 2026-10-08
+
+### Diubah
+- Bagian *Laba Rugi per Unit* di dashboard diganti dari tabel menjadi kartu daftar yang lebih bersih dan modern: avatar unit (warna sama dengan grafik Pendapatan per Unit), baris ringkas pendapatan dan beban, angka laba menonjol (merah bila rugi), bar tipis beban terhadap pendapatan (merah bila beban melebihi pendapatan), dan baris total unit. Kelas CSS `lru-*`.
+
+### Diuji
+- `logic-127.js`.
+
+## [1.1.117] — 2026-10-08
+
+### Diubah
+- Dashboard diprioritaskan: blok *Perlu perhatian* dan aksi cepat di paling atas, lalu angka utama (Total Kas & Bank, Tunggakan, Jatuh tempo 7 hari, Pendapatan, Beban, Laba/Rugi, Piutang Pinjaman, Tabungan, Piutang Pelanggan), kemudian ringkasan bulan, tren, dan tabel.
+- Pengingat backup dan banner cadangan awan menjadi satu baris ringkas dengan tombol kecil (`.wn.bn`); pesan tanpa peringatan dipersingkat.
+
+### Diuji
+- `logic-126.js` (urutan dashboard dan banner ringkas).
+
+## [1.1.116] — 2026-10-07
+
+### Diubah
+- Header di HP lebih ringkas (padding dan ukuran dikurangi, filter unit lebih sempit) dan menyusut saat halaman digulir (`body.hc`); judul dan nama BUMDes dipotong dengan elipsis.
+
+### Ditambah
+- Ikon status awan di header (`awChip`): hijau tersinkron, kuning menyimpan/menunggu, merah perlu dicek (dijeda, offline, belum disimpan), abu-abu belum masuk. Disembunyikan bila awan belum diatur. Diketuk membuka Data > Backup (bagian awan). Ikon `cloud` baru.
+
+## [1.1.115] — 2026-10-07
+
+### Diubah
+- Bagian awan di Data > Backup disederhanakan untuk pengguna akhir: satu kartu status dengan tombol utama, Simpan otomatis, dan "Pengaturan lanjutan" tertutup berisi Riwayat cadangan, Koneksi, Ganti kata sandi, Tabel relasional, dan Tentang awan. Dua kolom lama dihapus. Judul menjadi "Cadangan online (awan)"; ikon dan id tombol tetap.
+
 ## [1.1.114] — 2026-10-07
 
 ### Diubah

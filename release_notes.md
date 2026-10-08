@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.114
+# Catatan Rilis — v1.1.122
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,14 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.122 | Simpan Pinjam > Ringkasan seragam dengan dashboard (kartu berikon, daftar jatuh tempo) |
+| 1.1.121 | Transaksi terakhir di dashboard jadi kartu seragam dengan ikon arus |
+| 1.1.120 | Dashboard: grafik Pendapatan per Unit dihapus (duplikat), Laba Rugi per Unit naik |
+| 1.1.119 | Grafik Pendapatan per Unit di dashboard lebih halus |
+| 1.1.118 | Laba Rugi per Unit di dashboard jadi kartu daftar yang bersih |
+| 1.1.117 | Dashboard diprioritaskan: peringatan di atas, banner backup ringkas |
+| 1.1.116 | Header lebih ringkas di HP; ikon status awan di header |
+| 1.1.115 | Tampilan awan disederhanakan untuk pengguna akhir |
 | 1.1.114 | Pengaturan Awan pindah ke Data > Backup |
 | 1.1.113 | Profil BUMDes ikut tersinkron dengan awan |
 | 1.1.112 | Muat dari awan hanya mengganti data; profil BUMDes tetap |
