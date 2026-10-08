@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.114** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.122** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,7 +10,15 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.114)
+## Fitur (v1.1.122)
+- **Simpan Pinjam > Ringkasan seragam dengan dashboard (v1.1.122, UI-1):** enam kartu ringkasan kini berikon berwarna seperti dashboard; *Akan jatuh tempo (30 hari)* menjadi kartu berisi daftar berbaris (avatar nasabah, nomor pinjaman, angsuran ke-n, tagihan, lencana hari lagi) menggantikan tabel berkepala. Pengingat backup di HP kini membungkus teks (sebelumnya terpotong).
+- **Transaksi terakhir seragam (v1.1.121):** di dashboard kini berupa kartu seperti yang lain: judul dan subjudul, ikon arus (hijau masuk, merah keluar, abu-abu transfer/lainnya), keterangan dipotong rapi, nominal tebal di kanan, tombol "Lihat semua transaksi" selebar kartu. Label jenis ramah ("Setoran Tabungan", "Biaya Pinjaman") menggantikan kode mentah (`sav setor`, `loan fee`).
+- **Dashboard tanpa duplikat (v1.1.120):** grafik *Pendapatan per Unit* dihapus karena angkanya sudah ada di kartu *Laba Rugi per Unit*; kartu itu kini berada di samping (desktop) atau tepat di bawah (HP) *Ringkasan Bulan Ini*. Catatan "Umum (tanpa unit)" tetap muncul di bawahnya bila ada selisih.
+- **Grafik Pendapatan per Unit lebih halus (v1.1.119):** lebih pendek, batang ramping dan berwarna lembut, avatar dan teks lebih kecil, agar tidak menyaingi kartu Laba Rugi per Unit di bawahnya.
+- **Laba Rugi per Unit lebih bersih (v1.1.118):** di dashboard kini berupa kartu daftar: avatar unit, pendapatan dan beban ringkas, laba menonjol (merah bila rugi), bar tipis beban terhadap pendapatan, dan baris total unit.
+- **Dashboard diprioritaskan (v1.1.117):** urutan baru: Perlu perhatian dan aksi cepat di atas, lalu angka utama (Total Kas & Bank, Tunggakan, Jatuh tempo 7 hari, Pendapatan, Beban, Laba/Rugi, piutang, tabungan), baru tren dan ringkasan. Pengingat backup dan cadangan awan jadi satu baris kecil (bukan banner besar); pesan "tidak ada peringatan" dipersingkat.
+- **Header ringkas dan status awan (v1.1.116):** di HP header lebih pendek dan baris nama BUMDes menyusut saat halaman digulir; judul dan nama panjang dipotong rapi. Ada ikon awan di header dengan titik status (hijau tersinkron, kuning menyimpan, merah perlu dicek, abu-abu belum masuk); diketuk membuka Data > Backup bagian awan.
+- **Awan lebih sederhana (v1.1.115):** bagian Cadangan online di Data > Backup kini satu kartu status (Tersinkron / Belum masuk / Belum diatur) dengan tombol Simpan ke awan, Muat dari awan, dan Keluar, ditambah pilihan Simpan otomatis. Koneksi, riwayat cadangan, ganti kata sandi, tabel relasional, dan penjelasan teknis dipindah ke "Pengaturan lanjutan" yang tertutup (terbuka otomatis bila koneksi belum diisi atau ada masalah).
 - **Awan pindah ke Data > Backup (v1.1.114):** pengaturan Awan (Supabase) tidak lagi di Setelan; kini menjadi bagian 3 di Data > Backup, di antara Pulihkan dan Kosongkan data. Tab Awan di Setelan dihapus.
 - **Profil ikut awan (v1.1.113):** profil BUMDes (nama, alamat, logo) ikut tersinkron bersama data: Simpan ke awan menyimpannya dan Muat dari awan memuatnya kembali (membatalkan v1.1.112). Import JSON dan Kosongkan data tetap menjaga profil.
 - **Data & Cadangan (v1.1.111):** halaman Data > Backup dibagi tiga bagian: Cadangkan (Export JSON, nama berkas memuat nama BUMDes, info cadangan terakhir), Pulihkan (Import JSON hanya mengganti data; nama, alamat, dan logo BUMDes tidak berubah) dan Kosongkan semua data (wajib mengetik KOSONGKAN; profil BUMDes, pengguna, dan pengaturan tetap; salinan lama disimpan sebagai cadangan lokal). "Reset data demo" menjadi "Isi data contoh" yang tersembunyi; ia juga tidak mengubah profil BUMDes.

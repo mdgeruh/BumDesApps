@@ -408,3 +408,38 @@ body.mk-on{overflow:hidden}
 .card.dz{border-color:var(--rd)}.card.dz h3{color:var(--rd)}
 .kvg>.kv{min-width:0}.kv b{min-width:0;overflow-wrap:anywhere}.kv .bdg{white-space:normal;text-align:right}
 @media (max-width:480px){.kvg{grid-template-columns:1fr}}
+.card.aws .awt{margin:0 0 6px;font-size:15px}.card.aws p{margin:6px 0}details.awl{padding:0}details.awl>summary{padding:12px 14px;cursor:pointer;list-style:none}details.awl>summary::-webkit-details-marker{display:none}details.awl>summary::before{content:"\203A";display:inline-block;margin-right:8px;transition:transform .15s}details.awl[open]>summary::before{transform:rotate(90deg)}.awb{padding:0 12px 12px}.mk-pw .mk-eye{flex:none}
+
+/* v1.1.116: header ringkas dan ikon status awan */
+header>div:first-child{min-width:0;flex:1}#sbt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}h1#ttl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hru{flex:none}.awc .dot{background:var(--mu)}.awc-ok{color:var(--ac)}.awc-ok .dot{background:var(--ac)}.awc-wait .dot{background:#d99a1a;animation:awp 1.2s ease-in-out infinite}.awc-bad{color:var(--rd)}.awc-bad .dot{background:var(--rd)}.awc-warn .dot{background:#d99a1a}.awc-off{color:var(--mu)}
+@keyframes awp{50%{opacity:.35}}@media (prefers-reduced-motion:reduce){.awc-wait .dot{animation:none}}
+@media (max-width:480px){header{padding:6px 12px;gap:6px;transition:padding .15s}#ttl{font-size:16px}.sub{font-size:11.5px;line-height:1.25;max-height:18px;transition:max-height .15s,opacity .15s}.hru{gap:4px}.chip{min-width:44px;min-height:44px;padding:4px 8px}#unit{max-width:36vw;font-size:13px;padding:6px 8px;min-height:44px}body.hc header{padding:3px 12px}body.hc .sub{max-height:0;opacity:0;overflow:hidden}}
+.chip.awc{background:var(--bd)}.chip.awc .ic{width:20px;height:20px}
+
+/* v1.1.117: dashboard: peringatan dan pengingat lebih ringkas */
+.wn.bn{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 12px;margin:8px 0;font-size:13px}.wn.bn .bna{display:inline-flex;gap:6px;margin-left:auto}.wn.bn .b{margin:0;padding:5px 12px;min-height:40px;font-size:13px}
+.al .wn{padding:8px 12px;margin:6px 0;font-size:13px;line-height:1.35}.al .wn .b{margin-top:6px;font-size:13px}.okb{padding:8px 12px;font-size:13px;margin:6px 0 12px}
+@media (max-width:480px){.g.dk{gap:8px}.g.dk .card{padding:10px}.g.dk .card .v{font-size:19px}.qa{gap:6px}}
+/* v1.1.118 — Laba Rugi per Unit: daftar bersih dengan avatar unit, laba menonjol, bar beban/pendapatan */
+.lru-l{display:flex;flex-direction:column}.lru-r{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}.lru-r:last-child{border-bottom:0;padding-bottom:2px}.lru-r .bi{width:32px;height:32px;font-size:14px;flex:none}
+.lru-m{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.lru-m b{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lru-m small,.lru-a small{color:var(--mu);font-size:12px;overflow-wrap:anywhere}
+.lru-b{height:4px;border-radius:4px;background:color-mix(in srgb,var(--tx) 7%,var(--cd));overflow:hidden;margin-top:3px}.lru-b i{display:block;height:100%;border-radius:4px;background:color-mix(in srgb,var(--ac) 70%,var(--cd))}.lru-b.ov i{background:var(--rd)}
+.lru-a{text-align:right;display:flex;flex-direction:column;gap:2px;flex:none}.lru-a b{font-size:15px;font-weight:700;white-space:nowrap}.lru-a.neg b{color:var(--rd)}
+.lru-t{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:10px;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--tx) 4%,var(--cd));font-size:12px;color:var(--mu)}.lru-t b{color:var(--tx)}.lru-t>b{font-size:14px;white-space:nowrap}.lru-t>b.neg{color:var(--rd)}
+@media (max-width:420px){.lru-t{flex-direction:column;gap:2px}}
+.lru-a{min-width:108px}
+/* v1.1.121 — Transaksi terakhir: kartu daftar seragam (ikon arus, keterangan, nominal) */
+.rc.trl{background:none;border:0;border-radius:0;margin:0}.rc.trl>div.trr{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:0;border-bottom:1px solid var(--bd)}.rc.trl>div.trr:last-child{border-bottom:0}
+.tri{width:32px;height:32px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;background:color-mix(in srgb,var(--tx) 7%,var(--cd));color:var(--mu)}.tri.in{background:color-mix(in srgb,var(--ok,#15803d) 14%,var(--cd));color:var(--ok,#15803d)}.tri.out{background:color-mix(in srgb,var(--rd) 12%,var(--cd));color:var(--rd)}
+.rc.trl .trm{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.rc.trl .trm b{font-size:14px;font-weight:600}.rc.trl .trm small{font-size:12px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rc.trl .tra{font-size:14px;font-weight:700;white-space:nowrap;flex:none}
+.trs{margin-top:10px;width:100%;justify-content:center}
+/* v1.1.122 — UI-1 Simpan Pinjam > Ringkasan: kartu berikon dan daftar jatuh tempo gaya dashboard */
+.card.kp .kh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.upl{display:flex;flex-direction:column}.upr{display:flex;align-items:center;gap:12px;width:100%;padding:12px 0;border:0;border-bottom:1px solid var(--bd);background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;min-height:44px}.upr:last-child{border-bottom:0}.upr:hover{background:var(--hv)}.upr:focus-visible{outline:2px solid var(--ac);outline-offset:-2px;border-radius:10px}
+.upr .bi{width:32px;height:32px;font-size:14px;flex:none}.upm{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.upm b{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.upm small{font-size:12px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upa{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}.upa b{font-size:14px;font-weight:700;white-space:nowrap}
+.g.dk .card.kp{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch}
+.wn.bn>span:first-child{flex:1 1 200px;min-width:0;overflow-wrap:anywhere}.upm small{white-space:normal;overflow:visible}
+.wn.bn{white-space:normal;overflow:visible;text-overflow:clip}
+.wn.bn>span:first-child{text-align:left}
