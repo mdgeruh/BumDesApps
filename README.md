@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.149** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.174** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,7 +10,30 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.150)
+## Fitur (v1.1.174)
+- **Zona waktu mengikuti perangkat (v1.1.174):** tanggal hari ini dan jam tampilan memakai waktu perangkat (mis. WITA); data tersimpan tetap UTC.
+- **Tabel jadwal simulasi ringkas dan polos (v1.1.173):** angka tanpa Rp, baris Jumlah, muat di HP tanpa geser, bukan kartu.
+- **Tampilan halaman pinjaman dirapikan (v1.1.172):** tanpa kartu di dalam kartu; teks tidak menempel ke garis tepi.
+- **Ajukan pinjaman dan rincian pinjaman sebagai halaman (v1.1.171):** Simpan Pinjam > Pinjaman: Ajukan pinjaman, Ubah pengajuan, dan rincian per nasabah kini halaman penuh (dua kolom di layar lebar; simulasi angsuran di samping isian; bilah tombol tetap terlihat; Kembali; kartu Pinjaman lain milik nasabah). Setujui, Cairkan, Bayar, Lunasi, Tolak, jaminan, dan profil nasabah tetap jendela kecil di atas halaman. Alamat: `/simpan-pinjam/ajukan`, `/simpan-pinjam/pinjaman/{id}`, `.../ubah`; tombol Back peramban kembali ke daftar.
+- **Master Tarif Air (v1.1.169; form lewat modal sejak v1.1.170):** sub-tab Master > Tarif Air mengatur golongan tarif (dipilih per sambungan), denda keterlambatan (sekali per tagihan, diubah/dibebaskan saat Terima), biaya pasang baru (piutang saat sambungan baru), dan diskon (tagihan dan penjualan lain); semua bawaan nonaktif. Akun baru 4210 dan 4220.
+- **Format nomor penjualan dan tagihan air (v1.1.168):** Setelan > Profil > kartu Nomor (bila modul Unit Air aktif) mengatur format nomor penjualan dan tagihan air dengan kode {YYYY} {YY} {MM} {DD} {NNNN}.
+- **Piutang per tanggal lampau dan catatan atas laporan (v1.1.167):** Laporan > Piutang bisa dilihat per tanggal (dihitung mundur dari pembayaran); Neraca, Laba Rugi, Arus Kas, dan Piutang memuat Catatan atas laporan (otomatis + catatan tambahan di Setelan > Dokumen Cetak) yang ikut tercetak.
+- **Simpan Pinjam: aksesibilitas dan uji pelengkap (v1.1.166):** fokus keyboard masuk ke jendela rincian; uji aksesibilitas modal (`ui-spa11y.py`), uji transisi (`logic-168.js`), dan pemeriksa nama baku audit (`check-audit.js`).
+- **Rekap gaji tahunan (v1.1.165):** Laporan Gaji > Kelompokkan "Per tahun" dan "Per tahun · pegawai".
+- **Neraca dan Arus Kas dengan pembanding (v1.1.164):** Neraca vs akhir bulan sebelumnya/tahun sebelumnya; Arus Kas vs periode sebelumnya/tahun sebelumnya; selisih Rupiah dan persen, CSV ikut memuat pembanding.
+- **Laba Rugi dengan pembanding (v1.1.163):** Laporan > Laba Rugi > "Bandingkan dengan" periode sebelumnya atau tahun sebelumnya (selisih Rupiah dan persen; CSV ikut memuat pembanding).
+- **Format nomor pegawai dan tabungan (v1.1.162):** Setelan > Profil > "Nomor pegawai dan tabungan": format nomor dengan kode {YYYY} {YY} {MM} {DD} {NNNN}; berlaku untuk nomor berikutnya.
+- **Setor potongan gaji (v1.1.161):** Gaji > Proses Gaji > "Potongan gaji belum disetor": saldo per unit dan form setoran dari kas/bank (sebagian/penuh, tujuan wajib), pelunasan Kewajiban Lain 2200; dapat dibatalkan dengan jurnal pembalik.
+- **Gaji massal (v1.1.160):** Gaji > Proses Gaji > kartu "Proses massal": pilih periode, lalu setujui semua draf atau bayar semua gaji disetujui sekaligus (konfirmasi jumlah/total, tiap gaji dijurnal sendiri dan dapat dibatalkan sendiri, mengikuti filter unit dan izin).
+- **Keluar otomatis dan reset izin (v1.1.159):** Setelan > Pengguna & Peran: "Keluar otomatis" (Jangan, 5, 15, 30, 60 menit tidak aktif; `db.settings.idle_min`, pesan di layar masuk, tercatat di audit log) dan "Kembalikan matriks ke bawaan" (izin peran bawaan kembali ke awal; peran buatan sendiri dan Superadmin tidak berubah; ditolak bila Admin Sistem aktif akan habis).
+- **Cetakan baru (v1.1.158, SP-O O7):** Kartu Pinjaman (data, ringkasan, jadwal, riwayat kwitansi; tombol di rincian pinjaman) dan Rekap Tabungan (semua rekening aktif nasabah, 10 mutasi terakhir; tombol di rincian nasabah). Portal nasabah: Cetak kartu pinjaman dan Cetak rekap tabungan (hanya milik sendiri, tanpa tanda tangan petugas dan tanpa daftar kwitansi karena data itu tidak diterbitkan ke portal); cetak portal menyembunyikan header dan menu.
+- **Uji cepat dan lengkap (v1.1.157, SP-O O11):** `npm run test:cepat` (`node tests/suite.js cepat`: build --check, check-css/pwa/sql, semua uji logika, 10 uji UI ringkas; ±1,5 menit) dan `npm run test:lengkap` (+ logic-77 dan seluruh uji UI, paralel `-j N`; ±19 menit dengan 2 proses). Tanpa perubahan pada aplikasi.
+- **Pengingat backup berkala (v1.1.156, SP-O O12):** interval dipilih di Data > Backup (3/7/14/30 hari atau mati; `db.settings.backup_days`, bawaan 7), spanduk memuat jumlah perubahan sejak cadangan terakhir dan berubah galat pada 3x interval, Nanti menyembunyikan sampai besok (`bumdes_bk_snooze`), hanya tampil untuk peran dengan izin Export backup. Penjaga kunci awan (hanya anon/publishable, `sb_secret_`/service_role ditolak) sudah ada sejak sebelumnya.
+- **Daftar panjang dimuat bertahap (v1.1.155, SP-O O10):** Nasabah, Pihak, Pegawai, Tabungan, Tunggakan, Pelanggan, Sambungan, dan Piutang Air menampilkan 30 baris dengan tombol Muat lebih banyak (`pgLim/pgMore/pgGrow`); batas direset saat pindah halaman.
+- **Pemantau penyimpanan browser (v1.1.154, SP-O O9):** kartu "Penyimpanan di browser" di Data > Backup (bilah pemakaian dari perkiraan batas 5 MB, rincian data/log audit/salinan lokal), spanduk peringatan 70% dan 90%, Arsipkan log audit lama (unduh JSON lalu hapus; 200 log terbaru dan riwayat pinjaman aktif dipertahankan), Hapus salinan cadangan lokal.
+- **Pengguna & Peran dirapikan (v1.1.153):** form Ganti PIN ganda di Setelan diganti tautan ke Profil; kartu ringkasan angka di Daftar Pengguna; tombol tambah dan buat dari pegawai satu baris.
+- **Profil dirapikan (v1.1.152):** header dengan tombol Keluar dan kontak, kartu angka (menu, izin, masuk sejak), dua kolom di desktop, Ganti PIN berupa panel lipat, aktivitas terakhir beristilah ramah.
+- **Kosongkan isi database awan (v1.1.151):** `sql/98_kosongkan_isi.sql` mengosongkan isi tabel dan snapshot tanpa menghapus struktur, BUMDes, anggota, atau akun; aplikasi menampilkan pesan jelas dan tombol Timpa awan bila awan sudah dikosongkan.
 - **Tampilan sesuai akun dan peran (v1.1.150):** menu, sub-tab, kartu, dan tombol aksi hanya tampil bila peran akun mengizinkan (termasuk peran pembaca di awan); Setelan hanya untuk Admin Sistem; akun yang hanya bertugas di unit non-Simpan Pinjam tidak melihat menu Simpan Pinjam.
 - **Ubah data sendiri (v1.1.149):** di halaman Profil, pengguna yang login dapat mengubah nama, telepon, dan alamat (ikut ke data pegawai tertaut); tercatat di jejak audit.
 - **Dialog per aksi pinjaman (v1.1.149):** Setujui, Cairkan, Bayar angsuran, dan Lunasi dibuka sebagai dialog dengan nilai bawaan dan galat per kolom.
@@ -53,7 +76,7 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 - **Data & Cadangan (v1.1.111):** halaman Data > Backup dibagi tiga bagian: Cadangkan (Export JSON, nama berkas memuat nama BUMDes, info cadangan terakhir), Pulihkan (Import JSON hanya mengganti data; nama, alamat, dan logo BUMDes tidak berubah) dan Kosongkan semua data (wajib mengetik KOSONGKAN; profil BUMDes, pengguna, dan pengaturan tetap; salinan lama disimpan sebagai cadangan lokal). "Reset data demo" menjadi "Isi data contoh" yang tersembunyi; ia juga tidak mengubah profil BUMDes.
 - **Nama BUMDes seragam (v1.1.110):** nama di Profil BUMDes dan nama di awan (tabel `bumdes`) kini disamakan. Saat Siapkan BUMDes, nama yang diisi menjadi nama Profil; saat admin menyimpan Profil atau memuat data dari awan, nama awan ikut diperbarui.
 - **Validasi Siapkan BUMDes (v1.1.109):** semua masalah isian tampil sekaligus di kotak merah yang menetap (tidak hilang seperti toast), kata sandi tidak terhapus saat gagal, ada ikon mata untuk menampilkan/menyembunyikan kata sandi (juga di layar Masuk), dan permintaan daftar punya batas waktu 25 detik.
-- **SQL bertahap (v1.1.108):** semua berkas SQL pindah ke folder `sql/` dengan nama berurut: `00_semua`, `01_inti`, `02_akuntansi`, `03_pegawai`, `04_tabungan`, `05_penjualan`, `06_nasabah`, `07_pengguna`, dan `99_reset`.
+- **SQL bertahap (v1.1.108):** semua berkas SQL pindah ke folder `sql/` dengan nama berurut: `00_semua`, `01_inti`, `02_akuntansi`, `03_pegawai`, `04_tabungan`, `05_penjualan`, `06_nasabah`, `07_pengguna`, dan `98_kosongkan_isi`, dan `99_reset`.
 - **Satu aplikasi, satu database (v1.1.107):** model diubah menjadi 1 hosting = 1 proyek Supabase = 1 BUMDes. Peran developer, daftar BUMDes dan pemilih BUMDes dihapus (`supabase_developer.sql` dibuang). Pendaftar pertama lewat layar "Siapkan BUMDes" otomatis menjadi admin lalu penyiapan terkunci; `sql/99_reset.sql` mengosongkan database untuk mulai dari awal.
 - **Cek peran akun (v1.1.106):** Setelan > Awan punya tombol "Cek peran akun" yang menyebut apakah akun developer platform, akun BUMDes biasa, atau pengecekan gagal. Galat pengecekan developer (mis. `supabase_developer.sql` belum terpasang) kini ditampilkan, tidak lagi diam-diam menganggap akun sebagai admin biasa.
 - **Setelan > Awan beda untuk developer dan admin (v1.1.105):** akun developer melihat kartu Konsol Developer (buka halaman Developer, jumlah BUMDes klien, peran "Developer (platform)") tanpa Sinkron, Riwayat cadangan, Tabel relasional, dan pemilih BUMDes; akun admin/pengurus/pembaca melihat sinkron dan tabel BUMDes-nya tanpa konsol developer.
@@ -138,6 +161,7 @@ Satu folder datar (tanpa subfolder sumber). Halaman utama `index.html` memuat ga
 | `uikit.js` | Kontrol form kustom (v1.1.033): dropdown, kalender, bulan, berkas |
 | `cloud.js` | Sinkron awan Supabase Tahap 1 (v1.1.042): koneksi, masuk, simpan/muat dengan kunci versi |
 | `sql/00_semua.sql` | **Pasang semua sekaligus** untuk proyek baru: gabungan otomatis 7 berkas di bawah (dibangkitkan `node build.js`, jangan diedit) |
+| `sql/98_kosongkan_isi.sql` | Kosongkan isi semua tabel data dan snapshot (versi awan kembali nol); struktur, BUMDes, anggota, dan akun tetap |
 | `sql/99_reset.sql` | Kosongkan database (hapus semua tabel dan fungsi) untuk mulai dari awal |
 | `sql/01_inti.sql` | [1/7] Tahap 1: snapshot, riwayat, kunci versi, peran, RLS |
 | `sql/02_akuntansi.sql` | [2/7] Tahap 2: tabel akuntansi dan Simpan Pinjam + migrasi |
@@ -172,4 +196,4 @@ Satu folder datar (tanpa subfolder sumber). Halaman utama `index.html` memuat ga
 
 **Pasang sebagai aplikasi (PWA):** setelah di-host lewat https, pilih *Pasang aplikasi* di browser. Dari `file://` aplikasi tetap jalan tetapi tidak bisa dipasang.
 
-**Alur pengembangan:** edit berkas sumber → `node build.js` (menyegarkan `bumdes.html`) → `npm test` (cek sinkron + versi + daftar cache) atau `npm run test:lokal` (semua tes; butuh `tests/` lokal). Saat menambah/ganti nama berkas skrip: ubah daftar `<script src>` di `index.html` dan `ASSETS` di `sw.js`.
+**Alur pengembangan:** edit berkas sumber → `node build.js` (menyegarkan `bumdes.html`) → `npm test` (cek sinkron + versi + daftar cache) atau `npm run test:cepat` (uji pra-rilis ±1,5 menit; butuh `tests/` lokal) dan `npm run test:lengkap` (semua uji termasuk seluruh uji UI). Saat menambah/ganti nama berkas skrip: ubah daftar `<script src>` di `index.html` dan `ASSETS` di `sw.js`.

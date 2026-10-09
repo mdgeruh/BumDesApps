@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.150
+# Catatan Rilis — v1.1.174
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -7,10 +7,10 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Sorotan
 
 **Simpan Pinjam**
-- Pengajuan lewat modal; alur Diajukan → Disetujui → Aktif → Lunas (atau Ditolak/Dibatalkan, wajib beralasan), dengan konfirmasi untuk aksi berisiko.
+- Pengajuan pinjaman dan rincian pinjaman per nasabah berupa halaman penuh (dua kolom di layar lebar, tombol Kembali, alamat tersendiri); alur Diajukan → Disetujui → Aktif → Lunas (atau Ditolak/Dibatalkan, wajib beralasan), dengan konfirmasi untuk aksi berisiko.
 - Metode jasa flat dan anuitas; jadwal angsuran, denda keterlambatan (masa tenggang, dasar hitung, batas), pembulatan, dan batas pinjaman yang dapat diatur di Setelan.
 - Sub-tab **Ringkasan** (tab bawaan): pinjaman aktif, tunggakan, jatuh tempo 7/30 hari, pengajuan menunggu, pembayaran bulan ini. Simulasi angsuran langsung saat mengajukan; daftar pinjaman bisa diurutkan dan dimuat bertahap.
-- Daftar ringkas untuk **Pinjaman, Tunggakan, Jaminan, Nasabah**; klik baris membuka modal rincian. Modal pinjaman memuat jadwal pembayaran yang bisa dibuka/ditutup per angsuran dan riwayat pembayaran (kwitansi, pembatalan).
+- Daftar ringkas untuk **Pinjaman, Tunggakan, Jaminan, Nasabah**; klik baris membuka halaman rincian. Halaman pinjaman memuat jadwal pembayaran yang bisa dibuka/ditutup per angsuran dan riwayat pembayaran (kwitansi, pembatalan).
 - Pembayaran angsuran dengan **jenis pembayaran**: pokok + bunga, bunga saja, atau nominal bebas; jumlah terisi otomatis dan ada tombol bayar langsung di kartu pembayaran.
 - Pelunasan dipercepat, bukti pencairan, kwitansi, pembatalan pencairan/pembayaran, pengelolaan jaminan.
 
@@ -48,6 +48,30 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.174 | Zona waktu mengikuti perangkat |
+| 1.1.173 | Tabel jadwal simulasi ringkas dan polos |
+| 1.1.172 | Rapikan tampilan halaman pinjaman |
+| 1.1.171 | Ajukan pinjaman dan rincian pinjaman sebagai halaman |
+| 1.1.170 | Form Master Tarif Air lewat modal |
+| 1.1.169 | Master Tarif Air: golongan, denda, pasang baru, diskon |
+| 1.1.168 | Format nomor penjualan dan tagihan air |
+| 1.1.167 | Piutang per tanggal lampau dan catatan atas laporan |
+| 1.1.166 | Simpan Pinjam: aksesibilitas dan uji pelengkap |
+| 1.1.165 | Rekap gaji tahunan |
+| 1.1.164 | Neraca dan Arus Kas dengan pembanding |
+| 1.1.163 | Laba Rugi dengan pembanding |
+| 1.1.162 | Format nomor pegawai dan tabungan |
+| 1.1.161 | Setor potongan gaji |
+| 1.1.160 | Gaji: setujui dan bayar massal |
+| 1.1.159 | Keluar otomatis dan reset izin |
+| 1.1.158 | Kartu pinjaman dan rekap tabungan |
+| 1.1.157 | Uji cepat dan uji lengkap |
+| 1.1.156 | Pengingat backup dapat diatur |
+| 1.1.155 | Daftar panjang dimuat bertahap |
+| 1.1.154 | Pemantau penyimpanan browser |
+| 1.1.153 | Pengguna & Peran tanpa form ganda |
+| 1.1.152 | Halaman Profil dirapikan |
+| 1.1.151 | Kosongkan isi database awan |
 | 1.1.150 | Tampilan sesuai akun dan peran |
 | 1.1.149 | Ubah data profil sendiri dan dialog per aksi pinjaman |
 | 1.1.148 | Profil pengguna di header dan halaman Profil |

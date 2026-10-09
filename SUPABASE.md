@@ -13,6 +13,10 @@ Data utama aplikasi tetap di perangkat (`localStorage`). Supabase milik Anda men
 5. Buka layar masuk (`#masuk`) dan pilih **Siapkan BUMDes baru**: isi nama BUMDes, email, dan kata sandi. **Pendaftar pertama otomatis menjadi admin**; penyiapan lalu terkunci (hanya bisa sekali). Bila Supabase meminta konfirmasi email, buka email, lalu masuk dan lanjutkan penyiapan (cukup mengisi nama BUMDes).
 6. Admin menambah pengurus lewat bagian *Menambah pengurus dan peran* di bawah.
 
+## Kosongkan isi saja (struktur dan akun tetap)
+
+Jalankan **`sql/98_kosongkan_isi.sql`** di SQL Editor setelah mengubah `v_konfirmasi` menjadi `'KOSONGKAN ISI'`. Mengosongkan seluruh isi tabel data, snapshot, dan riwayat (nomor versi awan kembali ke nol). **Tetap ada:** semua tabel, fungsi, kebijakan akses, BUMDes yang sudah disiapkan, daftar anggota, dan akun login, jadi tidak perlu Siapkan BUMDes lagi. Sesudahnya, di aplikasi buka **Data > Cadangan online**, tekan **Muat ulang**, lalu **Simpan ke awan**: aplikasi menolak simpan pertama karena versi di perangkat masih lama, lalu menampilkan pesan "Awan sudah dikosongkan"; tekan **Timpa awan** sekali agar data perangkat terkirim sebagai versi 1 (atau Import JSON dulu bila perangkat juga ingin dikosongkan). Export cadangan dulu: tidak bisa dibatalkan.
+
 ## Mulai dari awal (reset database)
 
 Jalankan **`sql/99_reset.sql`** di SQL Editor. **Menghapus semua tabel dan fungsi di skema public** (data, snapshot, riwayat, nasabah). Berkas ini sengaja gagal sebelum Anda mengubah `v_konfirmasi` menjadi `'HAPUS SEMUA DATA'`; ubah `v_hapus_akun` menjadi `true` bila akun login juga ingin dihapus. Sesudahnya jalankan lagi `sql/00_semua.sql` dan pilih **Siapkan BUMDes**. Proyek lama yang masih memakai model banyak BUMDes (ada `supabase_developer.sql`, tabel `platform_*`, beberapa baris di tabel `bumdes`) **harus direset** sebelum memasang versi ini.
@@ -21,7 +25,7 @@ Jalankan **`sql/99_reset.sql`** di SQL Editor. **Menghapus semua tabel dan fungs
 
 ## Berkas SQL dan urutan pasang
 
-Semua SQL ada di folder **`sql/`**, bernomor menurut urutan pasang: `00_semua.sql` (gabungan, paling mudah), `01`–`07` (bertahap), dan `99_reset.sql` (kosongkan database).
+Semua SQL ada di folder **`sql/`**, bernomor menurut urutan pasang: `00_semua.sql` (gabungan, paling mudah), `01`–`07` (bertahap), `98_kosongkan_isi.sql` (kosongkan isi, struktur tetap), dan `99_reset.sql` (hapus semua untuk mulai dari awal).
 
 | No | Berkas | Isi | Prasyarat | Dipakai oleh |
 |---|---|---|---|---|

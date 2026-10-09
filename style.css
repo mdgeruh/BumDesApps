@@ -593,7 +593,7 @@ header .hic{display:none}
 #usr .usrp .usn small{font-size:11px;color:var(--mu);font-weight:500}
 #usr .usrp.on{border-color:var(--ac);box-shadow:0 0 0 2px var(--ring)}
 @media (max-width:899px){#usr .usrp{padding:3px;min-width:44px;min-height:44px;justify-content:center}#usr .usrp .usn{display:none}#usr .usrp .bi{width:32px;height:32px}}
-.pfw2{max-width:760px}.pfw2 .dc{margin:0 0 12px}
+.pfw2{max-width:760px}.pfw2 .dc{margin:0 0 12px}.pfw2 .pft{margin-bottom:12px}.pfw2 .pft .card.kp{cursor:default}.pfw2 .pft .card.kp:hover{border-color:var(--bd)}
 .pfh{display:flex;align-items:center;gap:16px;padding:18px 16px}
 .pfh .pfa{width:64px;height:64px;font-size:28px;flex:none}
 .pfn{min-width:0}.pfn h2{margin:0 0 6px;font-size:20px;overflow-wrap:anywhere}.pfn .k{margin-top:6px;overflow-wrap:anywhere}
@@ -605,3 +605,69 @@ header .hic{display:none}
 
 /* v1.1.149 — Profil: jarak catatan sebelum tombol simpan */
 .pfw2 .k+.fl{margin-top:12px}
+
+/* v1.1.152 — Profil: dua kolom di desktop, kartu angka, bentuk lipat untuk Ganti PIN */
+.pfh{flex-wrap:wrap}.pfh .pfn{flex:1 1 160px}.pfx{margin-left:auto;flex:none}@media (max-width:600px){.pfh{gap:12px}.pfh .pfa{width:52px;height:52px;font-size:22px}.pfx{width:100%;justify-content:center}}
+.pfw2 .pfg{display:grid;grid-template-columns:1fr;gap:0}.pfw2 .pff label{display:block}
+.pfw2 details.pfs{border:0;margin:0;background:none}.pfw2 details.pfs>summary{padding:4px 2px;font-size:16px}.pfw2 .pfb{padding:4px 2px 2px}.pfw2 .pfs .stc{font-weight:500;color:var(--mu);font-size:12px}
+.pfw2 .pfc2>.card{break-inside:avoid;margin:0 0 12px}
+@media (min-width:900px){.pfw2{max-width:1040px}.pfw2 .pfc2{column-count:2;column-gap:16px}.pfw2 .pfg{grid-template-columns:1fr 1fr;gap:0 16px}.pfw2 .pff.w{grid-column:1/-1}}
+
+/* v1.1.154 — O9: bilah pemakaian penyimpanan browser */
+.sto{height:10px;border-radius:99px;background:color-mix(in srgb,var(--tx) 9%,transparent);overflow:hidden;margin:6px 0 12px}
+.sto i{display:block;height:100%;border-radius:99px;background:var(--ac);min-width:2px}
+.sto.wr i{background:var(--wr,#c98a0b)}.sto.er i{background:var(--rd)}
+
+/* v1.1.158 — O7: cetak dari portal nasabah (kartu pinjaman, rekap tabungan) */
+.pt-db{display:flex;gap:8px;margin:0 0 10px}.pt-w .doc{margin-left:auto;margin-right:auto}
+@media print{body.pt-on{overflow:visible!important}body.pt-on>*:not(#portal){display:none!important}#portal.on{position:static!important;overflow:visible!important;background:#fff!important}.pt-hd,.pt-nv,.pt-pv{display:none!important}.pt-w{padding:0!important;max-width:none!important}.pt-w .doc{border:0;max-width:none;margin:0;padding:0}}
+
+/* v1.1.163 — Laba Rugi: perbandingan; tabel di layar lebar dan saat cetak, daftar berbaris di layar sempit */
+.lrcl{display:none}.lrch{margin:14px 0 4px}
+@media(max-width:899px){.lrct{display:none}.lrcl{display:block}}
+@media print{.lrct{display:block!important}.lrcl{display:none!important}}
+
+.rnl{margin:0;padding-left:20px;font-size:13px;line-height:1.5}.rnl li+li{margin-top:6px}.rnh{display:none}.rnx{white-space:normal}
+@media print{.rnh{display:block;margin:0 0 6px;font-size:13px}.rpc .rnl{font-size:11px}}
+/* v1.1.171: halaman Ajukan pinjaman, Ubah pengajuan, dan Detail pinjaman (bukan modal) */
+.pgh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 12px}.pgh>.b,.pgh>.ib{margin:0;flex:none}
+.pgt{flex:1 1 12rem;min-width:0}.pgt h2{margin:0;font-size:18px;overflow-wrap:anywhere}.pgt small{display:block}
+.pgg{display:grid;grid-template-columns:minmax(0,1fr);gap:0 20px}.pgc{min-width:0}
+.pgf.card{padding:12px 14px}.pgf .actb .b{flex:1}
+.pgf .actb{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+@media (min-width:1000px){.pgg{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pgs{position:sticky;top:12px;align-self:start}.pgf .actb .b{flex:0 0 auto}}
+@media print{.pgh .pgb{display:none}}
+.pgf .actb{margin-top:12px}
+/* v1.1.172: halaman pinjaman: tanpa kartu di dalam kartu, teks tidak menempel ke garis tepi */
+.pgf .card.sim{background:color-mix(in srgb,var(--tx) 4%,var(--cd));border:0;box-shadow:none;border-radius:12px;padding:12px 14px;margin:12px 0 0}
+@media (min-width:1000px){.pgf .pgs>.card.sim:first-child{margin-top:0}}
+.pgf .card.sim details.sx{background:var(--cd);margin:8px 0 0;overflow:hidden}
+.pgf .card.sim details.sx>*:not(summary){border:0;border-radius:0;box-shadow:none;margin-top:0;margin-bottom:0}
+.pgf .card.sim details.sx>div{overflow-x:auto}
+.pgf .card.sim .k:first-child{margin-top:0}
+.pg details.sx>.upl{padding:0 14px}.pg details.sx>.upl .upr:last-child{border-bottom:0}
+.pg details.sx>.empty,.pg details.sx>p.em{margin:4px 12px 12px}
+.pg details.sx>.sxa{padding:0 12px 12px}
+.pg details.sx>.li{margin:0;padding-left:14px;padding-right:14px}
+.pg details.sx>p.k:not(.em){padding:0 14px 10px;margin:0}
+.pgf .pgs{padding-top:0}
+/* v1.1.173: tabel jadwal simulasi ringkas */
+.simt{table-layout:auto;font-size:12.5px;font-variant-numeric:tabular-nums}.simt th,.simt td{padding:6px 6px;white-space:nowrap}.simt th:first-child,.simt td:first-child{padding-left:12px;width:2.2em}.simt th:last-child,.simt td:last-child{padding-right:12px}
+.simt thead th{font-size:11.5px;font-weight:600;color:var(--mu);background:var(--cd);position:sticky;top:0;z-index:1;box-shadow:0 1px 0 var(--ln)}
+.simt tbody tr:nth-child(even){background:color-mix(in srgb,var(--tx) 3%,transparent)}
+.simt tfoot th,.simt tfoot td{font-weight:700;border-top:2px solid var(--ln);background:var(--cd);position:sticky;bottom:0}.simt tfoot th{text-align:left;padding-left:12px}
+.simsc{border:0}.simsc.lg{max-height:340px;overflow-y:auto}
+@media (max-width:420px){.simt{font-size:12px}.simt th,.simt td{padding:6px 4px}.simt th:first-child,.simt td:first-child{padding-left:8px}.simt th:last-child,.simt td:last-child{padding-right:8px}}
+.simd>summary .simu{margin-left:auto;font-weight:400}
+@media (max-width:420px){.pgf .card.sim{padding:12px 10px}.simt th:nth-child(2),.simt td:nth-child(2){padding-left:2px}}
+@media (max-width:420px){.pgf.card{padding:12px 10px}.pgf .card.sim{padding:12px 8px}.simt{font-size:11.5px}.simt thead th{font-size:10.5px}.simt th,.simt td{padding:6px 3px}.simt th:first-child,.simt td:first-child{padding-left:8px;width:1.6em}.simt th:last-child,.simt td:last-child{padding-right:8px}.simt th:nth-child(2),.simt td:nth-child(2){padding-left:3px}}
+@media (max-width:420px){.pgf .actb{flex-wrap:nowrap}.pgf .actb .b{min-width:0;padding-left:8px;padding-right:8px}}
+@media (max-width:420px){.pgf .actb{margin-left:-10px;margin-right:-10px;padding-left:10px;padding-right:10px}}
+/* v1.1.173: jadwal simulasi polos (bukan kartu): tanpa kotak/garis tepi, hanya garis antarbaris */
+.simd,.pgf .card.sim details.simd{border:0;border-radius:0;background:transparent;box-shadow:none;margin:10px 0 0;overflow:visible}
+.simd>summary{padding:8px 0;min-height:40px}
+.simd .simsc{border:0;border-top:1px solid var(--ln);border-radius:0;background:transparent}
+.simt thead th,.simt tfoot th,.simt tfoot td{background:color-mix(in srgb,var(--tx) 4%,var(--cd))}
+.simt tbody tr:nth-child(even){background:transparent}.simt tbody td{border-bottom:1px solid var(--ln)}
+.simt th:first-child,.simt td:first-child{padding-left:0}.simt th:last-child,.simt td:last-child{padding-right:0}
+@media (max-width:420px){.pgf .actb{margin-left:-10px;margin-right:-10px;padding-left:10px;padding-right:10px}.simt th:first-child,.simt td:first-child{padding-left:0}.simt th:last-child,.simt td:last-child{padding-right:0}}
