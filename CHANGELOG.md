@@ -2,6 +2,20 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.176] — 2026-10-09
+
+### Diubah
+- `areaSvg()` (Tren 6 Bulan, Dashboard): garis dan area memakai bezier kubik monoton (`smoothPath()`, Fritsch–Carlson; tidak melampaui data), titik pendapatan dan beban per bulan (`.tpt`), dan area sentuh `.th` per bulan (fokus keyboard, `aria-label` berisi angka).
+- Tooltip `.ttp` lewat penanganan delegasi (`trTip/trHide`): hover (mouse), klik/ketuk bertahan sampai di luar, fokus keyboard, Escape. Posisi dijaga di dalam kolom grafik.
+- Uji: `ui-kurva.py` (baru; 390/1280 px, mouse, ketuk, keyboard); `logic-107` menyesuaikan struktur SVG.
+
+## [1.1.175] — 2026-10-09
+
+### Diubah
+- Data > Backup (`vDat0`): ringkasan status `bkStat()` (`.bks/.bkt`; petak Cadangan online hanya bila `setelan.kelola`), kartu 1-2 dan 3-4 dalam dua kolom `.bkg/.bkc` di ≥1000 px, kartu 5 selebar halaman.
+- `.dc.dwc`: kartu dan `details` di dalam kartu awan diratakan (tanpa border/bayangan, dipisah garis). Baris `.bkr` (label + pilihan) dan `.bkb` (tombol) pada kartu 1 dan 4; tombol Export dan Import berukuran penuh di HP.
+- Uji: `ui-backuptata.py` (baru; 390/1280 px).
+
 ## [1.1.174] — 2026-10-09
 
 ### Diubah
