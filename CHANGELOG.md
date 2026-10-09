@@ -2,6 +2,269 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.174] — 2026-10-09
+
+### Diubah
+- `today()` = tanggal lokal perangkat (`ymd(new Date())`), bukan `now().slice(0,10)` (UTC). `now()` tetap ISO UTC untuk penyimpanan.
+- Pembantu baru di `accounting.js`: `pad2`, `ymd`, `wkt(iso[,detik])` (tanggal+jam lokal; tanggal murni tidak digeser), `wd(iso)` (tanggal lokal). Dipakai di jejak audit (tampil, CSV, filter tanggal), log aktivitas, riwayat calon, linimasa pinjaman, status awan/riwayat versi, portal nasabah, info data portal, cetak laporan, tahun tutup buku, tanggal akun, pemotongan arsip log.
+- Uji: `tests/run.js` membekukan 12:00 UTC dan memakai `ymd` (lulus di TZ UTC, Makassar, Honolulu, Tokyo); `logic-98` tak bergantung zona; `ui-zona.py` (baru; Makassar/UTC/Honolulu pada 20:00 UTC).
+
+## [1.1.173] — 2026-10-09
+
+### Diubah
+- Simulasi pengajuan (`simLive`): tabel jadwal kini dibuat `simTbl()` (kelas `.simt`): angka tanpa Rp, tanggal dd/mm/yy, `tfoot` Jumlah, `thead` menempel, area gulir `.simsc.lg` (maks 340 px) bila tenor >12, lima kolom muat di 360/390 px. Polos tanpa bingkai kartu (`details.simd` tanpa border).
+- Keadaan buka/tutup dijaga lewat `S.simO` (`simOpen/simTog`); bawaan terbuka di layar ≥700 px.
+- `.pgf .actb` di ≤420 px: margin dan bantalan 10 px agar tidak meluap 1 px.
+
+## [1.1.172] — 2026-10-09
+
+### Diubah
+- Halaman pinjaman (`lp/la/ld`): `.card.sim` di dalam `.pgf` diratakan (latar tipis tanpa garis, tanpa bayangan) agar tidak kartu-di-kartu; daftar jadwal simulasi tanpa garis ganda; jarak antara kolom Tenor dan kotak tarif/biaya.
+- Baris `.upr`/`.li`, keadaan kosong (`p.k.em` hasil `emptyFx`) dan `.sxa` di dalam `details.sx` pada halaman diberi bantalan sehingga tidak menempel ke garis tepi (CSS saja).
+
+## [1.1.171] — 2026-10-09
+
+### Diubah
+- Simpan Pinjam: Ajukan pinjaman (`lp`), Ubah pengajuan (`la`), dan rincian pinjaman (`ld`) tampil sebagai **halaman** di area utama (`vPage()`), bukan modal. `mdOpen('ld'|'lp'|'la',id)` dan `openLoan` mengalihkan ke `pgOpen`; keadaan halaman disimpan di `S.pp={k,id,prev,h}` dan tetap ada saat dialog (`lc/lw/lz/ls/lr/lb/cj/jd/nd/rm`) terbuka di atasnya. `S.md` ikut menyala dengan jenis halaman (`PGK`) sehingga `LI`, `feeSel`, dan `mdBackLd` tidak berubah; `pgNorm()` (awal `render`) menjaga `S.pp`, `S.md`, `S.eld`, dan `S.ela` tetap selaras.
+- Form pengajuan/ubah dua kolom di layar ≥1000 px (isian | simulasi `#sim-fee/#sim/#sim-w`, bilah tombol `.actb` menempel); `MD.lp/MD.la` kini mengembalikan `side` (simulasi) dan `xb` (tombol Simpan sebagai draf) selain `b`. Rincian dibagi dua kolom lewat `vLoan(l,1)` → `{top,side}` (`vLoan(l)` tetap string utuh untuk modal lama).
+- Kembali/Batal: `pgBack()` memakai riwayat peramban bila halaman dibuka dari dalam aplikasi, selain itu `pgClose()`. Setelah simpan berhasil `pgDone()` kembali ke rincian (dari Ubah) atau ke daftar, dengan entri riwayat diganti (`S.rtRep`).
+- Isian form halaman dijaga lewat render ulang oleh `pgSnap/pgRestore` (setara `mdSnap`) dan dikecualikan dari sistem draf per tab (`inPg` di `dSnap/dRestore/dirtyFields`).
+- Alamat per halaman: `/simpan-pinjam/ajukan`, `/simpan-pinjam/pinjaman/{id}`, `/simpan-pinjam/pinjaman/{id}/ubah` (`rtPath/rtParse/rtApply/rtPop`, `pgSet` memeriksa data dan izin). Pindah tab, menu Simpan Pinjam, dan keluar akun (termasuk keluar otomatis) menutup halaman. FAB disembunyikan saat halaman terbuka.
+
+### Ditambah
+- Tombol **Profil nasabah** di kepala rincian dan kartu **Pinjaman lain {nasabah}** (`pgOthers`) untuk pindah antarpinjaman milik nasabah yang sama.
+- Dokumen (kartu pinjaman, bukti cair, kwitansi) yang dibuka dari rincian kini kembali ke halaman rincian, bukan ke daftar.
+
+### Tes
+- `logic-173.js` (55: halaman, dialog di atas halaman, ubah/ajukan/draf/hapus draf, dokumen, navigasi, keluar akun, alamat, `pgSet`, `pgNorm`) dan `ui-halaman.py` (390/1280 px: tata letak, bilah tombol, dialog di atas halaman, pinjaman lain, Kembali).
+- Disesuaikan ke halaman: `logic-1/35/38/67/79`, `ui.py`, `ui-sp/sp0/sp2/spm/ubah/p0/draf/ringkasan/roles/fab/form/tgl/calon/spa11y`.
+
+## [1.1.170] — 2026-10-09
+
+### Diubah
+- Master > Tarif Air: semua form (golongan tarif, denda keterlambatan, biaya pasang baru, diskon) kini berupa modal (`MD.gl`, `MD.dn`, `MD.pb`, `MD.ds`; kunci `MK` `gl/dn/pb/ds` → `S.egl/edn/epb/eds`) dengan galat validasi per kolom dan Escape/Batal menutup. Halaman memuat kartu ringkasan (mis. "5% dari sisa tagihan, tenggang 3 hari") dengan tombol Tambah golongan tarif, Ubah pengaturan denda, Ubah biaya pasang baru, dan Tambah diskon; baris golongan/diskon punya Edit (modal) dan Nonaktifkan.
+- Model tarif golongan (flat/bertingkat) menampilkan atau menyembunyikan blok bertingkat di dalam modal tanpa render ulang (`gtMd`).
+- `saveGol/saveLate/saveInst/saveDisc` menutup modal lewat `okM()`; `gtEdit` dan `dsEdit` dihapus. Perhitungan, jurnal, dan data tidak berubah.
+
+### Tes
+- `logic-172.js` disesuaikan (91 cek): modal berisi bidang dan label terhubung, mode ubah terisi, simpan menutup modal, galat validasi menahan modal.
+- `ui-tarifair.py` disesuaikan: alur lewat modal di 390 dan 1280px (validasi, Escape, tampil/sembunyi blok bertingkat).
+
+## [1.1.169] — 2026-10-09
+
+### Ditambah
+- **Master > Tarif Air** (sub-tab baru, hanya bila modul Unit Air aktif; izin `master.kelola`), data di `db.settings` (`air_class`, `air_late`, `air_inst`, `air_disc`) sehingga tanpa koleksi atau tabel SQL baru; bawaan nonaktif:
+  - **Golongan tarif:** kode otomatis `GOL001…`; model flat/bertingkat, beban tetap, minimum; dipilih per sambungan (`conn.cls`, kolom Golongan tarif di modal sambungan). `airCfgFor(conn)` menimpa model, beban tetap, minimum, dan blok tarif standar; jatuh tempo dan unit tetap dari tarif standar. Golongan nonaktif tidak bisa dipilih baru, sambungan lama tetap memakainya.
+  - **Diskon:** kode `DSK001…`; persen atau nominal; lingkup tagihan air, penjualan lain, atau keduanya. Diskon tagihan dipilih per sambungan (`conn.disc`, berlaku tiap bulan); diskon penjualan dipilih di form Penjualan baru (`#j-ds`). Total tagihan/penjualan dan jurnal dicatat setelah diskon (pendapatan bersih), rincian ada di baris item "Diskon …" dan nota; diskon yang menghabiskan seluruh tagihan ditolak.
+  - **Denda keterlambatan:** nominal tetap atau persen dari sisa tagihan, tenggang 0–90 hari, batas maksimum. `lateFine()` mengenakan sekali per tagihan pada pembayaran pertama sesudah jatuh tempo + tenggang; form Terima punya kolom Denda (kosong = otomatis, 0 = bebaskan, angka = ubah). Jurnal: Dr kas (bayar + denda) / Cr 1400 (bayar) / Cr 4210 (denda); piutang tidak bertambah. Batal pembayaran membalik denda dan denda dapat dikenakan lagi.
+  - **Biaya pasang baru:** nama dan nominal; saat menambah sambungan baru (pilihan Tagihkan Ya/Tidak) dibuat penjualan kredit `install` (Dr 1400 / Cr 4220), nomor memakai format penjualan.
+- Akun baru **4210 Pendapatan Denda Air** dan **4220 Pendapatan Pasang Baru Air** (`ensureAirAcc` di `migr`, juga di akun bawaan; masuk akun sistem).
+- Laporan Unit Air: baris Denda keterlambatan diterima (akun 4210).
+- Unit Air > Tarif: petunjuk ke Master > Tarif Air.
+
+### Diubah
+- Tagihan air memakai `airCfgFor(sambungan)` dan mengurangi diskon; pratinjau angka meter menampilkan diskon dan total bersih.
+- Sub-tab Master: tujuh bila modul Unit Air aktif (`logic-33` disesuaikan); rute `/master/tarif-air`.
+
+### Tes
+- `logic-172.js` (83): akun dan migrasi, bawaan nonaktif, golongan (validasi, tarif, nonaktif, ubah tidak mengubah tagihan lama), diskon (validasi, lingkup, jurnal, item, nota, 100% ditolak, penjualan), denda (tenggang, sekali per tagihan, jurnal, batal, bebas, manual, penolakan, tetap, nonaktif), biaya pasang baru (jurnal, piutang, nomor, nota, edit tidak menagih lagi, batal), tampilan Master, label, izin, audit.
+- `ui-tarifair.py`: alur Master > Tarif Air sampai tagihan bergolongan berdiskon, terima dengan denda, 390 dan 1280px.
+
+## [1.1.168] — 2026-10-09
+
+### Ditambah
+- Nomor penjualan (`sale`, bawaan `JL-{YYYY}-{NNNN}`) dan nomor tagihan air (`bill`, bawaan `TA-{YYYY}{MM}-{NNN}`) memakai mesin nomor `numNext` (v1.1.162): `NUMF0`/`NUMK`/`numPool` diperluas; kolom format di Setelan > Profil (kartu Nomor, tampil bila modul Unit Air aktif; judul kartu berubah menjadi "Nomor pegawai, tabungan, dan Unit Air"). Urutan mulai 1 lagi saat tahun/bulan/tanggal pada format berganti; nomor lama tidak berubah; nomor tetap unik.
+
+### Diubah
+- Penjualan lain tidak lagi bernomor `jumlah semua penjualan + 1` (yang ikut menghitung tagihan dan saldo awal): nomor kini urut per awalan/format sendiri. Tagihan air urut per bulan seperti sebelumnya.
+- Tidak ada koleksi database atau tabel SQL baru (`db.settings.num_sale`, `num_bill`).
+
+### Tes
+- `logic-171.js` (17): format bawaan, urutan JL- tidak terpengaruh TA-/SA-, urut per bulan tagihan, format baru dan ganti bulan, validasi, tagihan air nyata, keunikan, kolom Setelan menurut modul, izin.
+- `ui-nomor.py` diperluas: kolom penjualan dan tagihan air, contoh nomor, penolakan format salah, modul Air nonaktif.
+
+## [1.1.167] — 2026-10-09
+
+### Ditambah
+- Laporan > Piutang per tanggal lampau: input **Per tanggal** (kosong = hari ini; tanggal masa depan dipotong ke hari ini). `piuData(dd)` memakai `piuHist(t)` untuk tanggal sebelum hari ini: sisa pokok = pokok − pembayaran pokok bertanggal ≤ t; aging tagihan dari jadwal angsuran dikurangi alokasi pembayaran ≤ t (jasa yang dihapuskan sesudah t dikembalikan); piutang pelanggan = total penjualan kredit − pembayaran bertanggal ≤ t; buku besar 1300/1400 dari jurnal bertanggal ≤ t. Cetak dan CSV mengikuti tanggal. Catatan di layar: pembatalan sesudah tanggal itu tidak dihitung; pinjaman yang direstrukturisasi setelah tanggal itu hanya masuk total pokok, tidak ke aging.
+- **Catatan atas laporan** di bawah Neraca, Laba Rugi (per akun dan per unit), Arus Kas, dan Piutang: catatan otomatis dari data (entitas dan cakupan unit, dasar pencatatan jasa/denda diakui saat diterima, amortisasi fee bila ada, saldo awal, tahun buku ditutup, filter unit) ditambah **catatan tambahan** pengurus (maks. 1.500 huruf) di Setelan > Dokumen Cetak (`setRepNote`, izin `setelan.kelola`, tercatat di audit). Ikut tercetak; petunjuk setelan disembunyikan saat cetak.
+
+### Diubah
+- Bar filter laporan Piutang berjudul "Filter dan cetak" (sebelumnya "Cetak dan unduh").
+- Tidak ada koleksi database atau tabel SQL baru (`db.settings.rep_note`).
+
+### Tes
+- `logic-169.js` (30): piutang per tanggal lampau: sebelum cair, hari cair, sebelum/sesudah pembayaran, aging mundur, buku besar per tanggal, `piuHist(hari ini)` sama dengan posisi kini, pembayaran dibatalkan, penjualan kredit dan cicilan, filter unit, tampilan, CSV, tanggal masa depan.
+- `logic-170.js` (22): catatan otomatis per laporan, catatan tambahan, escape HTML, batas panjang, audit, kolom Setelan, izin.
+- `ui-catatan.py`: piutang per tanggal dan catatan atas laporan di 390 dan 1280px, cetak.
+- `logic-137.js` disesuaikan dengan judul bar baru.
+
+## [1.1.166] — 2026-10-09
+
+### Diperbaiki
+- `mdr()`: modal tanpa kolom isian (mis. rincian pinjaman `ld`) kini memfokuskan tombol kembali/tombol pertama di dalam modal saat dibuka (sebelumnya fokus tertinggal di halaman belakang).
+
+### Tes
+- Penyebab uji UI lambat/gagal sejak v1.1.158 ditemukan: `pg.fill('#bk', JSON ±70 KB)` Playwright memakan ±30 dtk, bukan aplikasi (mengisi nilai + memicu event langsung ±3 ms). 20 uji UI (`akad, awal, bayar, calon, draf, import-dummy, kolek, nsb, restruk, rincian, ringkasan, sp, sp1b, sp2, sp4c, sp5, tab2, tab3, tabungan, trx`) kini memakai `pg.evaluate`; `ui-akad` yang sebelumnya selalu gagal kini lulus dalam ±7 dtk. Suite lengkap: 89 langkah lulus, ±13 menit (`-j 3`).
+- `ui-spa11y.py`: audit aksesibilitas modal Simpan Pinjam (pengajuan, ubah, tolak, batal, cairkan, bayar, lunasi, nasabah, rincian) pada 360/390/1280px: label terhubung, target sentuh 44px (mobile), tanpa meluap horizontal, fokus di dalam modal, Escape menutup.
+- `logic-168.js` (18 cek): uji transisi pelengkap SP2: tolak tanpa jurnal dan alasan wajib, tidak bisa cair/setuju setelah ditolak, cair dengan fee (satu jurnal, dana bersih), cair dua kali ditolak, batal cair mengembalikan kas dan jadwal, cair tanpa kode fee.
+- `check-audit.js` (masuk `suite.js cepat`): setiap `audit("aksi","entitas",…)` berliteral di kode harus punya nama baku `AUD_V`/`AUD_D` (108 pasangan terdaftar).
+
+## [1.1.165] — 2026-10-09
+
+### Ditambah
+- Laporan Gaji (Gaji > Laporan): pengelompokan **Per tahun** (`tahun`) dan **Per tahun · pegawai** (`pegtahun`, tahun terbaru dulu lalu nomor/nama pegawai) di `GG`/`gajiTab()`; kolom sama dengan pengelompokan lain (jumlah gaji, bruto, potongan, bersih, dibayar, belum dibayar). Filter periode, filter unit, cetak, dan CSV berlaku.
+
+### Tes
+- `logic-167.js` (12 cek), `ui-rekapgaji.py` (390/1280px).
+
+## [1.1.164] — 2026-10-09
+
+### Ditambah
+- Laporan > **Neraca**: pilihan Bandingkan neraca dengan (`S.ncmp`): Akhir bulan sebelumnya (dari Per tanggal) atau Tahun sebelumnya (tanggal sama tahun lalu). Butuh Per tanggal terisi. `neracaData(tanggal)` menerima tanggal eksplisit; `nrCmp()`, `nrCmpDate()`.
+- Laporan > **Arus Kas**: pilihan Bandingkan arus kas dengan (`S.kcmp`): Periode sebelumnya atau Tahun sebelumnya (rentang sama seperti Laba Rugi; `lrCmpRange(k)` kini menerima jenis). `kasData(a,b)` menerima rentang eksplisit; `kasCmp()`. Akun lawan yang hanya ada di satu rentang tetap tampil.
+- Tabel pembanding dipakai bersama (`lrCmpTbl`, tabel di layar lebar/cetak, daftar berbaris di bawah 900px); Unduh CSV Neraca dan Arus Kas memuat kolom pembanding dan selisih. Status kecocokan (Aset = Kewajiban + Ekuitas; saldo akhir = Kas & Bank) tetap tampil.
+
+### Tes
+- `logic-165.js` (18 cek), `logic-166.js` (15 cek); `ui-lrbanding.py` diperluas ke Neraca dan Arus Kas.
+
+## [1.1.163] — 2026-10-09
+
+### Ditambah
+- Laporan > Laba Rugi (Per akun): pilihan **Bandingkan dengan** (`S.lcmp`): Periode sebelumnya (rentang sama panjang tepat sebelum Dari tanggal) atau Tahun sebelumnya (rentang digeser satu tahun, 29 Februari menjadi 28 Februari). Perlu tanggal Dari dan Sampai; bila kosong/terbalik muncul petunjuk. Kolom Periode ini, Pembanding, Selisih, dan % ("baru" bila pembanding nol); akun yang hanya ada di salah satu rentang tetap tampil.
+- `lrData(a,b)` menerima rentang eksplisit (tanpa argumen = filter bawaan); `lrCmp()`, `lrCmpTbl()`, helper `dAdd/dDiff/dYr/pctTxt`.
+- Tampilan: tabel di layar lebar dan saat cetak, daftar berbaris `.upl` di bawah 900px. Unduh CSV memuat kolom pembanding dan selisih. Tampilan Per unit tidak berubah.
+
+### Tes
+- `logic-164.js` (21 cek), `ui-lrbanding.py` (390/1280px).
+
+## [1.1.162] — 2026-10-09
+
+### Ditambah
+- Setelan > Profil > kartu **Nomor pegawai dan tabungan** (`numSet()`): format `num_emp` (bawaan `PEG-{NNN}`) dan `num_tab` (bawaan `TAB-{NNNN}`), memakai mesin nomor yang sama dengan pinjaman/draf/akad (`numChk`, `numNext`, kode `{YYYY} {YY} {MM} {DD} {NNNN}`); contoh nomor berikutnya ditampilkan.
+- `numNext` kini memakai `numPool(kind)` (pinjaman/draf/akad dihitung bersama, pegawai, tabungan); `empNo()` dan `savNo()` memakai `numNext`. Bawaan menghasilkan nomor identik dengan sebelumnya; nomor lama tidak berubah dan urutan melanjutkan nomor terbesar yang cocok dengan format.
+- `setNum` masuk izin `setelan.kelola`.
+
+### Tes
+- `logic-163.js` (18 cek), `ui-nomor.py` (390/1280px).
+
+## [1.1.161] — 2026-10-09
+
+### Ditambah
+- Gaji > Proses Gaji: kartu **Potongan gaji belum disetor** (`potCard()`): saldo per unit = potongan gaji berstatus Dibayar − setoran (`potBal()`), form **Catat setoran** (`potSetor`: unit, jumlah, tanggal, kas/bank, tujuan wajib; ditolak bila melebihi saldo, periode tertutup, atau tanpa tujuan) dan riwayat 10 setoran terakhir. Jurnal: Dr Kewajiban Lain (2200) / Cr kas-bank, tipe transaksi baru `payroll_rem` ("Setor Potongan Gaji") pada unit yang sama; tanpa koleksi atau tabel SQL baru.
+- `batalSetorPot` (konfirmasi `askC`, jurnal pembalik); `voidT` langsung dari Transaksi diblokir untuk `payroll_rem`. `batalGaji` ditolak bila pembatalan membuat saldo potongan unit lebih kecil dari yang sudah disetor.
+- Izin: `potSetor`, `batalSetorPot` → `gaji.kelola`. Audit: `payroll.remit` ("Setoran potongan gaji").
+
+### Tes
+- `logic-162.js` (28 cek), `ui-gajisetor.py` (390/1280px).
+
+## [1.1.160] — 2026-10-09
+
+### Ditambah
+- Gaji > Proses Gaji: kartu **Proses massal** (`gjMass()`): pilih periode (`S.gpm`, bawaan periode terbaru yang masih menunggu) lalu **Setujui semua draf** (`payApprAll`, izin `gaji.setuju`) atau **Bayar semua disetujui** (`payBayarAll`, izin `gaji.kelola`). Keduanya lewat konfirmasi (`askC`) berisi jumlah gaji, total bersih, kas/bank, dan tanggal; mengikuti filter unit di header.
+- Pembayaran massal memakai tanggal dan kas/bank dari kartu Pembayaran gaji; tiap gaji dijurnal sendiri (`payPost`, hasil pemisahan dari `payBayar`) sehingga pembatalan tetap per gaji. Bila satu gagal (mis. periode tertutup), proses berhenti dan pesan menyebut berapa yang sudah dibayar.
+- Audit: persetujuan massal tercatat per gaji dengan keterangan "(massal)".
+
+### Tes
+- `logic-161.js` (20 cek), `ui-gajimassal.py` (390/1280px).
+
+## [1.1.159] — 2026-10-09
+
+### Ditambah
+- Setelan > Pengguna & Peran > Mode Pengguna: kartu **Keluar otomatis** (Jangan keluar otomatis, 5, 15, 30, 60 menit tidak aktif; `db.settings.idle_min`; izin `pengguna.kelola`). Aktivitas (klik, tombol, sentuh) memperbarui `S.idleAt`; pemeriksaan tiap 15 detik (`idleCheck`); saat lewat batas pengguna keluar, sesi dihapus, layar masuk menampilkan alasannya, dan tercatat di audit log.
+- Kartu **Kembalikan ke bawaan** di Peran dan Izin: `rolesReset()` mengembalikan izin peran bawaan (tanpa Superadmin dan peran buatan sendiri); dengan konfirmasi dan catatan audit; ditolak bila setelahnya tidak ada Admin Sistem aktif.
+
+### Tes
+- `logic-160.js` (20 cek), `ui-rbackecil.py` (390/1280px).
+
+## [1.1.158] — 2026-10-09
+
+### Ditambah
+- SP-O O7: **Kartu Pinjaman** (`kartuHtml`, `vKartu`, dokumen `kp`): identitas nasabah, data pinjaman, ringkasan (sisa pokok, total dibayar, tunggakan termasuk denda), jadwal angsuran dengan status, riwayat pembayaran dengan nomor kwitansi, tanda tangan. Tombol "Kartu pinjaman" di rincian pinjaman (pinjaman yang sudah dicairkan).
+- **Rekap Tabungan** (`rekapHtml`, `vRekap`, dokumen `rt`): semua rekening aktif nasabah dengan saldo, total, dan 10 mutasi terakhir per rekening. Tombol "Rekap tabungan" di rincian nasabah.
+- Portal nasabah: "Cetak kartu pinjaman" (rincian pinjaman) dan "Cetak rekap tabungan" (menu Tabungan); hanya data milik sendiri; versi portal tanpa riwayat kwitansi dan tanda tangan petugas (data itu tidak diterbitkan ke portal). CSS cetak menyembunyikan header, menu, dan pratinjau portal.
+- Tabel jadwal pada kartu tidak diubah menjadi kartu di layar sempit (`.sc.nc`); angka tidak terpotong (`nt`).
+
+### Catatan
+- `tests/suite.js`: kegagalan kini hanya dinilai dari kode keluar (galat `BrokenPipe` server uji lokal pada `ui-route` tidak lagi dianggap gagal).
+- Bukti pembayaran (kwitansi) dan bukti pencairan sudah ada sebelumnya.
+
+### Tes
+- `logic-159.js` (23 cek), `ui-cetak.py` (390/1280px: kartu, rekap, portal, media cetak).
+
+## [1.1.157] — 2026-10-09
+
+### Ditambah
+- SP-O O11: `tests/suite.js` dengan tiga mode: `cepat` (build --check, check-css/pwa/sql, semua uji logika, 10 uji UI ringkas: ±1,5 menit), `lengkap [-j N]` (ditambah logic-77 dan seluruh uji UI, paralel, bawaan 2 proses), dan `ui <nama…>` untuk uji UI tertentu. Log per langkah di `/tmp/bumdes-suite/`, ringkasan `ringkasan.json`, kode keluar bukan nol bila ada yang gagal.
+- `package.json`: `test:cepat`, `test:lengkap`; `test:lokal` kini sama dengan `test:cepat`.
+
+### Diubah
+- Uji lengkap dengan 2 proses paralel selesai ±19 menit (sebelumnya ±35 menit berurutan). `ui-awan2.py` memakai berkas sementara sendiri (`_tmp_nokey2.html`) agar tidak berebut dengan `ui-awan.py` saat paralel.
+- `tests/run.js` tanpa argumen otomatis memuat semua `logic-*.js` berurut (daftar tetap lama berhenti di logic-116); `--semua` menyertakan `logic-77` yang lambat. Tidak ada perubahan pada aplikasi.
+
+## [1.1.156] — 2026-10-09
+
+### Ditambah
+- SP-O O12: interval pengingat backup dapat diatur di Data > Backup (Jangan ingatkan, 3, 7, 14, 30 hari; `db.settings.backup_days`, bawaan 7; perubahan tercatat di audit log, izin `data.backup`).
+- Spanduk pengingat memuat jumlah perubahan audit sejak cadangan terakhir; menjadi galat (`role="alert"`) setelah 3x interval; hanya tampil untuk peran dengan izin Export backup.
+- Tombol Nanti menyembunyikan pengingat sampai besok (disimpan di `bumdes_bk_snooze`, bertahan setelah muat ulang); mengubah interval menghapus jeda. Chip Backup di header mengikuti interval.
+
+### Catatan
+- Sinkronisasi awan hanya dengan kunci anon/publishable sudah dijaga sebelumnya (`cloudSecret`, `service_role` ditolak di `cloudSave` dan `cloudFixed`), sehingga bagian itu dari O12 dinyatakan selesai tanpa perubahan kode.
+
+### Tes
+- `logic-158.js` (17 cek), `ui-backup.py` (390/1280px: interval, banner, Nanti bertahan, mati).
+
+## [1.1.155] — 2026-10-08
+
+### Ditambah
+- SP-O O10: render bertahap untuk Daftar Nasabah, Pihak, Pegawai, Tabungan, Tunggakan, Pelanggan, Sambungan, dan Piutang Air: 30 baris dulu, tombol "Muat lebih banyak (N lagi)". Pembantu `pgLim/pgMore/pgGrow` di `views.js`; batas per daftar disimpan di `S.pl` dan direset oleh `go()` dan pergantian sub-tab (Simpan Pinjam, `subT`).
+- Daftar yang sudah bertahap sebelumnya tetap: Pinjaman, Transaksi, Buku Besar, Log audit, Gaji, Penjualan/Pembayaran Air.
+
+### Tes
+- `logic-157.js` (11 cek), `ui-paging.py` (300 nasabah, 390/1280px, reset saat pindah sub-tab).
+
+## [1.1.154] — 2026-10-08
+
+### Ditambah
+- SP-O O9: kartu "4. Penyimpanan di browser" di Data > Backup: bilah pemakaian (`stoUse()`, perkiraan batas 5 juta karakter), rincian data aplikasi, log audit, salinan cadangan lokal (`_prev`), dan lainnya.
+- Spanduk peringatan di semua halaman saat pemakaian ≥70% (biasa) dan ≥90% (galat); tombol Nanti menyembunyikannya sampai pemakaian naik ±5 poin.
+- Arsipkan log audit lama (3/6/12 bulan): dialog konfirmasi, log diunduh sebagai `bumdes-arsip-audit-<tanggal>.json` lalu dihapus dari db; 200 log terbaru dan riwayat pinjaman aktif dipertahankan; tercatat sebagai `arsip_audit`. Tombol Hapus salinan cadangan lokal. Izin `data.kelola`.
+
+### Diubah
+- Kartu "Kosongkan semua data" menjadi nomor 5.
+
+### Tes
+- `logic-156.js` (20 cek), `ui-storage.py` (390/1280px: kartu, arsip, unduhan, peringatan); `tests/run.js`: stub `localStorage` mendukung `length/key/removeItem`; `logic-145` disesuaikan penomoran.
+
+## [1.1.153] — 2026-10-08
+
+### Diubah
+- Setelan > Pengguna & Peran: kartu "Akun saya" tidak lagi memuat form Ganti PIN dan tombol Keluar (sudah ada di halaman Profil; ID `cp-o/cp-n/cp-r` tidak lagi ganda), diganti tombol "Buka Profil saya".
+- Daftar Pengguna mendapat kartu angka (pengguna aktif, nonaktif, Admin Sistem aktif, peran); tombol Tambah pengguna dan Buat dari pegawai satu baris.
+
+### Tes
+- `logic-147.js` disesuaikan (tautan ke Profil, tanpa form PIN, kartu ringkasan).
+
+## [1.1.152] — 2026-10-08
+
+### Diubah
+- Halaman Profil: header berisi nama, peran, unit, telepon/alamat, dan tombol Keluar; kartu angka (menu dapat dibuka, izin peran, masuk sejak / peran akun awan); dua kolom di desktop (CSS columns) dan satu kolom di HP.
+- Identitas tidak lagi mengulang Nama/Telepon/Alamat; "Ubah data saya" memakai grid `.pfg`; Ganti PIN menjadi panel lipat (`S.dx.pfp`, terbuka lagi bila PIN salah); tombol Keluar bawah dihapus.
+- Aktivitas terakhir (5 terbaru) memakai istilah ramah (Masuk, Keluar, PIN diganti).
+
+### Tes
+- `logic-153.js` dan `ui-profil.py` disesuaikan (header memuat kontak, Ganti PIN tertutup bawaan).
+
+## [1.1.151] — 2026-10-08
+
+### Ditambah
+- `sql/98_kosongkan_isi.sql`: mengosongkan isi semua tabel data, snapshot, dan riwayat di skema public (`truncate … restart identity cascade`) dengan penjaga konfirmasi `v_konfirmasi = 'KOSONGKAN ISI'`. Tabel `bumdes`, `bumdes_members`, struktur, fungsi, kebijakan, dan `auth.users` tetap; versi snapshot kembali nol sehingga tidak perlu Siapkan BUMDes ulang. Aman diulang.
+- Pesan aplikasi saat simpan ke awan ditolak dengan `version_conflict:0` (awan sudah dikosongkan): "Awan sudah dikosongkan … tekan Timpa awan untuk mengirimnya sebagai versi 1".
+
+### Tes
+- `tests/sql-kosongkan.sh` (15 cek, Postgres 16: penjaga konfirmasi, isi kosong, struktur/BUMDes/anggota/akun/kebijakan tetap, `save_snapshot` versi lama ditolak dan versi 0 menjadi 1, dapat diulang), `logic-155.js` (4).
+
 ## [1.1.150] — 2026-10-08
 
 ### Ditambah

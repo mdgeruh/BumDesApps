@@ -61,7 +61,7 @@ async function nsbChgPin(){try{const v=i=>$("#"+i).value;const n=nsbGet();if(!n)
 // tampilan portal dari data server: db sementara berisi HANYA data nasabah itu; db asli tidak disentuh
 function nsbDb(d){const h=blank();h.bumdes=[{name:d.bumdes||"BUMDes"}];h.parties=[Object.assign({type:"nasabah"},d.party)];h.loans=d.loans||[];h.loan_installments=d.ins||[];h.savings_accounts=d.sav||[];h.savings_tx=d.stx||[];h.rate_master=d.rates||[];h.settings=Object.assign(h.settings||{},d.settings||{});return h}
 function nsbWrap(f){if(!S.pt||!S.pt.srv)return f();const n=nsbGet();if(!n||!n.data||!n.data.party)return f();const bk=db;db=nsbDb(Object.assign({bumdes:n.bumdes},n.data));try{return f()}finally{db=bk}}
-function nsbInfo(){if(!S.pt||!S.pt.srv)return"";const n=nsbGet()||{},t=String(n.at||"").replace("T"," ").slice(0,16);return`<small>${S.pt.off?"Offline · ":""}Data per ${esc(tglS(t.slice(0,10)))} ${esc(t.slice(11))}</small>`}
+function nsbInfo(){if(!S.pt||!S.pt.srv)return"";const n=nsbGet()||{},t=wkt(n.at);return`<small>${S.pt.off?"Offline · ":""}Data per ${esc(tglS(t.slice(0,10)))} ${esc(t.slice(11))}</small>`}
 // ----- arah per peran setelah masuk akun awan -----
 async function entRoute(L){const c=cloudCfg();S.lgpick=null;S.lgmand=0;
  try{if(location.hash==="#portal")history.replaceState(null,"",location.pathname+location.search)}catch(e){}
