@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.174
+# Catatan Rilis — v1.1.176
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,8 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.176 | Kurva dashboard halus dengan tooltip |
+| 1.1.175 | Data > Backup lebih rapi |
 | 1.1.174 | Zona waktu mengikuti perangkat |
 | 1.1.173 | Tabel jadwal simulasi ringkas dan polos |
 | 1.1.172 | Rapikan tampilan halaman pinjaman |
