@@ -32,8 +32,8 @@ if(process.argv.includes('--check')){
  if(!rd('config.js').includes('APP_VER="'+VER+'"'))e('APP_VER di config.js tidak sama dengan package.json ('+VER+')');
  const sw=rd('sw.js');for(const f of [...css,...js,'index.html','manifest.json'])if(!sw.includes('"./'+f+'"'))e('sw.js: berkas belum masuk daftar cache: '+f);
  const rl=rd('releases.js'),first=(rl.match(/\{v:"([^"]+)"/)||[])[1];if(first!==VER)e('releases.js: entri paling atas ('+first+') harus '+VER);
- if(!rd('release_notes.md').split('\n')[0].includes('v'+VER))e('release_notes.md: judul harus menyebut v'+VER);
- if(!rd('CHANGELOG.md').includes('## ['+VER+']'))e('CHANGELOG.md: belum ada entri ['+VER+']');
+ if(!rd('docs/release_notes.md').split('\n')[0].includes('v'+VER))e('docs/release_notes.md: judul harus menyebut v'+VER);
+ if(!rd('docs/CHANGELOG.md').includes('## ['+VER+']'))e('docs/CHANGELOG.md: belum ada entri ['+VER+']');
  if(bad)process.exit(1);
  console.log('OK: bumdes.html sinkron ('+out.length+' byte), versi '+VER+', cache sw.js lengkap, catatan rilis sinkron');
 }else{fs.writeFileSync(sqlTarget,sqlOut);fs.writeFileSync(target,out);console.log('bumdes.html dirakit ('+out.length+' byte, '+js.length+' skrip + '+css.length+' gaya)')}
