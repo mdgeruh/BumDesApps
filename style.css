@@ -718,3 +718,33 @@ header .hic{display:none}
 @media (max-width:420px){.wsm{grid-template-columns:1fr 1fr}.wsm>div:last-child{grid-column:1/-1}}
 .wgh{display:flex;justify-content:space-between;gap:8px;padding:10px 4px 4px;margin-top:6px;font-size:13px;border-bottom:1px solid var(--bd);color:var(--mu)}.wgh b{color:var(--tx)}.upl>.wgh:first-child{margin-top:0}
 .btt{display:block;margin:10px auto 0}
+/* v1.1.189: cetak Buku Besar berupa tabel buku besar (tampilan layar tetap daftar kartu) */
+@media print{
+ .lgp{margin-top:6px}.lgt{width:100%;border-collapse:collapse;font-size:9pt;table-layout:fixed}
+ .lgt th,.lgt td{border:1px solid #999;padding:3px 5px!important;vertical-align:top;overflow-wrap:anywhere}
+ .lgt th{background:#eee!important;color:#000!important;text-align:left}.lgt th.n,.lgt td.n{text-align:right;white-space:nowrap}
+ .lgt td{white-space:normal}
+ .lgt td.tg,.lgt td.bk,.lgt td.n{white-space:nowrap}
+ .lgt thead{display:table-header-group}.lgt tfoot{display:table-row-group}.lgt tr{break-inside:avoid}
+ .lgt tr.lgs td{background:#f4f4f4!important;font-weight:700}.lgt tfoot td{font-weight:700;background:#f4f4f4!important;border-top:2px solid #000}
+ .lgt tr.vd td{color:#666;text-decoration:line-through}
+}
+
+/* ===== v1.1.190 Struk thermal 80 mm / 58 mm (CD-3, CD-4) ===== */
+.dbr{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.dbr select{width:auto;min-width:150px;flex:0 0 auto}
+.doc.st{box-sizing:border-box;border-radius:4px;padding:4mm;margin:10px auto 0;font-size:9pt;line-height:1.25;page:struk;overflow-wrap:break-word}
+.doc.s80{width:80mm;max-width:100%}.doc.s58{width:58mm;max-width:100%;padding:3mm 5mm}
+.doc.st .logo{max-height:36px;max-width:60%}
+.doc.st h2{font-size:11pt;margin:0}.doc.st h3{font-size:10pt;margin:6px 0 2px;border-top:1px dashed #000;padding-top:5px}
+.doc.st .cn{font-size:8pt;margin-bottom:4px}
+.doc.st table{width:100%;font-size:9pt;border-collapse:collapse}.doc.st table+table{border-top:1px dashed #000;margin-top:4px;padding-top:3px}
+.doc.st td,.doc.st th{padding:1px 0!important;border-bottom:0!important;background:none!important;font-size:9pt}
+.doc.st td.n,.doc.st th.n{padding-left:6px!important}
+.doc.st .nt tr{display:flex;flex-wrap:wrap}.doc.st .nt tr:first-child{display:none}.doc.st .nt td:first-child{flex:0 0 100%;font-weight:600}.doc.st .nt td.n{flex:1;text-align:right}.doc.st .nt tr:last-child th{flex:1}
+.doc.st .tb{font-size:8pt;margin:6px 0;border-top:1px dashed #000;padding-top:4px}
+.doc.st .sg,.doc.st .tp{display:none!important}
+.doc.st:after{content:"Terima kasih";display:block;text-align:center;border-top:1px dashed #000;margin-top:6px;padding-top:4px;font-size:8pt}
+/* 58 mm: label dan nilai satu baris bila muat, bila tidak nilai turun ke baris bawah rata kanan (tanpa memecah angka) */
+.doc.s58 table:not(.nt) tr{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline}.doc.s58 table:not(.nt) td:first-child,.doc.s58 table:not(.nt) th:first-child{flex:0 1 auto;padding-right:6px!important}.doc.s58 table:not(.nt) td.n,.doc.s58 table:not(.nt) th.n{flex:0 1 auto;margin-left:auto;text-align:right}
+@page struk{margin:0;@bottom-center{content:none}}
+@media print{.doc.st{margin:0;padding:4mm;border:0;border-radius:0;break-inside:auto}.doc.s58{padding:3mm 5mm}.doc.st td,.doc.st th{padding:1px 0!important}body:has(.doc.st){font-size:9pt}}
