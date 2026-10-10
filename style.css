@@ -81,7 +81,7 @@ main:focus{outline:none}
 @media (max-width:899px){#fm.on{top:var(--vvt,0px);bottom:auto;height:var(--vvh,100%)}#fm .mb{max-height:min(92dvh,calc(var(--vvh,100dvh) - 8px))}body.kb #bn{display:none}body.kb .actb{bottom:env(safe-area-inset-bottom,0px)}}
 #fm .mb:focus{outline:none}
 @media (min-width:900px){#fm{align-items:center;padding:24px}#fm .mb{border-radius:14px;max-height:88vh}#fm .mf .b{flex:0 0 auto}}
-body.mo{overflow:hidden}body.mo .fab{visibility:hidden}body.mo #toast{bottom:auto;top:calc(10px + env(safe-area-inset-top,0px))}
+body.mo{overflow:hidden}body.mo .fab{visibility:hidden}body.mo #toast{bottom:auto;top:calc(64px + env(safe-area-inset-top,0px))}
 .grp{border:1px solid var(--bd);border-radius:10px;margin:0 0 12px;padding:2px 12px 10px;min-width:0}.grp legend{font-weight:600;font-size:13px;color:var(--mu);padding:0 6px}
 .prev{margin:2px 0 4px;padding:8px 10px;border:1px dashed var(--bd);border-radius:10px;overflow-x:auto}.prev table{width:100%;border-collapse:collapse;margin-top:4px}.prev th,.prev td{font-size:13px;padding:4px 6px;white-space:normal}.prev .n{white-space:nowrap}.prev td.kr{padding-left:22px}
 .card input,.card select,.card textarea{scroll-margin-bottom:150px}.wn.dr .b{margin:6px 0 0}
@@ -509,9 +509,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .dc.alf{max-width:none}.dc.alf .b{margin-top:8px}.dc.alf>.b:last-child{margin-top:12px}
 .bdg:not(.ok):not(.wr):not(.bd){background:color-mix(in srgb,var(--tx) 8%,var(--cd));color:var(--mu)}
 /* v1.1.137 — UI-9b Unit Air (Baca Meter, Sambungan, Tarif) */
-.upr.smr{cursor:default;align-items:flex-start}.upr.smr:hover{background:none}.upr.smr .upm{flex:1 1 0;min-width:0}.upr.smr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.smr .upm small{overflow-wrap:anywhere}
-.upr.smr .upa{align-items:flex-end;text-align:right;gap:4px}.upr.smr .smw{color:var(--rd)!important;font-weight:600}.upr.smr.vd .upm b{text-decoration:none}
-@media (min-width:900px){.dc.alf:has(#tw-md),.dc.alf:has(#gm-c){max-width:720px}}
+@media (min-width:900px){.dc.alf:has(#gm-c){max-width:720px}}
 /* v1.1.138 — UI-10 Gaji: kartu seragam dashboard, daftar gaji dan komponen berbaris */
 .upr.gjr .upm small+small{color:var(--mu);opacity:.85}.dc.alf .gjf{margin-top:12px;padding-top:4px;border-top:1px solid var(--bd)}.dc.alf .gjf label:first-of-type{margin-top:8px}
 .g.dk.gjk{grid-template-columns:repeat(2,minmax(0,1fr))}.g.dk.gjk>.card{grid-column:auto}@media (min-width:900px){.g.dk.gjk{grid-template-columns:repeat(4,minmax(0,1fr))}}@media (max-width:480px){.g.dk.gjk .v{font-size:18px}}
@@ -695,10 +693,28 @@ header .hic{display:none}
 /* v1.1.177: pencarian pelanggan Unit Air + modal detail pelanggan */
 .wsr{margin:0 0 10px}.wsr input{flex:1 1 220px;min-width:0}
 .wdw h3{margin:16px 0 6px;font-size:14px}.wdw .kvg{margin-bottom:4px}.wdw .wdp{min-height:18px;margin-top:4px;font-weight:600}.wdw .lda{margin-top:4px}
-.upr.smr.smc{cursor:pointer}.upr.smr.smc:hover{background:var(--hv,rgba(0,0,0,.03))}
 /* v1.1.181: modal detail Air lebih ringkas */
 .wdw .kvg{grid-template-columns:1fr 1fr;gap:0 16px}.wdw .kv{flex-direction:column;align-items:flex-start;gap:1px;padding:6px 0}.wdw .kv .k{font-size:12px}.wdw .kv b{font-size:14px}
 .wdw .wdg2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.wdw .wdg2>div{min-width:0}
 .wdw .lda .ib{min-height:40px}.wdw .lds{flex-wrap:wrap}
 .lkb{display:inline-flex;align-items:center;gap:5px;border:0;background:none;color:var(--ac);font:inherit;font-size:12.5px;font-weight:600;padding:5px 0;margin:2px 12px 0 0;min-height:32px;cursor:pointer}.lkb .ic{width:14px;height:14px}.lkb:hover{text-decoration:underline}.lkb:focus-visible{outline:2px solid var(--ac);outline-offset:2px;border-radius:4px}
 .dkb{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ln);border-radius:8px;background:var(--cd);color:var(--tx);font:inherit;font-size:13px;font-weight:600;padding:8px 12px;min-height:40px;cursor:pointer;text-align:left}.dkb .ic{width:16px;height:16px;flex:none}.dkb:hover{border-color:var(--ac);color:var(--ac)}.dkb:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+/* v1.1.182: progres tagihan Baca Meter */
+.wpt{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--mu);margin:2px 0 6px}.wpt b{color:var(--tx);font-size:15px}
+.wpg{height:8px;border-radius:99px;background:color-mix(in srgb,var(--tx) 10%,var(--cd));overflow:hidden;margin:0 0 12px}.wpg i{display:block;height:100%;background:var(--ac);border-radius:99px;transition:width .3s}
+.empty.em .b{margin-top:8px}
+/* v1.1.183: Sambungan aman dan ringkas */
+.nsr .smw{color:var(--rd)!important;font-weight:600}.upr.nsr.vd .upm b{text-decoration:none}.upr.nsr.vd{opacity:.75}
+.dkb.dng{color:var(--rd);border-color:color-mix(in srgb,var(--rd) 40%,var(--ln))}.dkb.dng:hover{border-color:var(--rd);color:var(--rd)}
+/* v1.1.184: Piutang lewat modal */
+.wdw .wdq{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 4px;font-size:13px}.wdw .wdq .lkb{margin:0}
+/* v1.1.185: Unit Air > Pengaturan (sub-tab) dan halaman Tarif satu tempat */
+.stsub{margin:-4px 0 10px}.stsub .stb{margin:0;box-shadow:none}.stsub .stt{min-height:44px;padding:8px 12px;font-size:13px;border-bottom-width:2px}
+.tgp h4{margin:16px 0 0;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--mu)}.tgp:first-child h4{margin-top:0}
+.tgi{display:grid;grid-template-columns:1fr;gap:0}@media (min-width:600px){.tgi{grid-template-columns:1fr 1fr;gap:0 14px;align-items:end}}.tgf{min-width:0}
+.twg{display:block}@media (min-width:900px){.twg{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:0 20px;align-items:start}.twg .dc.alf{max-width:none}.twg .tws{position:sticky;top:12px}}
+/* v1.1.186: ringkasan periode, kelompok alamat, kembali ke atas */
+.wsm{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 4px}.wsm>div{padding:8px 10px;border:1px solid var(--bd);border-radius:10px;background:color-mix(in srgb,var(--ac) 5%,var(--cd));min-width:0}.wsm small{display:block;color:var(--mu);font-size:12px}.wsm b{display:block;font-size:14px;overflow-wrap:anywhere}
+@media (max-width:420px){.wsm{grid-template-columns:1fr 1fr}.wsm>div:last-child{grid-column:1/-1}}
+.wgh{display:flex;justify-content:space-between;gap:8px;padding:10px 4px 4px;margin-top:6px;font-size:13px;border-bottom:1px solid var(--bd);color:var(--mu)}.wgh b{color:var(--tx)}.upl>.wgh:first-child{margin-top:0}
+.btt{display:block;margin:10px auto 0}

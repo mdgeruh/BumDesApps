@@ -64,7 +64,7 @@ try{S.sbc=localStorage.getItem("bumdes_ui_sbc")==="1"}catch(e){}
 const ROUTES=[["dash","dashboard"],["rep","laporan"],["trx","transaksi"],["sp","simpan-pinjam"],["air","unit-air"],["pay","gaji"],["led","buku-besar"],["tb","neraca-saldo"],["mst","master"],["dat","data"],["set","setelan"],["prof","profil"]];
 const RT_SUB={set:["su","pf",[["usr","pengguna"],["mod","modul"],["sp","simpan-pinjam"],["pt","portal"]]],
  trx:["xt","daftar",[["awal","saldo-awal"]]],
- mst:["mt","unit",[["kas","kas-bank"],["coa","akun"],["pihak","pihak"],["peg","pegawai"],["tarif","tarif-biaya"],["tair","tarif-air"]]],
+ mst:["mt","unit",[["kas","kas-bank"],["coa","akun"],["pihak","pihak"],["peg","pegawai"],["tarif","tarif-biaya"]]],
  dat:["dt","bk",[["per","periode"],["aud","audit-log"]]],
  pay:["gt","proses",[["komp","komponen"],["rekap","laporan"]]],
  sp:["st","ringkasan",[["pinjaman","pinjaman"],["tabungan","tabungan"],["tunggakan","tunggakan"],["jaminan","jaminan"],["nasabah","nasabah"],["calon","calon"]]],
@@ -73,13 +73,13 @@ const RT_SUB={set:["su","pf",[["usr","pengguna"],["mod","modul"],["sp","simpan-p
 const rtOn=()=>typeof window!=="undefined"&&window.RT_BASE!==undefined&&typeof location!=="undefined"&&/^https?:$/.test(location.protocol)&&typeof history!=="undefined"&&!!history.pushState;
 const rtBase=()=>(typeof window!=="undefined"&&window.RT_BASE)||"/";
 function rtPath(){const r=ROUTES.find(x=>x[0]===S.tab);if(!r)return null;let p=rtBase()+r[1];if(S.tab==="sp"&&S.pp)return p+"/"+(S.pp.k==="lp"?"ajukan":"pinjaman/"+encodeURIComponent(S.pp.id)+(S.pp.k==="la"?"/ubah":""));const m=RT_SUB[S.tab];if(m){const q=m[2].find(x=>x[0]===S[m[0]]);if(q)p+="/"+q[1]}return p}
-function rtParse(path){const b=rtBase();if(path.indexOf(b)!==0)return null;const sg=path.slice(b.length).split("/").filter(Boolean),r=ROUTES.find(x=>x[1]===sg[0]);if(!r)return null;const o={tab:r[0]},m=RT_SUB[r[0]];if(m){const q=m[2].find(x=>x[1]===sg[1]);o.sk=m[0];o.sv=q?q[0]:m[1]}if(r[0]==="sp"){if(sg[1]==="ajukan"){o.sk="st";o.sv="pinjaman";o.pp={k:"lp",id:null}}else if(sg[1]==="pinjaman"&&sg[2]){let id=sg[2];try{id=decodeURIComponent(id)}catch(e){}o.pp={k:sg[3]==="ubah"?"la":"ld",id}}}return o}
+function rtParse(path){const b=rtBase();if(path.indexOf(b)!==0)return null;const sg=path.slice(b.length).split("/").filter(Boolean),r=ROUTES.find(x=>x[1]===sg[0]);if(!r)return null;if(r[0]==="mst"&&sg[1]==="tarif-air")return{tab:"air",sk:"at",sv:"tarif"};const o={tab:r[0]},m=RT_SUB[r[0]];if(m){const q=m[2].find(x=>x[1]===sg[1]);o.sk=m[0];o.sv=q?q[0]:m[1]}if(r[0]==="sp"){if(sg[1]==="ajukan"){o.sk="st";o.sv="pinjaman";o.pp={k:"lp",id:null}}else if(sg[1]==="pinjaman"&&sg[2]){let id=sg[2];try{id=decodeURIComponent(id)}catch(e){}o.pp={k:sg[3]==="ubah"?"la":"ld",id}}}return o}
 function rtSync(){try{if(!rtOn()||location.hash||S.lgn||S.pt)return;const p=rtPath();if(!p)return;if(location.pathname===p){S.rtPop=0;S.rtRep=0;S.rtInit=1;return}
  if(S.rtInit&&!S.rtPop&&!S.rtRep)history.pushState(null,"",p+location.search);else history.replaceState(null,"",p+location.search);S.rtInit=1;S.rtPop=0;S.rtRep=0}catch(e){}}
 function rtApply(){const o=rtParse(location.pathname);if(!o)return false;S.tab=o.tab;if(o.sk)S[o.sk]=o.sv;if(o.pp)S.pp=o.pp;return true}
 function rtPop(){S.rtPop=1;const o=rtParse(location.pathname);if(!o){render();return}if(o.sk)S[o.sk]=o.sv;if(o.tab!==S.tab)go(o.tab);if(o.tab==="sp")pgSet(o.pp||null);render()}
 if(typeof window!=="undefined"&&window.addEventListener)window.addEventListener("popstate",()=>{if(typeof rtPop==="function"&&rtOn())rtPop()});
-function go(k){const dn=dirtyFields().length,pl=(TABS.find(x=>x[0]===S.tab)||[0,""])[1],same=k===S.tab;S.md=null;S.mv=null;S.ecn=S.eus=S.rp=null;S.eu=S.ec=S.ea=S.ey=S.eg=S.ek=S.pd=null;S.gf=S.gto="";S.pf="";S.wq="";S.wf="";S.tab=k;S.msg=dn&&!same?"Isian di "+pl+" belum diposting; disimpan sementara":"";S.doc=null;S.pp=null;S.pv=null;S.rc=0;S.more=0;S.q="";S.d1="";S.d2="";S.tt="";S.aa="";S.ae="";S.au="";S.lim=0;S.pl=null;render();window.scrollTo(0,0)}
+function go(k){const dn=dirtyFields().length,pl=(TABS.find(x=>x[0]===S.tab)||[0,""])[1],same=k===S.tab;S.md=null;S.mv=null;S.ecn=S.eus=S.rp=null;S.eu=S.ec=S.ea=S.ey=S.eg=S.ek=S.pd=null;S.gf=S.gto="";S.pf="";S.wq="";S.wf="";S.wpf="";S.tab=k;S.msg=dn&&!same?"Isian di "+pl+" belum diposting; disimpan sementara":"";S.doc=null;S.pp=null;S.pv=null;S.rc=0;S.more=0;S.q="";S.d1="";S.d2="";S.tt="";S.aa="";S.ae="";S.au="";S.lim=0;S.pl=null;render();window.scrollTo(0,0)}
 const unitMQ=()=>typeof matchMedia==="function"&&matchMedia("(min-width:900px)").matches;
 function unitMv(u,p){p.appendChild(u);if(u._b&&u._b.parentNode!==p)p.appendChild(u._b)}
 function unitHome(){const u=$("#unit"),h=document.querySelector(".hru");if(u&&h&&u.parentNode&&(u.parentNode!==h||(u._b&&u._b.parentNode!==h))&&h.appendChild)unitMv(u,h)}

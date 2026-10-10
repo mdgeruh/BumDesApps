@@ -2,15 +2,21 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.181** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
-> **Desain:** `BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
+> **Status:** MVP Tahap 1 — **v1.1.187** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Desain:** `docs/BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
 
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.181)
+## Fitur (v1.1.187)
+- **Perapian folder (v1.1.187):** dokumen selain README di `docs/`, ikon di `icons/`.
+- **Unit Air tahap E (v1.1.186):** ringkasan periode, kelompok per alamat, tombol ke atas, toast di bawah header modal, pengingat tunggakan (WhatsApp/salin/bagikan).
+- **Unit Air tahap D (v1.1.185):** empat tab harian + Pengaturan (Tarif, Pelanggan, Produk); tarif standar, golongan, denda, pasang baru, dan diskon di satu halaman.
+- **Unit Air tahap C (v1.1.184):** Piutang dengan cari dan filter; baris membuka modal terima pembayaran (Lunasi sisa, denda, cetak tagihan).
+- **Unit Air tahap B (v1.1.183):** Sambungan berupa daftar ketuk-untuk-detail; Putus dan Sambungkan kembali dengan konfirmasi di modal.
+- **Unit Air tahap A (v1.1.182):** progres tagihan, filter bawaan Belum ditagih, Terbitkan & lanjut ke pelanggan berikutnya.
 - **Modal detail Air lebih ringkas (v1.1.181):** tanpa tombol kuitansi dobel, tombol cetak tenang, rincian dua kolom.
 - **Kuitansi pembayaran air (v1.1.180):** dokumen cetak per pembayaran; tombol di modal detail pelanggan dan di Riwayat Pembayaran.
 - **Tombol Bayar di modal detail Air (v1.1.179):** bagian Pembayaran dengan tanggal, kas/bank, jumlah, denda; bayar sebagian atau lunas per tagihan.
@@ -22,7 +28,7 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 - **Tabel jadwal simulasi ringkas dan polos (v1.1.173):** angka tanpa Rp, baris Jumlah, muat di HP tanpa geser, bukan kartu.
 - **Tampilan halaman pinjaman dirapikan (v1.1.172):** tanpa kartu di dalam kartu; teks tidak menempel ke garis tepi.
 - **Ajukan pinjaman dan rincian pinjaman sebagai halaman (v1.1.171):** Simpan Pinjam > Pinjaman: Ajukan pinjaman, Ubah pengajuan, dan rincian per nasabah kini halaman penuh (dua kolom di layar lebar; simulasi angsuran di samping isian; bilah tombol tetap terlihat; Kembali; kartu Pinjaman lain milik nasabah). Setujui, Cairkan, Bayar, Lunasi, Tolak, jaminan, dan profil nasabah tetap jendela kecil di atas halaman. Alamat: `/simpan-pinjam/ajukan`, `/simpan-pinjam/pinjaman/{id}`, `.../ubah`; tombol Back peramban kembali ke daftar.
-- **Master Tarif Air (v1.1.169; form lewat modal sejak v1.1.170):** sub-tab Master > Tarif Air mengatur golongan tarif (dipilih per sambungan), denda keterlambatan (sekali per tagihan, diubah/dibebaskan saat Terima), biaya pasang baru (piutang saat sambungan baru), dan diskon (tagihan dan penjualan lain); semua bawaan nonaktif. Akun baru 4210 dan 4220.
+- **Master Tarif Air (v1.1.169; form lewat modal sejak v1.1.170):** halaman Unit Air > Pengaturan > Tarif (sebelumnya Master > Tarif Air) mengatur golongan tarif (dipilih per sambungan), denda keterlambatan (sekali per tagihan, diubah/dibebaskan saat Terima), biaya pasang baru (piutang saat sambungan baru), dan diskon (tagihan dan penjualan lain); semua bawaan nonaktif. Akun baru 4210 dan 4220.
 - **Format nomor penjualan dan tagihan air (v1.1.168):** Setelan > Profil > kartu Nomor (bila modul Unit Air aktif) mengatur format nomor penjualan dan tagihan air dengan kode {YYYY} {YY} {MM} {DD} {NNNN}.
 - **Piutang per tanggal lampau dan catatan atas laporan (v1.1.167):** Laporan > Piutang bisa dilihat per tanggal (dihitung mundur dari pembayaran); Neraca, Laba Rugi, Arus Kas, dan Piutang memuat Catatan atas laporan (otomatis + catatan tambahan di Setelan > Dokumen Cetak) yang ikut tercetak.
 - **Simpan Pinjam: aksesibilitas dan uji pelengkap (v1.1.166):** fokus keyboard masuk ke jendela rincian; uji aksesibilitas modal (`ui-spa11y.py`), uji transisi (`logic-168.js`), dan pemeriksa nama baku audit (`check-audit.js`).
@@ -113,7 +119,7 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 
 Aksesibilitas (v0.1.030): tautan *Lewati ke konten*, fokus keyboard terlihat, label semua kolom terhubung, target sentuh 44px di mobile, dialog konfirmasi menjebak fokus dan menutup dengan Escape, kontras warna memenuhi WCAG AA di tema terang dan gelap.
 
-**Fokus pengembangan: Simpan Pinjam** (integritas logika, mesin hitung, UI), lihat `ROADMAP.md`. Belum ada: Pengiriman Unit Air dan ekspor PDF/XLSX. Rencana lengkap ada di `ROADMAP.md`.
+**Fokus pengembangan: Simpan Pinjam** (integritas logika, mesin hitung, UI), lihat `docs/ROADMAP.md`. Belum ada: Pengiriman Unit Air dan ekspor PDF/XLSX. Rencana lengkap ada di `docs/ROADMAP.md`.
 
 ## Prinsip
 
@@ -132,16 +138,16 @@ Bagian kode: `CONFIG → STORAGE & ID → ACCOUNTING ENGINE → REPORTING → UI
 
 Cocok untuk prototype, simulasi, validasi engine, dan demo satu perangkat. Belum cocok untuk multi-user, multi-perangkat, keamanan production, data besar, audit server-side, dan backup otomatis.
 
-> Ini blueprint/prototype teknis, bukan penetapan kebijakan akuntansi atau hukum BUMDes. Keputusan yang harus final sebelum pembukuan riil ada di `ROADMAP.md` (Gerbang Keputusan).
+> Ini blueprint/prototype teknis, bukan penetapan kebijakan akuntansi atau hukum BUMDes. Keputusan yang harus final sebelum pembukuan riil ada di `docs/ROADMAP.md` (Gerbang Keputusan).
 
 ## Dokumen
 
 | File | Isi |
 |------|-----|
-| `SUMMARY.md` | Ringkasan blueprint, aturan sistem, dan status implementasi |
-| `ROADMAP.md` | Fase, todolist, gerbang keputusan, Definition of Done |
-| `CHANGELOG.md` | Riwayat rilis terbaru (v1.1.041 ke atas) |
-| `CHANGELOG_ARSIP.md` | Riwayat rilis lama (v1.1.040 ke bawah dan seri 0.1.NNN) |
+| `docs/SUMMARY.md` | Ringkasan blueprint, aturan sistem, dan status implementasi |
+| `docs/ROADMAP.md` | Fase, todolist, gerbang keputusan, Definition of Done |
+| `docs/CHANGELOG.md` | Riwayat rilis terbaru (v1.1.041 ke atas) |
+| `docs/CHANGELOG_ARSIP.md` | Riwayat rilis lama (v1.1.040 ke bawah dan seri 0.1.NNN) |
 | `tests/` | Uji logika (Node) dan UI (Playwright); lihat `tests/README.md` (hanya lokal, tidak diunggah ke Git) |
 
 
@@ -177,7 +183,7 @@ Satu folder datar (tanpa subfolder sumber). Halaman utama `index.html` memuat ga
 | `sql/05_penjualan.sql` | [5/7] Tahap 5: tabel penjualan, Unit Air, jaminan, tarif dan pajak |
 | `sql/06_nasabah.sql` | [6/7] Portal nasabah (HP + PIN) |
 | `sql/07_pengguna.sql` | [7/7] Pengguna dari pegawai (opsional) |
-| `SUPABASE.md` | Panduan pasang cepat, urutan berkas SQL, peran, keamanan, uji |
+| `docs/SUPABASE.md` | Panduan pasang cepat, urutan berkas SQL, peran, keamanan, uji |
 | `portal.js` | Portal nasabah mode demo (v1.1.038): masuk HP + PIN, pinjaman, tabungan, profil |
 | `calon.js` | Calon peminjam (v1.1.031): sub-tab Calon, status, jadikan nasabah |
 | `closing.js` | Tutup buku/periode, audit log, backup |
@@ -190,11 +196,13 @@ Satu folder datar (tanpa subfolder sumber). Halaman utama `index.html` memuat ga
 | `permissions.js` | Penjagaan izin per aksi (dimuat setelah semua fungsi) |
 | `pwa.js` | Pendaftaran service worker, tombol pasang aplikasi |
 | `app.js` | Memulai aplikasi (dimuat paling akhir) |
-| `manifest.json`, `sw.js`, `icon-*.png`, `icon.svg` | PWA: pasang dari browser, jalan offline |
+| `manifest.json`, `sw.js` | PWA: pasang dari browser, jalan offline |
+| `icons/` | Ikon aplikasi: `icon.svg`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` |
 | `vercel.json` | Pengaturan Vercel (tanpa build; sw.js tidak di-cache) |
 | `bumdes.html` | Versi **satu-file mandiri** hasil `node build.js` (untuk dibuka langsung dari file/tes; jangan diedit) |
 | `build.js`, `package.json` | Perakit `bumdes.html` dan skrip dev (tidak perlu diunggah ke hosting) |
-| `release_notes.md`, `CHANGELOG.md`, `CHANGELOG_ARSIP.md`, `README.md`, `SUMMARY.md`, `ROADMAP.md` | Dokumentasi |
+| `README.md` | Dokumentasi utama (satu-satunya dokumen di folder utama) |
+| `docs/` | Dokumentasi lain: `release_notes.md`, `CHANGELOG.md`, `CHANGELOG_ARSIP.md`, `SUMMARY.md`, `ROADMAP.md`, `ROADMAP_ARSIP.md`, `SUPABASE.md`, blueprint |
 | `tests/`, `data/` | Tes dan data dummy — **hanya lokal, tidak diunggah ke Git** (`.gitignore`) |
 
 **Deploy Git → Vercel:** unggah seluruh isi paket Git (semua berkas datar di root repo, tanpa `tests/` dan `data/`) ke GitHub; hubungkan repo ke Vercel (Framework Preset: *Other*). `vercel.json` sudah mengatur tanpa build dan folder keluaran `.`, jadi tidak perlu mengisi apa pun. Pada tiap commit Vercel men-deploy ulang.
