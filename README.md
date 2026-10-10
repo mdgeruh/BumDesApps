@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.190** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.192** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `docs/BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,7 +10,9 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.190)
+## Fitur (v1.1.192)
+- **Tombol struk (v1.1.192):** Struk tagihan, Struk kuitansi, dan Struk nota bernama jelas di modal.
+- **Cetak tahap I (v1.1.191):** audit PDF semua dokumen dan laporan (A4, struk 80/58 mm); perbaikan tabel Laporan Simpan Pinjam yang terpotong; 34 PDF diuji otomatis di uji pra-rilis.
 - **Cetak tahap H (v1.1.190):** struk thermal 80/58 mm untuk kuitansi, nota, tagihan, angsuran, pencairan, dan setoran/penarikan tabungan; ukuran kertas per perangkat; tombol Cetak struk.
 - **Cetak tahap G (v1.1.189):** Buku Besar dan Neraca Saldo dicetak sebagai tabel (judul kolom berulang, saldo awal/akhir, nomor bukti).
 - **Cetak tahap F (v1.1.188):** nama petugas muncul di kuitansi, nota, tagihan, dan akhir laporan; petugas tercatat saat transaksi.

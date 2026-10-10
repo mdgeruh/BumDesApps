@@ -199,7 +199,7 @@ function vTagih(id){const x=db.sales.find(q=>q._id===id),bar=docBar(1);
 // kuitansi pembayaran tagihan air (satu kuitansi per pembayaran; sebagian atau pelunasan)
 const payOk=x=>db.payments.filter(y=>y.sale_id===x._id&&y.status==="posted"),kwNo=y=>"KA-"+y.date.slice(0,4)+"-"+String(db.payments.indexOf(y)+1).padStart(4,"0"),
  dkb=(t,f,i,c)=>`<button class="dkb${c?" "+c:""}" onclick="${f}">${ic(i||"print")}<span>${t}</span></button>`,
- kwBtn=(y,full)=>dkb(full?"Cetak kuitansi":"Kuitansi "+tglS(y.date)+" · Rp "+fm(y.amount+(y.fine||0)),"mdClose();openDoc('kuit','"+y._id+"')")+(full?dkb("Cetak struk","mdClose();openDoc('kuit','"+y._id+"','"+strukP()+"')"):"");
+ kwBtn=(y,full)=>dkb(full?"Cetak kuitansi":"Kuitansi "+tglS(y.date)+" · Rp "+fm(y.amount+(y.fine||0)),"mdClose();openDoc('kuit','"+y._id+"')")+(full?dkb("Struk kuitansi","mdClose();openDoc('kuit','"+y._id+"','"+strukP()+"')"):"");
 function vKuit(id){const y=db.payments.find(q=>q._id===id),bar=docBar(1);
  const x=y&&db.sales.find(q=>q._id===y.sale_id);if(!y||y.status==="voided"||!x||x.status!=="posted")return`${bar}<p class="k">Kuitansi tidak tersedia.</p>`;
  const b=x.bill,p=cust(x.party_id),R=(a,v)=>`<tr><td>${a}</td><td class="n">${v}</td></tr>`,ci=db.cash_accounts.find(c=>c._id===y.cash_id),ix=db.payments.indexOf(y),

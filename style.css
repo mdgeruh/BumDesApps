@@ -341,7 +341,7 @@ body.mk-on{overflow:hidden}
 .rh{display:flex;gap:10px;align-items:center}.rt{display:flex;flex-direction:column;min-width:0}.rt b{font-size:14px;font-weight:600}.rt small{color:var(--mu);font-size:11.5px;line-height:1.3}.rf{font-size:12px;color:var(--mu);border-top:1px solid var(--bd);padding-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rf .neg{color:var(--rd)}
 .kic.t0{background:color-mix(in srgb,var(--tx) 7%,transparent);color:var(--mu)}
 @media (min-width:700px){.rsel{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}}
-@media (max-width:699px){.sc table:has(th:nth-child(2):last-child) td:first-child{white-space:normal;overflow-wrap:anywhere}.sc table:has(th:nth-child(2):last-child) td.n{white-space:nowrap}}
+@media (max-width:699px){.sc table:has(th:nth-child(2):last-child) td:first-child{white-space:normal;overflow-wrap:break-word}.sc table:has(th:nth-child(2):last-child) td.n{white-space:nowrap}}
 
 /* ===== Sidebar (v1.1.092): tombol ciut mengambang, gaya lebih ringan ===== */
 #cb{display:none}
@@ -465,7 +465,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .upr.awr{cursor:default}.upr.awr:hover{background:none}.upr.awr .upa{flex-direction:column;align-items:flex-end;text-align:right}.upr.awr .upa small{color:var(--mu);font-size:12px}.upr.awr .upm small+small{color:var(--mu);opacity:.85}
 .upr.awt{cursor:default;border-top:1px solid var(--bd);margin-top:2px}.upr.awt:hover{background:none}.upr.awt .upm{flex:1}.upr.awt .upa{flex-direction:column;align-items:flex-end}.upr.awt .upa small{color:var(--mu);font-size:12px}
 #main ul.awl>li{padding-left:0;margin:0}#main ul.awl>li::before{content:none}
-.upr.awr{align-items:flex-start}.upr.awr .upm{flex:1 1 0;min-width:0}.upr.awr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.awr .upa{gap:2px}.upr.awr .upa .ib{margin-top:6px}
+.upr.awr{align-items:flex-start}.upr.awr .upm{flex:1 1 0;min-width:0}.upr.awr .upm b{white-space:normal;overflow-wrap:break-word}.upr.awr .upa{gap:2px}.upr.awr .upa .ib{margin-top:6px}
 /* v1.1.132 — UI-6 Laporan: kartu seragam dashboard, filter ringkas, aging berbaris */
 .dc.rpc{margin:12px 0}.rpc>.cs:empty{display:none}.rpc>.ct+.sc,.rpc>.ct+.fl,.rpc>.ct+.upl{margin-top:12px}
 .rpc .sc{margin:0 -4px}.rpc .fl.noprint{margin:0 0 10px}
@@ -475,7 +475,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .upr.rpr{cursor:default}.upr.rpr:hover{background:none}
 @media print{.dc.rpc{box-shadow:none;border:0;border-radius:0;padding:0;margin:0 0 10px}.rpc>.ct,.rpc>.cs{display:none}.rpc .sc{margin:0}}
 /* v1.1.133 — UI-7 Buku Besar: kartu filter, ringkasan kp, daftar mutasi berbaris dengan ikon D/K */
-.upr.lgr .upm b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal;overflow-wrap:anywhere}
+.upr.lgr .upm b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal;overflow-wrap:break-word}
 .upr.lgr .upa small{color:var(--mu);font-size:12px;white-space:nowrap}.upr.lgr .tri{font-size:13px}
 .upr.lgo{cursor:default;background:color-mix(in srgb,var(--tx) 5%,var(--cd));border-radius:10px;padding:10px 12px;border-bottom:0;margin:4px 0;min-height:0;font-size:13px;color:var(--mu);display:flex;justify-content:space-between}.upr.lgo:hover{background:color-mix(in srgb,var(--tx) 5%,var(--cd))}.upr.lgo b{color:var(--tx);font-size:13px}.upr.lgo .upm b{font-weight:600;color:var(--mu)}
 .dc.lgc .fl{margin:0 0 8px}.dc.lgc .upl>.b{margin:4px 0}
@@ -487,7 +487,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 /* v1.1.134 — UI-8 Neraca Saldo: ringkasan kp dan tabel dalam kartu */
 .g.dk.tbk{grid-template-columns:repeat(2,minmax(0,1fr))}.g.dk.tbk>.card{grid-column:auto}.g.dk.tbk>.card:last-child{grid-column:1/-1}@media (min-width:900px){.g.dk.tbk{grid-template-columns:repeat(3,minmax(0,1fr))}.g.dk.tbk>.card:last-child{grid-column:auto}}
 .dc.tbc{max-width:none}.tbc .sc{margin:0 -4px}.tbc .k.rck{margin:10px 0 0}
-.upr.tbr{cursor:default}.upr.tbr:hover{background:none}.upr.tbr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.tbr .upa small{color:var(--mu);font-size:12px}.upr.tbr .tri{font-size:13px}
+.upr.tbr{cursor:default}.upr.tbr:hover{background:none}.upr.tbr .upm b{white-space:normal;overflow-wrap:break-word}.upr.tbr .upa small{color:var(--mu);font-size:12px}.upr.tbr .tri{font-size:13px}
 /* v1.1.135 — Buku Besar desktop: kolom Tanggal/Keterangan/Unit/Debit/Kredit/Saldo, filter satu baris */
 .lgx,.upr.lgh{display:none}
 @media (min-width:900px){
@@ -504,7 +504,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .lgfg>div+div{margin-top:12px}@media (min-width:900px){.lgfg>div+div{margin-top:0}}
 @media (max-width:480px){.g.dk[aria-label="Ringkasan akun"] .v{font-size:18px}}
 /* v1.1.136 — UI-9a Unit Air (Piutang, Penjualan Lain, Pelanggan, Produk): kartu dan daftar berbaris */
-.upr.alr{cursor:default;align-items:flex-start}.upr.alr:hover{background:none}.upr.alr .upm{flex:1 1 0;min-width:0}.upr.alr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.alr .upm small+small{color:var(--mu);opacity:.85;overflow-wrap:anywhere}
+.upr.alr{cursor:default;align-items:flex-start}.upr.alr:hover{background:none}.upr.alr .upm{flex:1 1 0;min-width:0}.upr.alr .upm b{white-space:normal;overflow-wrap:break-word}.upr.alr .upm small+small{color:var(--mu);opacity:.85;overflow-wrap:anywhere}
 .upr.alr .upa{align-items:flex-end;text-align:right;gap:3px}.upr.alr .upa small{color:var(--mu);font-size:12px;white-space:normal}.upr.alr .alb{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-top:4px}.upr.alr .tri{font-size:15px}
 .dc.alf{max-width:none}.dc.alf .b{margin-top:8px}.dc.alf>.b:last-child{margin-top:12px}
 .bdg:not(.ok):not(.wr):not(.bd){background:color-mix(in srgb,var(--tx) 8%,var(--cd));color:var(--mu)}
@@ -516,7 +516,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .upr.alr .tri{font-size:15px}
 .upr.gjr{flex-wrap:wrap}.upr.gjr .alb.gjb{flex:0 0 100%;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin:0;padding-left:44px;box-sizing:border-box}
 /* v1.1.139 — UI-11a Master (Unit Usaha, Kas & Bank, COA): kartu dan daftar berbaris */
-.upr.mdr .upm{flex:1 1 0;min-width:0}.upr.mdr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.mdr .upm small{color:var(--mu);overflow-wrap:anywhere}.upr.mdr .upa{align-items:flex-end;text-align:right;gap:3px}.upr.mdr .upa small{color:var(--mu);font-size:12px}
+.upr.mdr .upm{flex:1 1 0;min-width:0}.upr.mdr .upm b{white-space:normal;overflow-wrap:break-word}.upr.mdr .upm small{color:var(--mu);overflow-wrap:anywhere}.upr.mdr .upa{align-items:flex-end;text-align:right;gap:3px}.upr.mdr .upa small{color:var(--mu);font-size:12px}
 .upr.mdr.vd .upm b,.upr.mdr.vd .bi{opacity:.6}
 .kic.acc{width:auto;min-width:44px;height:32px;padding:0 8px;border-radius:10px;font-size:12px;font-weight:700;flex:none;font-variant-numeric:tabular-nums}
 .upr.mdr.mdh{background:color-mix(in srgb,var(--tx) 4%,var(--cd));border-radius:10px;padding-left:8px;padding-right:8px;margin:2px 0}.upr.mdr.mdh .upm b{font-weight:800;letter-spacing:.2px}.upr.mdr.mdc{padding-left:16px}
@@ -530,7 +530,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .dc .card.aws{margin-top:0}.dc.dz .b.x{margin-top:8px}
 .upr.dpr,.upr.adr{cursor:default}.upr.dpr:hover,.upr.adr:hover{background:none}
 .upr.dpr .upa{align-items:flex-end;text-align:right;gap:4px}.upr.dpr .upa small{color:var(--mu);font-size:12px}.upr.dpr.vd .upm b{opacity:.75}
-.upr.adr .upm{flex:1 1 0;min-width:0}.upr.adr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.adr .upm small{color:var(--mu);overflow-wrap:anywhere;white-space:normal}.upr.adr .upm code{font-size:11px}
+.upr.adr .upm{flex:1 1 0;min-width:0}.upr.adr .upm b{white-space:normal;overflow-wrap:break-word}.upr.adr .upm small{color:var(--mu);overflow-wrap:anywhere;white-space:normal}.upr.adr .upm code{font-size:11px}
 .upr.adr .upa{align-items:flex-end;text-align:right;gap:3px;max-width:34%;flex:none}.upr.adr .upa small{color:var(--mu);font-size:12px;overflow-wrap:anywhere}
 .dc .fl+.upl,.dc .fl+.empty{margin-top:8px}
 /* v1.1.142 — UI-13a Setelan > Profil, Dokumen Cetak, Modul: kartu seragam dashboard */
@@ -562,7 +562,7 @@ button.upr.pt-it:last-child{border-bottom:0}
 .mk-ic{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;flex:none}.mk-ic svg{width:18px;height:18px}
 .mk-card .upl{margin:6px 0 4px}
 button.upr.mk-pk{display:flex;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;min-height:56px;margin:0;background:none;border:0;border-bottom:1px solid var(--bd);border-radius:0}
-button.upr.mk-pk:last-child{border-bottom:0}.upr.mk-pk .upm small{white-space:normal;overflow-wrap:anywhere}
+button.upr.mk-pk:last-child{border-bottom:0}.upr.mk-pk .upm small{white-space:normal;overflow-wrap:break-word}
 .pt-card .fl .b{width:100%;justify-content:center}
 /* v1.1.146 — UI-15 Penutup: CSS lama tak terpakai dipangkas; cetak tidak melebar */
 @media print{.dc{max-width:100%;overflow:hidden;box-shadow:none;border:1px solid #ccc;break-inside:avoid}}
@@ -748,3 +748,9 @@ header .hic{display:none}
 .doc.s58 table:not(.nt) tr{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline}.doc.s58 table:not(.nt) td:first-child,.doc.s58 table:not(.nt) th:first-child{flex:0 1 auto;padding-right:6px!important}.doc.s58 table:not(.nt) td.n,.doc.s58 table:not(.nt) th.n{flex:0 1 auto;margin-left:auto;text-align:right}
 @page struk{margin:0;@bottom-center{content:none}}
 @media print{.doc.st{margin:0;padding:4mm;border:0;border-radius:0;break-inside:auto}.doc.s58{padding:3mm 5mm}.doc.st td,.doc.st th{padding:1px 0!important}body:has(.doc.st){font-size:9pt}}
+
+/* ===== v1.1.191 Audit cetak (CD-5): teks tabel boleh turun baris agar tidak meluap dari halaman A4 ===== */
+@media print{
+ main .sc td,main .sc th,#portal .sc td,#portal .sc th{white-space:normal;overflow-wrap:break-word}
+ main .sc td.n,main .sc th.n,#portal .sc td.n,#portal .sc th.n{white-space:nowrap;overflow-wrap:normal}
+}

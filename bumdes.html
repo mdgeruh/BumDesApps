@@ -355,7 +355,7 @@ body.mk-on{overflow:hidden}
 .rh{display:flex;gap:10px;align-items:center}.rt{display:flex;flex-direction:column;min-width:0}.rt b{font-size:14px;font-weight:600}.rt small{color:var(--mu);font-size:11.5px;line-height:1.3}.rf{font-size:12px;color:var(--mu);border-top:1px solid var(--bd);padding-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rf .neg{color:var(--rd)}
 .kic.t0{background:color-mix(in srgb,var(--tx) 7%,transparent);color:var(--mu)}
 @media (min-width:700px){.rsel{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}}
-@media (max-width:699px){.sc table:has(th:nth-child(2):last-child) td:first-child{white-space:normal;overflow-wrap:anywhere}.sc table:has(th:nth-child(2):last-child) td.n{white-space:nowrap}}
+@media (max-width:699px){.sc table:has(th:nth-child(2):last-child) td:first-child{white-space:normal;overflow-wrap:break-word}.sc table:has(th:nth-child(2):last-child) td.n{white-space:nowrap}}
 
 /* ===== Sidebar (v1.1.092): tombol ciut mengambang, gaya lebih ringan ===== */
 #cb{display:none}
@@ -479,7 +479,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .upr.awr{cursor:default}.upr.awr:hover{background:none}.upr.awr .upa{flex-direction:column;align-items:flex-end;text-align:right}.upr.awr .upa small{color:var(--mu);font-size:12px}.upr.awr .upm small+small{color:var(--mu);opacity:.85}
 .upr.awt{cursor:default;border-top:1px solid var(--bd);margin-top:2px}.upr.awt:hover{background:none}.upr.awt .upm{flex:1}.upr.awt .upa{flex-direction:column;align-items:flex-end}.upr.awt .upa small{color:var(--mu);font-size:12px}
 #main ul.awl>li{padding-left:0;margin:0}#main ul.awl>li::before{content:none}
-.upr.awr{align-items:flex-start}.upr.awr .upm{flex:1 1 0;min-width:0}.upr.awr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.awr .upa{gap:2px}.upr.awr .upa .ib{margin-top:6px}
+.upr.awr{align-items:flex-start}.upr.awr .upm{flex:1 1 0;min-width:0}.upr.awr .upm b{white-space:normal;overflow-wrap:break-word}.upr.awr .upa{gap:2px}.upr.awr .upa .ib{margin-top:6px}
 /* v1.1.132 — UI-6 Laporan: kartu seragam dashboard, filter ringkas, aging berbaris */
 .dc.rpc{margin:12px 0}.rpc>.cs:empty{display:none}.rpc>.ct+.sc,.rpc>.ct+.fl,.rpc>.ct+.upl{margin-top:12px}
 .rpc .sc{margin:0 -4px}.rpc .fl.noprint{margin:0 0 10px}
@@ -489,7 +489,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .upr.rpr{cursor:default}.upr.rpr:hover{background:none}
 @media print{.dc.rpc{box-shadow:none;border:0;border-radius:0;padding:0;margin:0 0 10px}.rpc>.ct,.rpc>.cs{display:none}.rpc .sc{margin:0}}
 /* v1.1.133 — UI-7 Buku Besar: kartu filter, ringkasan kp, daftar mutasi berbaris dengan ikon D/K */
-.upr.lgr .upm b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal;overflow-wrap:anywhere}
+.upr.lgr .upm b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal;overflow-wrap:break-word}
 .upr.lgr .upa small{color:var(--mu);font-size:12px;white-space:nowrap}.upr.lgr .tri{font-size:13px}
 .upr.lgo{cursor:default;background:color-mix(in srgb,var(--tx) 5%,var(--cd));border-radius:10px;padding:10px 12px;border-bottom:0;margin:4px 0;min-height:0;font-size:13px;color:var(--mu);display:flex;justify-content:space-between}.upr.lgo:hover{background:color-mix(in srgb,var(--tx) 5%,var(--cd))}.upr.lgo b{color:var(--tx);font-size:13px}.upr.lgo .upm b{font-weight:600;color:var(--mu)}
 .dc.lgc .fl{margin:0 0 8px}.dc.lgc .upl>.b{margin:4px 0}
@@ -501,7 +501,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 /* v1.1.134 — UI-8 Neraca Saldo: ringkasan kp dan tabel dalam kartu */
 .g.dk.tbk{grid-template-columns:repeat(2,minmax(0,1fr))}.g.dk.tbk>.card{grid-column:auto}.g.dk.tbk>.card:last-child{grid-column:1/-1}@media (min-width:900px){.g.dk.tbk{grid-template-columns:repeat(3,minmax(0,1fr))}.g.dk.tbk>.card:last-child{grid-column:auto}}
 .dc.tbc{max-width:none}.tbc .sc{margin:0 -4px}.tbc .k.rck{margin:10px 0 0}
-.upr.tbr{cursor:default}.upr.tbr:hover{background:none}.upr.tbr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.tbr .upa small{color:var(--mu);font-size:12px}.upr.tbr .tri{font-size:13px}
+.upr.tbr{cursor:default}.upr.tbr:hover{background:none}.upr.tbr .upm b{white-space:normal;overflow-wrap:break-word}.upr.tbr .upa small{color:var(--mu);font-size:12px}.upr.tbr .tri{font-size:13px}
 /* v1.1.135 — Buku Besar desktop: kolom Tanggal/Keterangan/Unit/Debit/Kredit/Saldo, filter satu baris */
 .lgx,.upr.lgh{display:none}
 @media (min-width:900px){
@@ -518,7 +518,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .lgfg>div+div{margin-top:12px}@media (min-width:900px){.lgfg>div+div{margin-top:0}}
 @media (max-width:480px){.g.dk[aria-label="Ringkasan akun"] .v{font-size:18px}}
 /* v1.1.136 — UI-9a Unit Air (Piutang, Penjualan Lain, Pelanggan, Produk): kartu dan daftar berbaris */
-.upr.alr{cursor:default;align-items:flex-start}.upr.alr:hover{background:none}.upr.alr .upm{flex:1 1 0;min-width:0}.upr.alr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.alr .upm small+small{color:var(--mu);opacity:.85;overflow-wrap:anywhere}
+.upr.alr{cursor:default;align-items:flex-start}.upr.alr:hover{background:none}.upr.alr .upm{flex:1 1 0;min-width:0}.upr.alr .upm b{white-space:normal;overflow-wrap:break-word}.upr.alr .upm small+small{color:var(--mu);opacity:.85;overflow-wrap:anywhere}
 .upr.alr .upa{align-items:flex-end;text-align:right;gap:3px}.upr.alr .upa small{color:var(--mu);font-size:12px;white-space:normal}.upr.alr .alb{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-top:4px}.upr.alr .tri{font-size:15px}
 .dc.alf{max-width:none}.dc.alf .b{margin-top:8px}.dc.alf>.b:last-child{margin-top:12px}
 .bdg:not(.ok):not(.wr):not(.bd){background:color-mix(in srgb,var(--tx) 8%,var(--cd));color:var(--mu)}
@@ -530,7 +530,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .upr.alr .tri{font-size:15px}
 .upr.gjr{flex-wrap:wrap}.upr.gjr .alb.gjb{flex:0 0 100%;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin:0;padding-left:44px;box-sizing:border-box}
 /* v1.1.139 — UI-11a Master (Unit Usaha, Kas & Bank, COA): kartu dan daftar berbaris */
-.upr.mdr .upm{flex:1 1 0;min-width:0}.upr.mdr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.mdr .upm small{color:var(--mu);overflow-wrap:anywhere}.upr.mdr .upa{align-items:flex-end;text-align:right;gap:3px}.upr.mdr .upa small{color:var(--mu);font-size:12px}
+.upr.mdr .upm{flex:1 1 0;min-width:0}.upr.mdr .upm b{white-space:normal;overflow-wrap:break-word}.upr.mdr .upm small{color:var(--mu);overflow-wrap:anywhere}.upr.mdr .upa{align-items:flex-end;text-align:right;gap:3px}.upr.mdr .upa small{color:var(--mu);font-size:12px}
 .upr.mdr.vd .upm b,.upr.mdr.vd .bi{opacity:.6}
 .kic.acc{width:auto;min-width:44px;height:32px;padding:0 8px;border-radius:10px;font-size:12px;font-weight:700;flex:none;font-variant-numeric:tabular-nums}
 .upr.mdr.mdh{background:color-mix(in srgb,var(--tx) 4%,var(--cd));border-radius:10px;padding-left:8px;padding-right:8px;margin:2px 0}.upr.mdr.mdh .upm b{font-weight:800;letter-spacing:.2px}.upr.mdr.mdc{padding-left:16px}
@@ -544,7 +544,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .dc .card.aws{margin-top:0}.dc.dz .b.x{margin-top:8px}
 .upr.dpr,.upr.adr{cursor:default}.upr.dpr:hover,.upr.adr:hover{background:none}
 .upr.dpr .upa{align-items:flex-end;text-align:right;gap:4px}.upr.dpr .upa small{color:var(--mu);font-size:12px}.upr.dpr.vd .upm b{opacity:.75}
-.upr.adr .upm{flex:1 1 0;min-width:0}.upr.adr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.adr .upm small{color:var(--mu);overflow-wrap:anywhere;white-space:normal}.upr.adr .upm code{font-size:11px}
+.upr.adr .upm{flex:1 1 0;min-width:0}.upr.adr .upm b{white-space:normal;overflow-wrap:break-word}.upr.adr .upm small{color:var(--mu);overflow-wrap:anywhere;white-space:normal}.upr.adr .upm code{font-size:11px}
 .upr.adr .upa{align-items:flex-end;text-align:right;gap:3px;max-width:34%;flex:none}.upr.adr .upa small{color:var(--mu);font-size:12px;overflow-wrap:anywhere}
 .dc .fl+.upl,.dc .fl+.empty{margin-top:8px}
 /* v1.1.142 — UI-13a Setelan > Profil, Dokumen Cetak, Modul: kartu seragam dashboard */
@@ -576,7 +576,7 @@ button.upr.pt-it:last-child{border-bottom:0}
 .mk-ic{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;flex:none}.mk-ic svg{width:18px;height:18px}
 .mk-card .upl{margin:6px 0 4px}
 button.upr.mk-pk{display:flex;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;min-height:56px;margin:0;background:none;border:0;border-bottom:1px solid var(--bd);border-radius:0}
-button.upr.mk-pk:last-child{border-bottom:0}.upr.mk-pk .upm small{white-space:normal;overflow-wrap:anywhere}
+button.upr.mk-pk:last-child{border-bottom:0}.upr.mk-pk .upm small{white-space:normal;overflow-wrap:break-word}
 .pt-card .fl .b{width:100%;justify-content:center}
 /* v1.1.146 — UI-15 Penutup: CSS lama tak terpakai dipangkas; cetak tidak melebar */
 @media print{.dc{max-width:100%;overflow:hidden;box-shadow:none;border:1px solid #ccc;break-inside:avoid}}
@@ -762,6 +762,12 @@ header .hic{display:none}
 .doc.s58 table:not(.nt) tr{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline}.doc.s58 table:not(.nt) td:first-child,.doc.s58 table:not(.nt) th:first-child{flex:0 1 auto;padding-right:6px!important}.doc.s58 table:not(.nt) td.n,.doc.s58 table:not(.nt) th.n{flex:0 1 auto;margin-left:auto;text-align:right}
 @page struk{margin:0;@bottom-center{content:none}}
 @media print{.doc.st{margin:0;padding:4mm;border:0;border-radius:0;break-inside:auto}.doc.s58{padding:3mm 5mm}.doc.st td,.doc.st th{padding:1px 0!important}body:has(.doc.st){font-size:9pt}}
+
+/* ===== v1.1.191 Audit cetak (CD-5): teks tabel boleh turun baris agar tidak meluap dari halaman A4 ===== */
+@media print{
+ main .sc td,main .sc th,#portal .sc td,#portal .sc th{white-space:normal;overflow-wrap:break-word}
+ main .sc td.n,main .sc th.n,#portal .sc td.n,#portal .sc th.n{white-space:nowrap;overflow-wrap:normal}
+}
 </style></head><body>
 <a class="skip" href="#main" onclick="event.preventDefault();var m=document.getElementById('main');if(m)m.focus()">Lewati ke konten</a>
 <div id="app"><aside id="sb" aria-label="Menu utama"></aside><button id="cb" type="button" onclick="togSb()"></button><div id="ct"><header><span class="kic t1 hic" id="hic" aria-hidden="true"></span><div><h1 id="ttl"></h1><div class="sub" id="sbt"></div></div><div class="hru"><span class="hdt" id="hdt"></span><span id="awc"></span><span id="bkc"></span><span id="usr"></span><select id="unit" aria-label="Filter unit usaha" style="width:auto" onchange="S.unit=this.value;render()"></select></div></header>
@@ -779,7 +785,7 @@ let pwaPrompt=null; // kejadian beforeinstallprompt (lihat js-15-pwa.js)
 // Aman ditaruh di kode karena yang melindungi data adalah login dan RLS. JANGAN isi service_role / sb_secret_ (ditolak aplikasi).
 // Bila SB_URL dan SB_KEY terisi, kolom Koneksi di Data > Backup (bagian Awan) disembunyikan dan nilai ini yang dipakai.
 const SB_URL="https://smpqygmtivxsdbxuypmx.supabase.co",SB_KEY="sb_publishable_yRNGwSos4JM2wsPqPUtWyA_T9i6EXmp";
-const APP_VER="1.1.190"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
+const APP_VER="1.1.192"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
 const KEY="bumdes_db_v1";
 const KEYS="bumdes business_units users roles permissions parties employees accounts cash_accounts transactions journal_entries journal_lines general_ledger accounting_periods loans loan_installments loan_payments collaterals products sales sale_items payments payroll_components payrolls payroll_items salary_payments approvals audit_logs water_connections water_readings".split(" ");
 const NEWK=["water_connections","water_readings","rate_master","tax_master","savings_accounts","savings_tx","collection_notes","prospects"],AIRDEF=()=>({unit_id:"UNIT-002",mode:"flat",abon:15000,min_m3:0,due_days:14,cut_months:3,tiers:[{upto:null,price:10000}]});
@@ -2022,7 +2028,7 @@ function vTagih(id){const x=db.sales.find(q=>q._id===id),bar=docBar(1);
 // kuitansi pembayaran tagihan air (satu kuitansi per pembayaran; sebagian atau pelunasan)
 const payOk=x=>db.payments.filter(y=>y.sale_id===x._id&&y.status==="posted"),kwNo=y=>"KA-"+y.date.slice(0,4)+"-"+String(db.payments.indexOf(y)+1).padStart(4,"0"),
  dkb=(t,f,i,c)=>`<button class="dkb${c?" "+c:""}" onclick="${f}">${ic(i||"print")}<span>${t}</span></button>`,
- kwBtn=(y,full)=>dkb(full?"Cetak kuitansi":"Kuitansi "+tglS(y.date)+" · Rp "+fm(y.amount+(y.fine||0)),"mdClose();openDoc('kuit','"+y._id+"')")+(full?dkb("Cetak struk","mdClose();openDoc('kuit','"+y._id+"','"+strukP()+"')"):"");
+ kwBtn=(y,full)=>dkb(full?"Cetak kuitansi":"Kuitansi "+tglS(y.date)+" · Rp "+fm(y.amount+(y.fine||0)),"mdClose();openDoc('kuit','"+y._id+"')")+(full?dkb("Struk kuitansi","mdClose();openDoc('kuit','"+y._id+"','"+strukP()+"')"):"");
 function vKuit(id){const y=db.payments.find(q=>q._id===id),bar=docBar(1);
  const x=y&&db.sales.find(q=>q._id===y.sale_id);if(!y||y.status==="voided"||!x||x.status!=="posted")return`${bar}<p class="k">Kuitansi tidak tersedia.</p>`;
  const b=x.bill,p=cust(x.party_id),R=(a,v)=>`<tr><td>${a}</td><td class="n">${v}</td></tr>`,ci=db.cash_accounts.find(c=>c._id===y.cash_id),ix=db.payments.indexOf(y),
@@ -2925,6 +2931,8 @@ function idleCheck(t){const m=idleMin();if(!m||!rbacOn()||!S.cu)return false;t=t
 if(typeof window!=="undefined"&&window.addEventListener&&typeof document!=="undefined"&&document.addEventListener){["click","keydown","touchstart"].forEach(e=>document.addEventListener(e,()=>{S.idleAt=Date.now()},true));setInterval(()=>idleCheck(),15000)}
 // ===== CATATAN RILIS (v1.1.003): data untuk modal "?" di Setelan. Tambahkan rilis baru di PALING ATAS; sinkronkan dengan release_notes.md =====
 const RELEASES=[
+ {v:"1.1.192",d:"2026-10-10",t:"Perbaikan nama tombol struk",i:["Di modal detail pelanggan air dua tombol Cetak struk kini bernama jelas: Struk tagihan dan Struk kuitansi (di nota penjualan: Struk nota)."]},
+ {v:"1.1.191",d:"2026-10-10",t:"Cetak tahap I: audit semua dokumen dan uji cetak otomatis",i:["Semua dokumen dan laporan cetak diperiksa lewat PDF asli: laporan, buku besar, kartu pinjaman, akad, tabungan, slip gaji, laporan gaji, portal nasabah, serta struk 80 mm dan 58 mm.","Perbaikan: tabel di Laporan Simpan Pinjam yang melewati batas kanan kertas A4 kini membungkus teks; kata tidak lagi terpotong di tengah.","Uji cetak otomatis (34 PDF) kini masuk uji pra-rilis: tidak meluap, tanpa halaman kosong, jumlah halaman wajar, isi dan nama petugas tampil."]},
  {v:"1.1.190",d:"2026-10-10",t:"Cetak tahap H: struk thermal 80 mm dan 58 mm",i:["Kuitansi air, nota penjualan, nota tagihan, kwitansi angsuran, bukti pencairan, dan bukti setoran/penarikan tabungan bisa dicetak sebagai struk printer thermal: ukuran 80 mm atau 58 mm, tinggi mengikuti isi, tanpa kotak tanda tangan (nama petugas tercetak).","Ukuran kertas bukti dipilih per perangkat di Setelan > Dokumen Cetak (bawaan A4). Di pratinjau dokumen ada pilihan ukuran sementara tanpa mengubah bawaan.","Tombol Cetak struk tersedia langsung di modal pembayaran, tagihan, dan nota, serta pada riwayat angsuran dan mutasi tabungan.","Bukti setoran dan penarikan tabungan kini punya dokumen sendiri (BS-tahun-nomor); setoran tabungan juga mencatat nama petugas."]},
  {v:"1.1.189",d:"2026-10-10",t:"Cetak tahap G: Buku Besar dan Neraca Saldo seperti tabel buku",i:["Buku Besar dicetak sebagai tabel: Tanggal, No. Bukti, Keterangan, Unit, Debit, Kredit, Saldo, dengan baris saldo awal, jumlah mutasi, dan saldo akhir; semua baris tercetak dan judul kolom berulang di tiap halaman.","Neraca Saldo dicetak sebagai tabel Kode, Nama akun, Tipe, Debit, Kredit dengan jumlah dan status seimbang; kartu ringkasan dan daftar kartu tidak ikut tercetak.","Setiap transaksi punya nomor bukti (BKT-tahun-nomor) yang tampil di Buku Besar, rincian transaksi, dan ekspor CSV."]},
  {v:"1.1.188",d:"2026-10-10",t:"Cetak tahap F: nama petugas di dokumen",i:["Kuitansi, nota, dan nota tagihan kini memuat nama petugas (baris Petugas dan tanda tangan), tidak lagi garis kosong bila nama Bendahara belum diisi.","Petugas tercatat saat pembayaran, penjualan, tagihan, angsuran, dan penarikan tabungan: pengguna yang login, atau petugas perangkat yang dipilih di Setelan > Dokumen Cetak.","Bila nama Bendahara di Profil kosong, dipakai pegawai aktif berjabatan Bendahara. Direktur dan Bendahara di Profil bisa dipilih dari daftar pegawai.","Akhir laporan menampilkan Dicetak oleh walau fitur login belum dipakai."]},
@@ -3259,7 +3267,7 @@ MD.wd=()=>{const c=wConn(S.ewd);if(!c._id)return{t:"Detail pelanggan",s:"mdClose
   st=`<div class="lds"><span class="bdg ${off?"":"ok"}">${off?"Diputus":"Aktif"}</span>${off?"":b?`<span class="bdg ok">✓ Ditagih ${esc(per)}</span>`:`<span class="bdg wr">Belum ditagih ${esc(per)}</span>`}${a.length?`<span class="bdg wr">Belum lunas ${a.length}</span>`:""}</div>`,
   info=`<h3>Rincian</h3><div class="kvg">${R("Nomor meter",esc(c.meter_no))}${R("Angka terakhir",qf(wPrev(c._id))+" m³")}${R("Telepon",esc(p.phone||"-"))}${R("Alamat",esc(p.address||"-"))}${R("Golongan",esc(c.cls?clsName(c.cls):"Standar"))}${R("Bacaan terakhir",lb?esc(lb.period):"Belum ada")}${R("Tunggakan",a.length?rp(o):"Tidak ada")}${R("Piutang total",rp(piu(p._id||c.party_id)))}</div>`,
   fm_=ok?`<h3>Terbitkan tagihan</h3>${fld("wd-a","Angka meter akhir (angka terakhir "+qf(wPrev(c._id))+")",{type:"text",a:' inputmode="decimal" autocomplete="off" placeholder="angka akhir" oninput="wdPrev()" aria-describedby="wd-pv"',value:""})}<div class="k wdp" id="wd-pv" aria-live="polite"></div><div class="wdg2"><div>${fld("wd-p","Bulan pemakaian",{type:"month",value:per,a:' onchange="bpChg(this.value)"'})}</div><div>${fld("wd-d","Tanggal tagihan",{type:"date",value:S.wdd||today()})}</div></div>`
-   :b?`<h3>Tagihan ${esc(per)}</h3><div class="kvg">${R("Nomor",esc(b.sale_number))}${R("Pemakaian",qf(b.bill.usage)+" m³")}${R("Tagihan",rp(b.total))}${R("Sisa",owedS(b)>0.005?rp(owedS(b)):'<span class="bdg ok">Lunas</span>')}</div><div class="lda">${dkb("Cetak tagihan","mdClose();openDoc('tagih','"+b._id+"')")}${dkb("Cetak struk","mdClose();openDoc('tagih','"+b._id+"','"+strukP()+"')")}${payOk(b).length===1?kwBtn(payOk(b)[0],1):payOk(b).map(y=>kwBtn(y)).join("")}</div>`
+   :b?`<h3>Tagihan ${esc(per)}</h3><div class="kvg">${R("Nomor",esc(b.sale_number))}${R("Pemakaian",qf(b.bill.usage)+" m³")}${R("Tagihan",rp(b.total))}${R("Sisa",owedS(b)>0.005?rp(owedS(b)):'<span class="bdg ok">Lunas</span>')}</div><div class="lda">${dkb("Cetak tagihan","mdClose();openDoc('tagih','"+b._id+"')")}${dkb("Struk tagihan","mdClose();openDoc('tagih','"+b._id+"','"+strukP()+"')")}${payOk(b).length===1?kwBtn(payOk(b)[0],1):payOk(b).map(y=>kwBtn(y)).join("")}</div>`
    :off?`<p class="k">Sambungan diputus, tidak ditagih sampai disambung kembali.</p>`:`<p class="k">Anda hanya dapat melihat data ini; menerbitkan tagihan membutuhkan izin kelola Unit Air.</p>`,
   ow=a.slice().sort((x,y)=>x.bill.period.localeCompare(y.bill.period)),
   pay=ow.length&&!noPerm("air.kelola")?`<h3>Pembayaran</h3><div class="noent"><div class="wdg2"><div>${fld("wp-d","Tanggal bayar",{type:"date",value:today()})}</div><div>${fld("wp-k","Kas/Bank",{t:"select",opts:opt(db.cash_accounts.filter(isAct),k=>[k._id,k.name])})}</div></div>${fld("wp-a","Jumlah (Rp) — kosong = lunasi sisa",{type:"text",a:RPA,value:""})}${aLate().on?fld("wp-f","Denda keterlambatan (Rp) — kosong = hitung otomatis bila terlambat; isi 0 untuk membebaskan",{type:"text",a:RPA,value:""}):""}</div><div class="upl">${ow.map(x=>{const lf=lateFine(x,today(),owedS(x));return`<div class="upr alr"><span class="upm"><b>${esc(x.bill.period)}</b><small>${esc(x.sale_number)} · jatuh tempo ${esc(x.bill.due||"-")}${lf?" · denda bila dibayar hari ini Rp "+fm(lf):""}</small></span><span class="upa"><b>${rp(owedS(x))}</b><small>sisa dari ${rp(x.total)}</small><span class="alb">${ib("cash","Bayar","terima('"+x._id+"','wp')")}</span></span></div>`}).join("")}</div>`:"",
@@ -3273,7 +3281,7 @@ MD.wb=()=>{const x=db.sales.find(q=>q._id===S.ewb);if(!x)return{t:"Piutang",s:"m
  const nm=x.party_id?cust(x.party_id).name:"Umum",o=owedS(x),pd=paidOf(x),R=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,lf=lateFine(x,today(),o),late=o>0.005&&x.bill&&x.bill.due&&x.bill.due<today(),
   ok=o>0.005&&!noPerm("air.kelola"),
   info=`<div class="lds">${late?'<span class="bdg bd">Terlambat</span>':""}${pd>0&&o>0.005?'<span class="bdg wr">Dibayar sebagian</span>':""}${o<=0.005?'<span class="bdg ok">Lunas</span>':""}</div><div class="kvg">${R("Tagihan",esc(x.sale_number))}${R(x.bill?"Periode":"Jenis",x.bill?esc(x.bill.period):x.opening?"Saldo awal piutang":"Penjualan kredit")}${R(x.bill?"Jatuh tempo":"Tanggal",esc(tglS(x.bill?x.bill.due:x.date)))}${R("Total",rp(x.total))}${R("Sudah dibayar",rp(pd))}${R("Sisa",rp(o))}</div>`,
-  nota=(x.status==="posted"&&!x.opening||ok&&x.party_id)?`<div class="lda">${x.status==="posted"&&!x.opening?dkb(x.bill?"Cetak tagihan":"Cetak nota","mdClose();openDoc('"+(x.bill?"tagih":"jual")+"','"+x._id+"')")+dkb("Cetak struk","mdClose();openDoc('"+(x.bill?"tagih":"jual")+"','"+x._id+"','"+strukP()+"')"):""}${ok&&x.party_id?dkb("Kirim pengingat","mdOpen('ar','"+x.party_id+"')","out"):""}</div>`:"",
+  nota=(x.status==="posted"&&!x.opening||ok&&x.party_id)?`<div class="lda">${x.status==="posted"&&!x.opening?dkb(x.bill?"Cetak tagihan":"Cetak nota","mdClose();openDoc('"+(x.bill?"tagih":"jual")+"','"+x._id+"')")+dkb(x.bill?"Struk tagihan":"Struk nota","mdClose();openDoc('"+(x.bill?"tagih":"jual")+"','"+x._id+"','"+strukP()+"')"):""}${ok&&x.party_id?dkb("Kirim pengingat","mdOpen('ar','"+x.party_id+"')","out"):""}</div>`:"",
   frm=ok?`<h3>Terima pembayaran</h3><div class="noent">${fld("wp-a","Jumlah (Rp)",{type:"text",a:RPA+' aria-describedby="wp-sr"',value:fm(o)})}<div class="wdq"><span id="wp-sr" class="k">Sisa piutang Rp ${fm(o)}</span><button type="button" class="lkb" onclick="const e=$('#wp-a');e.value='${fm(o)}';e.focus()">Lunasi sisa</button></div><div class="wdg2"><div>${fld("wp-d","Tanggal bayar",{type:"date",value:today()})}</div><div>${fld("wp-k","Kas/Bank",{t:"select",opts:opt(db.cash_accounts.filter(isAct),k=>[k._id,k.name])})}</div></div>${aLate().on&&x.bill?fld("wp-f","Denda keterlambatan (Rp) — kosong = otomatis"+(lf?" (bila dibayar hari ini Rp "+fm(lf)+")":"")+"; isi 0 untuk membebaskan",{type:"text",a:RPA,value:""}):""}</div>`
    :o>0.005?`<p class="k">Anda hanya dapat melihat data ini; menerima pembayaran membutuhkan izin kelola Unit Air.</p>`:`<p class="k">Piutang ini sudah lunas.</p>`;
  return{t:nm,s:"terima('"+x._id+"','wp')",y:"Terima pembayaran",nf:ok?0:1,b:`<div class="ldw wdw">${info}${nota}${frm}</div>`}};
