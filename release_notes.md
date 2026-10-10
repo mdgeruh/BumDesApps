@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.176
+# Catatan Rilis — v1.1.181
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,11 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.181 | Modal detail pelanggan Air lebih ringkas |
+| 1.1.180 | Kuitansi pembayaran tagihan air |
+| 1.1.179 | Tombol Bayar di modal detail pelanggan Air |
+| 1.1.178 | Baca Meter: daftar bersih, klik langsung buka modal |
+| 1.1.177 | Unit Air: pencarian pelanggan dan modal detail |
 | 1.1.176 | Kurva dashboard halus dengan tooltip |
 | 1.1.175 | Data > Backup lebih rapi |
 | 1.1.174 | Zona waktu mengikuti perangkat |

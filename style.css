@@ -509,8 +509,7 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 .dc.alf{max-width:none}.dc.alf .b{margin-top:8px}.dc.alf>.b:last-child{margin-top:12px}
 .bdg:not(.ok):not(.wr):not(.bd){background:color-mix(in srgb,var(--tx) 8%,var(--cd));color:var(--mu)}
 /* v1.1.137 — UI-9b Unit Air (Baca Meter, Sambungan, Tarif) */
-.upr.bmr,.upr.smr{cursor:default;align-items:flex-start}.upr.bmr:hover,.upr.smr:hover{background:none}.upr.bmr .upm,.upr.smr .upm{flex:1 1 0;min-width:0}.upr.bmr .upm b,.upr.smr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.bmr .upm small,.upr.smr .upm small{overflow-wrap:anywhere}
-.upr.bmr .upa{align-items:flex-end;text-align:right;gap:3px;max-width:48%}.upr.bmr .upa input{width:130px;min-width:0;text-align:right}.upr.bmr .upa .k{font-size:12px;text-align:right;max-width:160px}.upr.bmr .upa small{color:var(--mu);font-size:12px}
+.upr.smr{cursor:default;align-items:flex-start}.upr.smr:hover{background:none}.upr.smr .upm{flex:1 1 0;min-width:0}.upr.smr .upm b{white-space:normal;overflow-wrap:anywhere}.upr.smr .upm small{overflow-wrap:anywhere}
 .upr.smr .upa{align-items:flex-end;text-align:right;gap:4px}.upr.smr .smw{color:var(--rd)!important;font-weight:600}.upr.smr.vd .upm b{text-decoration:none}
 @media (min-width:900px){.dc.alf:has(#tw-md),.dc.alf:has(#gm-c){max-width:720px}}
 /* v1.1.138 — UI-10 Gaji: kartu seragam dashboard, daftar gaji dan komponen berbaris */
@@ -693,3 +692,13 @@ header .hic{display:none}
 .ttp .ts{margin-top:3px;padding-top:3px;border-top:1px solid var(--bd)}.ttp .ts.ok em{color:var(--ac)}.ttp .ts.ng em{color:var(--rd)}
 @media print{.ttp{display:none}}
 .ttp .tr-r{background:var(--ac)}.ttp .tr-e{background:var(--mu)}
+/* v1.1.177: pencarian pelanggan Unit Air + modal detail pelanggan */
+.wsr{margin:0 0 10px}.wsr input{flex:1 1 220px;min-width:0}
+.wdw h3{margin:16px 0 6px;font-size:14px}.wdw .kvg{margin-bottom:4px}.wdw .wdp{min-height:18px;margin-top:4px;font-weight:600}.wdw .lda{margin-top:4px}
+.upr.smr.smc{cursor:pointer}.upr.smr.smc:hover{background:var(--hv,rgba(0,0,0,.03))}
+/* v1.1.181: modal detail Air lebih ringkas */
+.wdw .kvg{grid-template-columns:1fr 1fr;gap:0 16px}.wdw .kv{flex-direction:column;align-items:flex-start;gap:1px;padding:6px 0}.wdw .kv .k{font-size:12px}.wdw .kv b{font-size:14px}
+.wdw .wdg2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.wdw .wdg2>div{min-width:0}
+.wdw .lda .ib{min-height:40px}.wdw .lds{flex-wrap:wrap}
+.lkb{display:inline-flex;align-items:center;gap:5px;border:0;background:none;color:var(--ac);font:inherit;font-size:12.5px;font-weight:600;padding:5px 0;margin:2px 12px 0 0;min-height:32px;cursor:pointer}.lkb .ic{width:14px;height:14px}.lkb:hover{text-decoration:underline}.lkb:focus-visible{outline:2px solid var(--ac);outline-offset:2px;border-radius:4px}
+.dkb{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ln);border-radius:8px;background:var(--cd);color:var(--tx);font:inherit;font-size:13px;font-weight:600;padding:8px 12px;min-height:40px;cursor:pointer;text-align:left}.dkb .ic{width:16px;height:16px;flex:none}.dkb:hover{border-color:var(--ac);color:var(--ac)}.dkb:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
