@@ -276,7 +276,7 @@ function tb(n){n=Math.floor(n);
  return tb(Math.floor(n/1e12))+" triliun"+(n%1e12?" "+tb(n%1e12):"")}
 const terbilang=n=>n<1?"nol rupiah":tb(n)+" rupiah";
 function openDoc(k,id){S.doc={k,id};S.msg="";render();window.scrollTo(0,0)}
-function vDoc(){const D=S.doc;if(D.k==="kp")return vKartu(D.id);if(D.k==="rt")return vRekap(D.id);if(D.k==="ak")return vAkad(D.id);if(D.k==="bt")return vBuku(D.id);if(D.k==="slip")return vSlip(D.id);if(D.k==="tagih")return vTagih(D.id);if(D.k==="jual")return vNota(D.id);const bn=(db.bumdes[0]||{}).name||"BUMDes",R=(a,b)=>`<tr><td>${a}</td><td class="n">${b}</td></tr>`,
+function vDoc(){const D=S.doc;if(D.k==="kp")return vKartu(D.id);if(D.k==="rt")return vRekap(D.id);if(D.k==="ak")return vAkad(D.id);if(D.k==="bt")return vBuku(D.id);if(D.k==="slip")return vSlip(D.id);if(D.k==="tagih")return vTagih(D.id);if(D.k==="kuit")return vKuit(D.id);if(D.k==="jual")return vNota(D.id);const bn=(db.bumdes[0]||{}).name||"BUMDes",R=(a,b)=>`<tr><td>${a}</td><td class="n">${b}</td></tr>`,
  bar=`<div class="noprint"><button class="b" onclick="window.print()">Cetak</button><button class="b s" onclick="S.doc=null;render()">Kembali</button></div>`;
  let l,p,body;if(D.k==="kw"){p=db.loan_payments.find(x=>x._id===D.id);l=p&&db.loans.find(x=>x._id===p.loan_id)}else l=db.loans.find(x=>x._id===D.id);
  if(!l||(D.k==="kw"&&(!p||p.status==="voided")))return`${bar}<p class="k">Dokumen tidak tersedia.</p>`;

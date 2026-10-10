@@ -1,7 +1,7 @@
 // ===== MODAL CRUD (v0.1.032): tambah/edit master data lewat dialog modal =====
 // S.md = jenis modal terbuka; id yang diedit tetap di S.eu/ec/ea/ey/eg/en/ep/epr/ecn/ek/eus (null = baru); S.rp = id untuk reset PIN
 const DLG=["lc","lw","lz","ls"],PGK=["ld","lp","la"];
-const MK={ps:"ps",lq:"elq",rn:"ern",ld:"eld",cj:"ecj",jd:"ejd",nd:"end",lp:"elp",la:"ela",lr:"elr",lb:"elb",lc:"elc",lw:"elw",lz:"elz",ls:"els",u:"eu",c:"ec",a:"ea",py:"ey",pg:"eg",n:"en",pl:"ep",pr:"epr",cn:"ecn",gl:"egl",dn:"edn",pb:"epb",ds:"eds",pk:"ek",us:"eus",rp:"rp",tn:"etn",jm:"ejm",td:"etd"};
+const MK={ps:"ps",lq:"elq",rn:"ern",ld:"eld",cj:"ecj",jd:"ejd",nd:"end",lp:"elp",la:"ela",lr:"elr",lb:"elb",lc:"elc",lw:"elw",lz:"elz",ls:"els",u:"eu",c:"ec",a:"ea",py:"ey",pg:"eg",n:"en",pl:"ep",pr:"epr",cn:"ecn",wd:"ewd",gl:"egl",dn:"edn",pb:"epb",ds:"eds",pk:"ek",us:"eus",rp:"rp",tn:"etn",jm:"ejm",td:"etd"};
 const addB=(t,k)=>`<div class="fl"><button class="b ad" onclick="mdOpen('${k}','')">${ic("plus")}<span>${t}</span></button></div>`;
 const mdId=()=>S.md?(S[MK[S.md]]||""):"",mdKey=()=>S.md?S.md+"|"+mdId():"";
 function mdOpen(k,id){if(!MK[k])return;if(PGK.includes(k)){pgOpen(k,id);return}const kp=(k==="lr"||k==="lb"||DLG.includes(k))&&(S.md==="ld"||DLG.includes(S.md)||(S.pp&&S.pp.k==="ld"))?(S.eld||(S.pp&&S.pp.id)):null;for(const x in MK)S[MK[x]]=null;if(kp)S.eld=kp;S[MK[k]]=id||null;S.md=k;if(k==="la"){const e=db.loans.find(x=>x._id===id);S.elp=e&&Array.isArray(e.disb_codes)?e.disb_codes.slice():null;S.elq=e&&e.disb_qty?Object.assign({},e.disb_qty):null}S.mv=null;S.mf="";S.msg="";S.fe=null;
@@ -107,18 +107,34 @@ function mdr(){const el=$("#fm");if(!el)return;const k=mdKey(),was=S.mo||"";
  el.innerHTML=mdHtml();el.className="on";mdLock(1);
  if(S.mv&&S.mv.k===k&&document.querySelectorAll)document.querySelectorAll("#fm [id]").forEach(e=>{if(!(e.id in S.mv.v))return;const v=S.mv.v[e.id];
   if(e.type==="checkbox")e.checked=!!v;else if(e.tagName==="SELECT"){if([...e.options].some(o=>o.value===v||o.text===v))e.value=v}else e.value=v});
- S.mo=k;if(S.md==="tn")rows();if(S.md==="jm")jlSum();if(S.md==="lp"||S.md==="la"){simLive();jasaInfo()}if(S.md==="ld"||S.md==="lw"||S.md==="lc"){const sm=$("#sp-mode");if(sm&&S.pm)sm.value=S.pm;const sa=$("#sp-amt");if(sa&&S.pm==="full"&&sm&&S.sa==="")sa.value="";amtSync()}
+ S.mo=k;if(S.md==="tn")rows();if(S.md==="wd")wdPrev();if(S.md==="jm")jlSum();if(S.md==="lp"||S.md==="la"){simLive();jasaInfo()}if(S.md==="ld"||S.md==="lw"||S.md==="lc"){const sm=$("#sp-mode");if(sm&&S.pm)sm.value=S.pm;const sa=$("#sp-amt");if(sa&&S.pm==="full"&&sm&&S.sa==="")sa.value="";amtSync()}
  if(typeof uiEnh==="function")uiEnh();
  if(!S.fe&&!S.cf&&el.querySelector){const co=typeof matchMedia==="function"&&matchMedia("(pointer:coarse)").matches,f=was===k&&S.mf?$("#"+S.mf):co&&was!==k?el.querySelector(".mb"):el.querySelector(".mc input:not([disabled]):not([type=checkbox]):not(.uh),.mc .ub:not([disabled]),.mc select:not([disabled]):not(.uh),.mc textarea:not([disabled])")||el.querySelector(".mb")||el.querySelector("button");if(f&&f.focus){if(was!==k){const c=el.querySelector(".mc");if(c)c.scrollTop=0}f.focus({preventScroll:was!==k})}}vvFit()}
 if(document.addEventListener)document.addEventListener("keydown",e=>{if(S.cf||!S.md||PGK.includes(S.md))return;const el=$("#fm");if(!el||!el.querySelectorAll)return;
  if(e.key==="Escape"){e.preventDefault();mdClose();return}
- if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"&&e.target.type!=="checkbox"&&!(e.target.closest&&e.target.closest(".card"))){e.preventDefault();const b=el.querySelector(".mf .b:last-child");if(b)b.click();return}
+ if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"&&e.target.type!=="checkbox"&&!(e.target.closest&&e.target.closest(".card,.noent"))){e.preventDefault();const b=el.querySelector(".mf .b:last-child");if(b)b.click();return}
  if(e.key==="Tab"){const f=[...el.querySelectorAll("button,input,select,textarea")].filter(x=>!x.disabled&&x.getClientRects().length&&!x.classList.contains("uh"));if(!f.length)return;const i=f.indexOf(document.activeElement);
   if(e.shiftKey&&i<=0){e.preventDefault();f[f.length-1].focus()}else if(!e.shiftKey&&(i<0||i===f.length-1)){e.preventDefault();f[0].focus()}}});
 
 // ===== v1.1.009: transaksi lewat modal (form baru, jurnal multi-baris, rincian) =====
 MD.tn=()=>({t:"Transaksi baru",s:"submitT()",y:"Posting",b:`<div class="frm">${trxFormHtml()}<div class="prev" id="f-prev" aria-live="polite"></div></div>`});
 MD.jm=()=>({t:"Jurnal multi-baris",s:"postJnl()",y:"Posting jurnal",b:vJnl()});
+
+// ===== v1.1.177: detail pelanggan Unit Air (modal): ringkasan sambungan, angka meter terakhir, terbitkan tagihan, riwayat =====
+MD.wd=()=>{const c=wConn(S.ewd);if(!c._id)return{t:"Detail pelanggan",s:"mdClose()",y:"Tutup",b:"<p>Sambungan tidak ditemukan.</p>",nf:1};
+ const p=cust(c.party_id),per=S.bp||today().slice(0,7),b=billOf(c._id,per),a=arrears(c._id),o=a.reduce((t,x)=>t+owedS(x),0),off=c.status!=="aktif",lb=wLastB(c._id),
+  R=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,
+  hist=db.sales.filter(x=>x.bill&&x.bill.conn_id===c._id&&x.status==="posted"&&x!==b).sort((x,y)=>y.bill.period.localeCompare(x.bill.period)||y._id.localeCompare(x._id)).slice(0,6),
+  ok=!off&&!b&&!noPerm("air.kelola"),
+  st=`<div class="lds"><span class="bdg ${off?"":"ok"}">${off?"Diputus":"Aktif"}</span>${off?"":b?`<span class="bdg ok">✓ Ditagih ${esc(per)}</span>`:`<span class="bdg wr">Belum ditagih ${esc(per)}</span>`}${a.length?`<span class="bdg wr">Belum lunas ${a.length}</span>`:""}</div>`,
+  info=`<h3>Rincian</h3><div class="kvg">${R("Nomor meter",esc(c.meter_no))}${R("Angka terakhir",qf(wPrev(c._id))+" m³")}${R("Telepon",esc(p.phone||"-"))}${R("Alamat",esc(p.address||"-"))}${R("Golongan",esc(c.cls?clsName(c.cls):"Standar"))}${R("Bacaan terakhir",lb?esc(lb.period):"Belum ada")}${R("Tunggakan",a.length?rp(o):"Tidak ada")}${R("Piutang total",rp(piu(p._id||c.party_id)))}</div>`,
+  fm_=ok?`<h3>Terbitkan tagihan</h3>${fld("wd-p","Bulan pemakaian",{type:"month",value:per,a:' onchange="bpChg(this.value)"'})}${fld("wd-d","Tanggal tagihan",{type:"date",value:today()})}${fld("wd-a","Angka meter akhir (angka terakhir "+qf(wPrev(c._id))+")",{type:"text",a:' inputmode="decimal" autocomplete="off" placeholder="angka akhir" oninput="wdPrev()" aria-describedby="wd-pv"',value:""})}<div class="k wdp" id="wd-pv" aria-live="polite"></div>`
+   :b?`<h3>Tagihan ${esc(per)}</h3><div class="kvg">${R("Nomor",esc(b.sale_number))}${R("Pemakaian",qf(b.bill.usage)+" m³")}${R("Tagihan",rp(b.total))}${R("Sisa",owedS(b)>0.005?rp(owedS(b)):'<span class="bdg ok">Lunas</span>')}</div><div class="lda">${dkb("Cetak tagihan","mdClose();openDoc('tagih','"+b._id+"')")}${payOk(b).length===1?kwBtn(payOk(b)[0],1):payOk(b).map(y=>kwBtn(y)).join("")}</div>`
+   :off?`<p class="k">Sambungan diputus, tidak ditagih sampai disambung kembali.</p>`:`<p class="k">Anda hanya dapat melihat data ini; menerbitkan tagihan membutuhkan izin kelola Unit Air.</p>`,
+  ow=a.slice().sort((x,y)=>x.bill.period.localeCompare(y.bill.period)),
+  pay=ow.length&&!noPerm("air.kelola")?`<h3>Pembayaran</h3><div class="noent"><div class="wdg2"><div>${fld("wp-d","Tanggal bayar",{type:"date",value:today()})}</div><div>${fld("wp-k","Kas/Bank",{t:"select",opts:opt(db.cash_accounts.filter(isAct),k=>[k._id,k.name])})}</div></div>${fld("wp-a","Jumlah (Rp) — kosong = lunasi sisa",{type:"text",a:RPA,value:""})}${aLate().on?fld("wp-f","Denda keterlambatan (Rp) — kosong = hitung otomatis bila terlambat; isi 0 untuk membebaskan",{type:"text",a:RPA,value:""}):""}</div><div class="upl">${ow.map(x=>{const lf=lateFine(x,today(),owedS(x));return`<div class="upr alr"><span class="upm"><b>${esc(x.bill.period)}</b><small>${esc(x.sale_number)} · jatuh tempo ${esc(x.bill.due||"-")}${lf?" · denda bila dibayar hari ini Rp "+fm(lf):""}</small></span><span class="upa"><b>${rp(owedS(x))}</b><small>sisa dari ${rp(x.total)}</small><span class="alb">${ib("cash","Bayar","terima('"+x._id+"','wp')")}</span></span></div>`}).join("")}</div>`:"",
+  hs=hist.length?`<h3>Tagihan sebelumnya</h3><div class="upl">${hist.map(x=>`<div class="upr alr"><span class="upm"><b>${esc(x.bill.period)}</b><small>${esc(x.sale_number)} · ${qf(x.bill.usage)} m³</small>${payOk(x).map(y=>`<button class="lkb" onclick="mdClose();openDoc('kuit','${y._id}')">${ic("print")}Kuitansi ${tglS(y.date)}</button>`).join("")}</span><span class="upa"><b>${rp(x.total)}</b>${owedS(x)>0.005?'<span class="bdg wr">Belum lunas</span>':'<span class="bdg ok">Lunas</span>'}</span></div>`).join("")}</div>`:b?"":`<h3>Riwayat tagihan</h3><p class="k">Belum ada tagihan.</p>`;
+ return{t:p.name||"Pelanggan",s:"askC('terbitSatu','')",y:"Terbitkan tagihan",nf:ok?0:1,b:`<div class="ldw wdw">${st}${fm_}${pay}${info}${hs}</div>`}};
 
 // ===== v1.1.170: Master > Tarif Air lewat modal (golongan tarif, denda, biaya pasang baru, diskon) =====
 const nf0=v=>({type:"text",a:' inputmode="numeric" autocomplete="off" oninput="fmtR(this)"',value:v===""||v==null?"":fm(v)});

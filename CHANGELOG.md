@@ -2,6 +2,47 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.181] — 2026-10-10
+
+### Diubah
+- Modal `wd`: riwayat mengecualikan tagihan periode yang sedang dibuka (`x!==b`); kuitansi tunggal = `Cetak kuitansi`, beberapa = satu tombol per pembayaran; periode lain memakai tautan `.lkb`. Lencana status (`Ditagih`/`Belum ditagih`, `Belum lunas`) di atas; baris Status dihapus.
+- Tombol cetak memakai `.dkb` (bergaris, label selalu terlihat; sebelumnya `ib` hijau/ikon saja). `.wdw .kvg` dua kolom dengan label di atas nilai; `.wdg2` untuk tanggal bayar + kas/bank.
+- Uji: `ui-detailair.py` mencakup tanpa duplikat, dua kuitansi, dan riwayat periode lain.
+
+## [1.1.180] — 2026-10-10
+
+### Ditambah
+- Dokumen `kuit` (`vKuit(payId)`, water.js; didaftarkan di `vDoc`): kuitansi pembayaran air, nomor `KA-yyyy-nnnn` dari indeks pembayaran, sisa tagihan dihitung sampai pembayaran itu.
+- Tombol: modal `wd` (Cetak kuitansi di bagian tagihan; `.wdk` per pembayaran di Riwayat tagihan) dan Riwayat Pembayaran di sub-tab Piutang. Helper `payOk`, `kwNo`, `kwBtn`.
+- Uji: `ui-detailair.py` mencakup kuitansi sebagian dan pelunasan, lebar layar, dan mode cetak.
+
+## [1.1.179] — 2026-10-10
+
+### Ditambah
+- Modal `wd`: bagian Pembayaran (`wp-d/wp-k/wp-a/wp-f`) dan tombol Bayar per tagihan belum lunas (urut periode), memanggil `terima(id,'wp')`.
+
+### Diubah
+- `terima(id,px)`: awalan id kolom bisa dipilih (`ar` untuk sub-tab Piutang, `wp` untuk modal); logika tidak berubah.
+- Enter pada `.noent` tidak menekan tombol footer modal. Uji: `ui-detailair.py` mencakup bayar sebagian dan lunas dari modal.
+
+## [1.1.178] — 2026-10-10
+
+### Diubah
+- `vBaca()`: baris pelanggan berupa `button.upr.nsr` yang langsung `mdOpen('wd',id)`; input `bm_*`, pratinjau baris, dan tombol Terbitkan tagihan massal dihapus dari UI. Status Belum/Sudah ditagih dan filter status `S.wf` (direset oleh `go()` dan pergantian sub-tab).
+- Sambungan: baris `.smc` membuka modal detail saat diketuk di luar tombol.
+- `terbitTagihan()`/`bmPrev` tetap ada hanya untuk generator data dan uji logika (tanpa tombol di UI).
+- Uji: `ui-air`, `ui-konfirmasi`, `ui-tarifair`, `ui-detailair` memakai alur modal.
+
+## [1.1.177] — 2026-10-10
+
+### Ditambah
+- Pencarian pelanggan Unit Air (`wSrch/wqHit`, state `S.wq`; dikosongkan oleh `go()` dan pergantian sub-tab) di Baca Meter, Sambungan, dan Pelanggan.
+- Modal `wd` (`MD.wd`, `S.ewd`; modals.js): detail pelanggan/sambungan dengan angka meter akhir, pratinjau (`wdPrev/bilTxt`), `terbitSatu()` (izin `air.kelola`, konfirmasi `cfInfo('terbitSatu')` yang memvalidasi dulu), status Sudah ditagih + Cetak tagihan, riwayat 6 tagihan terakhir. Tombol Detail di baris Baca Meter dan Sambungan.
+
+### Diubah
+- `terbitTagihan()` dipecah menjadi `bilChk` (periode), `bilPrep` (validasi satu sambungan), `bilPost` (jurnal, penjualan, bacaan, audit) yang dipakai juga oleh `terbitSatu()`. Perilaku tagihan massal tidak berubah; baris tersaring dibaca dari draf (`bmVal`) dan ikut dihitung di konfirmasi.
+- Uji: `ui-detailair.py` (baru; 390/1280 px).
+
 ## [1.1.176] — 2026-10-09
 
 ### Diubah

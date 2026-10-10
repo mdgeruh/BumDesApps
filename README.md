@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.176** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.181** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,7 +10,12 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.176)
+## Fitur (v1.1.181)
+- **Modal detail Air lebih ringkas (v1.1.181):** tanpa tombol kuitansi dobel, tombol cetak tenang, rincian dua kolom.
+- **Kuitansi pembayaran air (v1.1.180):** dokumen cetak per pembayaran; tombol di modal detail pelanggan dan di Riwayat Pembayaran.
+- **Tombol Bayar di modal detail Air (v1.1.179):** bagian Pembayaran dengan tanggal, kas/bank, jumlah, denda; bayar sebagian atau lunas per tagihan.
+- **Baca Meter: daftar bersih (v1.1.178):** ketuk pelanggan langsung membuka modal detail (angka meter akhir + Terbitkan tagihan); filter status; tanpa input di daftar.
+- **Unit Air: pencarian pelanggan dan modal detail (v1.1.177):** kolom cari di Baca Meter, Sambungan, Pelanggan; modal detail dengan angka meter akhir dan Terbitkan tagihan per pelanggan.
 - **Kurva dashboard halus dengan tooltip (v1.1.176):** bezier mulus; tooltip bulan, pendapatan, beban, selisih saat hover, klik/ketuk, atau keyboard.
 - **Data > Backup lebih rapi (v1.1.175):** ringkasan status, dua kolom di layar lebar, kartu awan datar, baris pilihan dan tombol rapi.
 - **Zona waktu mengikuti perangkat (v1.1.174):** tanggal hari ini dan jam tampilan memakai waktu perangkat (mis. WITA); data tersimpan tetap UTC.
