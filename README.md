@@ -1,329 +1,219 @@
-# Keuangan Pribadi
+# Sistem BUMDes Multi-Unit Usaha
+
+Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
+
+> **Status:** MVP Tahap 1 — **v1.1.192** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Desain:** `docs/BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
+
+## Menjalankan
+
+1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
+2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
+
+## Fitur (v1.1.192)
+- **Tombol struk (v1.1.192):** Struk tagihan, Struk kuitansi, dan Struk nota bernama jelas di modal.
+- **Cetak tahap I (v1.1.191):** audit PDF semua dokumen dan laporan (A4, struk 80/58 mm); perbaikan tabel Laporan Simpan Pinjam yang terpotong; 34 PDF diuji otomatis di uji pra-rilis.
+- **Cetak tahap H (v1.1.190):** struk thermal 80/58 mm untuk kuitansi, nota, tagihan, angsuran, pencairan, dan setoran/penarikan tabungan; ukuran kertas per perangkat; tombol Cetak struk.
+- **Cetak tahap G (v1.1.189):** Buku Besar dan Neraca Saldo dicetak sebagai tabel (judul kolom berulang, saldo awal/akhir, nomor bukti).
+- **Cetak tahap F (v1.1.188):** nama petugas muncul di kuitansi, nota, tagihan, dan akhir laporan; petugas tercatat saat transaksi.
+- **Perapian folder (v1.1.187):** dokumen selain README di `docs/`, ikon di `icons/`.
+- **Unit Air tahap E (v1.1.186):** ringkasan periode, kelompok per alamat, tombol ke atas, toast di bawah header modal, pengingat tunggakan (WhatsApp/salin/bagikan).
+- **Unit Air tahap D (v1.1.185):** empat tab harian + Pengaturan (Tarif, Pelanggan, Produk); tarif standar, golongan, denda, pasang baru, dan diskon di satu halaman.
+- **Unit Air tahap C (v1.1.184):** Piutang dengan cari dan filter; baris membuka modal terima pembayaran (Lunasi sisa, denda, cetak tagihan).
+- **Unit Air tahap B (v1.1.183):** Sambungan berupa daftar ketuk-untuk-detail; Putus dan Sambungkan kembali dengan konfirmasi di modal.
+- **Unit Air tahap A (v1.1.182):** progres tagihan, filter bawaan Belum ditagih, Terbitkan & lanjut ke pelanggan berikutnya.
+- **Modal detail Air lebih ringkas (v1.1.181):** tanpa tombol kuitansi dobel, tombol cetak tenang, rincian dua kolom.
+- **Kuitansi pembayaran air (v1.1.180):** dokumen cetak per pembayaran; tombol di modal detail pelanggan dan di Riwayat Pembayaran.
+- **Tombol Bayar di modal detail Air (v1.1.179):** bagian Pembayaran dengan tanggal, kas/bank, jumlah, denda; bayar sebagian atau lunas per tagihan.
+- **Baca Meter: daftar bersih (v1.1.178):** ketuk pelanggan langsung membuka modal detail (angka meter akhir + Terbitkan tagihan); filter status; tanpa input di daftar.
+- **Unit Air: pencarian pelanggan dan modal detail (v1.1.177):** kolom cari di Baca Meter, Sambungan, Pelanggan; modal detail dengan angka meter akhir dan Terbitkan tagihan per pelanggan.
+- **Kurva dashboard halus dengan tooltip (v1.1.176):** bezier mulus; tooltip bulan, pendapatan, beban, selisih saat hover, klik/ketuk, atau keyboard.
+- **Data > Backup lebih rapi (v1.1.175):** ringkasan status, dua kolom di layar lebar, kartu awan datar, baris pilihan dan tombol rapi.
+- **Zona waktu mengikuti perangkat (v1.1.174):** tanggal hari ini dan jam tampilan memakai waktu perangkat (mis. WITA); data tersimpan tetap UTC.
+- **Tabel jadwal simulasi ringkas dan polos (v1.1.173):** angka tanpa Rp, baris Jumlah, muat di HP tanpa geser, bukan kartu.
+- **Tampilan halaman pinjaman dirapikan (v1.1.172):** tanpa kartu di dalam kartu; teks tidak menempel ke garis tepi.
+- **Ajukan pinjaman dan rincian pinjaman sebagai halaman (v1.1.171):** Simpan Pinjam > Pinjaman: Ajukan pinjaman, Ubah pengajuan, dan rincian per nasabah kini halaman penuh (dua kolom di layar lebar; simulasi angsuran di samping isian; bilah tombol tetap terlihat; Kembali; kartu Pinjaman lain milik nasabah). Setujui, Cairkan, Bayar, Lunasi, Tolak, jaminan, dan profil nasabah tetap jendela kecil di atas halaman. Alamat: `/simpan-pinjam/ajukan`, `/simpan-pinjam/pinjaman/{id}`, `.../ubah`; tombol Back peramban kembali ke daftar.
+- **Master Tarif Air (v1.1.169; form lewat modal sejak v1.1.170):** halaman Unit Air > Pengaturan > Tarif (sebelumnya Master > Tarif Air) mengatur golongan tarif (dipilih per sambungan), denda keterlambatan (sekali per tagihan, diubah/dibebaskan saat Terima), biaya pasang baru (piutang saat sambungan baru), dan diskon (tagihan dan penjualan lain); semua bawaan nonaktif. Akun baru 4210 dan 4220.
+- **Format nomor penjualan dan tagihan air (v1.1.168):** Setelan > Profil > kartu Nomor (bila modul Unit Air aktif) mengatur format nomor penjualan dan tagihan air dengan kode {YYYY} {YY} {MM} {DD} {NNNN}.
+- **Piutang per tanggal lampau dan catatan atas laporan (v1.1.167):** Laporan > Piutang bisa dilihat per tanggal (dihitung mundur dari pembayaran); Neraca, Laba Rugi, Arus Kas, dan Piutang memuat Catatan atas laporan (otomatis + catatan tambahan di Setelan > Dokumen Cetak) yang ikut tercetak.
+- **Simpan Pinjam: aksesibilitas dan uji pelengkap (v1.1.166):** fokus keyboard masuk ke jendela rincian; uji aksesibilitas modal (`ui-spa11y.py`), uji transisi (`logic-168.js`), dan pemeriksa nama baku audit (`check-audit.js`).
+- **Rekap gaji tahunan (v1.1.165):** Laporan Gaji > Kelompokkan "Per tahun" dan "Per tahun · pegawai".
+- **Neraca dan Arus Kas dengan pembanding (v1.1.164):** Neraca vs akhir bulan sebelumnya/tahun sebelumnya; Arus Kas vs periode sebelumnya/tahun sebelumnya; selisih Rupiah dan persen, CSV ikut memuat pembanding.
+- **Laba Rugi dengan pembanding (v1.1.163):** Laporan > Laba Rugi > "Bandingkan dengan" periode sebelumnya atau tahun sebelumnya (selisih Rupiah dan persen; CSV ikut memuat pembanding).
+- **Format nomor pegawai dan tabungan (v1.1.162):** Setelan > Profil > "Nomor pegawai dan tabungan": format nomor dengan kode {YYYY} {YY} {MM} {DD} {NNNN}; berlaku untuk nomor berikutnya.
+- **Setor potongan gaji (v1.1.161):** Gaji > Proses Gaji > "Potongan gaji belum disetor": saldo per unit dan form setoran dari kas/bank (sebagian/penuh, tujuan wajib), pelunasan Kewajiban Lain 2200; dapat dibatalkan dengan jurnal pembalik.
+- **Gaji massal (v1.1.160):** Gaji > Proses Gaji > kartu "Proses massal": pilih periode, lalu setujui semua draf atau bayar semua gaji disetujui sekaligus (konfirmasi jumlah/total, tiap gaji dijurnal sendiri dan dapat dibatalkan sendiri, mengikuti filter unit dan izin).
+- **Keluar otomatis dan reset izin (v1.1.159):** Setelan > Pengguna & Peran: "Keluar otomatis" (Jangan, 5, 15, 30, 60 menit tidak aktif; `db.settings.idle_min`, pesan di layar masuk, tercatat di audit log) dan "Kembalikan matriks ke bawaan" (izin peran bawaan kembali ke awal; peran buatan sendiri dan Superadmin tidak berubah; ditolak bila Admin Sistem aktif akan habis).
+- **Cetakan baru (v1.1.158, SP-O O7):** Kartu Pinjaman (data, ringkasan, jadwal, riwayat kwitansi; tombol di rincian pinjaman) dan Rekap Tabungan (semua rekening aktif nasabah, 10 mutasi terakhir; tombol di rincian nasabah). Portal nasabah: Cetak kartu pinjaman dan Cetak rekap tabungan (hanya milik sendiri, tanpa tanda tangan petugas dan tanpa daftar kwitansi karena data itu tidak diterbitkan ke portal); cetak portal menyembunyikan header dan menu.
+- **Uji cepat dan lengkap (v1.1.157, SP-O O11):** `npm run test:cepat` (`node tests/suite.js cepat`: build --check, check-css/pwa/sql, semua uji logika, 10 uji UI ringkas; ±1,5 menit) dan `npm run test:lengkap` (+ logic-77 dan seluruh uji UI, paralel `-j N`; ±19 menit dengan 2 proses). Tanpa perubahan pada aplikasi.
+- **Pengingat backup berkala (v1.1.156, SP-O O12):** interval dipilih di Data > Backup (3/7/14/30 hari atau mati; `db.settings.backup_days`, bawaan 7), spanduk memuat jumlah perubahan sejak cadangan terakhir dan berubah galat pada 3x interval, Nanti menyembunyikan sampai besok (`bumdes_bk_snooze`), hanya tampil untuk peran dengan izin Export backup. Penjaga kunci awan (hanya anon/publishable, `sb_secret_`/service_role ditolak) sudah ada sejak sebelumnya.
+- **Daftar panjang dimuat bertahap (v1.1.155, SP-O O10):** Nasabah, Pihak, Pegawai, Tabungan, Tunggakan, Pelanggan, Sambungan, dan Piutang Air menampilkan 30 baris dengan tombol Muat lebih banyak (`pgLim/pgMore/pgGrow`); batas direset saat pindah halaman.
+- **Pemantau penyimpanan browser (v1.1.154, SP-O O9):** kartu "Penyimpanan di browser" di Data > Backup (bilah pemakaian dari perkiraan batas 5 MB, rincian data/log audit/salinan lokal), spanduk peringatan 70% dan 90%, Arsipkan log audit lama (unduh JSON lalu hapus; 200 log terbaru dan riwayat pinjaman aktif dipertahankan), Hapus salinan cadangan lokal.
+- **Pengguna & Peran dirapikan (v1.1.153):** form Ganti PIN ganda di Setelan diganti tautan ke Profil; kartu ringkasan angka di Daftar Pengguna; tombol tambah dan buat dari pegawai satu baris.
+- **Profil dirapikan (v1.1.152):** header dengan tombol Keluar dan kontak, kartu angka (menu, izin, masuk sejak), dua kolom di desktop, Ganti PIN berupa panel lipat, aktivitas terakhir beristilah ramah.
+- **Kosongkan isi database awan (v1.1.151):** `sql/98_kosongkan_isi.sql` mengosongkan isi tabel dan snapshot tanpa menghapus struktur, BUMDes, anggota, atau akun; aplikasi menampilkan pesan jelas dan tombol Timpa awan bila awan sudah dikosongkan.
+- **Tampilan sesuai akun dan peran (v1.1.150):** menu, sub-tab, kartu, dan tombol aksi hanya tampil bila peran akun mengizinkan (termasuk peran pembaca di awan); Setelan hanya untuk Admin Sistem; akun yang hanya bertugas di unit non-Simpan Pinjam tidak melihat menu Simpan Pinjam.
+- **Ubah data sendiri (v1.1.149):** di halaman Profil, pengguna yang login dapat mengubah nama, telepon, dan alamat (ikut ke data pegawai tertaut); tercatat di jejak audit.
+- **Dialog per aksi pinjaman (v1.1.149):** Setujui, Cairkan, Bayar angsuran, dan Lunasi dibuka sebagai dialog dengan nilai bawaan dan galat per kolom.
+- **Profil pengguna yang login (v1.1.148):** chip profil di header (avatar inisial, nama, peran; hanya avatar di HP) membuka halaman Profil: identitas, akses saya, ganti PIN (mode pengguna) atau atur ulang kata sandi (akun awan), aktivitas terakhir, dan Keluar. Alamat `#profil`.
+- **Sidebar dan header lebih jelas (v1.1.147):** pilihan unit usaha tampil lagi di sidebar desktop (sebelumnya hilang), nama BUMDes dua baris, header memuat ikon halaman, subjudul nama BUMDes · unit, dan tanggal hari ini; saat sidebar diciutkan pilihan unit pindah ke header.
+- **Penutup seragam UI (v1.1.146, UI-15):** CSS lama yang tak lagi dipakai (daftar lama Buku Besar, baris mutasi portal, grid awan, dll.) dihapus tanpa mengubah tampilan (48 tangkapan layar terang/gelap identik); kartu `dc` tidak terpotong saat dicetak; penjaga baru `node tests/check-css.js`.
+- **Layar masuk dan Portal Nasabah seragam dengan dashboard (v1.1.145, UI-14):** Beranda portal memakai dua kartu ringkasan berikon (Total tabungan, Sisa pokok pinjaman), tagihan berikutnya dan mutasi dalam kartu; daftar pinjaman/tabungan berbaris dengan avatar; detail, profil, ganti PIN, dan login portal dalam kartu berjudul. Layar Masuk, Siapkan BUMDes, dan Pilih BUMDes diberi ikon di judul; pilihan BUMDes berupa daftar berbaris. ID, fungsi, dan teks lama tidak berubah.
+- **Setelan Simpan Pinjam seragam dengan dashboard (v1.1.144, UI-13c):** 13 pengaturan (Nomor dan Denda, Perhitungan Jasa, Batas Pengajuan, Alur Pengajuan, Pemisahan Tugas, Kolektibilitas, Tabungan, Produk, Tabungan Wajib, Akun Fee, Pengakuan Fee, Klausul Akad, Templat Pengingat) tampil sebagai kartu berjudul dengan penjelasan sebagai subjudul; bagian lipat per kelompok tetap. Dengan ini seluruh tab Setelan sudah seragam.
+- **Setelan Pengguna & Peran dan Portal Nasabah seragam dengan dashboard (v1.1.143, UI-13b):** kartu *Akun saya*, *Pengguna aplikasi* (baris berawatar dengan peran, unit, status, dan tombol edit / reset PIN / nonaktifkan), *Matriks izin*, *Matikan mode pengguna* (bingkai merah), serta kartu *Pengaturan portal* dan *Status penerbitan*. Simpan Pinjam menyusul (UI-13c).
+- **Setelan Profil, Dokumen Cetak, dan Modul seragam dengan dashboard (v1.1.142, UI-13a):** kartu *Identitas BUMDes* (dua kolom di desktop) dan *Kop dan tanda tangan*; tab Modul berupa kartu penjelasan dan satu kartu per modul dengan lencana status dan saklar. Pengguna & Peran, Portal Nasabah, dan Simpan Pinjam menyusul (UI-13b, UI-13c).
+- **Data seragam dengan dashboard (v1.1.141, UI-12):** empat bagian Backup (Cadangkan, Pulihkan, Cadangan online, Kosongkan — bagian bahaya berbingkai merah) jadi kartu bernomor; Periode Akuntansi berupa daftar berbaris terurut dengan ikon kunci dan lencana status; Tutup Buku Tahunan dan Riwayat Penutupan jadi kartu dengan baris unit/tahun; Audit Log berupa daftar berbaris (keterangan, peristiwa, waktu, pengguna, aksi, entitas) dengan filter di dalam kartu.
+- **Master Pihak, Pegawai, Tarif & Pajak seragam dengan dashboard (v1.1.140, UI-11b):** kartu *Daftar Pihak*, *Daftar Pegawai* (gaji pokok di kanan), *Daftar Tarif*, *Daftar Pajak*, dan *Pratinjau hitung*; baris berawatar dengan status, filter di dalam kartu, tarif bertingkat diringkas sebagai "Bertingkat". Dengan ini seluruh tab Master sudah seragam.
+- **Master seragam dengan dashboard (v1.1.139, UI-11a):** Unit Usaha (kartu *Daftar Unit Usaha*, baris berawatar inisial dengan kode, jenis, dan status), Kas & Bank (baris dengan saldo dan status), dan Akun COA (filter dalam kartu, chip kode akun berwarna menurut tipe, akun induk menonjol dan akun anak menjorok); baris membuka modal seperti sebelumnya. Pihak, Pegawai, Tarif menyusul di UI-11b.
+- **Gaji seragam dengan dashboard (v1.1.138, UI-10):** Proses Gaji (kartu *Buat gaji periode*, *Pembayaran gaji*, *Daftar Gaji* berisi baris berawatar dengan bersih, status, dan aksi di baris tersendiri; kartu rincian gaji dengan komponen +/−), Komponen (kartu *Master Komponen* berbaris), dan Laporan (filter dalam kartu, empat kartu ringkasan, rekap dalam kartu).
+- **Unit Air seragam dengan dashboard, bagian 2 (v1.1.137, UI-9b):** Baca Meter (kartu periode tagihan; kartu *Angka Meter* berisi baris per sambungan dengan kolom angka akhir atau status sudah ditagih), Sambungan (daftar berbaris dengan lencana Aktif/Diputus, peringatan menunggak, kartu Ganti Meter dan Riwayat Ganti Meter), dan Tarif (kartu Pengaturan Tarif dan Simulasi Tagihan). Seluruh tab Unit Air kini seragam.
+- **Unit Air seragam dengan dashboard, bagian 1 (v1.1.136, UI-9a):** tab Penjualan Lain, Piutang, Pelanggan, dan Produk memakai kartu; formulir dalam kartu, daftar berupa baris berawatar dengan nominal, lencana status (Lunas/Belum lunas/Batal/Nonaktif), dan tombol aksi; tabel diganti. Baca Meter, Sambungan, dan Tarif menyusul (UI-9b).
+- **Buku Besar desktop dioptimalkan (v1.1.135):** di layar lebar daftar mutasi punya kolom Tanggal, Keterangan, Unit, Debit, Kredit, dan Saldo (debit hijau, kredit merah, nol dipudarkan) dengan judul kolom; filter akun dan cari/tanggal sebaris. Tampilan HP tidak berubah.
+- **Neraca Saldo seragam dengan dashboard (v1.1.134, UI-8):** tiga kartu ringkasan (total debit, total kredit, status seimbang) dan kartu *Saldo per Akun* berisi baris dengan ikon D/K, nama akun, kode, jenis, dan nominal; baris total debit dan kredit menggantikan tabel.
+- **Buku Besar seragam dengan dashboard (v1.1.133, UI-7):** kartu *Akun dan filter*, empat kartu ringkasan (saldo akhir, total debit, total kredit, mutasi), dan kartu *Mutasi* berisi baris dengan ikon D (debit) / K (kredit), keterangan, tanggal, unit, saldo berjalan, serta baris saldo awal dan akhir. Urutan, Cetak, dan Unduh CSV tidak berubah.
+- **Laporan seragam dengan dashboard (v1.1.132, UI-6):** filter dan cetak berupa kartu ringkas (tombol Cetak/Unduh CSV selebar kartu); Neraca, Laba Rugi, Arus Kas, Piutang, Simpan Pinjam, dan Unit Air tiap bagiannya dalam kartu; aging piutang berupa baris dengan bar, piutang terbesar berawatar, kecocokan Buku Besar berstatus ✓/⚠. Cetak dan CSV tidak berubah (kartu menjadi polos saat dicetak).
+- **Saldo Awal seragam dengan dashboard (v1.1.131, UI-5b):** ringkasan dalam kartu *Mulai dari saldo lama* (kartu berikon, checklist langkah), form piutang dan pinjaman berjalan awal berada dalam kartu masing-masing dengan form lipat, entri berupa baris berawatar (sisa, tombol Batalkan, baris Total) menggantikan tabel.
+- **Transaksi seragam dengan dashboard (v1.1.130, UI-5):** daftar transaksi dalam kartu *Daftar Transaksi* (pencarian, jenis, tanggal di dalam kartu); baris berisi ikon arus (hijau masuk, merah keluar, abu-abu transfer/lainnya), keterangan sampai dua baris, tanggal · unit · jenis ramah (`TLX`), nominal; lencana hanya untuk yang tidak berstatus diposting (mis. Dibatalkan, dicoret).
+- **Simpan Pinjam > Calon seragam dengan dashboard (v1.1.129, UI-4d):** daftar calon dalam kartu *Daftar Calon* (pencarian dan filter di dalam kartu); baris berisi avatar, nama, telepon · keperluan · tanggal dicatat, rencana pinjaman, dan lencana status. Semua sub-tab Simpan Pinjam kini memakai gaya yang sama dengan dashboard.
+- **Tautan modal rapi (v1.1.128):** nomor pinjaman di modal Jaminan kini bergaya aksen (hijau, tebal, panah, tanpa garis bawah; mengikuti mode gelap) menggantikan tautan biru bawaan browser. Kelas `a.lkx` bisa dipakai untuk tautan lain di dalam modal.
+- **Simpan Pinjam > Nasabah seragam dengan dashboard (v1.1.127, UI-4c):** daftar nasabah dalam kartu *Daftar Nasabah* (pencarian dan filter di dalam kartu); baris berisi avatar, nama, telepon · tabungan · alamat, jumlah pinjaman aktif, sisa pokok, dan lencana Aktif/Menunggak/Nonaktif.
+- **Simpan Pinjam > Jaminan seragam dengan dashboard (v1.1.126, UI-4b):** daftar jaminan dalam kartu *Daftar Jaminan* (pencarian dan filter di dalam kartu); baris berisi avatar nasabah, nomor pinjaman · jenis · deskripsi, nilai taksiran, dan lencana Dipegang/Dikembalikan.
+- **Simpan Pinjam > Tunggakan seragam dengan dashboard (v1.1.125, UI-4a):** *Daftar Tunggakan*, *Kolektibilitas pinjaman aktif*, *Aging Tunggakan*, *Pengingat penagihan*, dan *Kualitas portofolio (PAR)* kini masing-masing berupa kartu; tabel diganti baris dengan bar persentase; baris tunggakan berisi avatar nasabah, nomor pinjaman, lencana kolektibilitas, tindak lanjut terakhir, dan sisa tagihan.
+- **Simpan Pinjam > Tabungan seragam dengan dashboard (v1.1.124, UI-3):** kartu total tabungan berikon; *Proses akhir bulan* dan *Daftar Rekening* masing-masing dalam kartu; baris rekening berisi avatar nasabah, nomor · produk · unit · mutasi terakhir, saldo, dan lencana status; keterangan kesesuaian dengan akun 2300 di dasar kartu.
+- **Simpan Pinjam > Pinjaman seragam dengan dashboard (v1.1.123, UI-2):** daftar pinjaman kini berada dalam kartu *Daftar Pinjaman* (pencarian, filter, urutan di dalam kartu); tiap baris berisi avatar nasabah, nama, nomor pinjaman · tenor · bunga, nominal (sisa pokok atau pokok) dan lencana status; tabel berkepala diganti daftar berbaris. Keadaan kosong memakai gaya yang sama dengan dashboard.
+- **Simpan Pinjam > Ringkasan seragam dengan dashboard (v1.1.122, UI-1):** enam kartu ringkasan kini berikon berwarna seperti dashboard; *Akan jatuh tempo (30 hari)* menjadi kartu berisi daftar berbaris (avatar nasabah, nomor pinjaman, angsuran ke-n, tagihan, lencana hari lagi) menggantikan tabel berkepala. Pengingat backup di HP kini membungkus teks (sebelumnya terpotong).
+- **Transaksi terakhir seragam (v1.1.121):** di dashboard kini berupa kartu seperti yang lain: judul dan subjudul, ikon arus (hijau masuk, merah keluar, abu-abu transfer/lainnya), keterangan dipotong rapi, nominal tebal di kanan, tombol "Lihat semua transaksi" selebar kartu. Label jenis ramah ("Setoran Tabungan", "Biaya Pinjaman") menggantikan kode mentah (`sav setor`, `loan fee`).
+- **Dashboard tanpa duplikat (v1.1.120):** grafik *Pendapatan per Unit* dihapus karena angkanya sudah ada di kartu *Laba Rugi per Unit*; kartu itu kini berada di samping (desktop) atau tepat di bawah (HP) *Ringkasan Bulan Ini*. Catatan "Umum (tanpa unit)" tetap muncul di bawahnya bila ada selisih.
+- **Grafik Pendapatan per Unit lebih halus (v1.1.119):** lebih pendek, batang ramping dan berwarna lembut, avatar dan teks lebih kecil, agar tidak menyaingi kartu Laba Rugi per Unit di bawahnya.
+- **Laba Rugi per Unit lebih bersih (v1.1.118):** di dashboard kini berupa kartu daftar: avatar unit, pendapatan dan beban ringkas, laba menonjol (merah bila rugi), bar tipis beban terhadap pendapatan, dan baris total unit.
+- **Dashboard diprioritaskan (v1.1.117):** urutan baru: Perlu perhatian dan aksi cepat di atas, lalu angka utama (Total Kas & Bank, Tunggakan, Jatuh tempo 7 hari, Pendapatan, Beban, Laba/Rugi, piutang, tabungan), baru tren dan ringkasan. Pengingat backup dan cadangan awan jadi satu baris kecil (bukan banner besar); pesan "tidak ada peringatan" dipersingkat.
+- **Header ringkas dan status awan (v1.1.116):** di HP header lebih pendek dan baris nama BUMDes menyusut saat halaman digulir; judul dan nama panjang dipotong rapi. Ada ikon awan di header dengan titik status (hijau tersinkron, kuning menyimpan, merah perlu dicek, abu-abu belum masuk); diketuk membuka Data > Backup bagian awan.
+- **Awan lebih sederhana (v1.1.115):** bagian Cadangan online di Data > Backup kini satu kartu status (Tersinkron / Belum masuk / Belum diatur) dengan tombol Simpan ke awan, Muat dari awan, dan Keluar, ditambah pilihan Simpan otomatis. Koneksi, riwayat cadangan, ganti kata sandi, tabel relasional, dan penjelasan teknis dipindah ke "Pengaturan lanjutan" yang tertutup (terbuka otomatis bila koneksi belum diisi atau ada masalah).
+- **Awan pindah ke Data > Backup (v1.1.114):** pengaturan Awan (Supabase) tidak lagi di Setelan; kini menjadi bagian 3 di Data > Backup, di antara Pulihkan dan Kosongkan data. Tab Awan di Setelan dihapus.
+- **Profil ikut awan (v1.1.113):** profil BUMDes (nama, alamat, logo) ikut tersinkron bersama data: Simpan ke awan menyimpannya dan Muat dari awan memuatnya kembali (membatalkan v1.1.112). Import JSON dan Kosongkan data tetap menjaga profil.
+- **Data & Cadangan (v1.1.111):** halaman Data > Backup dibagi tiga bagian: Cadangkan (Export JSON, nama berkas memuat nama BUMDes, info cadangan terakhir), Pulihkan (Import JSON hanya mengganti data; nama, alamat, dan logo BUMDes tidak berubah) dan Kosongkan semua data (wajib mengetik KOSONGKAN; profil BUMDes, pengguna, dan pengaturan tetap; salinan lama disimpan sebagai cadangan lokal). "Reset data demo" menjadi "Isi data contoh" yang tersembunyi; ia juga tidak mengubah profil BUMDes.
+- **Nama BUMDes seragam (v1.1.110):** nama di Profil BUMDes dan nama di awan (tabel `bumdes`) kini disamakan. Saat Siapkan BUMDes, nama yang diisi menjadi nama Profil; saat admin menyimpan Profil atau memuat data dari awan, nama awan ikut diperbarui.
+- **Validasi Siapkan BUMDes (v1.1.109):** semua masalah isian tampil sekaligus di kotak merah yang menetap (tidak hilang seperti toast), kata sandi tidak terhapus saat gagal, ada ikon mata untuk menampilkan/menyembunyikan kata sandi (juga di layar Masuk), dan permintaan daftar punya batas waktu 25 detik.
+- **SQL bertahap (v1.1.108):** semua berkas SQL pindah ke folder `sql/` dengan nama berurut: `00_semua`, `01_inti`, `02_akuntansi`, `03_pegawai`, `04_tabungan`, `05_penjualan`, `06_nasabah`, `07_pengguna`, dan `98_kosongkan_isi`, dan `99_reset`.
+- **Satu aplikasi, satu database (v1.1.107):** model diubah menjadi 1 hosting = 1 proyek Supabase = 1 BUMDes. Peran developer, daftar BUMDes dan pemilih BUMDes dihapus (`supabase_developer.sql` dibuang). Pendaftar pertama lewat layar "Siapkan BUMDes" otomatis menjadi admin lalu penyiapan terkunci; `sql/99_reset.sql` mengosongkan database untuk mulai dari awal.
+- **Cek peran akun (v1.1.106):** Setelan > Awan punya tombol "Cek peran akun" yang menyebut apakah akun developer platform, akun BUMDes biasa, atau pengecekan gagal. Galat pengecekan developer (mis. `supabase_developer.sql` belum terpasang) kini ditampilkan, tidak lagi diam-diam menganggap akun sebagai admin biasa.
+- **Setelan > Awan beda untuk developer dan admin (v1.1.105):** akun developer melihat kartu Konsol Developer (buka halaman Developer, jumlah BUMDes klien, peran "Developer (platform)") tanpa Sinkron, Riwayat cadangan, Tabel relasional, dan pemilih BUMDes; akun admin/pengurus/pembaca melihat sinkron dan tabel BUMDes-nya tanpa konsol developer.
+- **Setelan > Awan di desktop (v1.1.104):** dua kolom berdampingan (kiri: Sinkron, Riwayat cadangan, Tabel relasional; kanan: Koneksi, BUMDes di awan, Ganti kata sandi, Developer, Tentang awan), kartu Sinkron selebar kolom, label "Tabel relasional" tidak lagi menyebut Tahap 2 dan ada lencana status. Di HP tetap satu kolom.
+- **Tabel relasional Tahap 5 (v1.1.103):** penjualan, rincian, pembayaran, produk, sambungan dan catatan meter Unit Air, jaminan, tarif dan pajak berversi, catatan penagihan, dan calon peminjam kini ikut disalin ke tabel Supabase (`sql/05_penjualan.sql`, berkas [5/7]) dengan pengecekan jumlah baris serta total penjualan, pembayaran, dan nilai jaminan. Berkas SQL kini 8.
+- **Konsol Developer: Masuk ke BUMDes (v1.1.102):** tiap BUMDes aktif punya tombol "Masuk ke BUMDes"; developer keluar dari konsol dan layar login menampilkan nama BUMDes itu. Setelah masuk dengan akun admin/pengurus BUMDes tersebut, aplikasi langsung membuka BUMDes itu (tanpa pemilih). Akun bukan anggota ditolak. Developer tetap tidak bisa membaca data klien.
 
-Aplikasi pencatatan keuangan pribadi berbasis web statis (HTML + CSS + JavaScript biasa, tanpa build tool). Tidak butuh instalasi atau server khusus. Data tersimpan di **localStorage browser** dan, kalau diaktifkan, disalin ke **cloud (Supabase)** supaya bisa dipakai di beberapa perangkat. Tanpa konfigurasi cloud, app berjalan 100% lokal. Kalau di-host lewat `http(s)://`, service worker menyimpan app supaya bisa dibuka tanpa internet.
+> **Masuk (v1.1.079):** satu halaman masuk untuk semua peran (email = pengurus/developer, nomor HP = nasabah) dengan arah otomatis menurut peran, sesi tersimpan sehingga bisa dipakai offline, dan portal nasabah di HP sendiri lewat Supabase (`sql/06_nasabah.sql`).
+>
+> **Awan (v1.1.078):** koneksi Supabase dapat ditanam di `config.js` (`SB_URL`, `SB_KEY` anon); lupa/ganti kata sandi, status sinkron, dan sinkron otomatis dua arah.
 
-Versi app: **v1.1.138** (tampil di kartu paling atas tab Profil). Kode dipecah per modul (`00-config.js` s.d. `15-startup.js`) yang dimuat berurutan oleh `index.html`.
+| Area | Isi |
+|------|-----|
+| Master data | Unit usaha, Chart of Accounts (parent-child), rekening Kas/Bank, **Pihak** (nasabah, pelanggan, pemasok, lainnya) dan **Pegawai** (nomor PEG-NNN, jabatan dari master jabatan dengan gaji/komponen bawaan, ceklist komponen gaji nominal/% gaji/% laba, unit, tanggal mulai, gaji pokok/tunjangan/potongan tetap, komponen tetap); tambah, edit, nonaktifkan (dengan perlindungan akun sistem/bersaldo/berpiutang/berpinjaman/ber-pegawai) |
+| Transaksi | Penerimaan, Pengeluaran, Transfer, Jurnal Manual, Jurnal Multi-baris, **Saldo Awal terpandu** (v1.1.025: ringkasan, checklist, pratinjau jurnal/jadwal langsung, form lipat, validasi tanggal/jasa/tenor) (piutang pelanggan dan pinjaman berjalan yang terhubung ke Unit Air / Simpan Pinjam); cari/filter (kata kunci, jenis, tanggal), 30 baris + muat lebih banyak |
+| Akuntansi | Jurnal otomatis, Debit = Kredit, pembatalan (void) dengan jurnal pembalik, periode bulanan (tutup/buka), **Tutup Buku Tahunan** (jurnal penutup per unit ke 3300 Laba Ditahan, kunci 12 periode, bisa dibatalkan) |
+| Simpan Pinjam | Calon → nasabah → pengajuan (draf, kirim, ubah, tolak beralasan) → persetujuan → pencairan; jadwal flat/menurun/anuitas, basis hari, pembulatan, masa tenggang, tanggal tagih tetap; bayar penuh/sebagian, pelunasan dipercepat (berbiaya + pajak), denda (tenggang/batas/dasar), aging dan kolektibilitas, restrukturisasi dan hapus buku (aturan dua orang), jaminan, pembatalan terkontrol; jasa, biaya, dan pajak dari Master Tarif & Biaya (berversi, bertingkat), dipotong saat pencairan, fee dapat diamortisasi; tabungan dan deposito (bunga per produk/bertingkat, tabungan wajib, pajak administrasi); akad, kwitansi, bukti pencairan, dan buku tabungan cetak; Audit Log baku + jejak per pinjaman; laporan pipeline, kolektibilitas, PAR 30/60/90, pendapatan per jenis, biaya per kode, pajak terutang, waktu proses, kepatuhan pemisahan tugas. Rincian per versi: `CHANGELOG.md`. |
+| Unit Air | **Air langganan (PAMSIMAS):** sambungan & meter (putus/sambung, ganti meter), tarif (bawaan Rp 10.000/m³ sama untuk semua + beban tetap Rp 15.000; bisa bertingkat) + minimum, **baca meter → tagihan bulanan** (Dr 1400 / Cr 4200), nota tagihan cetak, piutang dan pembayaran (penuh/sebagian), penanda tunggakan/layak diputus; **Penjualan Lain** tunai/kredit, pelanggan dan produk; jurnal otomatis; pembatalan terkontrol; **nota penjualan cetak** untuk penjualan biasa (tunai/kredit, multi-barang) |
+| Payroll | Menu **Gaji** (sub-tab Proses Gaji dan Komponen): komponen gaji fleksibel (lembur, insentif, tunjangan, kasbon; tetap per pegawai atau sekali pakai pada gaji draf), gaji dibuat per periode dari profil gaji pegawai, **slip gaji cetak**, **laporan gaji/SDM** (per periode, unit, pegawai, komponen; cetak dan CSV), alur Draf → Disetujui → Dibayar; pembayaran menjurnal Dr Beban Gaji (per unit pegawai) / Cr Kas-Bank / Cr Kewajiban Lain (potongan); batal bayar dengan jurnal pembalik |
+| Laporan | Menu **Laporan** (sub-tab Neraca, Laba Rugi, Arus Kas, Piutang, Simpan Pinjam, Unit Air): Neraca per tanggal, Laba Rugi per akun atau per unit dengan rentang tanggal, Arus Kas metode langsung (operasi/investasi/pendanaan) yang dicocokkan ke saldo Kas & Bank, **Piutang** (pinjaman + pelanggan per unit, aging, piutang terbesar, kecocokan dengan buku besar) **Simpan Pinjam** (posisi, pencairan, pembayaran, jasa dan denda, daftar pinjaman aktif), dan **Unit Air** (penjualan tunai/kredit, per produk, pelanggan, bulan, pembayaran piutang, cocok dengan jurnal); cetak dan CSV. Juga Dashboard, Buku Besar (saldo berjalan, filter), Neraca Saldo, Laporan Gaji; semua bisa difilter per unit |
+| Pengguna & peran (opsional, bawaan mati) | *Setelan > Pengguna & Peran*: login PIN (hash bergaram, kunci akun 5 menit setelah 5 kali salah), lima peran awal dengan matriks izin, reset PIN oleh Admin, pemulihan dari backup, sesi per tab, audit log mencatat *Oleh*. **Kontrol prosedur, bukan keamanan sungguhan** selama data di browser; izin ditegakkan di fungsi aksi, menu menyesuaikan peran, pembatasan per Unit tugas, matriks izin dapat diubah Admin (tercatat di audit) |
+| Keamanan data | Toast, dialog konfirmasi aksi berisiko (Void, batal cair/bayar, tutup/buka periode, Import, Reset), banner gagal simpan, pengingat backup, draf form bertahan saat render ulang, audit log |
+| Antarmuka | PWA (dipasang dari browser, jalan offline); mobile: navbar bawah dan lembar bawah untuk modal; desktop: sidebar ikon yang bisa diciutkan dan filter unit; Dashboard berperingatan (tunggakan, piutang air, periode terbuka, gaji belum dibayar), jalan pintas, tren 6 bulan, kartu dapat diklik; semua tambah/edit data lewat modal (jebakan fokus, Escape, galat di kolom, isian terjaga); Form Transaksi terpandu (akun lawan wajib, ringkasan jurnal sebelum Posting, draf dipulihkan); input Rupiah berpemisah ribuan, negatif ditolak, tanggal dd/mm/yyyy; aksesibilitas (tautan lompat, fokus terlihat, label terhubung, target 44px, kontras AA, mode gelap, `prefers-reduced-motion`); halaman masuk gabungan dan halaman developer |
+| Modul (v0.1.039) | *Setelan > Modul*: **Unit Air** dan **Gaji** bawaan **nonaktif** agar tampilan fokus ke Simpan Pinjam; dinyalakan lewat saklar. Menonaktifkan hanya menyembunyikan menu, navbar, kartu Dashboard, sub-tab Laporan Unit Air, dan Saldo Awal piutang pelanggan; data, jurnal, dan saldo tetap utuh. Data lama yang sudah berisi data Unit Air/Gaji tetap menyala saat dimuat (tidak hilang diam-diam). Dicatat di audit log |
+| Setelan | Profil BUMDes dan pengaturan denda/jasa pelunasan: nama, alamat, kontak, direktur, bendahara, no. SK; tampil di menu, judul, dan kop dokumen cetak; **tempat penandatanganan** dicetak bersama tanggal dokumen di atas tanda tangan |
+| Data | Export/Import JSON (divalidasi), Reset data demo, Periode + Tutup Buku Tahunan, **Audit Log** lengkap (filter aksi, entitas, tanggal, kata kunci; muat lebih banyak) |
 
-Dokumen pendamping: [CHANGELOG.md](CHANGELOG.md) (riwayat perubahan; versi lama lengkap di [CHANGELOG-ARSIP.md](CHANGELOG-ARSIP.md)) dan [SUMMARY.md](SUMMARY.md) (status, todolist, hasil uji).
+Aksesibilitas (v0.1.030): tautan *Lewati ke konten*, fokus keyboard terlihat, label semua kolom terhubung, target sentuh 44px di mobile, dialog konfirmasi menjebak fokus dan menutup dengan Escape, kontras warna memenuhi WCAG AA di tema terang dan gelap.
 
----
+**Fokus pengembangan: Simpan Pinjam** (integritas logika, mesin hitung, UI), lihat `docs/ROADMAP.md`. Belum ada: Pengiriman Unit Air dan ekspor PDF/XLSX. Rencana lengkap ada di `docs/ROADMAP.md`.
 
-## Daftar Isi
+## Prinsip
 
-- [Setup / Cara Menjalankan](#setup--cara-menjalankan)
-- [Penyimpanan Data](#penyimpanan-data)
-- [Tab & Fitur](#tab--fitur)
-- [Tipe Akun](#tipe-akun)
-- [Pinjaman Online (pinjol)](#pinjaman-online-pinjol)
-- [Akun Aset — termasuk Forex & Crypto Futures](#akun-aset--termasuk-forex--crypto-futures)
-- [Titipan / Piutang](#titipan--piutang)
-- [Mencatat Bulan yang Sudah Lewat (Backdate)](#mencatat-bulan-yang-sudah-lewat-backdate)
-- [Tab Laporan: Utang, Proyeksi & Simulasi](#tab-laporan-utang-proyeksi--simulasi)
-- [Export, Import & Backup](#export-import--backup)
-- [Sinkron Cloud (Supabase)](#sinkron-cloud-supabase)
-- [Keterbatasan yang Perlu Diketahui](#keterbatasan-yang-perlu-diketahui)
-- [Ide yang Belum Dibuat](#ide-yang-belum-dibuat)
-- [Struktur Kode (untuk yang mau modifikasi)](#struktur-kode-untuk-yang-mau-modifikasi)
-- [Penomoran Versi & Cara Rilis](#penomoran-versi--cara-rilis)
+- Debit = Kredit; jurnal tidak balance ditolak.
+- Transaksi `posted` tidak dihapus: void/reversal/adjustment.
+- Semua transaksi bermuara ke satu buku besar; laporan membaca dari jurnal.
+- Unit usaha adalah **dimensi** transaksi (tidak di-hardcode).
 
----
+## Arsitektur
 
-## Setup / Cara Menjalankan
+`UI → Application State → Business Logic → Accounting Engine → JSON State → localStorage`
 
-Tidak ada proses instalasi. Tiga cara pakai:
+Bagian kode: `CONFIG → STORAGE & ID → ACCOUNTING ENGINE → REPORTING → UI HELPERS → VIEWS → UI CONTROLLER`. Koleksi JSON mengikuti nama collection MongoDB (target), termasuk yang modulnya belum ada (kosong), sehingga migrasi hanya mengganti data access layer. Daftar koleksi: Blueprint §2.3.
 
-1. **Buka langsung di browser** — klik dua kali `index.html` (semua file harus ada di folder yang sama). Selesai, app langsung jalan. Font dan pustaka Supabase dimuat dari internet; tanpa koneksi, app tetap jalan dengan font bawaan dan mode lokal.
-2. **Install sebagai app** — app punya `manifest.json` + ikon, jadi bisa dipasang seperti aplikasi biasa (jendela sendiri, tanpa address bar):
-   - **HP (Android/Chrome):** buka `index.html` di HP, titik tiga (⋮) → **"Instal aplikasi"** / **"Tambahkan ke Layar utama"**
-   - **HP (iOS/Safari):** tombol Share → **"Add to Home Screen"**
-   - **Desktop (Chrome/Edge):** ikon Install di address bar (kalau dibuka via `http(s)://`), atau titik tiga → **More tools/Cast, save, and share → "Create shortcut..."** lalu centang **"Open as window"**
-   - Prompt install otomatis dari Chrome hanya muncul kalau app dibuka lewat `http://`/`https://` (bukan `file://` langsung) — lihat opsi "Host sendiri" di bawah. Dibuka langsung dari `file://` tetap jalan normal, cuma tanpa prompt install otomatis
-3. **Host sendiri (opsional)** — taruh seluruh folder di static file server apa pun (Nginx, `python3 -m http.server`, GitHub Pages, dll). Tanpa sinkron cloud, data ada di localStorage **per-browser**, jadi tiap perangkat punya datanya sendiri. Untuk berbagi data antar perangkat, aktifkan [Sinkron Cloud](#sinkron-cloud-supabase).
+## Batasan localStorage
 
-**Syarat:** browser modern dengan JavaScript aktif dan localStorage tidak diblokir (jangan mode Incognito/Private kalau mau data bertahan lama — mode privat biasanya menghapus localStorage begitu jendela ditutup).
+Cocok untuk prototype, simulasi, validasi engine, dan demo satu perangkat. Belum cocok untuk multi-user, multi-perangkat, keamanan production, data besar, audit server-side, dan backup otomatis.
 
-**Pindah ke versi baru:** data ada di browser, bukan di file, dan sebagian browser memperlakukan tiap lokasi/file HTML lokal sebagai penyimpanan terpisah. Cara paling aman: **Export JSON** dari versi lama, buka versi baru, lalu **Import JSON** (atau "Reset lalu isi dari file").
+> Ini blueprint/prototype teknis, bukan penetapan kebijakan akuntansi atau hukum BUMDes. Keputusan yang harus final sebelum pembukuan riil ada di `docs/ROADMAP.md` (Gerbang Keputusan).
 
----
-
-## Penyimpanan Data
-
-- Semua akun & transaksi disimpan di `localStorage` dengan key `keuangan-app-data-v2` (format JSON). localStorage selalu jadi penyimpanan utama, jadi app tetap cepat dan jalan offline.
-- **Tanpa sinkron cloud**, data 100% lokal. Kalau clear cache/data browser, uninstall browser, atau ganti perangkat, data akan hilang kecuali sudah di-**export** lebih dulu.
-- **Data rusak:** kalau isi localStorage tidak bisa dibaca, app tidak menimpanya. Salinan mentah diamankan di key `keuangan-app-data-v2-corrupt`, muncul peringatan merah, dan yang tampil hanya data contoh di memori. Jangan ubah apa pun sebelum memulihkan dari backup JSON.
-- Preferensi tampilan (tema, kartu ringkasan yang disembunyikan, grup akun yang di-collapse) dan nama pemilik (`kp_owner_name`) disimpan terpisah di localStorage dan **tidak ikut** ter-export ke JSON. Nama pemilik cuma dipakai sebagai awalan nama file export/backup dan tidak ikut sinkron akun; preferensi tampilan tetap per perangkat. Status sinkron ada di `kp_sync_meta`.
-- **Wajib backup rutin** lewat menu Export JSON (lihat bagian [Export, Import & Backup](#export-import--backup)) — app akan mengingatkan otomatis kalau sudah lama tidak export.
-
----
-
-## Tab & Fitur
-
-**Tampilan:** ponsel memakai satu kolom dengan navigasi bawah. Tablet (768px ke atas) memakai dialog di tengah layar. Desktop (1024px ke atas) memakai sidebar kiri, dan Ringkasan tampil dua kolom mulai 1280px. Mulai 1024px, Transaksi, Titipan, dan Laporan memakai dua panel (filter atau ringkasan menempel di kiri, isi di kanan). Mulai 1280px, Ringkasan, grup akun, dan kartu pengaturan (Data, Profil) tampil dua kolom, dan isi Laporan ikut dua kolom di Data & Profil. Di 1024–1279px tab-tab ini tetap satu kolom selebar maksimal 760px.
-
-**Desktop (≥1280px):** bar atas menempel (judul tab, kotak cari, tanggal, tema, profil). Form Catat transaksi dan form akun muncul sebagai panel dari kanan. Panel Akun di Ringkasan dibagi Aset/Utang, ada ikon per jenis dan bar pemakaian limit kartu kredit/PayLater. Pintasan keyboard (tidak aktif saat mengetik atau saat dialog terbuka): `/` fokus kotak cari, `N` catat transaksi, `[` buka/ciutkan menu samping.
-
-Header menampilkan sapaan sesuai jam (GMT+8), tanggal singkat, ikon tampilan (sistem/terang/gelap), dan ikon Profil. Footer di tab Profil menampilkan nama app, nomor versi, dan tanggal build.
-
-| Tab | Isi |
-|---|---|
-| **Ringkasan** | Kekayaan bersih, saldo per kategori, nilai akun, transaksi terbaru, insight bulanan, grafik (tren, kekayaan bersih, cashflow, kategori), serta kartu **Anggaran per kategori** (batas bulanan, peringatan 80%/100%), **Langganan berulang** (dicatat otomatis tiap bulan), **Dana darurat** (target dalam bulan pengeluaran), dan **Tren total utang** (6 bulan). Tiap kartu bisa disembunyikan lewat Profil > Tampilan Ringkasan; kartu yang belum ada datanya tersembunyi sendiri. |
-| **Akun** | Daftar semua akun dikelompokkan per tipe, dengan progress bar untuk akun berlimit (kartu kredit/pinjaman). Tambah/edit/hapus akun, buka detail akun (saldo, riwayat, jadwal cicilan, dll). Akun kas/bank/e-wallet punya bagian **Cocokkan saldo** (rekonsiliasi): isi saldo asli, lihat selisihnya, dan catat sebagai transaksi kategori *Penyesuaian saldo* yang tidak dihitung sebagai pemasukan/pengeluaran. |
-| **Transaksi** | Catat pemasukan/pengeluaran/transfer. Filter per akun, tipe, bulan, dan pencarian teks. Edit & hapus transaksi individual. Daftar dimuat bertahap (80 per halaman, tombol "Muat lebih banyak") supaya tetap ringan walau jurnalnya sudah panjang. |
-| **Titipan** | Catat uang yang dititipkan/dibelanjakan untuk orang lain, atau uang yang diterima dari orang lain — tanggalnya bisa diubah untuk catat titipan bulan yang sudah lewat. Ringkasan siapa berutang & siapa dititipi lebih. Tombol **Lunasi sekarang** untuk melunasi penuh dalam satu klik. |
-| **Laporan** | Ringkasan per periode (harian s.d. alltime/custom): total masuk-keluar, breakdown kategori, tren, perbandingan periode lalu, plus kartu utang: **Rincian utang, Proyeksi kas, Total biaya utang, Simulasi pelunasan, dan Saran**. Kartu utang berbentuk baris ringkas yang bisa diketuk untuk detail. Export ke PDF (print) otomatis membuka semua baris. Lihat [Tab Laporan](#tab-laporan-utang-proyeksi--simulasi). |
-| **Tagihan** | Pengingat jatuh tempo 7/30/90 hari/1 tahun (kartu kredit, PayLater, pinjaman) dan kalender tagihan bulanan ke depan yang menggabungkan semua akun berutang. Ketuk satu bulan untuk rincian per akun. Tombol **Ekspor ke kalender (.ics)** membuat file kalender berisi semua tagihan 12 bulan ke depan (satu event sehari penuh per tagihan, pengingat H-1) untuk diimpor ke Google Calendar/Apple Kalender. |
-| **Profil** *(ikon orang di header)* | Nama pemilik (awalan nama file export), akun sinkron (email, ubah email/kata sandi, masuk/keluar), dan **Pengaturan data lanjutan**: tampilan Ringkasan, data contoh, export/import JSON & CSV, reset (semua dengan backup otomatis sebelum aksi yang merusak data). Tombol **?** membuka riwayat perubahan ringkas untuk pengguna. |
-
----
-
-## Tipe Akun
-
-| Tipe | Perilaku |
-|---|---|
-| **Kas / Dompet, Bank, E-wallet** | Akun biasa: saldo naik-turun lewat transaksi masuk/keluar/transfer. |
-| **Aset** *(emas, kendaraan, properti, investasi, forex, kripto, dll.)* | **Tidak** dicatat lewat masuk/keluar harian — nilainya berdasarkan **valuasi periodik** yang kamu update manual. Beli/jual tambahan dicatat lewat Transfer. Lihat detail di bagian [Akun Aset](#akun-aset--termasuk-forex--crypto-futures). |
-| **Kartu Kredit** | Pengeluaran otomatis nambah tagihan; ada limit, tanggal cetak tagihan, bunga, dan skema pembayaran minimum. |
-| **PayLater** | Mirip kartu kredit, mendukung cicilan flat dengan tenor & bunga per rencana. |
-| **Pinjaman Bank** | Melacak sisa pokok, bunga (flat/menurun), jadwal jatuh tempo, biaya admin & materai, dan (opsional) denda telat. Panel "Catat pembayaran" di detail akun punya field tanggal sendiri — bisa dipakai untuk mencatat angsuran bulan-bulan yang sudah lewat, bukan cuma hari ini. |
-| **Pinjaman Online** | Bunga selalu flat, angsuran dihitung otomatis dari pokok, tenor, dan bunga. Mendukung biaya admin (dipotong saat cair atau dicicil), asuransi/proteksi opsional, dan denda telat opsional. Lihat [Pinjaman Online](#pinjaman-online-pinjol). |
-| **Titipan / Piutang** | Satu akun per orang. Saldo positif = orang itu berutang ke kamu; saldo negatif = kamu yang "berutang" (memegang titipan lebih dari mereka). Lihat [Titipan / Piutang](#titipan--piutang). |
-
-Total **kekayaan bersih** otomatis menjumlahkan semua tipe di atas dengan tanda yang benar (piutang dihitung sebagai aset, sisa hutang & titipan lebih dihitung sebagai kewajiban).
-
----
-
-### Arsip akun (v1.1.080)
-
-Akun yang tidak dipakai lagi diarsipkan, bukan dihapus: detail akun > **Arsipkan akun**. Syarat: bukan titipan, saldo Rp0 (utang: lunas, tanpa bunga terjadwal tersisa), tidak ada langganan aktif di akun itu, dan masih ada minimal satu akun aktif lain. Akun arsip (`archived: true`) pindah ke bagian **Diarsipkan** (terlipat) di bawah daftar akun, hilang dari pilihan transaksi baru dan chip filter, tidak dikenai biaya bulanan, dan tidak dihitung di Limit kartu terpakai. Riwayat, laporan, dan saldo historis tetap utuh; transaksi lama milik akun arsip tetap bisa diedit. Pulihkan lewat **Pulihkan akun** di detailnya. Field ikut ekspor/impor dan sinkron cloud.
-
-## Pinjaman Online (pinjol)
-
-Form akun tipe **Pinjaman Online** punya field berikut:
-
-| Field | Keterangan |
-|---|---|
-| **Bunga flat** | Persen per bulan (atau per tahun) dari **pokok awal**, sama tiap bulan sepanjang tenor |
-| **Biaya admin (% dari pokok)** | Dihitung ke Rupiah otomatis |
-| **Cara bayar biaya admin** | *Dipotong dari pencairan* (default) atau *Dicicil bersama angsuran* (pencairan Rp0 biaya, gaya aplikasi pinjol seperti ShopeePay) |
-| **Asuransi / proteksi (% per bulan dari pokok)** | **Opsional, boleh kosong** (kosong = tanpa asuransi) |
-| **Biaya materai (sekali)** | Nominal Rupiah, opsional, dipotong saat cair |
-| **Tenor, tanggal pencairan, tgl jatuh tempo** | Dasar jadwal angsuran & pengingat |
-
-**Rumus angsuran (otomatis, bisa diubah manual):**
-
-```
-angsuran = pokok / tenor
-         + pokok x bunga per bulan
-         + pokok x asuransi per bulan
-         + (pokok x admin% / tenor)    <- hanya kalau admin dicicil
-```
-
-Contoh: pokok Rp4.200.000, tenor 9 bulan, bunga 2,95%/bln, asuransi 0,15%/bln, admin 5% dicicil → **Rp620.200/bulan** (aplikasi aslinya Rp620.036; selisih kecil karena bunga aslinya sekitar 2,946%).
-
-Bunga, asuransi, dan admin yang dicicil diperlakukan sebagai satu komponen "**bunga & biaya**" di tiap angsuran (kategori transaksi `Bunga & biaya bank`). Artinya sisa hutang, jadwal angsuran, dan rincian "Catat pembayaran" otomatis ikut menghitungnya.
-
-**Pinjol yang sudah berjalan:** isi *Sisa pokok sekarang* dengan **sisa pokok yang sebenarnya**, bukan total angsuran terakhir. Kalau angka ini salah, jumlah angsuran yang dianggap lunas ikut salah (jadwal dihitung dari selisih pokok awal dan sisa pokok). Sisa hutang untuk pinjaman yang sudah berjalan memakai sisa pokok saja, karena bunga yang sudah terbayar sebelum app dipakai tidak diketahui.
-
----
-
-## Akun Aset — termasuk Forex & Crypto Futures
-
-Field pada akun tipe **Aset**:
-
-- **Jenis aset**: Emas, Kendaraan, Properti, Investasi, **Forex / trading (akun cent)**, **Kripto / crypto futures**, atau Lainnya
-- **Jumlah** & **Satuan** *(opsional)* — alat bantu hitung, bukan penentu nilai utama
-- **Valuasi**: riwayat `{tanggal, nilai (Rp), harga per satuan (opsional)}` — inilah sumber kebenaran nilai akun
-
-> ⚠️ App ini **satu mata uang (Rupiah)** — tidak ada konversi kurs otomatis (tidak ada `GOOGLEFINANCE` atau API kurs live). Semua nilai akhirnya harus dalam Rupiah, dikonversi manual oleh kamu.
-
-**Cara pakai untuk akun forex cent:**
-1. Jenis aset → "Forex / trading (akun cent)"
-2. Jumlah = **equity dalam USD** (bagi saldo sen ÷ 100 dulu sebelum diinput), Satuan = `USD`
-3. Setiap kali review: edit akun → update Jumlah ke equity terbaru → buka detail akun → tambah valuasi baru → isi "Harga per satuan" dengan **kurs USD/IDR hari itu** → nilai total Rp terhitung otomatis
-
-**Cara pakai untuk akun crypto futures (margin USDT):**
-1. Jenis aset → "Kripto / crypto futures"
-2. Jumlah = equity dalam **USDT**, Satuan = `USDT`
-3. Update berkala sama seperti di atas, tapi harga per satuan = **kurs USDT/IDR** dari exchange yang kamu pakai (bisa beda dari kurs USD resmi karena premium lokal)
-
-Satuan `USD`/`USDT` (dan alias umum lain: IDR, EUR, GBP, SGD, JPY, BTC, ETH) otomatis dinormalisasi ke huruf besar baku, baik saat diketik manual maupun saat import dari file JSON — jadi `"usd"`, `"Usd"`, `"USD"` semuanya jadi `"USD"`.
-
-Kalau tidak mau ribet dengan Jumlah/Satuan/Harga, kamu bisa langsung isi **nilai total dalam Rupiah** yang sudah kamu hitung sendiri di kolom valuasi, kosongkan Jumlah.
-
----
-
-## Titipan / Piutang
-
-- **"Belanjakan"** = kamu keluar uang untuk orang itu → piutang ke dia bertambah
-- **"Terima bayar"** = orang itu bayar/kembalikan uang ke kamu → piutang berkurang (atau kalau tidak ada piutang sebelumnya, berarti dia menitipkan uang ke kamu)
-- Tombol **"Lunasi sekarang"** di detail orang otomatis mengisi mode & nominal penuh sesuai sisa saldo — tinggal pilih akun dana dan simpan
-- Hapus orang di tab ini otomatis menghapus seluruh riwayat transaksinya (beda dari akun biasa yang harus dikosongkan transaksinya dulu)
-
----
-
-## Mencatat Bulan yang Sudah Lewat (Backdate)
-
-Kalau kamu baru mulai memakai app ini padahal pinjaman/titipan sudah berjalan beberapa bulan, dua form berikut mendukung tanggal mundur (bukan cuma hari ini):
-
-- **Pinjaman (bank/online) → detail akun → "Catat pembayaran"** — field **Tanggal** di form ini bisa diubah ke tanggal angsuran bulan lalu, bulan sebelumnya, dst. Catat satu per satu dari bulan paling lama ke paling baru, supaya perhitungan bunga terbayar & sisa pokok tetap akurat.
-- **Titipan → "+ Catat titipan"** — field **Tanggal** di form ini juga bisa diubah, untuk mencatat titipan/pembayaran yang sebetulnya terjadi di bulan lalu.
-
-**Untuk pinjaman yang memang sudah berjalan sejak sebelum pakai app ini** (bukan sekadar telat dicatat beberapa bulan), gunakan alur khusus saat *menambah akun baru*:
-1. Status pinjaman → **"Sudah berjalan (sudah dipakai / dicicil sebagian)"**
-2. Isi **Pokok awal saat pertama cair** (jumlah pinjaman asli) — beda dari **Sisa pokok sekarang** (saldo yang diisi di kolom saldo akun)
-3. Isi **Tanggal pencairan** (tanggal asli pinjaman cair, boleh jauh di masa lalu) dan **Tenor**
-
-Dengan kombinasi ini, jadwal angsuran otomatis menghitung mundur berapa bulan yang sudah "lunas" berdasarkan selisih pokok awal vs sisa sekarang — kamu tidak perlu mengetik ulang riwayat cicilan bulan demi bulan dari nol. Field "Catat pembayaran" di atas baru dipakai untuk angsuran-angsuran berikutnya (termasuk kalau ada yang telat dicatat).
-
-> Catatan: field ini mengubah tanggal *transaksi* yang dicatat (pembayaran/titipan), bukan menambah field "tanggal akun dibuat" baru — akun pinjaman sudah punya field tanggal historisnya sendiri (Tanggal pencairan), dan itulah yang dipakai form-form di atas sebagai rujukan.
-
----
-
-## Tab Laporan: Utang, Proyeksi & Simulasi
-
-Selain ringkasan periode (pemasukan, pengeluaran, kategori, tren, perbandingan periode lalu), tab Laporan punya kartu-kartu berikut. Semuanya menggambarkan **kondisi saat ini**, tidak terpengaruh filter periode.
-
-Rincian utang, Proyeksi kas, Total biaya utang, Simulasi, dan Saran memakai baris ringkas: titik status, nama, nilai, dan satu baris petunjuk. Ketuk baris (▾) untuk melihat detail; daftar panjang menampilkan sebagian dulu dan sisanya lewat "Tampilkan N lagi".
-
-| Kartu | Isi |
-|---|---|
-| **Posisi saat ini** | Total aset, total utang (sisa pokok), sisa bunga kontrak, kekayaan bersih |
-| **Rincian utang** | Per jenis: **Kartu kredit** (pemakaian vs limit, tagihan cetak, minimum, jatuh tempo, estimasi bunga), **PayLater** (limit terpakai, cicilan aktif, sisa bunga cicilan, tagihan periode ini), **Pinjol & Pinjaman bank** (sisa pokok + bunga & biaya, angsuran ke-n dari tenor, angsuran berikutnya, biaya efektif per bulan) |
-| **Proyeksi kas 30/60 hari** | Saldo kas + bank + e-wallet setelah tagihan & angsuran terjadwal dibayar, urut per tanggal dengan saldo sesudahnya. Kalau saldo diperkirakan minus, tanggal dan tagihan penyebabnya ditandai |
-| **Total biaya utang** | Bunga + admin + asuransi + materai per akun: sudah dibayar vs sisa, dan persen dari pokok |
-| **Simulasi pelunasan** | Kolom dana ekstra per bulan, lalu bandingkan 3 skenario: tanpa ekstra, ekstra dengan bunga tertinggi dulu, ekstra dengan saldo terkecil dulu (cicilan yang lunas digulung ke utang lain). Hasil: bulan bebas utang dan bunga tambahan. Hasil langsung berubah saat angka diketik |
-| **Saran** | Saran otomatis satu baris per poin (ketuk untuk detail), 3 tampil awal. Isinya: tagihan lewat jatuh tempo, dana 30 hari kurang, beban cicilan vs pemasukan, limit tinggi, pinjol berbiaya tinggi, pengeluaran melebihi pemasukan, beban bunga, prioritas dana ekstra |
-
-**Cara kerja singkat:**
-- **Beban cicilan** dibandingkan dengan rata-rata pemasukan bulanan 90 hari terakhir (tanpa pencairan pinjaman). Batas sehat yang dipakai: 30–35%.
-- **Bunga pinjaman flat** (pinjol, dll.) dianggap sudah terkunci di saldo, jadi bayar lebih awal tidak menghemat bunga di simulasi. Manfaatnya hanya cicilan yang lunas bisa digulung ke utang lain.
-- **Bunga kartu kredit** yang kosong dianggap 0% di simulasi. Isi bunganya di akun kartu supaya hasil akurat.
-- Saran hanya berbasis data yang kamu catat dan bukan nasihat keuangan profesional.
-
----
-
-## Export, Import & Backup
-
-| Aksi | Fungsi |
-|---|---|
-| **Export JSON** | Unduh seluruh akun & transaksi sebagai `keuangan-YYYY-MM-DD.json` — ini file backup utama kamu |
-| **Export CSV** | Unduh daftar transaksi (bukan akun) sebagai CSV, untuk dibuka di Excel/Sheets |
-| **Import JSON** | **Gabungkan** isi file JSON ke data yang sudah ada — akun dengan nama+tipe yang sama tidak diduplikasi, transaksi baru ditambahkan |
-| **Reset semua data** | Mengosongkan semua akun & transaksi (ada backup otomatis dulu sebelum dihapus) |
-| **Reset lalu isi dari file** | Menghapus **semua** data lama lalu menggantinya total dengan isi file JSON yang dipilih (ada backup otomatis dulu) |
-
-Semua field aset (Jenis, Jumlah, Satuan, Valuasi) dan field pinjol (termasuk cara bayar admin dan asuransi) ikut divalidasi & dinormalisasi konsisten di jalur Import maupun Reset-dari-file.
-
-App juga akan menampilkan pengingat kalau kamu sudah lama tidak export (backup reminder), supaya tidak kehilangan data kalau tiba-tiba clear cache browser.
-
----
-
-## Sinkron Cloud (Supabase)
-
-Opsional. Aktif hanya kalau `SUPABASE_URL` dan `SUPABASE_ANON_KEY` di `00-config.js` terisi; kalau key dikosongkan, app 100% lokal tanpa login.
-
-- **Cara kerja:** login email + kata sandi atau **Google** (daftar akun langsung dari layar masuk). Setelah tiap perubahan, data dikirim ke tabel `app_data` di latar belakang (jeda 1,5 detik, coba ulang tiap 30 detik kalau gagal). Status kecil di bawah footer: Tersinkron, Menyimpan, Belum terkirim, Mode lokal, atau "Ada pembaruan dari perangkat lain" (tombol Muat ulang).
-- **Bentrok:** tiap baris cloud punya nomor versi. Kalau perangkat ini dan cloud sama-sama berubah, muncul dialog untuk memilih data cloud atau data perangkat ini; data yang tidak dipilih dibackup ke file JSON dulu.
-- **Mode lokal dulu:** di layar login bisa memilih "Pakai mode lokal dulu". Perubahan tetap ditandai belum terkirim dan dikirim setelah login berikutnya. Kapan saja, buka tab **Profil** lalu pilih **Masuk** (opsi ini hanya tampil kalau belum login).
-- **Pustaka Supabase** dimuat hanya saat dibutuhkan (`syncLoadLib()`), bukan `<script>` statis, jadi CDN yang lambat/offline tidak menahan app. Kalau perangkat sudah punya data, app langsung tampil dari data lokal lalu menyegarkan diri setelah sinkron selesai.
-- **Biaya bulanan otomatis** (bunga/admin kartu & pinjaman) berID deterministik `fee-<akun>-<bulan>-...`, jadi dua perangkat tidak membuat transaksi ganda.
-- **Lupa kata sandi / ganti email & kata sandi:** tersedia di layar login dan tab Profil.
-- **Keamanan:** anon/publishable key memang publik, tapi **Row Level Security wajib aktif** (jalankan `supabase/setup.sql` di SQL Editor Supabase; berisi tabel, kebijakan, dan query verifikasi) supaya tiap akun hanya bisa membaca barisnya sendiri. Jangan pernah menaruh key `service_role` atau kata sandi database di file ini. Data tersimpan sebagai JSON biasa (tidak dienkripsi di sisi klien) di project Supabase kamu.
-- **Content-Security-Policy (v1.1.079):** `index.html` punya meta CSP: skrip hanya dari app sendiri dan `cdn.jsdelivr.net`, sambungan data hanya ke app sendiri dan `*.supabase.co`, tanpa `unsafe-eval`, `object-src none`. Karena itu **jangan menambah `<script>` inline atau atribut `onclick=`**; pakai `data-act`. Kalau menambah layanan luar, tambahkan origin-nya di CSP.
-- **Kunci versi Supabase JS:** jalankan `node tools/pin-supabase.js` (butuh internet) sekali; hasilnya versi persis + hash SRI di `14-sync.js`. Selama belum dijalankan, pustaka dimuat dari `@2` tanpa cek hash.
-- **Keluar:** menghapus sesi login, tapi salinan data tetap ada di localStorage perangkat itu. Untuk perangkat bersama, reset data lokal setelah keluar.
-
----
-
-## Keterbatasan yang Perlu Diketahui
-
-- **Satu mata uang (Rupiah)** — tidak ada dukungan multi-currency asli; forex/kripto ditangani lewat trik "harga per satuan = kurs", bukan konversi otomatis
-- **Tidak ada kurs/harga live** — semua update valuasi aset dilakukan manual
-- **Asuransi pinjol** dihitung sebagai persen per bulan dari pokok awal. Kalau aplikasi pinjolmu memakai skema lain (misalnya sekali di awal), pakai kolom angsuran manual
-- **Denda keterlambatan** (persen per hari + batas maksimal, diisi per akun pinjaman) hanya **perkiraan**: tidak mengubah saldo dan tidak membuat transaksi. Kalau denda benar-benar ditagih, catat sendiri sebagai pengeluaran
-- **Ekspor kalender (.ics)** berupa snapshot, bukan langganan: kalau tagihan berubah, ekspor ulang
-- **Rekonsiliasi saldo** hanya untuk akun kas/bank/e-wallet; aset memakai valuasi, akun utang memakai jadwal
-- **Proyeksi kas** hanya menghitung tagihan & angsuran yang sudah terjadwal. Pemasukan (gaji dll.), belanja harian, dan tagihan kartu yang belum dicetak belum ikut
-- **Simulasi pelunasan** memakai bunga bulanan sederhana dan tidak memasukkan belanja baru di kartu/PayLater
-
----
-
-## Ide yang Belum Dibuat
-
-- Pengecekan otomatis akun pinjaman yang sisa pokoknya tidak cocok dengan jadwal
-- Akun forex USD/cent dengan kurs
-
-Todolist lengkap (termasuk yang menunggu keputusan) ada di [SUMMARY.md](SUMMARY.md).
-
----
-
-## Struktur Kode (untuk yang mau modifikasi)
-
-JavaScript dipecah per modul dan dimuat berurutan di akhir `index.html` (semua berbagi scope global, jadi **urutan `<script>` penting**). File baru harus didaftarkan di `index.html`, `APP_SHELL` di `sw.js`, dan daftar file di `tests/run.js` kalau fungsinya dites.
+## Dokumen
 
 | File | Isi |
+|------|-----|
+| `docs/SUMMARY.md` | Ringkasan blueprint, aturan sistem, dan status implementasi |
+| `docs/ROADMAP.md` | Fase, todolist, gerbang keputusan, Definition of Done |
+| `docs/CHANGELOG.md` | Riwayat rilis terbaru (v1.1.041 ke atas) |
+| `docs/CHANGELOG_ARSIP.md` | Riwayat rilis lama (v1.1.040 ke bawah dan seri 0.1.NNN) |
+| `tests/` | Uji logika (Node) dan UI (Playwright); lihat `tests/README.md` (hanya lokal, tidak diunggah ke Git) |
+
+
+## Data dummy
+`data/bumdes-data-dummy.json` — backup contoh siap impor; lihat `data/README.md` (hanya lokal, tidak diunggah ke Git).
+
+## Struktur berkas dan alur kerja
+Satu folder datar (tanpa subfolder sumber). Halaman utama `index.html` memuat gaya dan skrip secara langsung, jadi **bisa di-host apa adanya** di hosting statis (Vercel, GitHub Pages, Netlify) tanpa langkah build.
+
+| Berkas | Isi |
 |---|---|
-| `00-config` | Konfigurasi dan state terpusat (`SUPABASE_URL`/key di sini) |
-| `01-data` | Lapisan data: load/save, saldo, pinjaman/anuitas, jadwal, kalender tagihan, arus utang |
-| `02-navigasi` | Navigasi, header, sapaan, aksi cepat, pengingat jatuh tempo |
-| `03-form-transaksi`, `05-form-titipan` | Form transaksi dan form titipan |
-| `04-akun`, `04b-akun-detail`, `04c-akun-aset-tagihan` | Akun: form dan simpan, modal detail, nilai aset + bayar kartu/PayLater/pinjaman + `addTxn` |
-| `06-util-ui` | Util UI (modal, toast, format, custom select) dan `dispatchDelegated()` |
-| `07-render-akun-transaksi`, `08-render-titipan` | Render tab Akun/Transaksi/Tagihan dan tab Titipan |
-| `09-grafik` | Grafik SVG dan pengaturan kartu Ringkasan |
-| `10-render-beranda` | Tab Ringkasan |
-| `10b-anggaran`, `10c-langganan`, `10e-dana-darurat`, `10f-tren-utang` | Kartu Ringkasan: anggaran, langganan berulang, dana darurat, tren utang |
-| `10d-changelog` | Riwayat perubahan di tombol `?` (`CHANGELOG_ENTRIES`) |
-| `10g-denda-telat`, `10h-ics-tagihan`, `10i-rekonsiliasi` | Perkiraan denda telat, ekspor `.ics`, rekonsiliasi saldo |
-| `09-grafik` (urutan kartu) | `RINGKASAN_ORDER_UNITS`, `sanitizeRingkasanOrder`, `moveInOrder`, `applyRingkasanOrder`; pengaturan di Profil > Tampilan Ringkasan (▲ ▼, tersimpan per perangkat) |
-| `10b-anggaran` + `10-render-beranda` (proyeksi) | `computeMonthProjection` (murni) dan `renderMonthProjection`: baris "Proyeksi akhir bulan" di blok insight kartu Bulan ini |
-| `09-grafik` (aksesibilitas) | `applyChartA11y`, `chartAriaLabel`, `describeChartPoint`, `describePieChart`, `trendArrow`; grafik `role="img"` + `aria-label`, keyboard (panah, Home, End, Esc) lewat `bindChartInteraction`, pembacaan titik lewat `#chart-live` (aria-live) |
-| `09-grafik` (segmen) | Kartu "Grafik" di Ringkasan: `CHART_SEGMENTS`, `pickChartSegment`, `setChartSegment`; `computeRingkasanVisibility` menentukan kartu mana yang dirender |
-| `10j-perhatian` | Strip "Perlu perhatian" di puncak Ringkasan (`computeAttentionItems`, `renderAttentionStrip`) dan kartu ajakan rencana (`renderPlanCta`; kartu Anggaran/Langganan/Dana darurat yang belum dipakai tersembunyi otomatis, `computePlanUsage`) |
-| `11-laporan`, `11b-laporan-utang`, `11c-laporan-proyeksi` | Laporan: periode dan kategori; rincian utang dan saran; proyeksi kas, biaya utang, simulasi (`renderLaporanExtra`) |
-| `12-render-utama` | Entry point `render()`, `APP_VERSION`/`APP_BUILD` |
-| `13-import-export`, `14-sync`, `15-startup` | Import/export/reset, sinkron Supabase, startup (dijalankan terakhir; kode yang memanggil fungsi lintas file ditaruh di sini) |
-| `sw.js`, `manifest.json`, `supabase/setup.sql`, `tests/run.js` | Service worker, PWA, skema Supabase + RLS, 259 test unit |
-| `03b-label.js` | Label (tag) transaksi: `txn.tags` (maks. 5 per transaksi, 24 huruf, huruf besar/kecil dianggap sama). Kolom Label + chip saran di form, `#label` di daftar dan detail, chip filter label dan pencarian di tab Transaksi, kartu "Per label" di Laporan, kolom Label di CSV, ikut ekspor/impor JSON |
-| `10k-target.js` | Target tabungan: nama, nominal, tenggat opsional, sumber dana (saldo satu akun kas/bank/e-wallet, atau setoran manual). Kartu di Ringkasan menampilkan progres, saran setoran per bulan (sisa ÷ sisa bulan kalender, dibulatkan ke atas Rp1.000), status tercapai/lewat tenggat. Ikut ekspor/impor JSON |
-| `06c-kalkulator.js` | Kalkulator kolom nominal: ketik rumus langsung (`25000+15000*2`, `150000/3`, `(1000+500)*2`, `200000+10%`) lalu Enter/pindah kolom; ikon kalkulator permanen di dalam setiap kolom nominal (dan tombol "Kalkulator" di bawah kolom yang fokus) membuka papan hitung layar (untuk HP tanpa tanda operasi) dengan "Pakai hasil". Parser sendiri tanpa eval; titik = ribuan, koma = desimal; kolom tanpa desimal membulatkan, tanpa minus menolak hasil negatif |
-| `06b-kunci.js` | Kunci app: PIN 6 angka (PBKDF2-SHA256 + salt; cadangan hash sederhana bila Web Crypto tak ada), layar kunci saat dibuka dan setelah >1 menit di latar, jeda 30 dtk dst. setelah 5x salah, Ubah/Matikan PIN di tab Profil, Lupa PIN = reset data perangkat (tanpa backup otomatis). PIN hanya di perangkat, tidak ikut ekspor/sinkron. Penghalang akses sekilas, bukan enkripsi data |
-| `02b-rute.js` | Rute web (hash): `#/akun`, `#/laporan`, `#/akun/<id>` untuk detail akun. Alamat mengikuti tab dan detail yang terbuka, tombol Kembali/Maju bekerja, tautan bisa dibookmark. Tombol Kembali juga menutup form/sheet yang terbuka. Tanpa pengaturan server |
-| `tools/build-dist.js` | `node tools/build-dist.js [folder]` membuat `dist/` untuk hosting: 30 file JS digabung jadi satu `app.js` (30 request → 1), CSS dipadatkan (±52 → ±41 KB), `index.html` dan daftar cache `sw.js` disesuaikan. JS ikut diperkecil bila `terser` terpasang (`npm i -D terser`). Sumber modular tetap dipakai untuk pengembangan dan test |
-| `tools/build-preview.js` | `node tools/build-preview.js` membuat `preview/keuangan-pribadi.html`: app lengkap dalam satu halaman (CSS + semua JS, mode lokal, data contoh + satu akun terarsip) untuk dipublikasikan sebagai artefak pratinjau. Ekspor/unduh file tidak berfungsi di artefak |
-| `tools/pin-supabase.js` | Skrip sekali jalan (butuh internet): mengunci versi `supabase-js` dan mengisi hash SRI di `14-sync.js` |
+| `index.html` | Halaman aplikasi; memuat `style.css` dan skrip di bawah (urutan penting) |
+| `style.css` | Seluruh gaya |
+| `config.js` | Konfigurasi, konstanta, versi (`APP_VER`) |
+| `accounting.js` | Penyimpanan, ID, mesin akuntansi, pelaporan dasar |
+| `layout.js` | Ikon, sidebar, navigasi bawah, peringatan, tren |
+| `views.js` | Tampilan utama: dashboard, laporan, transaksi, master, setelan |
+| `modules.js` | Pengaturan modul unit usaha |
+| `loans.js` | Simpan Pinjam: nasabah, pinjaman, jadwal, pembayaran, jaminan |
+| `water.js` | Unit Air: pelanggan, penjualan, langganan, meter |
+| `ui.js` | Toast, konfirmasi, draf form, komponen form dan aksesibilitas |
+| `payroll.js` | Pihak/pegawai sebagai master, penggajian, laporan gaji |
+| `reports.js` | Laporan keuangan, piutang, saldo awal terpandu, laporan air |
+| `uikit.js` | Kontrol form kustom (v1.1.033): dropdown, kalender, bulan, berkas |
+| `cloud.js` | Sinkron awan Supabase Tahap 1 (v1.1.042): koneksi, masuk, simpan/muat dengan kunci versi |
+| `sql/00_semua.sql` | **Pasang semua sekaligus** untuk proyek baru: gabungan otomatis 7 berkas di bawah (dibangkitkan `node build.js`, jangan diedit) |
+| `sql/98_kosongkan_isi.sql` | Kosongkan isi semua tabel data dan snapshot (versi awan kembali nol); struktur, BUMDes, anggota, dan akun tetap |
+| `sql/99_reset.sql` | Kosongkan database (hapus semua tabel dan fungsi) untuk mulai dari awal |
+| `sql/01_inti.sql` | [1/7] Tahap 1: snapshot, riwayat, kunci versi, peran, RLS |
+| `sql/02_akuntansi.sql` | [2/7] Tahap 2: tabel akuntansi dan Simpan Pinjam + migrasi |
+| `sql/03_pegawai.sql` | [3/7] Tahap 3: tabel pegawai dan gaji |
+| `sql/04_tabungan.sql` | [4/7] Tahap 4: tabel tabungan (rekening dan mutasi) |
+| `sql/05_penjualan.sql` | [5/7] Tahap 5: tabel penjualan, Unit Air, jaminan, tarif dan pajak |
+| `sql/06_nasabah.sql` | [6/7] Portal nasabah (HP + PIN) |
+| `sql/07_pengguna.sql` | [7/7] Pengguna dari pegawai (opsional) |
+| `docs/SUPABASE.md` | Panduan pasang cepat, urutan berkas SQL, peran, keamanan, uji |
+| `portal.js` | Portal nasabah mode demo (v1.1.038): masuk HP + PIN, pinjaman, tabungan, profil |
+| `calon.js` | Calon peminjam (v1.1.031): sub-tab Calon, status, jadikan nasabah |
+| `closing.js` | Tutup buku/periode, audit log, backup |
+| `users.js` | Pengguna, peran, login PIN |
+| `releases.js` | Data catatan rilis untuk tombol ? di Setelan (rilis baru ditambah di paling atas) |
+| `modals.js` | Dialog modal tambah/ubah data |
+| `flow.js` | Alur pengajuan lengkap opsional (SP2): verifikasi, analisis, wewenang persetujuan, akad |
+| `rates.js` | Mesin Tarif & Biaya: `rate_master`/`tax_master` berversi, `calcFees()` murni, tampilan Master > Tarif & Biaya |
+| `keyboard.js` | Keyboard layar dan pintasan |
+| `permissions.js` | Penjagaan izin per aksi (dimuat setelah semua fungsi) |
+| `pwa.js` | Pendaftaran service worker, tombol pasang aplikasi |
+| `app.js` | Memulai aplikasi (dimuat paling akhir) |
+| `manifest.json`, `sw.js` | PWA: pasang dari browser, jalan offline |
+| `icons/` | Ikon aplikasi: `icon.svg`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` |
+| `vercel.json` | Pengaturan Vercel (tanpa build; sw.js tidak di-cache) |
+| `bumdes.html` | Versi **satu-file mandiri** hasil `node build.js` (untuk dibuka langsung dari file/tes; jangan diedit) |
+| `build.js`, `package.json` | Perakit `bumdes.html` dan skrip dev (tidak perlu diunggah ke hosting) |
+| `README.md` | Dokumentasi utama (satu-satunya dokumen di folder utama) |
+| `docs/` | Dokumentasi lain: `release_notes.md`, `CHANGELOG.md`, `CHANGELOG_ARSIP.md`, `SUMMARY.md`, `ROADMAP.md`, `ROADMAP_ARSIP.md`, `SUPABASE.md`, blueprint |
+| `tests/`, `data/` | Tes dan data dummy — **hanya lokal, tidak diunggah ke Git** (`.gitignore`) |
 
-Titik masuk yang sering dipakai saat memodifikasi:
+**Deploy Git → Vercel:** unggah seluruh isi paket Git (semua berkas datar di root repo, tanpa `tests/` dan `data/`) ke GitHub; hubungkan repo ke Vercel (Framework Preset: *Other*). `vercel.json` sudah mengatur tanpa build dan folder keluaran `.`, jadi tidak perlu mengisi apa pun. Pada tiap commit Vercel men-deploy ulang.
 
-| Yang mau diubah | Cari |
-|---|---|
-| Rumus bunga/angsuran pinjaman | `computeLoanMonthlyInterest`, `computeOnlineInstallment`, `loanMonthlyFees`, `computeLoanSchedule`, `computeLoanRemaining` |
-| Form akun pinjol | `updateAccFormFields`, `updateOnlineLoanEstimate`, `saveAccount` |
-| Kartu-kartu di Laporan | `renderLaporanExtra` (`11c-laporan-proyeksi.js`), `laporanDebtDetailHtml`, `laporanAdviceHtml` (`11b-laporan-utang.js`), `laporanCashProjectionHtml`, `laporanDebtCostHtml`, `laporanSimulate` (`11c-laporan-proyeksi.js`) |
-| Nomor versi di footer | konstanta `APP_VERSION`, `APP_BUILD` (`12-render-utama.js`) |
-| Nama pemilik (awalan file export) & sapaan | `getOwnerName`, `setOwnerName` (`01-data.js`), `updateGreeting` (`02-navigasi.js`), `saveOwnerNameFromInput` (`02-navigasi.js`) |
-| Denda telat, `.ics`, rekonsiliasi | `computeLateFees` (`10g-`), `buildBillsIcs` (`10h-`), `computeReconcileDiff` (`01-data.js`) dan `reconcileCheck`/`reconcileApply` (`10i-`) |
-| Sinkron cloud | `syncBoot`, `syncReconcile`, `syncPush` (`14-sync.js`), konfigurasi di `00-config.js` |
-| Penanganan data rusak | `loadData`, `handleCorruptData` (`01-data.js`) |
-| Logika pinjaman | `computeLoanMonthlyInterest`, `computeLoanRemaining`, `computeLoanSchedule`, `loanEffectiveMonthlyRate`, `loanAnnuityPMT` (`01-data.js`), `splitLoanPayment` (`04c-akun-aset-tagihan.js`), `updateOnlineLoanEstimate` (`04-akun.js`), `laporanSimDebts`, `laporanDebtCostHtml` (`11c-laporan-proyeksi.js`) |
+**Hosting statis lain (unggah manual):** unggah `index.html`, `style.css`, semua `*.js` kecuali `build.js`, `manifest.json`, ikon, dan `vercel.json`. `bumdes.html`, `build.js`, `package.json`, dan dokumen tidak diperlukan agar aplikasi berjalan.
 
----
+**Pasang sebagai aplikasi (PWA):** setelah di-host lewat https, pilih *Pasang aplikasi* di browser. Dari `file://` aplikasi tetap jalan tetapi tidak bisa dipasang.
 
-## Penomoran Versi & Cara Rilis
-
-Nomor versi ada di `APP_VERSION` (`v1.1.NNN`) dan tampil di kartu atas tab Profil. `NNN` naik tiap batch perubahan. Detail per versi: [CHANGELOG.md](CHANGELOG.md).
-
-**Checklist rilis** (semua dokumen ikut diperbarui tiap ada perubahan kode):
-
-1. Naikkan `APP_VERSION` dan `APP_BUILD` (`12-render-utama.js`) **dan** `CACHE_VERSION` (`sw.js`) ke nomor yang sama.
-2. File JS baru: daftarkan di `index.html`, `APP_SHELL` (`sw.js`), dan `tests/run.js` (kalau dites).
-3. Dokumen: entri di [CHANGELOG.md](CHANGELOG.md) (teknis) dan `CHANGELOG_ENTRIES` di `10d-changelog.js` (bahasa awam, hanya entri terbaru per tanggal yang tampil); tandai [SUMMARY.md](SUMMARY.md) (todolist + hasil uji); perbarui README kalau fitur, struktur file, atau batasan berubah.
-4. Jalankan `node tests/run.js` (semua harus lulus), cek sintaks tiap file (`node --check`), lalu buka semua tab di browser.
-5. **Export JSON** dulu sebagai cadangan sebelum memasang versi baru.
-
-**Konvensi kode**
-- **Event delegation:** tulis `data-act="namaFungsi" data-a0="teks" data-n1="123"` (klik) atau `data-input-act` / `data-change-act` (argumen `data-input-a0`, `data-change-n0`, dst.), bukan `onclick="..."`. `data-a<i>` argumen teks, `data-n<i>` argumen angka. Atribut tambahan: `data-stop="1"` (berhenti setelah handler elemen ini) dan `data-backdrop` untuk menutup sheet. Ditangani `dispatchDelegated()` di `06-util-ui.js`.
-- **Kelas utilitas:** `style.css` punya `u-*` (mis. `u-mb8`, `u-w100`) di bagian bawah untuk margin/lebar sederhana; pakai itu alih-alih inline style baru. Kelas utilitas kalah oleh aturan yang lebih spesifik (mis. `#tab-laporan .section-title`).
-- **Transaksi non-operasional:** pembayaran utang, pencairan pinjaman, dan Penyesuaian saldo dikecualikan dari pemasukan/pengeluaran lewat `isNonOperatingTxn` (`01-data.js`); pakai helper itu untuk filter baru.
-
-**Memasang paket zip:** timpa file lama dengan isi zip. Zip parsial hanya berisi file yang berubah; paket lengkap juga berisi `sw.js`, `supabase/setup.sql`, `tests/run.js`, `manifest.json`, dan empat ikon. Salin semua file JS baru (mis. `04b-`, `04c-`, `11b-`, `11c-`, `10b-` s.d. `10j-`).
+**Alur pengembangan:** edit berkas sumber → `node build.js` (menyegarkan `bumdes.html`) → `npm test` (cek sinkron + versi + daftar cache) atau `npm run test:cepat` (uji pra-rilis ±1,5 menit; butuh `tests/` lokal) dan `npm run test:lengkap` (semua uji termasuk seluruh uji UI). Saat menambah/ganti nama berkas skrip: ubah daftar `<script src>` di `index.html` dan `ASSETS` di `sw.js`.
