@@ -1,11 +1,54 @@
-// Service worker BUMDes. Versi cache diambil dari ?v= saat didaftarkan (sama dengan versi aplikasi).
-// Strategi: halaman, skrip, gaya, manifest = jaringan dulu, cadangan dari cache (selalu terbarui bila online, tetap jalan bila offline);
-// ikon = cache dulu. Data aplikasi ada di localStorage, tidak pernah lewat service worker.
-const V=new URL(self.location).searchParams.get("v")||"dev",CACHE="bumdes-"+V;
-const ASSETS=["./","./index.html","./style.css","./config.js","./accounting.js","./layout.js","./views.js","./modules.js","./loans.js","./water.js","./ui.js","./uikit.js","./payroll.js","./reports.js","./closing.js","./users.js","./releases.js","./modals.js","./rates.js","./flow.js","./savings.js","./share.js","./sod.js","./collection.js","./restruct.js","./spaudit.js","./calon.js","./portal.js","./cloud.js","./entry.js","./keyboard.js","./permissions.js","./pwa.js","./app.js","./manifest.json","./icons/icon.svg","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png"];
-self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()))});
-self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("bumdes-")&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
-self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET"||new URL(r.url).origin!==self.location.origin)return;
- const page=r.mode==="navigate"||/\.(html|js|css|json)$/.test(new URL(r.url).pathname);
- e.respondWith(page?fetch(r).then(x=>{const c=x.clone();caches.open(CACHE).then(k=>k.put(r,c));return x}).catch(()=>caches.match(r).then(m=>m||caches.match("./index.html")))
-  :caches.match(r).then(m=>m||fetch(r).then(x=>{const c=x.clone();caches.open(CACHE).then(k=>k.put(r,c));return x})))});
+/* Service worker Keuangan Pribadi.
+ * Strategi: NETWORK-FIRST dengan cadangan cache. Saat online selalu ambil versi terbaru
+ * (jadi tidak ada risiko app basi), saat offline pakai salinan terakhir yang tersimpan.
+ * Hanya menangani file app sendiri + pustaka Supabase (jsdelivr) + font Google.
+ * TIDAK PERNAH menyentuh API Supabase (*.supabase.co) atau permintaan non-GET.
+ * Naikkan CACHE_VERSION bersamaan dengan APP_VERSION supaya cache lama dibersihkan. */
+const CACHE_VERSION = 'kp-v1.1.138';
+const APP_SHELL = [
+  './', 'index.html', 'style.css', 'manifest.json', 'icon-192.png', 'icon-512.png', 'icon-maskable-192.png', 'icon-maskable-512.png',
+  '00-config.js', '01-data.js', '02-navigasi.js', '02b-rute.js', '03-form-transaksi.js', '03b-label.js', '04-akun.js', '04b-akun-detail.js', '04c-akun-aset-tagihan.js',
+  '05-form-titipan.js', '06-util-ui.js', '06b-kunci.js', '06c-kalkulator.js', '07-render-akun-transaksi.js', '08-render-titipan.js',
+  '09-grafik.js', '10-render-beranda.js', '10b-anggaran.js', '10c-langganan.js', '10d-changelog.js', '10e-dana-darurat.js', '10k-target.js', '10f-tren-utang.js', '10g-denda-telat.js', '10h-ics-tagihan.js', '10i-rekonsiliasi.js', '10j-perhatian.js', '11-laporan.js', '11b-laporan-utang.js', '11c-laporan-proyeksi.js', '12-render-utama.js',
+  '13-import-export.js', '14-sync.js', '15-startup.js'
+];
+const CDN_HOSTS = ['cdn.jsdelivr.net', 'fonts.googleapis.com', 'fonts.gstatic.com'];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_VERSION);
+    // satu per satu: file yang tidak ada (mis. ikon) tidak menggagalkan seluruh instalasi
+    await Promise.allSettled(APP_SHELL.map(u => cache.add(u)));
+    await self.skipWaiting();
+  })());
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(k => k.startsWith('kp-') && k !== CACHE_VERSION).map(k => caches.delete(k)));
+    await self.clients.claim();
+  })());
+});
+
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  const sameOrigin = url.origin === self.location.origin;
+  if (!sameOrigin && !CDN_HOSTS.includes(url.hostname)) return;   // termasuk *.supabase.co: biarkan lewat
+
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_VERSION);
+    try {
+      const res = await fetch(req);
+      if (res && (res.ok || res.type === 'opaque')) cache.put(req, res.clone());
+      return res;
+    } catch (e) {
+      const hit = await cache.match(req, { ignoreSearch: req.mode === 'navigate' });
+      if (hit) return hit;
+      if (req.mode === 'navigate') { const shell = await cache.match('index.html'); if (shell) return shell; }
+      throw e;
+    }
+  })());
+});
