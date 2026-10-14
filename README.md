@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.192** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.201** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `docs/BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,7 +10,16 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.192)
+## Fitur (v1.1.201)
+- **Lokal dulu (v1.1.201):** pada pemasangan dengan koneksi awan, halaman masuk punya tombol Lanjut tanpa masuk (data lokal) untuk perangkat yang belum pernah masuk akun; masuk hanya diperlukan untuk sinkronisasi.
+- **Langkah awal dan CI (v1.1.200):** kartu Langkah awal di Dashboard (profil, unit, kas, pihak/pegawai, transaksi pertama, cadangan; tercentang otomatis, bisa disembunyikan); `.github/workflows/ci.yml` menjalankan `node build.js --check` (dan suite cepat bila folder tests/ ikut diunggah).
+- **Komponen per satuan (v1.1.199):** cara hitung baru tarif per jam/hari pada Komponen Gaji; tarif per pegawai lewat ceklist; jumlah satuan diisi pada gaji Draf (jumlah = tarif × satuan), tercantum di slip.
+- **Rekening pegawai dan daftar transfer (v1.1.198):** NIK, bank, nomor rekening, dan atas nama pada Master Pegawai; sub-tab Transfer di Gaji (daftar per periode, peringatan tanpa rekening, cetak A4, CSV); rekening tampil di slip.
+- **Calon putus, SP, pengaduan (v1.1.197):** kartu Calon Putus di Piutang (batas bulan dari Tarif) dengan tombol Putus; cetak Surat Peringatan 1/2 (A4) dan catat terkirim; tab Pengaduan untuk laporan pipa bocor/air mati (Baru/Ditangani/Selesai).
+- **Ringkasan Desa (v1.1.196):** laporan satu halaman untuk musyawarah desa (sambungan aktif/putus, KK terlayani, pemakaian per golongan dan dusun, tingkat penagihan, umur tunggakan, biaya per m³, kehilangan air); cetak A4 dan CSV.
+- **Kehilangan air (v1.1.195):** bacaan meter induk/sumber per bulan dibanding m³ ditagih; persen kehilangan, batas bawaan 20% dengan penanda, kartu di Laporan Pamsimas.
+- **Biaya Pamsimas (v1.1.194):** tab Biaya untuk listrik pompa, kaporit, perawatan pipa, honor operator; laporan biaya per m³ dibanding tarif rata-rata; saran dana pemeliharaan (persen, belum dijurnal).
+- **Pamsimas (v1.1.193):** Unit Air kini Pamsimas; Penjualan Lain dan Produk diganti Layanan & Biaya Lain (pelanggan wajib, layanan bawaan, bukti pembayaran layanan).
 - **Tombol struk (v1.1.192):** Struk tagihan, Struk kuitansi, dan Struk nota bernama jelas di modal.
 - **Cetak tahap I (v1.1.191):** audit PDF semua dokumen dan laporan (A4, struk 80/58 mm); perbaikan tabel Laporan Simpan Pinjam yang terpotong; 34 PDF diuji otomatis di uji pra-rilis.
 - **Cetak tahap H (v1.1.190):** struk thermal 80/58 mm untuk kuitansi, nota, tagihan, angsuran, pencairan, dan setoran/penarikan tabungan; ukuran kertas per perangkat; tombol Cetak struk.

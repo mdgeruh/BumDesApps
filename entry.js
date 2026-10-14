@@ -22,9 +22,10 @@ const cloudRO=()=>{const c=cloudCfg();return!!(c.token&&c.bumdes_id&&c.role==="p
 // wajib masuk berlaku bila koneksi tertanam di config.js (pemasangan resmi); koneksi manual dari Setelan tidak memaksa (penanda wajib=1 untuk uji)
 // peramban otomatis (navigator.webdriver, mis. uji Playwright) tidak dipaksa masuk kecuali uji menyalakan globalThis.__ENT_TEST
 function entNeed(){try{if(typeof navigator!=="undefined"&&navigator.webdriver&&!globalThis.__ENT_TEST)return false}catch(e){}if(!entOn()||!(cloudFixed()||entGet().wajib))return false;if(S.pt)return false;if(cloudCfg().token)return false;if(nsbGet())return false;if(entGet().lokal)return false;return true}
-// tautan "pakai data lokal" hanya untuk perangkat lama: ada data, belum pernah masuk akun
-const entLocalOk=()=>entOn()&&!entBlank()&&!entGet().seen&&!cloudCfg().email;
-function entLocal(){entPut({lokal:1,seen:1});S.lgmand=0;lgClose();S.msg="Memakai data lokal perangkat ini. Masuk akun awan dari Data > Backup kapan saja";render()}
+// tautan "lanjut tanpa masuk" (v1.1.201): tersedia di perangkat mana pun yang belum pernah masuk akun (perangkat baru yang masih berisi data contoh juga boleh memakai lokal dulu; masuk hanya perlu untuk sinkronisasi)
+// setelah pernah masuk akun tautan hilang, jadi tidak bisa dipakai untuk menghindari masuk
+const entLocalOk=()=>entOn()&&!entGet().seen&&!cloudCfg().email;
+function entLocal(){entPut({lokal:1,seen:1});S.lgmand=0;lgClose();S.msg="Memakai data lokal perangkat ini. Masuk untuk sinkronisasi kapan saja lewat Data > Backup atau ikon awan di header";render()}
 function entInit(){if(entInit.d)return;entInit.d=1;try{const n=nsbGet();if(n&&n.data&&n.data.party&&n.data.party._id&&!cloudCfg().token&&!S.pt){S.pt={pid:n.data.party._id,tab:"home",sel:null,prev:false,srv:1,at:Date.now()};S.ptl=0}}catch(e){}}
 // ----- masuk -----
 function entLogin(){const em=$("#ln-em"),pw=$("#ln-pw"),v=((em&&em.value)||"").trim();S.lgem=v;
