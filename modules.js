@@ -1,5 +1,6 @@
 // ===== SETELAN MODUL (v0.1.039): unit selain Simpan Pinjam bawaan nonaktif; data tidak dihapus =====
 function modInfo(k){if(k==="air"){const pc=db.sales.filter(x=>owedS(x)>.005).length;return db.water_connections.length+" sambungan · "+db.sales.length+" transaksi · "+(pc?pc+" piutang pelanggan belum lunas":"tanpa piutang berjalan")}
+ if(k==="pc"){const n=(db.projects||[]).length,r=(db.projects||[]).filter(x=>x.status==="berjalan"||x.status==="serah_terima").length;return n+" proyek · "+(r?r+" sedang berjalan":"tidak ada yang berjalan")}
  const dr=db.payrolls.filter(x=>x.status!=="paid").length;return db.payrolls.length+" gaji · "+(dr?dr+" gaji belum dibayar (draf/disetujui)":"tidak ada gaji tertunda")}
 function modAirUnit(){const u=db.business_units.find(x=>x._id===airUnit());if(!u)return`<p class="k smw">Unit usaha Pamsimas belum dipilih. Atur di Pamsimas > Pengaturan > Tarif.</p>`;
  return`<p class="k">Unit usaha: <b>${esc(u.name)}</b> · jenis ${u.type==="air"?"Pamsimas":u.type==="simpan_pinjam"?"Simpan Pinjam":"Lainnya"}</p>`+(u.type==="air"?"":`<p class="k smw">Jenis unit ini belum Pamsimas. Ubah di Master > Unit Usaha supaya sesuai.</p>`)}

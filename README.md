@@ -10,7 +10,18 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.210)
+## Fitur (v1.1.221)
+- **Fase PC tahap AC — Proyek dan Kegiatan (v1.1.221):** modul opsional Proyek dan Pengadaan; proyek dengan status Draf → Berjalan → Serah terima → Selesai/Dibatalkan, anggaran per pos dengan revisi berversi, hapus terbatas (PC1 roadmap 1.0).
+- **Pamsimas: Tarif ringkas dan Pengaturan dipecah (v1.1.220):** akordeon rincian blok, riwayat tarif, golongan, dan diskon; Pelanggan dan Layanan jadi tab sendiri di grup Data (tahap AB roadmap 1.1, tahap terakhir UI/UX Pamsimas).
+- **Pamsimas: keadaan kosong, Urungkan, sorot baris (v1.1.219):** keadaan kosong berikon dengan tombol langkah berikutnya, toast Urungkan untuk tagihan dan pembayaran, sorot baris yang baru berubah, istilah Piutang seragam (tahap AA roadmap 1.1).
+- **Pamsimas: tab berkelompok dan tombol aksi (v1.1.218):** grup Harian/Tagihan/Keuangan/Data, tombol melayang kontekstual per tab, pintasan Rincian sambungan dari piutang dan Loket (tahap Z roadmap 1.0f).
+- **Baca Meter cepat (v1.1.217):** isian angka akhir per baris dengan Enter pindah ke berikutnya, filter chip (Belum, Sudah, Perlu cek, Semua) dan rute, peringatan lonjakan >3× rata-rata (tahap Y roadmap 1.0f).
+- **Pamsimas: ringkasan angka kunci (v1.1.216):** kartu pelanggan aktif, tagihan, terkumpul, tunggakan, dan air tak berekening di atas tab; progres tagihan dan pembayaran; kartu Periode ringkas (tahap X roadmap 1.0f).
+- **Simpan Pinjam dan laporan lebih cepat (v1.1.215):** indeks angsuran dan pembayaran per pinjaman selama satu tampilan; 600 pinjaman membuka tab dalam sekitar 15–30 ms (sebelumnya 250–360 ms).
+- **Pamsimas lebih cepat (v1.1.214):** indeks sementara per tampilan; 800 pelanggan dan 9.600 tagihan membuka Baca Meter dalam sekitar 20 ms (sebelumnya sekitar 5 detik).
+- **Isian Pamsimas lewat modal (v1.1.213):** Layanan Lain, Biaya, dana pemeliharaan, Meter Induk, batas kehilangan air, Pengaduan, dan Tarif standar kini diisi lewat modal seperti form Pamsimas lainnya.
+- **Lonceng ringkas dan lebih lengkap (v1.1.212):** satu baris per notifikasi; ditambah pengajuan pinjaman menunggu, pinjaman disetujui belum cair, taksiran Pamsimas menunggu koreksi, dan sambungan belum dibaca (mulai tanggal 20).
+- **Dashboard tanpa daftar peringatan (v1.1.211):** daftar Perlu perhatian dihapus dari Dashboard; peringatan hanya di lonceng header.
 - **Lonceng notifikasi (v1.1.210):** ikon lonceng di header dengan lencana jumlah; panel berisi peringatan Dashboard, pengingat backup, dan angsuran jatuh tempo 7 hari dengan tombol aksi langsung.
 - **Saklar modul di Master (v1.1.209):** sub-tab Modul di Setelan dihapus; modul Pamsimas dan Gaji diaktifkan atau dinonaktifkan langsung dari Master > Unit Usaha.
 - **Unit Usaha dan Modul selaras Pamsimas (v1.1.208):** jenis unit Pamsimas di Master > Unit Usaha, unit bawaan bernama Pamsimas (data lama Sumber Air diubah otomatis), dan kartu modul Pamsimas menampilkan unit pencatat.

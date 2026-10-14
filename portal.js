@@ -37,7 +37,7 @@ function ptChgPin(){if(S.pt&&S.pt.srv)return nsbChgPin();try{const p=db.parties.
  ptPin(p,v("pc-n"));audit("portal_pin","party",p._id,"PIN portal diganti oleh nasabah",p.name);save();S.msg="PIN berhasil diganti"}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
 // ----- data nasabah (hanya milik sendiri) -----
 const ptLoans=pid=>db.loans.filter(l=>l.party_id===pid&&["active","paid_off","written_off"].includes(l.status)).sort((a,b)=>(a.status==="active"?0:1)-(b.status==="active"?0:1)||((b.disbursement_date||"")>(a.disbursement_date||"")?1:-1));
-const ptIns=l=>db.loan_installments.filter(i=>i.loan_id===l._id).sort((a,b)=>a.installment_number-b.installment_number);
+const ptIns=l=>insL(l._id).sort((a,b)=>a.installment_number-b.installment_number);
 const ptSisa=l=>ptIns(l).reduce((s,i)=>s+i.principal_due-i.principal_paid,0);
 const ptSav=pid=>(db.savings_accounts||[]).filter(a=>a.party_id===pid&&a.status==="aktif");
 function ptNext(pid){const t=today();let best=null;ptLoans(pid).filter(l=>l.status==="active").forEach(l=>{const o=ptIns(l).find(i=>i.status!=="paid");if(o&&(!best||o.due_date<best.i.due_date))best={l,i:o,tot:owed(o,t).total,late:o.due_date<t}});return best}

@@ -66,7 +66,7 @@ const akadBtn=l=>l.contract&&l.contract.no&&!l.opening?ib("print","Cetak akad","
 function vAkad(id){const bar=`<div class="noprint"><button class="b" onclick="window.print()">Cetak</button><button class="b s" onclick="S.doc=null;render()">Kembali</button></div>`,l=db.loans.find(x=>x._id===id);
  if(!l||!l.contract||!l.contract.no)return bar+'<p class="k">Akad belum dibuat untuk pinjaman ini.</p>';
  const c=l.contract,s=c.snap||akadSnap(l,c.date),pt=party(l.party_id),b=db.bumdes[0]||{},cal=calcOf(l),R=(k,v)=>`<tr><td>${k}</td><td class="n">${v}</td></tr>`,ms={flat:"Flat",menurun:"Menurun",anuitas:"Anuitas"},
-  ins=db.loan_installments.filter(i=>i.loan_id===l._id).sort((x,y)=>x.installment_number-y.installment_number),prev=!ins.length,
+  ins=insL(l._id).sort((x,y)=>x.installment_number-y.installment_number),prev=!ins.length,
   sch=prev?(()=>{try{return buildSchedule({principal:l.principal,rate:l.interest_rate,tenor:l.tenor,method:l.interest_method,start:l.approval_date||c.date,...cal}).map(x=>({n:x.n,due:x.due_date,p:x.principal_due,i:x.interest_due,t:x.total_due}))}catch(e){return[]}})():ins.map(x=>({n:x.installment_number,due:x.due_date,p:x.principal_due,i:x.interest_due,t:x.total_due})),
   jm=db.collaterals.filter(x=>x.loan_id===l._id),pn_=s.penalty,
   den=pn_.pct_day>0?pn_.pct_day.toLocaleString("id-ID")+"% per hari keterlambatan dari "+(pn_.base==="pri"?"pokok angsuran":pn_.base==="total"?"total angsuran":"pokok + jasa angsuran")+(pn_.grace>0?", setelah masa tenggang "+pn_.grace+" hari":"")+(pn_.cap_type==="pct"&&pn_.cap_val>0?", maksimal "+pn_.cap_val+"% dari angsuran":pn_.cap_type==="nom"&&pn_.cap_val>0?", maksimal Rp "+fm(pn_.cap_val):""):"Tidak ada denda keterlambatan",

@@ -58,7 +58,7 @@ function vDash(){const s=pl(inUnit);
  const all=balAll();
  const cash=db.cash_accounts.map(c=>[c.name,net(acc(c.account_id),all)]);
  const byU=db.business_units.map(u=>{const x=plU()[u._id]||{r:0,e:0};return{n:u.name,r:x.r,e:x.e,p:x.r-x.e}});
- const A=alertsAll(),TR=trend6(),qa=[tabOk("trx")?`<button class="b" onclick="qTrx('in')">${ic("plus")} Catat Penerimaan</button><button class="b s" onclick="qTrx('out')">${ic("plus")} Catat Pengeluaran</button>`:"",tabOk("sp")&&can("sp.bayar")?`<button class="b s" onclick="goS('sp',{st:'pinjaman'})">${ic("cash")} Bayar Angsuran</button>`:""].join("");
+ const TR=trend6(),qa=[tabOk("trx")?`<button class="b" onclick="qTrx('in')">${ic("plus")} Catat Penerimaan</button><button class="b s" onclick="qTrx('out')">${ic("plus")} Catat Pengeluaran</button>`:"",tabOk("sp")&&can("sp.bayar")?`<button class="b s" onclick="goS('sp',{st:'pinjaman'})">${ic("cash")} Bayar Angsuran</button>`:""].join("");
  const spOn=tabOk("sp"),tgd=spOn?db.loan_installments.filter(i=>i.status!=="paid"&&i.due_date<today()).map(i=>({i,l:db.loans.find(l=>l._id===i.loan_id)})).filter(x=>x.l&&x.l.status==="active"&&(S.unit==="all"||x.l.unit_id===S.unit)):[],
   tga=tgd.reduce((a,{i})=>a+i.principal_due-i.principal_paid+i.interest_due-i.interest_paid,0),nAk=db.loans.filter(l=>l.status==="active"&&(S.unit==="all"||l.unit_id===S.unit)).length,
   T0=today(),T7=addD(T0,7),upc=spOn?db.loan_installments.filter(i=>i.status!=="paid"&&i.due_date>=T0&&i.due_date<=T7).map(i=>({i,l:db.loans.find(l=>l._id===i.loan_id)})).filter(x=>x.l&&x.l.status==="active"&&(S.unit==="all"||x.l.unit_id===S.unit)):[],upa=upc.reduce((a,{i})=>a+i.principal_due-i.principal_paid+i.interest_due-i.interest_paid,0),
@@ -69,8 +69,7 @@ function vDash(){const s=pl(inUnit);
   cashT=cash.reduce((a,c)=>a+c[1],0),tot6=TR.reduce((a,x)=>a+x.r,0),totE6=TR.reduce((a,x)=>a+x.e,0),
   wd=(()=>{const a=[0,0,0,0,0,0,0],c0d=addD(T0,-90);db.transactions.forEach(t=>{if(t.status==="posted"&&t.date>=c0d&&t.date<=T0&&(S.unit==="all"||t.business_unit_id===S.unit))a[new Date(t.date+"T00:00:00Z").getUTCDay()]++});return a})(),
   uCol=i=>"var(--c"+(i%6+1)+")";
- return`<h2>Perlu perhatian${A.length?" ("+A.length+")":""}</h2>${A.length?`<div class="al" role="list">${(S.alAll?A:A.slice(0,3)).map(a=>`<div class="wn ${a.sev}" role="listitem"><b>${esc(a.t)}</b><span>${a.d}</span><button class="b s" onclick="${a.fn}">${esc(a.a)}</button></div>`).join("")}</div>${A.length>3?`<button class="b s" onclick="S.alAll=!S.alAll;render()">${S.alAll?"Ringkas peringatan":"Tampilkan semua ("+A.length+")"}</button>`:""}`:`<div class="okb">✓ Tidak ada peringatan: tunggakan, piutang, periode, dan gaji aman.</div>`}
-${qa?`<div class="qa noprint" aria-label="Jalan pintas">${qa}</div>`:""}
+ return`${qa?`<div class="qa noprint" aria-label="Jalan pintas">${qa}</div>`:""}
 ${vOnb()}
 <div class="g dk">${kp("Total Kas & Bank",rp(cashT),cash.length+" rekening","","","cash","t1")}
 ${spOn?kp("Tunggakan",rp(tga),tgd.length?tgd.length+" angsuran lewat jatuh tempo":"Tidak ada tunggakan","goS('sp',{st:'tunggakan'})",tgd.length?"bd":"","flag","t3"):""}

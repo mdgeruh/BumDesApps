@@ -94,7 +94,7 @@ function piuHist(t){const U={},P={},un=id=>U[id||""]??={p:0,c:0},pa=(id,ty)=>P[i
  ls.forEach(l=>{const v=l.principal-sumA(p=>p.loan_id===l._id&&p.payment_date<=t);if(v>0){un(l.unit_id).p+=v;pa(l.party_id,"nasabah").v+=v}
   if((l.restructures||[]).some(r=>r.date>t)){nr++;return}
   const lp=all.filter(p=>p.loan_id===l._id);
-  db.loan_installments.filter(i=>i.loan_id===l._id).forEach(i=>{let pp=0,np=0,wl=0;lp.forEach(p=>payAlloc(p).forEach(a=>{if(a.i!==i._id)return;if(p.payment_date<=t){pp+=a.p;np+=a.n}else wl+=a.wi||0}));
+  insL(l._id).forEach(i=>{let pp=0,np=0,wl=0;lp.forEach(p=>payAlloc(p).forEach(a=>{if(a.i!==i._id)return;if(p.payment_date<=t){pp+=a.p;np+=a.n}else wl+=a.wi||0}));
    const pr=i.principal_due-pp,tg=pr+(i.interest_due+wl-np);if(i.due_date&&tg>0)ins.push({due:i.due_date,pr,tg})})});
  const ss=db.sales.filter(x=>x.status==="posted"&&x.payment_type!=="cash"&&x.date<=t&&iu(x.unit_id)).map(x=>({x,v:Math.round((x.total-db.payments.filter(p=>p.sale_id===x._id&&p.status!=="voided"&&p.date<=t).reduce((a,p)=>a+p.amount,0))*100)/100})).filter(r=>r.v>0);
  ss.forEach(r=>{un(r.x.unit_id).c+=r.v;pa(r.x.party_id||"","pelanggan").v+=r.v});
@@ -156,7 +156,7 @@ function awalPinjam(){try{negAny();const v=i=>$("#"+i).value.trim(),d=v("ap-d"),
  if(!(r>=0))throw fe("ap-r","Jasa tidak boleh negatif");if(r>100)throw fe("ap-r","Jasa maksimal 100% per tahun");if(!(n>0))throw fe("ap-t","Sisa tenor minimal 1 angsuran");if(n>360)throw fe("ap-t","Sisa tenor maksimal 360 angsuran");if(!j)throw fe("ap-j","Tanggal jatuh tempo angsuran berikutnya wajib diisi");if(!isD(j))throw fe("ap-j","Tanggal jatuh tempo tidak valid");if(!e)throw fe("ap-e","Pilih akun ekuitas lawan");
  const t=post({type:"opening",date:d,unit:u,desc:"Saldo awal pinjaman – "+party(pt).name,lines:[{acc:"ACC1300",d:P},{acc:e,c:P}]});
  const l={_id:uid("LOAN"),loan_number:numNext("loan",d),unit_id:u,party_id:pt,application_date:d,approval_date:d,disbursement_date:d,principal:P,interest_rate:r,interest_method:v("ap-m"),tenor:n,installment_amount:0,status:"active",opening:true,disbursement_txn:t._id,disbursement_cash:null};
- db.loans.push(l);schedule(l);db.loan_installments.filter(i=>i.loan_id===l._id).forEach(i=>{i.due_date=addM(j,i.installment_number-1)});
+ db.loans.push(l);schedule(l);insL(l._id).forEach(i=>{i.due_date=addM(j,i.installment_number-1)});
  audit("opening","loan",l._id,l.loan_number+" · sisa pokok Rp "+fm(P)+" · "+n+" angsuran");save();clrF("#ap-p,#ap-t");S.awo=Object.assign(S.awo||{},{l:false});S.msg="Saldo awal pinjaman "+l.loan_number+" dicatat; angsuran dibayar lewat Simpan Pinjam"}catch(e){ferr(e);return}render()}
 function batalAwalL(id){try{const l=db.loans.find(x=>x._id===id);if(!l||!l.opening)throw Error("Bukan saldo awal pinjaman");if(db.loan_payments.some(p=>p.loan_id===id&&p.status!=="voided"))throw Error("Batalkan pembayaran angsuran dulu");
  rev(l.disbursement_txn);db.loan_installments=db.loan_installments.filter(i=>i.loan_id!==id);db.loans=db.loans.filter(x=>x._id!==id);if(S.ln===id)S.ln=null;audit("void","loan",id,"saldo awal "+l.loan_number);save();S.msg="Saldo awal pinjaman dibatalkan dengan jurnal pembalik"}catch(e){S.msg="⚠ "+e.message}render()}
@@ -172,7 +172,7 @@ function awalPv(k){try{const g=i=>($("#"+i)||{}).value||"",o=$(k==="p"?"#aw-pv":
 const awoOp=(k,n)=>(S.awo&&S.awo[k]!==undefined?S.awo[k]:!n)?" open":"";
 function vAwal(){const uo=opt(db.business_units.filter(isAct),u=>[u._id,u.name]),pel=db.parties.filter(p=>p.type==="pelanggan"&&isAct(p)),nas=db.parties.filter(p=>p.type==="nasabah"&&isAct(p)),
  sp=db.sales.filter(x=>x.opening&&x.status==="posted"&&(S.unit==="all"||x.unit_id===S.unit)),sl=db.loans.filter(l=>l.opening&&(S.unit==="all"||l.unit_id===S.unit)),
- sisa=l=>db.loan_installments.filter(i=>i.loan_id===l._id).reduce((s,i)=>s+sisaPok(i),0),tp=sp.reduce((s,x)=>s+x.total,0),tps=sp.reduce((s,x)=>s+owedS(x),0),tl=sl.reduce((s,l)=>s+sisa(l),0),
+ sisa=l=>insL(l._id).reduce((s,i)=>s+sisaPok(i),0),tp=sp.reduce((s,x)=>s+x.total,0),tps=sp.reduce((s,x)=>s+owedS(x),0),tl=sl.reduce((s,l)=>s+sisa(l),0),
  st=(ok,t)=>`<li class="${ok?"ok":""}"><span class="aws" aria-hidden="true">${ok?"✓":"○"}</span><span>${t}</span></li>`,air=modOn("air"),
  emp=(n,t)=>n?"":`<p class="k">${t}</p>`,
  av=(n,i)=>`<span class="bi" style="background:var(--c${i%6+1})" aria-hidden="true">${esc((n||"?").trim().charAt(0).toUpperCase())}</span>`,
