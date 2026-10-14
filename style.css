@@ -791,3 +791,28 @@ header .hic{display:none}
 .tgs{border:1px solid var(--bd);border-radius:14px;background:var(--cd);padding:0 14px;margin:12px 0}.tgs>summary{min-height:48px}.tgs[open]{padding-bottom:6px}.tgs[open]>summary{border-bottom:1px solid var(--bd);margin-bottom:8px}.tgs .dc,.tgs .card{box-shadow:none;border:0;padding-left:0;padding-right:0}
 @media print{.tgd:not([open])>*:not(summary){display:none}}
 @media (max-width:480px){.stsub .stt{padding:8px 8px;gap:5px}.stsub .stt .stc{min-width:18px;padding:0 5px}}
+
+/* v1.1.233 — Header aplikasi lebih bersih: judul di kiri; di kanan tanggal, filter unit, kelompok status (notifikasi, awan, backup), lalu profil */
+header{box-sizing:border-box;min-height:56px;padding:8px 20px;gap:12px;background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--ln);box-shadow:none}
+header h1#ttl{font-size:17px;font-weight:650;letter-spacing:-.01em;line-height:1.2}
+header .sub{font-size:12px;color:var(--mu);margin-top:1px}
+header .hru{gap:8px;align-items:center}
+header .hdt{border:0;background:transparent;padding:0 6px;min-height:0;font-size:12.5px;color:var(--mu)}
+header #unit{appearance:none;-webkit-appearance:none;min-height:36px;height:36px;max-width:220px;padding:0 30px 0 14px;border:1px solid var(--ln);border-radius:999px;background:var(--cd) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a9a92' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 11px center;font-size:13px;font-weight:550;color:var(--tx);cursor:pointer;transition:border-color .15s,box-shadow .15s}
+header #unit:hover{border-color:var(--bd)}header #unit:focus-visible{outline:0;border-color:var(--ac);box-shadow:0 0 0 3px var(--ring)}
+header .hst{display:inline-flex;align-items:center;gap:2px;padding:2px;border:1px solid var(--ln);border-radius:999px;background:var(--cd)}
+header .hst:not(:has(.chip,.belb)){display:none}
+header .hst .chip,header .hst .belb{min-width:34px;min-height:34px;height:34px;margin:0;padding:0 10px;border:0;border-radius:999px;background:transparent;box-shadow:none;color:var(--mu);font-size:12.5px;font-weight:550;transition:background .15s,color .15s}
+header .hst .chip:hover,header .hst .belb:hover{background:var(--hv);color:var(--tx)}
+header .hst .chip.awc{background:transparent;padding-right:22px}
+header .hst .chip.awc.awc-ok{color:var(--ac)}header .hst .chip.awc.awc-bad{color:var(--rd)}
+header .hst .chip .dot{top:7px;right:7px;border-width:2px}header .hst .chip.awc .dot{top:50%;right:8px}
+header .hst .belb .ic,header .hst .chip .ic{width:18px;height:18px}
+header #usr{gap:6px}
+header #usr .usrp{border:1px solid var(--ln);background:var(--cd);box-shadow:none;transition:border-color .15s,background .15s}
+header #usr .usrp:hover{border-color:var(--bd);background:var(--cd)}
+header #usr>.b:not(.usrp){width:36px;min-height:36px;height:36px;padding:0;justify-content:center;border:0;background:transparent;color:var(--mu);border-radius:999px}
+header #usr>.b:not(.usrp):hover{background:var(--hv);color:var(--rd)}
+@media (max-width:899px){header{padding:6px 12px;gap:8px}header .hru{gap:6px}header #unit{max-width:34vw;height:40px;min-height:44px;padding:0 26px 0 12px;background-position:right 9px center}header .hst{padding:0;border:0;background:transparent;gap:0}header .hst .chip,header .hst .belb{min-width:44px;min-height:44px;height:44px;padding:0 8px;background:transparent}header .hst .chip.awc{padding-right:8px}header #usr>.b:not(.usrp){width:44px;min-height:44px;height:44px}}
+@media (max-width:480px){header h1#ttl{font-size:16px}header #unit{max-width:30vw}}
+@media print{header .hst{display:none!important}}

@@ -10,7 +10,16 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `index.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.224)
+## Fitur (v1.1.233)
+- **Header aplikasi lebih bersih dan modern (v1.1.233):** tombol dan tautan header disusun ulang.
+- **Fase PC tahap AK — laporan pertanggungjawaban proyek, rekap tahunan, checklist dokumen desa (v1.1.232):** pelaporan ke desa (PC7 roadmap 1.0).
+- **Fase PC tahap AJ — izin terperinci, benturan kepentingan, pemisahan tugas, persetujuan berjenjang (v1.1.231):** tata kelola pengadaan bila Mode Pengguna aktif (PC6 roadmap 1.0).
+- **Fase PC tahap AI — anggaran vs realisasi, akun proyek, laporan, tabel awan (v1.1.230):** realisasi dari jurnal proyek, sisa anggaran, margin, laporan Proyek, kartu Dashboard, `sql/08_proyek.sql` (PC5b roadmap 1.0).
+- **Fase PC tahap AH — jurnal proyek, pembayaran termin, retensi (v1.1.229):** `project_id` di transaksi, tagihan vendor, bayar termin dengan jurnal otomatis, potongan lewat Master Tarif, pencairan retensi (PC5a roadmap 1.0).
+- **Fase PC tahap AG — serah terima dengan QC, BAST, dokumentasi (v1.1.228):** penerimaan per PO dengan hasil QC per item, dokumentasi, cetak BAST (PC4 roadmap 1.0).
+- **Fase PC tahap AF — Kontrak/SPK, termin, retensi, addendum (v1.1.227):** kontrak dari PO Terbit, termin persen, retensi, addendum berversi, cetak SPK (PC3 roadmap 1.0).
+- **Fase PC tahap AE — RFQ, evaluasi penawaran, Purchase Order (v1.1.226):** sub-tab Pengadaan; penawaran vendor, penilaian berbobot, pemenang (pengecualian beralasan), PO dengan batas komitmen terhadap anggaran (PC2b roadmap 1.0).
+- **Fase PC tahap AD — RAB/BoQ, metode pemilihan, vendor (v1.1.225):** sub-tab Proyek/RAB/Vendor/Metode; RAB per proyek dibandingkan dengan anggaran; master metode pemilihan yang diatur pengurus; vendor = Pihak berjenis Pemasok (PC2a roadmap 1.0).
 - **Satu halaman index.html (v1.1.224):** `bumdes.html` dihapus; `index.html` kini berkas mandiri hasil `node build.js` (templat sumber: `index.src.html`); `sw.js` hanya menyimpan index.html, manifest, ikon.
 - **Perbaikan halaman kosong (v1.1.223):** zip Git v1.1.221-222 tidak memuat proyek.js sehingga semua tab kosong; kini lengkap, dan aplikasi tetap tampil bila berkas itu hilang.
 - **Master Unit Usaha (v1.1.222):** jenis unit mengikuti modul (Perdagangan, Proyek dan Jasa), ringkasan aktivitas dan status modul per unit, kartu Kecocokan unit dan modul; unit pada form Proyek tidak lagi terisi otomatis.
@@ -131,7 +140,7 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 - **Cek peran akun (v1.1.106):** Setelan > Awan punya tombol "Cek peran akun" yang menyebut apakah akun developer platform, akun BUMDes biasa, atau pengecekan gagal. Galat pengecekan developer (mis. `supabase_developer.sql` belum terpasang) kini ditampilkan, tidak lagi diam-diam menganggap akun sebagai admin biasa.
 - **Setelan > Awan beda untuk developer dan admin (v1.1.105):** akun developer melihat kartu Konsol Developer (buka halaman Developer, jumlah BUMDes klien, peran "Developer (platform)") tanpa Sinkron, Riwayat cadangan, Tabel relasional, dan pemilih BUMDes; akun admin/pengurus/pembaca melihat sinkron dan tabel BUMDes-nya tanpa konsol developer.
 - **Setelan > Awan di desktop (v1.1.104):** dua kolom berdampingan (kiri: Sinkron, Riwayat cadangan, Tabel relasional; kanan: Koneksi, BUMDes di awan, Ganti kata sandi, Developer, Tentang awan), kartu Sinkron selebar kolom, label "Tabel relasional" tidak lagi menyebut Tahap 2 dan ada lencana status. Di HP tetap satu kolom.
-- **Tabel relasional Tahap 5 (v1.1.103):** penjualan, rincian, pembayaran, produk, sambungan dan catatan meter Unit Air, jaminan, tarif dan pajak berversi, catatan penagihan, dan calon peminjam kini ikut disalin ke tabel Supabase (`sql/05_penjualan.sql`, berkas [5/7]) dengan pengecekan jumlah baris serta total penjualan, pembayaran, dan nilai jaminan. Berkas SQL kini 8.
+- **Tabel relasional Tahap 5 (v1.1.103):** penjualan, rincian, pembayaran, produk, sambungan dan catatan meter Unit Air, jaminan, tarif dan pajak berversi, catatan penagihan, dan calon peminjam kini ikut disalin ke tabel Supabase (`sql/05_penjualan.sql`, berkas [5/8]) dengan pengecekan jumlah baris serta total penjualan, pembayaran, dan nilai jaminan. Berkas SQL kini 8.
 - **Konsol Developer: Masuk ke BUMDes (v1.1.102):** tiap BUMDes aktif punya tombol "Masuk ke BUMDes"; developer keluar dari konsol dan layar login menampilkan nama BUMDes itu. Setelah masuk dengan akun admin/pengurus BUMDes tersebut, aplikasi langsung membuka BUMDes itu (tanpa pemilih). Akun bukan anggota ditolak. Developer tetap tidak bisa membaca data klien.
 
 > **Masuk (v1.1.079):** satu halaman masuk untuk semua peran (email = pengurus/developer, nomor HP = nasabah) dengan arah otomatis menurut peran, sesi tersimpan sehingga bisa dipakai offline, dan portal nasabah di HP sendiri lewat Supabase (`sql/06_nasabah.sql`).
@@ -214,13 +223,14 @@ Satu folder datar (tanpa subfolder sumber). Sejak v1.1.224 hanya ada **satu hala
 | `sql/00_semua.sql` | **Pasang semua sekaligus** untuk proyek baru: gabungan otomatis 7 berkas di bawah (dibangkitkan `node build.js`, jangan diedit) |
 | `sql/98_kosongkan_isi.sql` | Kosongkan isi semua tabel data dan snapshot (versi awan kembali nol); struktur, BUMDes, anggota, dan akun tetap |
 | `sql/99_reset.sql` | Kosongkan database (hapus semua tabel dan fungsi) untuk mulai dari awal |
-| `sql/01_inti.sql` | [1/7] Tahap 1: snapshot, riwayat, kunci versi, peran, RLS |
-| `sql/02_akuntansi.sql` | [2/7] Tahap 2: tabel akuntansi dan Simpan Pinjam + migrasi |
-| `sql/03_pegawai.sql` | [3/7] Tahap 3: tabel pegawai dan gaji |
-| `sql/04_tabungan.sql` | [4/7] Tahap 4: tabel tabungan (rekening dan mutasi) |
-| `sql/05_penjualan.sql` | [5/7] Tahap 5: tabel penjualan, Unit Air, jaminan, tarif dan pajak |
-| `sql/06_nasabah.sql` | [6/7] Portal nasabah (HP + PIN) |
-| `sql/07_pengguna.sql` | [7/7] Pengguna dari pegawai (opsional) |
+| `sql/01_inti.sql` | [1/8] Tahap 1: snapshot, riwayat, kunci versi, peran, RLS |
+| `sql/02_akuntansi.sql` | [2/8] Tahap 2: tabel akuntansi dan Simpan Pinjam + migrasi |
+| `sql/03_pegawai.sql` | [3/8] Tahap 3: tabel pegawai dan gaji |
+| `sql/04_tabungan.sql` | [4/8] Tahap 4: tabel tabungan (rekening dan mutasi) |
+| `sql/05_penjualan.sql` | [5/8] Tahap 5: tabel penjualan, Unit Air, jaminan, tarif dan pajak |
+| `sql/06_nasabah.sql` | [6/8] Portal nasabah (HP + PIN) |
+| `sql/07_pengguna.sql` | [7/8] Pengguna dari pegawai (opsional) |
+| `sql/08_proyek.sql` | [8/8] Tabel proyek, pengadaan, kontrak, penerimaan (opsional) |
 | `docs/SUPABASE.md` | Panduan pasang cepat, urutan berkas SQL, peran, keamanan, uji |
 | `portal.js` | Portal nasabah mode demo (v1.1.038): masuk HP + PIN, pinjaman, tabungan, profil |
 | `calon.js` | Calon peminjam (v1.1.031): sub-tab Calon, status, jadikan nasabah |

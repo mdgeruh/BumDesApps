@@ -15,7 +15,7 @@ js.forEach((f,i)=>{out=out.replace(`<script src="${f}"></script>\n`,()=>i===js.l
 // versi: package.json "1.1.1" -> "1.1.001" harus sama dengan APP_VER di config.js
 const pk=JSON.parse(rd('package.json')).version.split('.'),VER=pk[0]+'.'+pk[1]+'.'+String(pk[2]).padStart(3,'0');
 // sql/00_semua.sql = gabungan berkas SQL terpisah menurut urutan pasang (sekali tempel untuk proyek baru)
-const SQLP=['01_inti','02_akuntansi','03_pegawai','04_tabungan','05_penjualan','06_nasabah','07_pengguna'];
+const SQLP=['01_inti','02_akuntansi','03_pegawai','04_tabungan','05_penjualan','06_nasabah','07_pengguna','08_proyek'];
 const sqlAll=()=>{const bar='-- '+'='.repeat(76);return[bar,'-- Sistem BUMDes · Supabase · SEMUA SEKALIGUS (proyek baru)','-- '+'-'.repeat(76),
  '-- Gabungan otomatis dari '+SQLP.length+' berkas di bawah, urutan pasang sudah benar. JANGAN diedit di sini:','-- ubah berkas bagiannya, lalu jalankan: node build.js',
  '-- Cara pakai: Supabase > SQL Editor > New query > tempel SELURUH berkas ini > Run. Idempoten (aman diulang).',

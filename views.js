@@ -79,6 +79,7 @@ ${kp("Beban",rp(s.e),(pd?pd+" · ":"")+dlt(M0.e,M1.e,0,"bln ini"),"","","tdn","t
 ${kp("Laba / Rugi",rp(s.p),mg||pd,"","","chart","t4")}
 ${kp("Piutang Pinjaman",rp(net(acc("ACC1300"),balU(S.unit))),nAk+" pinjaman aktif","goS('sp',{st:'pinjaman'})","","sp","t5")}
 ${spOn?kp("Tabungan Nasabah",rp(net(acc("ACC2300"),balU(S.unit))),"","goS('sp',{})","","user","t6"):""}
+${modOn("pc")&&typeof pcDash==="function"?pcDash(kp):""}
 ${modOn("air")?kp("Piutang Pelanggan",rp(net(acc("ACC1400"),balU(S.unit))),"","","","air","t5"):""}</div>
 <div class="dgr c2">
 ${dcard("Ringkasan Bulan Ini",mLbl(M0.m)+" dibanding bulan lalu",`<div class="ov">${[["Pendapatan",rp(M0.r),dlt(M0.r,M1.r,1)],["Beban",rp(M0.e),dlt(M0.e,M1.e,0)],["Laba",rp(M0.r-M0.e),dlt(M0.r-M0.e,M1.r-M1.e,1)],["Transaksi",c0,dlt(c0,c1,1)]].map(([l,v,d])=>`<div><div class="ovv">${v}</div><div class="ovl">${l}</div><div class="ovd">${d||'<span class="dl">—</span>'}</div></div>`).join("")}</div>`)}
@@ -118,7 +119,7 @@ function vJnl(){const n=S.jn||4,R=[...Array(n).keys()];
  return`<div class="k">Untuk jurnal manual dengan banyak akun dan saldo awal (jurnal pembuka). Total debit harus sama dengan total kredit.</div>
 <label>Jenis</label><select id="jl-ty"><option value="manual">Jurnal Manual</option><option value="opening">Saldo Awal</option></select>
 <label>Tanggal</label><input id="jl-d" type="date" value="${today()}"><label>Unit usaha (opsional)</label><select id="jl-u"><option value="">Umum (tanpa unit)</option>${opt(db.business_units.filter(isAct),u=>[u._id,u.name])}</select>
-<label>Keterangan</label><input id="jl-t">
+${typeof modOn==="function"&&modOn("pc")&&typeof pcAll==="function"&&pcAll().some(p=>["draf","berjalan"].includes(p.status))?`<label>Proyek (opsional)</label><select id="jl-pj"><option value="">Bukan jurnal proyek</option>${opt(pcAll().filter(p=>["draf","berjalan"].includes(p.status)),p=>[p._id,p.code+" · "+p.name])}</select>`:""}<label>Keterangan</label><input id="jl-t">
 ${R.map(i=>`<div class="fl jl"><select id="jl-a${i}" aria-label="Akun baris ${i+1}"><option value="">Akun ${i+1}…</option>${accOpts()}</select><input id="jl-d${i}" type="text" inputmode="numeric" autocomplete="off" placeholder="Debit" aria-label="Debit baris ${i+1}" oninput="fmtR(this);jlSum()"><input id="jl-c${i}" type="text" inputmode="numeric" autocomplete="off" placeholder="Kredit" aria-label="Kredit baris ${i+1}" oninput="fmtR(this);jlSum()"></div>`).join("")}
 <p class="k" id="jl-sum">Total debit Rp 0 · kredit Rp 0</p>
 <button class="b s" onclick="S.jn=(S.jn||4)+1;render()">+ Baris</button>`}
@@ -130,8 +131,8 @@ function postJnl(){try{const n=S.jn||4,d=$("#jl-d").value,L=[];if(!d)throw fe("j
   L.push(dd?{acc:a,d:dd}:{acc:a,c:cc})}
  if(L.length<2)throw Error("Minimal dua baris jurnal");
  const td=L.reduce((x,l)=>x+(l.d||0),0),tc=L.reduce((x,l)=>x+(l.c||0),0);if(td!==tc)throw Error("Debit (Rp "+fm(td)+") dan kredit (Rp "+fm(tc)+") belum seimbang, selisih Rp "+fm(Math.abs(td-tc)));
- post({type:$("#jl-ty").value,date:d,unit:$("#jl-u").value,desc:$("#jl-t").value.trim()||(($("#jl-ty").value==="opening")?"Saldo awal":"Jurnal manual"),lines:L});
- clrF("[id^='jl-']:not(#jl-d):not(#jl-ty):not(#jl-u)");S.jn=4;S.msg="Jurnal diposting ("+L.length+" baris)";okM()}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
+ post({type:$("#jl-ty").value,date:d,unit:$("#jl-u").value,desc:$("#jl-t").value.trim()||(($("#jl-ty").value==="opening")?"Saldo awal":"Jurnal manual"),lines:L,project_id:($("#jl-pj")||{}).value||""});
+ clrF("[id^='jl-']:not(#jl-d):not(#jl-ty):not(#jl-u):not(#jl-pj)");S.jn=4;S.msg="Jurnal diposting ("+L.length+" baris)";okM()}catch(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null}render()}
 function rows(){document.querySelectorAll("[data-t]").forEach(e=>e.style.display=e.dataset.t.split(" ").includes(S.ft)?"":"none");
  $("#l-cash").textContent=S.ft==="tf"?"Kas/Bank asal":"Kas/Bank";$("#l-acc").textContent=S.ft==="manual"?"Akun debit":"Akun lawan";trxPrev()}
 function trxPrevH(){const v=i=>{const e=$("#"+i);return e&&e.value!=null?String(e.value):""},t=S.ft,amt=Math.round(+pn(v("f-amt").trim()||"0")||0),ca=i=>{const c=db.cash_accounts.find(x=>x._id===v(i));return c?c.account_id:""};

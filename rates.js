@@ -1,7 +1,7 @@
 // ===== v1.1.007 — SP1 tahap 1: Mesin Tarif & Biaya (rate_master, tax_master berversi, calcFees murni) =====
-const FEE_TYPES=[["jasa","Jasa / bunga"],["administrasi","Administrasi"],["provisi","Provisi"],["materai","Materai"],["transfer","Transfer"],["denda","Denda keterlambatan"],["pelunasan","Pelunasan dipercepat"],["restruk","Restrukturisasi"],["lain","Biaya lain"],["tabwajib","Tabungan wajib (masuk tabungan nasabah)"]],
+const FEE_TYPES=[["jasa","Jasa / bunga"],["administrasi","Administrasi"],["provisi","Provisi"],["materai","Materai"],["transfer","Transfer"],["denda","Denda keterlambatan"],["pelunasan","Pelunasan dipercepat"],["restruk","Restrukturisasi"],["lain","Biaya lain"],["proyek","Potongan pembayaran proyek"],["tabwajib","Tabungan wajib (masuk tabungan nasabah)"]],
  FEE_METHODS=[["persen","Persentase dari dasar"],["tetap","Nominal tetap"],["per_hari","Per hari (× hari)"],["per_bulan","Per bulan (× bulan)"],["bertingkat","Bertingkat menurut pokok (khusus jasa)"]],
- FEE_BASES=[["pokok","Pokok pinjaman"],["sisa_pokok","Sisa pokok"],["angsuran","Angsuran"],["tunggakan","Tunggakan"]],
+ FEE_BASES=[["pokok","Pokok pinjaman"],["sisa_pokok","Sisa pokok"],["angsuran","Angsuran"],["nilai","Nilai pembayaran proyek"],["tunggakan","Tunggakan"]],
  ftName=t=>(FEE_TYPES.find(x=>x[0]===t)||[0,t])[1];
 const rateRows=()=>(db.rate_master=db.rate_master||[]),taxRows=()=>(db.tax_master=db.tax_master||[]);
 const inEff=(r,d)=>r.active!==false&&r.effective_from<=d&&(!r.effective_until||d<=r.effective_until);
