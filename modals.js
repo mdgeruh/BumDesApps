@@ -20,7 +20,7 @@ function cancelM(){mdClose()}function cancelE(){mdClose()}function cancelK(){mdC
 const RPA=' inputmode="numeric" autocomplete="off" oninput="fmtR(this)"',EN=(e,a,b)=>e?a:b;
 const MD={
  u:()=>{const e=db.business_units.find(x=>x._id===S.eu);return{t:EN(e,"Edit unit","Unit baru"),s:"saveUnit()",y:EN(e,"Simpan perubahan","Tambah unit"),
-  b:fld("u-c","Kode",{value:e?e.code:nextUnitCode(),hint:e?"":"Otomatis (UNT004, ...); boleh diganti, mis. SP atau AIR."})+fld("u-n","Nama unit",{value:e?e.name:"",req:1})+fld("u-t","Jenis unit",{t:"select",hint:"Pinjaman hanya dapat dibuat pada unit berjenis Simpan Pinjam",opts:opt([["simpan_pinjam","Simpan Pinjam"],["lainnya","Lainnya"]],x=>x,e?e.type:"lainnya")})}},
+  b:fld("u-c","Kode",{value:e?e.code:nextUnitCode(),hint:e?"":"Otomatis (UNT004, ...); boleh diganti, mis. SP atau AIR."})+fld("u-n","Nama unit",{value:e?e.name:"",req:1})+fld("u-t","Jenis unit",{t:"select",hint:"Simpan Pinjam: dasar pinjaman. Pamsimas: unit tagihan air minum desa (dipakai modul Pamsimas, atur di Pamsimas > Pengaturan > Tarif). Lainnya: unit usaha lain.",opts:opt([["simpan_pinjam","Simpan Pinjam"],["air","Pamsimas"],["lainnya","Lainnya"]],x=>x,e?e.type:"lainnya")})}},
  c:()=>{const e=db.cash_accounts.find(x=>x._id===S.ec);return{t:EN(e,"Edit rekening","Rekening baru"),s:"saveCash()",y:EN(e,"Simpan perubahan","Tambah rekening"),
   b:fld("c-n","Nama rekening",{value:e?e.name:"",req:1})+fld("c-t","Jenis",{t:"select",opts:["kas","bank"].map(t=>`<option${e&&e.type===t?" selected":""}>${t}</option>`).join("")})
   +fld("c-a","Akun COA"+EN(e," (tidak dapat diubah)",""),{t:"select",a:e?" disabled":"",opts:opt(db.accounts.filter(a=>postable(a)&&isAct(a)&&a.type==="asset"),a=>[a._id,a.code+" "+a.name],e?e.account_id:"")})}},
@@ -75,6 +75,8 @@ const MD={
  cn:()=>{const e=db.water_connections.find(c=>c._id===S.ecn),used=e&&db.water_readings.some(r=>r.conn_id===e._id),pel=db.parties.filter(p=>p.type==="pelanggan"&&isAct(p));return{t:EN(e,"Edit sambungan","Sambungan baru"),s:"saveConn()",y:EN(e,"Simpan perubahan","Tambah sambungan"),
   b:(e?fld("cn-x","Pelanggan",{value:cust(e.party_id).name,a:" disabled"}):fld("cn-c","Pelanggan",{t:"select",req:1,opts:`<option value="">Pilih pelanggan</option>`+opt(pel,p=>[p._id,p.name])}))
   +fld("cn-m","Nomor meter",{value:e?e.meter_no:"",req:1})
+  +fld("cn-r","Rute / dusun (opsional)",{value:e&&e.rute?e.rute:"",hint:"Untuk daftar kerja baca meter; kosong = ikut alamat pelanggan",a:' maxlength="60" list="cn-rl" autocomplete="off"'})+`<datalist id="cn-rl">${dkRoutes().map(r=>`<option value="${esc(r)}">`).join("")}</datalist>`
+  +fld("cn-u","Urutan di rute (opsional)",{value:e&&e.urut!==undefined?e.urut:"",type:"text",a:' inputmode="numeric" autocomplete="off"'})
   +fld("cn-a","Angka meter saat dipasang / awal pakai",{type:"text",a:' inputmode="decimal" autocomplete="off"'+(used?" readonly":""),value:e?qf(e.initial):""})
   +fld("cn-d","Tanggal pasang",{type:"date",value:e?e.installed:today(),req:1})
   +((()=>{const G=aClasses().filter(g=>g.active!==false||(e&&e.cls===g.code));return G.length?fld("cn-g","Golongan tarif",{t:"select",opts:'<option value="">Standar</option>'+opt(G,g=>[g.code,g.name],e?e.cls:"")}):""})())
@@ -207,7 +209,7 @@ MD.mdt=()=>{const [k,id]=String(S.emdt||"|").split("|"),K=(a,b)=>`<div class="kv
  act=(ed,tog,x)=>`<div class="lda">${ed?ib("edit","Edit",ed,"s"):""}${ib(isAct(x)?"x":"check",isAct(x)?"Nonaktifkan":"Aktifkan",tog,"s")}</div>`,
  miss={t:"Rincian",s:"mdClose()",y:"Tutup",b:"<p>Data tidak ditemukan.</p>",nf:1},W=(t,x,rows,btn)=>({t,s:"mdClose()",y:"Tutup",nf:1,b:`<div class="ldw"><div class="lds">${st(x)}</div><div class="kvg">${rows.join("")}</div>${btn}</div>`});
  if(k==="u"){const x=db.business_units.find(q=>q._id===id);if(!x)return miss;const n=db.loans.filter(l=>l.unit_id===id).length,tn=db.transactions.filter(t=>t.business_unit_id===id).length;
-  return W(x.name,x,[K("Kode",esc(x.code)),K("Nama",esc(x.name)),K("Jenis",x.type==="simpan_pinjam"?"Simpan Pinjam":"Lainnya"),K("Transaksi",tn),...(x.type==="simpan_pinjam"?[K("Pinjaman",n)]:[])],act("openM('u','"+id+"')","togM('u','"+id+"')",x))}
+  return W(x.name,x,[K("Kode",esc(x.code)),K("Nama",esc(x.name)),K("Jenis",x.type==="simpan_pinjam"?"Simpan Pinjam":x.type==="air"?"Pamsimas":"Lainnya"),K("Transaksi",tn),...(x.type==="simpan_pinjam"?[K("Pinjaman",n)]:[])],act("openM('u','"+id+"')","togM('u','"+id+"')",x))}
  if(k==="c"){const x=db.cash_accounts.find(q=>q._id===id);if(!x)return miss;const a=acc(x.account_id);
   return W(x.name,x,[K("Nama",esc(x.name)),K("Jenis",esc(x.type)),K("Akun",esc(a?a.code+" "+a.name:x.account_id)),K("Saldo",rp(net(a,balAll())))],act("openM('c','"+id+"')","togM('c','"+id+"')",x))}
  if(k==="a"){const x=acc(id);if(!x)return miss;const par=x.parent_id&&acc(x.parent_id);
