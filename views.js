@@ -196,9 +196,26 @@ const mrw=(k,id,av,t,sm,r,rs,bd,cl)=>`<button class="upr mdr${cl?" "+cl:""}" onc
 // kotak cari + filter untuk daftar master (v1.1.088): pola sama dengan daftar lain (onchange -> state -> render)
 const mq=(k,ph,lbl)=>`<input type="search" placeholder="${ph}" aria-label="${lbl}" value="${esc(S[k]||"")}" onchange="S.${k}=this.value;render()">`,mhit=(q,...f)=>{q=String(q||"").trim().toLowerCase();return!q||f.some(x=>String(x||"").toLowerCase().includes(q))};
 const ACCT_T={asset:"Aset",liability:"Kewajiban",equity:"Ekuitas",revenue:"Pendapatan",expense:"Beban"};
-function vMst0(){const all=balAll(),UT={simpan_pinjam:"Simpan Pinjam",air:"Pamsimas",lainnya:"Lainnya"},nuA=db.business_units.filter(isAct).length;
- return`<h2>Unit Usaha</h2>${addB("Tambah unit","u")}${dcard("Daftar Unit Usaha",nuA+" aktif dari "+db.business_units.length+" unit",db.business_units.length?`<div class="upl">${db.business_units.map((u,i)=>mrw("u",u._id,avA(u.name,i),esc(u.name),"Kode "+esc(u.code)+" · "+(UT[u.type]||"Lainnya"),"","",mbd(u),isAct(u)?"":"vd")).join("")}</div>`:'<div class="empty">Belum ada unit usaha.</div>',"")}
-${vMod()}<h2>Kas & Bank</h2>${addB("Tambah rekening","c")}${dcard("Daftar Rekening",db.cash_accounts.length+" rekening",db.cash_accounts.length?`<div class="upl">${db.cash_accounts.map((c,i)=>{const a=acc(c.account_id);return mrw("c",c._id,avA(c.name,i),esc(c.name),"Akun "+esc(a?a.code+" "+a.name:c.account_id)+" · "+esc(c.type),rp(net(a,all)),"saldo",mbd(c),isAct(c)?"":"vd")}).join("")}</div>`:'<div class="empty">Belum ada rekening kas/bank.</div>',"")}
+// ===== v1.1.222: jenis unit mengikuti modul; ringkasan aktivitas per unit; kartu kecocokan unit dan modul =====
+const UNIT_T={simpan_pinjam:"Simpan Pinjam",air:"Pamsimas",dagang:"Perdagangan",proyek:"Proyek dan Jasa",lainnya:"Lainnya"},UNIT_M={air:"air",proyek:"pc"},
+ UNIT_H={simpan_pinjam:"Dasar pinjaman, angsuran, dan tabungan.",air:"Unit tagihan air minum desa; dipakai modul Pamsimas (atur di Pamsimas > Pengaturan > Tarif).",dagang:"Penjualan barang dan jasa lain.",proyek:"Proyek atau kegiatan; dipakai modul Proyek dan Pengadaan.",lainnya:"Unit usaha lain tanpa modul khusus."};
+const unitType=t=>UNIT_T[t]?t:"lainnya",modNm=k=>((MODS.find(m=>m[0]===k)||[])[1])||k;
+function unitStat(u){const id=u._id,t=unitType(u.type);
+ if(t==="simpan_pinjam")return[db.loans.filter(l=>l.unit_id===id&&l.status==="active").length,"pinjaman aktif"];
+ if(t==="air")return[(db.water_connections||[]).filter(c=>c.unit_id===id).length,"sambungan"];
+ if(t==="dagang")return[db.sales.filter(s=>s.unit_id===id&&s.status==="posted").length,"penjualan"];
+ if(t==="proyek")return[(db.projects||[]).filter(p=>p.unit_id===id&&p.status!=="batal").length,"proyek"];
+ return[db.transactions.filter(x=>x.business_unit_id===id).length,"transaksi"]}
+function unitIssues(){const A=db.business_units.filter(isAct),o=[];
+ Object.keys(UNIT_M).forEach(t=>{const k=UNIT_M[t],us=A.filter(u=>u.type===t),all=db.business_units.filter(u=>u.type===t);
+  if(us.length&&!modOn(k))o.push({k:"on-"+k,m:"Unit "+UNIT_T[t]+" ("+esc(us.map(u=>u.name).join(", "))+") ada, tetapi modul "+esc(modNm(k))+" nonaktif.",b:["Aktifkan modul","setMod('"+k+"',true)"]});
+  if(modOn(k)&&!us.length)o.push({k:"no-"+k,m:"Modul "+esc(modNm(k))+" aktif, tetapi belum ada unit berjenis "+UNIT_T[t]+(all.length?" yang aktif.":"."),b:["Tambah unit","mdOpen('u','')"]});
+  if(t==="air"&&us.length>1)o.push({k:"dup-air",m:"Ada "+us.length+" unit Pamsimas aktif; modul hanya memakai satu (pilih di Pamsimas > Pengaturan > Tarif)."})});
+ return o}
+const unitFix=()=>{const L=unitIssues();return L.length?dcard("Kecocokan unit dan modul",L.length+" perlu diperiksa",`<ul class="awl">${L.map(x=>`<li class="wr"><span>${x.m}</span>${x.b?` <button class="b s sm" onclick="${x.b[1]}">${x.b[0]}</button>`:""}</li>`).join("")}</ul>`,""):""};
+function vMst0(){const all=balAll(),UT=UNIT_T,nuA=db.business_units.filter(isAct).length;
+ return`<h2>Unit Usaha</h2>${addB("Tambah unit","u")}${dcard("Daftar Unit Usaha",nuA+" aktif dari "+db.business_units.length+" unit",db.business_units.length?`<div class="upl">${db.business_units.map((u,i)=>mrw("u",u._id,avA(u.name,i),esc(u.name),"Kode "+esc(u.code)+" · "+(UT[unitType(u.type)])+(UNIT_M[u.type]?" · modul "+(modOn(UNIT_M[u.type])?"aktif":"nonaktif"):""),unitStat(u)[0],unitStat(u)[1],mbd(u),isAct(u)?"":"vd")).join("")}</div>`:'<div class="empty">Belum ada unit usaha.</div>',"")}
+${unitFix()}${vMod()}<h2>Kas & Bank</h2>${addB("Tambah rekening","c")}${dcard("Daftar Rekening",db.cash_accounts.length+" rekening",db.cash_accounts.length?`<div class="upl">${db.cash_accounts.map((c,i)=>{const a=acc(c.account_id);return mrw("c",c._id,avA(c.name,i),esc(c.name),"Akun "+esc(a?a.code+" "+a.name:c.account_id)+" · "+esc(c.type),rp(net(a,all)),"saldo",mbd(c),isAct(c)?"":"vd")}).join("")}</div>`:'<div class="empty">Belum ada rekening kas/bank.</div>',"")}
 <h2>Chart of Accounts</h2>${addB("Tambah akun","a")}${(()=>{const q=S.aq||"",t=S.aqt||"",L=db.accounts.filter(a=>(!t||a.type===t)&&mhit(q,a.code,a.name)),fl=!!(q.trim()||t),TI={asset:"t2",liability:"t3",equity:"t1",revenue:"t4",expense:"t5"};
   return dcard("Daftar Akun",fl?L.length+" dari "+db.accounts.length+" akun":db.accounts.length+" akun",`<div class="fl">${mq("aq","Cari kode / nama akun…","Cari akun")}<select aria-label="Filter tipe akun" onchange="S.aqt=this.value;render()"><option value="">Semua tipe</option>${opt(Object.keys(ACCT_T),k=>[k,ACCT_T[k]],t)}</select></div>`+(L.length?`<div class="upl">${L.map(a=>{const hd=!a.parent_id||/000$/.test(a.code);return mrw("a",a._id,`<span class="kic ${TI[a.type]||"t0"} acc">${esc(a.code)}</span>`,esc(a.name),esc(ACCT_T[a.type]||a.type),"","",mbd(a),(hd&&!fl?"mdh ":"")+(a.parent_id&&!fl?"mdc":""))}).join("")}</div>`:`<div class="empty">${fl?"Tidak ada akun yang cocok.":"Belum ada akun."}</div>`),"")})()}`}
 
@@ -208,7 +225,7 @@ function mErr(e){S.msg="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null;rende
 const nextUnitCode=()=>seqCode("UNT",db.business_units.map(u=>u.code)),ACC_RANGE={asset:1,liability:2,equity:3,revenue:4,expense:5};
 function nextAccCode(t){const g=ACC_RANGE[t]||1,used=new Set(db.accounts.map(a=>a.code)),cs=db.accounts.map(a=>+a.code).filter(c=>Number.isInteger(c)&&Math.floor(c/1000)===g&&c%1000!==0);let c=cs.length?Math.max(...cs)+10:g*1000+100;if(c>g*1000+999||used.has(String(c))){c=g*1000+1;while(used.has(String(c))&&c<g*1000+999)c++}return String(c)}
 function accTipe(t){const e=$("#a-c");if(e&&!e.disabled&&(!e.value.trim()||Object.keys(ACC_RANGE).some(k=>nextAccCode(k)===e.value.trim())))e.value=nextAccCode(t)}
-function saveUnit(){try{const n=$("#u-n").value.trim(),c=$("#u-c").value.trim()||nextUnitCode(),ty=(v=>v==="simpan_pinjam"||v==="air"?v:"lainnya")(($("#u-t")||{}).value);if(!n)throw fe("u-n","Nama unit wajib diisi");
+function saveUnit(){try{const n=$("#u-n").value.trim(),c=$("#u-c").value.trim()||nextUnitCode(),ty=unitType(($("#u-t")||{}).value);if(!n)throw fe("u-n","Nama unit wajib diisi");
  if(S.eu&&ty!=="simpan_pinjam"&&db.loans.some(l=>l.unit_id===S.eu))throw fe("u-t","Unit sudah dipakai pinjaman; jenisnya tidak dapat diubah dari Simpan Pinjam");
  if(db.business_units.some(u=>u.code===c&&u._id!==S.eu))throw fe("u-c","Kode sudah dipakai");
  if(S.eu){Object.assign(db.business_units.find(u=>u._id===S.eu),{code:c,name:n,type:ty});audit("update","unit",S.eu);S.eu=null;S.msg="Unit diperbarui"}
