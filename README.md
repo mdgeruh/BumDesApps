@@ -2,15 +2,18 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.207** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.207** · satu file `index.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `docs/BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
 
-1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
+1. Buka `index.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.221)
+## Fitur (v1.1.224)
+- **Satu halaman index.html (v1.1.224):** `bumdes.html` dihapus; `index.html` kini berkas mandiri hasil `node build.js` (templat sumber: `index.src.html`); `sw.js` hanya menyimpan index.html, manifest, ikon.
+- **Perbaikan halaman kosong (v1.1.223):** zip Git v1.1.221-222 tidak memuat proyek.js sehingga semua tab kosong; kini lengkap, dan aplikasi tetap tampil bila berkas itu hilang.
+- **Master Unit Usaha (v1.1.222):** jenis unit mengikuti modul (Perdagangan, Proyek dan Jasa), ringkasan aktivitas dan status modul per unit, kartu Kecocokan unit dan modul; unit pada form Proyek tidak lagi terisi otomatis.
 - **Fase PC tahap AC — Proyek dan Kegiatan (v1.1.221):** modul opsional Proyek dan Pengadaan; proyek dengan status Draf → Berjalan → Serah terima → Selesai/Dibatalkan, anggaran per pos dengan revisi berversi, hapus terbatas (PC1 roadmap 1.0).
 - **Pamsimas: Tarif ringkas dan Pengaturan dipecah (v1.1.220):** akordeon rincian blok, riwayat tarif, golongan, dan diskon; Pelanggan dan Layanan jadi tab sendiri di grup Data (tahap AB roadmap 1.1, tahap terakhir UI/UX Pamsimas).
 - **Pamsimas: keadaan kosong, Urungkan, sorot baris (v1.1.219):** keadaan kosong berikon dengan tombol langkah berikutnya, toast Urungkan untuk tagihan dan pembayaran, sorot baris yang baru berubah, istilah Piutang seragam (tahap AA roadmap 1.1).
@@ -189,11 +192,12 @@ Cocok untuk prototype, simulasi, validasi engine, dan demo satu perangkat. Belum
 `data/bumdes-data-dummy.json` — backup contoh siap impor; lihat `data/README.md` (hanya lokal, tidak diunggah ke Git).
 
 ## Struktur berkas dan alur kerja
-Satu folder datar (tanpa subfolder sumber). Halaman utama `index.html` memuat gaya dan skrip secara langsung, jadi **bisa di-host apa adanya** di hosting statis (Vercel, GitHub Pages, Netlify) tanpa langkah build.
+Satu folder datar (tanpa subfolder sumber). Sejak v1.1.224 hanya ada **satu halaman: `index.html`**, berkas mandiri berisi seluruh gaya dan skrip (hasil `node build.js`), jadi **di-host apa adanya** di hosting statis (Vercel, GitHub Pages, Netlify) dan tidak lagi bergantung pada berkas `.js`/`.css` lain.
 
 | Berkas | Isi |
 |---|---|
-| `index.html` | Halaman aplikasi; memuat `style.css` dan skrip di bawah (urutan penting) |
+| `index.html` | **Aplikasi satu berkas (mandiri)**, hasil rakitan `node build.js`; satu-satunya halaman yang dibuka/di-host. Jangan diedit langsung |
+| `index.src.html` | Templat sumber (khusus pengembangan): memuat `style.css` dan skrip di bawah (urutan penting); dibaca `build.js` |
 | `style.css` | Seluruh gaya |
 | `config.js` | Konfigurasi, konstanta, versi (`APP_VER`) |
 | `accounting.js` | Penyimpanan, ID, mesin akuntansi, pelaporan dasar |
@@ -233,16 +237,16 @@ Satu folder datar (tanpa subfolder sumber). Halaman utama `index.html` memuat ga
 | `manifest.json`, `sw.js` | PWA: pasang dari browser, jalan offline |
 | `icons/` | Ikon aplikasi: `icon.svg`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` |
 | `vercel.json` | Pengaturan Vercel (tanpa build; sw.js tidak di-cache) |
-| `bumdes.html` | Versi **satu-file mandiri** hasil `node build.js` (untuk dibuka langsung dari file/tes; jangan diedit) |
-| `build.js`, `package.json` | Perakit `bumdes.html` dan skrip dev (tidak perlu diunggah ke hosting) |
+| `bumdes.html` | *Dihapus sejak v1.1.224 (digantikan `index.html`); hapus berkas lama ini dari root Git bila masih ada* |
+| `build.js`, `package.json` | Perakit `index.html` dan skrip dev (tidak perlu diunggah ke hosting) |
 | `README.md` | Dokumentasi utama (satu-satunya dokumen di folder utama) |
 | `docs/` | Dokumentasi lain: `release_notes.md`, `CHANGELOG.md`, `CHANGELOG_ARSIP.md`, `SUMMARY.md`, `ROADMAP.md`, `ROADMAP_ARSIP.md`, `SUPABASE.md`, blueprint |
 | `tests/`, `data/` | Tes dan data dummy — **hanya lokal, tidak diunggah ke Git** (`.gitignore`) |
 
 **Deploy Git → Vercel:** unggah seluruh isi paket Git (semua berkas datar di root repo, tanpa `tests/` dan `data/`) ke GitHub; hubungkan repo ke Vercel (Framework Preset: *Other*). `vercel.json` sudah mengatur tanpa build dan folder keluaran `.`, jadi tidak perlu mengisi apa pun. Pada tiap commit Vercel men-deploy ulang.
 
-**Hosting statis lain (unggah manual):** unggah `index.html`, `style.css`, semua `*.js` kecuali `build.js`, `manifest.json`, ikon, dan `vercel.json`. `bumdes.html`, `build.js`, `package.json`, dan dokumen tidak diperlukan agar aplikasi berjalan.
+**Hosting statis lain (unggah manual):** cukup unggah `index.html`, `sw.js`, `manifest.json`, ikon, dan `vercel.json`. Berkas sumber (`index.src.html`, `style.css`, `*.js`, `build.js`), `package.json`, dan dokumen tidak diperlukan agar aplikasi berjalan.
 
 **Pasang sebagai aplikasi (PWA):** setelah di-host lewat https, pilih *Pasang aplikasi* di browser. Dari `file://` aplikasi tetap jalan tetapi tidak bisa dipasang.
 
-**Alur pengembangan:** edit berkas sumber → `node build.js` (menyegarkan `bumdes.html`) → `npm test` (cek sinkron + versi + daftar cache) atau `npm run test:cepat` (uji pra-rilis ±1,5 menit; butuh `tests/` lokal) dan `npm run test:lengkap` (semua uji termasuk seluruh uji UI). Saat menambah/ganti nama berkas skrip: ubah daftar `<script src>` di `index.html` dan `ASSETS` di `sw.js`.
+**Alur pengembangan:** edit berkas sumber → `node build.js` (menyegarkan `index.html`) → `npm test` (cek sinkron + versi + daftar cache) atau `npm run test:cepat` (uji pra-rilis ±1,5 menit; butuh `tests/` lokal) dan `npm run test:lengkap` (semua uji termasuk seluruh uji UI). Saat menambah/ganti nama berkas skrip: ubah daftar `<script src>` di `index.src.html` (`sw.js` tidak perlu diubah: hanya menyimpan `index.html`, manifest, dan ikon).
