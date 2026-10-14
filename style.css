@@ -52,7 +52,7 @@ main{padding-bottom:110px;padding-top:10px}.g .card{margin:0}.v{font-size:17px;w
 .stc{min-width:22px;padding:1px 7px;border-radius:999px;background:var(--bd);color:var(--tx);font-size:12px;font-weight:600;line-height:18px;text-align:center}
 .stt.on .stc{background:var(--ac);color:var(--on)}.stt .stc.w,.stt.on .stc.w{background:var(--rd);color:var(--on)}
 @media (prefers-reduced-motion:reduce){.stt{transition:none}}
-@media print{.stb,#sb,#bn,#sheet,.sh,.fab,header,.noprint,.msg,.wn,#toast,#cf,#fm{display:none!important}#ct{margin:0!important}body{background:#fff}main{padding:0!important;max-width:none!important}.doc{border:0;padding:0;margin:0;max-width:none}.po{display:block!important}}
+@media print{.stb,#sb,#bn,#sheet,.sh,.fab,header,.noprint,.msg,.wn,#toast,#cf,#fm{display:none!important}#ct{margin:0!important}body{background:#fff}main{padding:0!important;max-width:none!important}.doc{border:0;padding:0;margin:0;max-width:none}.po{display:block!important}.tgp+.tgp{break-before:page;page-break-before:always}}
 .doc .tp{text-align:right;margin-top:14px;font-size:13px}.doc .nt td.n,.doc .nt th.n{white-space:nowrap}
 #lock{display:none;position:fixed;inset:0;z-index:65;background:var(--bg);overflow:auto;padding:20px 16px calc(24px + env(safe-area-inset-bottom,0px))}#lock.on{display:block}
 .lk{max-width:380px;margin:6vh auto 0}.lk h1{font-size:20px;margin:0 0 4px}.lk details{margin-top:14px}.lk summary{cursor:pointer;color:var(--mu)}
