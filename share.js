@@ -48,7 +48,7 @@ const arList=pid=>db.sales.filter(x=>x.party_id===pid&&x.status==="posted"&&owed
 function arText(pid){const p=db.parties.find(x=>x._id===pid),L=p?arList(pid):[];if(!L.length)return"";const t=today(),T=["*"+bnm()+"*","Pengingat tagihan air","","Yth. Bapak/Ibu "+p.name+",","Kami mengingatkan tagihan berikut belum dibayar:"];let tot=0,fine=0;
  L.forEach(x=>{const o=owedS(x),lf=x.bill?lateFine(x,t,o):null;tot+=o;if(lf>0)fine+=lf;
   if(x.bill){const dl=Math.round((Date.parse(t)-Date.parse(x.bill.due))/864e5);T.push("- Air "+x.bill.period+" ("+x.sale_number+"): Rp "+fm(o)+" · jatuh tempo "+tglS(x.bill.due)+(dl>0?", terlambat "+dl+" hari":""))}
-  else T.push("- "+(x.opening?"Saldo awal piutang":"Penjualan")+" "+x.sale_number+": Rp "+fm(o)+" · tanggal "+tglS(x.date))});
+  else T.push("- "+(x.opening?"Saldo awal piutang":"Layanan")+" "+x.sale_number+": Rp "+fm(o)+" · tanggal "+tglS(x.date))});
  T.push("","Total yang belum dibayar: Rp "+fm(tot));if(fine>0)T.push("Perkiraan denda keterlambatan bila dibayar hari ini: Rp "+fm(fine));
  T.push("","Mohon segera dibayar. Abaikan pesan ini bila sudah membayar. Terima kasih.");return T.join("\n")}
 MD.ar=()=>{const p=db.parties.find(x=>x._id===S.ear),x=arText(S.ear);if(!p||!x)return{t:"Pengingat tagihan",s:"mdClose()",y:"Tutup",b:"<p>Tidak ada tagihan yang belum dibayar.</p>",nf:1};

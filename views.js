@@ -43,6 +43,17 @@ if(typeof document!=="undefined"&&document.addEventListener&&!window.__trTip){wi
  document.addEventListener("focusin",e=>{const r=e.target.closest&&e.target.closest(".th");if(r)trTip(r,0)});
  document.addEventListener("focusout",e=>{const w=e.target.closest&&e.target.closest(".tcw");if(w&&!w.dataset.stk)trHide(w)});
  document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".tcw").forEach(trHide)})}
+// ===== v1.1.200 (PY-5) — Langkah awal di Dashboard (tercentang otomatis dari data; bisa disembunyikan) =====
+function onbSteps(){let bk=false;try{bk=!!localStorage.getItem(LB)}catch(e){}const b=db.bumdes[0]||{};
+ return[["Isi profil BUMDes (nama, direktur, alamat)",!!b.name&&b.name!=="BUMDes Contoh","Profil","go('prof')"],
+  ["Buat unit usaha",db.business_units.some(isAct),"Unit Usaha","goS('mst',{mt:'unit'})"],
+  ["Daftarkan kas atau bank",db.cash_accounts.some(isAct),"Kas & Bank","goS('mst',{mt:'kas'})"],
+  ["Isi data pihak (nasabah, pelanggan) atau pegawai",db.parties.length>0||db.employees.length>0,"Pihak","goS('mst',{mt:'pihak'})"],
+  ["Catat transaksi pertama",db.transactions.some(t=>t.status==="posted"&&t.type!=="opening"),"Catat","qTrx('in')"],
+  ["Simpan cadangan data (Export JSON)",bk,"Data","go('dat')"]]}
+function vOnb(){if(db.settings.onb_hide||!tabOk("mst"))return"";const L=onbSteps(),n=L.filter(x=>x[1]).length;if(n===L.length)return"";
+ return dcard("Langkah awal",n+" dari "+L.length+" selesai",`<div class="upl">${L.map(([t,d,a,f])=>`<div class="upr alr${d?" vd":""}"><span class="tri ${d?"in":"out"}" aria-hidden="true">${d?"✓":"•"}</span><span class="upm"><b>${esc(t)}</b></span><span class="upa">${d?'<span class="bdg ok">Selesai</span>':`<button class="b s" onclick="${f}">${esc(a)}</button>`}</span></div>`).join("")}</div><div class="fl"><button class="b s" onclick="onbHide()">Sembunyikan daftar ini</button></div>`,"noprint")}
+function onbHide(){try{db.settings.onb_hide=true;audit("setting","settings","onb_hide","Daftar langkah awal disembunyikan");save();S.msg="Daftar langkah awal disembunyikan"}catch(e){S.msg=ER(e)}render()}
 function vDash(){const s=pl(inUnit);
  const all=balAll();
  const cash=db.cash_accounts.map(c=>[c.name,net(acc(c.account_id),all)]);
@@ -60,6 +71,7 @@ function vDash(){const s=pl(inUnit);
   uCol=i=>"var(--c"+(i%6+1)+")";
  return`<h2>Perlu perhatian${A.length?" ("+A.length+")":""}</h2>${A.length?`<div class="al" role="list">${(S.alAll?A:A.slice(0,3)).map(a=>`<div class="wn ${a.sev}" role="listitem"><b>${esc(a.t)}</b><span>${a.d}</span><button class="b s" onclick="${a.fn}">${esc(a.a)}</button></div>`).join("")}</div>${A.length>3?`<button class="b s" onclick="S.alAll=!S.alAll;render()">${S.alAll?"Ringkas peringatan":"Tampilkan semua ("+A.length+")"}</button>`:""}`:`<div class="okb">✓ Tidak ada peringatan: tunggakan, piutang, periode, dan gaji aman.</div>`}
 ${qa?`<div class="qa noprint" aria-label="Jalan pintas">${qa}</div>`:""}
+${vOnb()}
 <div class="g dk">${kp("Total Kas & Bank",rp(cashT),cash.length+" rekening","","","cash","t1")}
 ${spOn?kp("Tunggakan",rp(tga),tgd.length?tgd.length+" angsuran lewat jatuh tempo":"Tidak ada tunggakan","goS('sp',{st:'tunggakan'})",tgd.length?"bd":"","flag","t3"):""}
 ${spOn?kp("Jatuh tempo 7 hari",rp(upa),upc.length?upc.length+" angsuran akan jatuh tempo":"Tidak ada angsuran dalam 7 hari","goS('sp',{st:'pinjaman'})","","cal","t2"):""}
