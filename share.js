@@ -4,7 +4,7 @@ function nsText(pid){const p=db.parties.find(x=>x._id===pid);if(!p)return"";cons
  L.push("*"+bnm()+"*","Ringkasan nasabah — "+p.name,"Posisi per "+t,"");
  L.push("*PINJAMAN*");
  if(!ln.length)L.push("Tidak ada pinjaman aktif.");
- ln.forEach(l=>{const ins=db.loan_installments.filter(i=>i.loan_id===l._id).sort((a,b)=>a.installment_number-b.installment_number),op=ins.filter(i=>i.status!=="paid"),od=op.filter(i=>i.due_date<t),nx=op.find(i=>i.due_date>=t),pk=ins.reduce((s,i)=>s+i.principal_due-i.principal_paid,0);
+ ln.forEach(l=>{const ins=insL(l._id).sort((a,b)=>a.installment_number-b.installment_number),op=ins.filter(i=>i.status!=="paid"),od=op.filter(i=>i.due_date<t),nx=op.find(i=>i.due_date>=t),pk=ins.reduce((s,i)=>s+i.principal_due-i.principal_paid,0);
   L.push(l.loan_number+" · sisa pokok Rp "+fm(pk)+" · "+op.length+" dari "+ins.length+" angsuran belum lunas");
   if(od.length){const tot=od.reduce((s,i)=>s+owed(i,t).total,0);L.push("  ⚠ Tunggakan "+od.length+" angsuran, total Rp "+fm(tot)+" (termasuk denda)")}
   if(nx)L.push("  Angsuran berikut: ke-"+nx.installment_number+", jatuh tempo "+nx.due_date+", tagihan Rp "+fm(owed(nx,t).total))});
@@ -24,8 +24,8 @@ function nsShare(id){nsLog(id,"bagikan");try{navigator.share({title:"Ringkasan n
 // ===== PENGINGAT JATUH TEMPO / TUNGGAKAN (v1.1.070): teks dari templat yang dapat diatur =====
 const REM_D={due:"Yth. Bapak/Ibu {nama}, kami mengingatkan angsuran ke-{ke} pinjaman {no} sebesar Rp {jumlah} jatuh tempo pada {tgl}. Terima kasih. — {bumdes}",late:"Yth. Bapak/Ibu {nama}, angsuran pinjaman {no} menunggak {hari} hari ({n} angsuran), total Rp {jumlah} termasuk denda Rp {denda}. Mohon segera dibayar atau hubungi pengurus. — {bumdes}"},REM_K=["nama","no","ke","tgl","jumlah","hari","n","denda","bumdes"];
 const remTpl=k=>{const t=(db.settings.sp_rem||{})[k];return typeof t==="string"&&t.trim()?t:REM_D[k]};
-function remKind(l,d){d=d||today();if(!l||l.status!=="active")return null;const op=db.loan_installments.filter(i=>i.loan_id===l._id&&i.status!=="paid").sort((a,b)=>a.installment_number-b.installment_number);if(op.some(i=>i.due_date<d))return"late";const nx=op[0];return nx&&dayDiff(nx.due_date,d)<=7?"due":null}
-function remText(id,d){d=d||today();const l=db.loans.find(x=>x._id===id),k=remKind(l,d);if(!k)return"";const p=party(l.party_id),op=db.loan_installments.filter(i=>i.loan_id===l._id&&i.status!=="paid").sort((a,b)=>a.installment_number-b.installment_number);let v;
+function remKind(l,d){d=d||today();if(!l||l.status!=="active")return null;const op=insL(l._id).filter(i=>i.status!=="paid").sort((a,b)=>a.installment_number-b.installment_number);if(op.some(i=>i.due_date<d))return"late";const nx=op[0];return nx&&dayDiff(nx.due_date,d)<=7?"due":null}
+function remText(id,d){d=d||today();const l=db.loans.find(x=>x._id===id),k=remKind(l,d);if(!k)return"";const p=party(l.party_id),op=insL(l._id).filter(i=>i.status!=="paid").sort((a,b)=>a.installment_number-b.installment_number);let v;
  if(k==="late"){const od=op.filter(i=>i.due_date<d),w=od.map(i=>owed(i,d)),mx=Math.max(...od.map(i=>dayDiff(d,i.due_date)));v={hari:mx,n:od.length,jumlah:fm(w.reduce((s,x)=>s+x.total,0)),denda:fm(w.reduce((s,x)=>s+x.pen,0)),ke:od[0].installment_number,tgl:od[0].due_date}}
  else{const i=op[0];v={ke:i.installment_number,tgl:i.due_date,jumlah:fm(owed(i,d).total),hari:0,n:1,denda:"0"}}
  return remTpl(k).replace(/\{(\w+)\}/g,(m,x)=>x==="nama"?p.name:x==="no"?l.loan_number:x==="bumdes"?bnm():(x in v?String(v[x]):m))}

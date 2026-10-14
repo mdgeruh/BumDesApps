@@ -1,6 +1,10 @@
 // ===== STORAGE & ID =====
 let db=null,S={tab:"dash",unit:"all",acc:"ACC1100",ft:"in",msg:""};
 let VER=0;const MC={};
+// v1.1.214: indeks sementara selama satu render() (data tidak berubah di dalamnya); null di luar render sehingga fungsi lain tetap membaca data langsung
+let WX=null;const wxI=(k,f)=>WX[k]||(WX[k]=f());
+const payL=id=>WX?(wxI("lpy",()=>{const m=new Map();db.loan_payments.forEach(p=>{(m.get(p.loan_id)||m.set(p.loan_id,[]).get(p.loan_id)).push(p)});return m}).get(id)||[]).slice():db.loan_payments.filter(p=>p.loan_id===id);
+const insL=id=>WX?(wxI("lin",()=>{const m=new Map();db.loan_installments.forEach(i=>{(m.get(i.loan_id)||m.set(i.loan_id,[]).get(i.loan_id)).push(i)});return m}).get(id)||[]).slice():db.loan_installments.filter(i=>i.loan_id===id);
 function memo(k,f){if(MC.v!==VER){for(const x in MC)delete MC[x];MC.v=VER}return k in MC?MC[k]:(MC[k]=f())}
 const uid=p=>p+"-"+Date.now()+"-"+Math.random().toString(36).slice(2,7);
 const PCS=[["Lembur","earning"],["Insentif","earning"],["Tunjangan Transport","earning"],["Potongan Kasbon","deduction"]],seedPC=d=>{if(d.payroll_components&&!d.payroll_components.length)PCS.forEach(([n,t],i)=>d.payroll_components.push({_id:"PC-00"+(i+1),name:n,type:t,status:"aktif"}))};

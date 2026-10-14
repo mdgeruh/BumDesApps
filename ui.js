@@ -4,8 +4,8 @@ const LB="bumdes_last_backup",NB=["sp-date","sp-cash","sp-amt","f-type","us-p","
 let tT=null;
 // v1.1.186: saat modal terbuka, toast diletakkan tepat di bawah header modal (tidak menutupi judul dan tombol Tutup)
 function toastPos(e){try{const h=document.body&&document.body.classList.contains("mo")&&document.querySelector("#fm.on .mh");if(h&&e.style){e.style.top=Math.round(h.getBoundingClientRect().bottom+8)+"px";e.style.bottom="auto"}else if(e.style){e.style.top="";e.style.bottom=""}}catch(x){}}
-function toast(m,er){const e=$("#toast");if(!e)return;e.textContent=m;e.className=er?"on er":"on";toastPos(e);if(e.setAttribute)e.setAttribute("aria-live",er?"assertive":"polite");
- if(typeof clearTimeout==="function"&&tT)clearTimeout(tT);if(typeof setTimeout==="function")tT=setTimeout(()=>{e.className=""},er?7000:3500)}
+function toast(m,er,ud){const e=$("#toast");if(!e)return;e.textContent=m;if(ud&&!er&&document.createElement&&e.appendChild){const b=document.createElement("button");b.type="button";b.className="tsu";b.textContent="Urungkan";b.onclick=()=>toastUndo();e.appendChild(b)}e.className=(er?"on er":"on")+(ud&&!er?" tu":"");toastPos(e);if(e.setAttribute)e.setAttribute("aria-live",er?"assertive":"polite");
+ if(typeof clearTimeout==="function"&&tT)clearTimeout(tT);if(typeof setTimeout==="function")tT=setTimeout(()=>{e.className=""},er?7000:ud&&!er?8000:3500)}
 
 
 // ===== KOMPONEN FORM & AKSESIBILITAS (v0.1.030, Fase F1) =====

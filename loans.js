@@ -10,7 +10,7 @@ const isD=x=>typeof x==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(x)&&new Date(x+"T00
 const addD=(x,n)=>new Date(new Date(x+"T00:00:00Z").getTime()+n*864e5).toISOString().slice(0,10);
 function dChk(f,d,lb,after,al){if(!isD(d))throw fe(f,lb+" tidak valid");const mx=addD(today(),spl().future_days);if(d>mx)throw fe(f,lb+" tidak boleh melewati "+mx+(spl().future_days?"":" (hari ini)"));if(after&&d<after)throw fe(f,lb+" ("+d+") tidak boleh sebelum "+al+" ("+after+")")}
 const spUnits=()=>db.business_units.filter(u=>isAct(u)&&u.type==="simpan_pinjam");
-const lastPay=l=>{const x=db.loan_payments.filter(p=>p.loan_id===l._id&&p.status!=="voided").map(p=>p.payment_date).sort().pop();return x||""};
+const lastPay=l=>{const x=payL(l._id).filter(p=>p.status!=="voided").map(p=>p.payment_date).sort().pop();return x||""};
 function payDate(l,d){const lp=lastPay(l),a=lp>(l.disbursement_date||"")?lp:l.disbursement_date,al=lp>(l.disbursement_date||"")?"pembayaran terakhir":"tanggal pencairan";dChk("sp-date",d,"Tanggal pembayaran",a,al)}
 // validasi masukan pengajuan (dipakai ajukan dan edit); mengembalikan nilai bersih
 function loanChk(o){const L=spl();
@@ -187,7 +187,7 @@ function bayar(id){try{negAny();const i=db.loan_installments.find(x=>x._id===id)
  let r=amt;const dd=Math.min(r,o.pen);r-=dd;const nn=Math.min(r,o.int);r-=nn;
  settle(l,d,c,[{i,p:r,n:nn,d:dd,acc:o.acc,wi:0}],amt<o.total?"partial":"full");S.sa="";S.pm="full";
  S.msg=(amt<o.total?(md==="int"?"Pembayaran bunga diterima":"Pembayaran sebagian diterima")+" (Rp "+fm(amt)+"), sisa tagihan Rp "+fm(o.total-amt):"Angsuran diterima")+(l.status==="paid_off"?" — pinjaman lunas":"");dlgDone(l._id)}catch(e){if(S.md==="lw"){mErr(e);return}S.msg=ER(e)}render()}
-function poPlan(l,d){const ins=db.loan_installments.filter(i=>i.loan_id===l._id&&i.status!=="paid").sort((a,b)=>a.installment_number-b.installment_number),
+function poPlan(l,d){const ins=insL(l._id).filter(i=>i.status!=="paid").sort((a,b)=>a.installment_number-b.installment_number),
  full=(db.settings.payoff_interest||"current")==="full",cur=ins.find(i=>i.due_date>d);
  return ins.map(i=>{const o=owed(i,d),wi=full||i.due_date<=d||i===cur?0:o.int;return{i,p:o.pri,n:o.int-wi,d:o.pen,acc:o.acc,wi}})}
 // biaya pelunasan dipercepat dari Tarif & Pajak (settings.payoff_fee = kode berjenis "pelunasan"); pajak ditambahkan di atas biaya
@@ -332,7 +332,7 @@ function pgRestore(){const k=pgFm()?pgKey():"";if(k&&S.pv&&S.pv.k===k&&document.
   if(e.type==="checkbox")e.checked=!!v;else if(e.tagName==="SELECT"){if([...e.options].some(o=>o.value===v||o.text===v))e.value=v}else e.value=v});
  const was=S.po2||"";S.po2=k;if(!k)return;simLive();jasaInfo();const f=was===k&&S.mf?$("#"+S.mf):null;if(f&&f.focus&&!S.fe)f.focus({preventScroll:true})}
 function pgOthers(l){const o=db.loans.filter(x=>x.party_id===l.party_id&&x._id!==l._id&&x.status!=="draft").sort((a,b)=>(b.application_date||"").localeCompare(a.application_date||""));if(!o.length)return"";const X=S.dx||{},nm=party(l.party_id).name;
- return`<details class="sx"${X.oth?" open":""} ontoggle="dxSet('oth',this.open)"><summary>Pinjaman lain ${esc(nm)} <span class="stc">${o.length}</span></summary><div class="upl">${o.map((x,n)=>{const hs=["active","paid_off"].includes(x.status),sisa=db.loan_installments.filter(i=>i.loan_id===x._id).reduce((a,i)=>a+i.principal_due-i.principal_paid,0);return`<button class="upr lnr" onclick="openLoan('${x._id}')"><span class="upm"><b>${esc(x.loan_number)}</b><small>${x.tenor}× · ${x.interest_rate}% ${x.interest_method} · ${esc(x.application_date||"")}</small></span><span class="upa"><small>${hs?"sisa pokok":"pokok"}</small><b>${rp(hs?sisa:x.principal)}</b>${lbadge(x)}</span></button>`}).join("")}</div></details>`}
+ return`<details class="sx"${X.oth?" open":""} ontoggle="dxSet('oth',this.open)"><summary>Pinjaman lain ${esc(nm)} <span class="stc">${o.length}</span></summary><div class="upl">${o.map((x,n)=>{const hs=["active","paid_off"].includes(x.status),sisa=insL(x._id).reduce((a,i)=>a+i.principal_due-i.principal_paid,0);return`<button class="upr lnr" onclick="openLoan('${x._id}')"><span class="upm"><b>${esc(x.loan_number)}</b><small>${x.tenor}× · ${x.interest_rate}% ${x.interest_method} · ${esc(x.application_date||"")}</small></span><span class="upa"><small>${hs?"sisa pokok":"pokok"}</small><b>${rp(hs?sisa:x.principal)}</b>${lbadge(x)}</span></button>`}).join("")}</div></details>`}
 function vPage(){const P=S.pp,hd=(t,sub,r)=>`<div class="pgh"><button class="b s pgb" onclick="pgBack()"><span aria-hidden="true">←</span> ${P.k==="ld"?"Daftar pinjaman":"Kembali"}</button><div class="pgt"><h2>${t}</h2>${sub?`<small class="k">${sub}</small>`:""}</div>${r||""}</div>`;
  if(P.k==="ld"){const l=db.loans.find(x=>x._id===P.id);if(!l)return`<div class="pg">${hd("Pinjaman","")}<p class="k">Pinjaman tidak ditemukan.</p></div>`;const v=vLoan(l,1);
   return`<div class="pg">${hd(esc(l.loan_number),esc(party(l.party_id).name)+" · "+esc(unitName(l.unit_id)),ib("user","Profil nasabah","mdOpen('nd','"+l.party_id+"')","s"))}<div class="pgg"><div class="pgc ldw">${v.top}</div><div class="pgc ldw">${pgOthers(l)}${v.side}</div></div></div>`}
@@ -341,7 +341,7 @@ function vPage(){const P=S.pp,hd=(t,sub,r)=>`<div class="pgh"><button class="b s
 function docOpen(k,id,pp){mdClose();openDoc(k,id,pp)}
 function dxSet(k,v){(S.dx=S.dx||{})[k]=v}
 function schAll(on){S.dx=S.dx||{};S.dx.sched=true;db.loan_installments.filter(i=>i.loan_id===S.eld).forEach(i=>S.dx["i"+i._id]=!!on);render()}
-function loanTimeline(l){const au=db.audit_logs.filter(a=>a.entity==="loan"&&a.entity_id===l._id),by=(...ac)=>{const a=au.find(x=>ac.includes(x.action));return a&&a.by?" · oleh "+a.by:""},E=[],P=db.loan_payments.filter(p=>p.loan_id===l._id);
+function loanTimeline(l){const au=db.audit_logs.filter(a=>a.entity==="loan"&&a.entity_id===l._id),by=(...ac)=>{const a=au.find(x=>ac.includes(x.action));return a&&a.by?" · oleh "+a.by:""},E=[],P=payL(l._id);
  E.push({d:l.application_date,t:"Diajukan",s:"Pokok "+"Rp "+fm(l.principal)+" · "+l.tenor+" bulan · "+l.interest_rate+"% "+l.interest_method+by("create")});
  if(l.approval_date)E.push({d:l.approval_date,t:"Disetujui",s:by("approved").slice(3)});
  if(l.disbursement_date)E.push({d:l.disbursement_date,t:l.opening?"Saldo awal dicatat":"Dicairkan",s:(l.opening?"":"Rp "+fm(l.principal)+by("disburse").replace(/^ · /," · "))});
@@ -352,7 +352,7 @@ function loanTimeline(l){const au=db.audit_logs.filter(a=>a.entity==="loan"&&a.e
  return E.map((x,i)=>({...x,i})).sort((a,b)=>(a.d||"").localeCompare(b.d||"")||a.i-b.i)}
 function tambahJam(id){S.cjl=id;mdOpen("cj","")}
 function vLoan(l,pg){const pt=party(l.party_id),act=["active","paid_off"].includes(l.status),dt=S.sd||today(),X=S.dx||{},R=(k,v)=>`<div class="kv"><span>${k}</span><b>${v}</b></div>`,
- ins=db.loan_installments.filter(i=>i.loan_id===l._id).sort((a,b)=>a.installment_number-b.installment_number),pays=db.loan_payments.filter(p=>p.loan_id===l._id),lastP=pays.filter(p=>p.status!=="voided").pop(),hasPay=pays.some(p=>p.status!=="voided"),
+ ins=insL(l._id).sort((a,b)=>a.installment_number-b.installment_number),pays=payL(l._id),lastP=pays.filter(p=>p.status!=="voided").pop(),hasPay=pays.some(p=>p.status!=="voided"),
  sisa=ins.reduce((s,i)=>s+i.principal_due-i.principal_paid,0),pv=!ins.length&&["draft","submitted","approved"].includes(l.status),
  rows=ins.length?ins:pv?buildSchedule({principal:l.principal,rate:l.interest_rate,tenor:l.tenor,method:l.interest_method,start:l.approval_date||l.application_date,...calcOf(l)}).map(x=>({installment_number:x.n,due_date:x.due_date,principal_due:x.principal_due,interest_due:x.interest_due,total_due:x.total_due,principal_paid:0,interest_paid:0,penalty_paid:0,status:"unpaid",_pv:1})):[],
  fu=ins.find(i=>i.status!=="paid"),kp=i=>"i"+(i._id||"p"+i.installment_number),op=(k,d)=>(k in X?X[k]:d)?" open":"";
@@ -368,7 +368,7 @@ ${l.reject_reason||l.cancel_reason?`<p class="k">Alasan: ${esc(l.reject_reason||
 ${rows.length?`<details class="sx"${op("sched",true)} ontoggle="dxSet('sched',this.open)"><summary>${pv?"Perkiraan jadwal (dibuat saat pencairan)":"Jadwal pembayaran"} <span class="stc">${rows.length}</span>${ins.length?` <span class="k">${ins.filter(i=>i.status==="paid").length}/${ins.length} lunas</span>`:""}</summary><div class="sxa"><button class="b s sm" onclick="schAll(1)">Buka semua</button><button class="b s sm" onclick="schAll(0)">Tutup semua</button></div>${rows.map(irow).join("")}</details>`:'<p class="k">Jadwal dibuat saat pencairan.</p>'}`,side=`${hist}${jam}${tlHtml(l)}${rsHist(l)}${tlh}${ajHtml(l)}`;return pg?{top,side}:`<div class="ldw">${top}${side}</div>`}
 function vSp(){
  const nas=db.parties.filter(p=>p.type==="nasabah"),nasA=nas.filter(p=>p.status!=="nonaktif"),ls=db.loans.filter(l=>S.unit==="all"||l.unit_id===S.unit),en=db.parties.find(p=>p._id===S.en);
- const sisa=l=>db.loan_installments.filter(i=>i.loan_id===l._id).reduce((s,i)=>s+i.principal_due-i.principal_paid,0);
+ const sisa=l=>insL(l._id).reduce((s,i)=>s+i.principal_due-i.principal_paid,0);
  const hasPay=l=>db.loan_payments.some(p=>p.loan_id===l._id&&p.status!=="voided");
  const dt=S.sd||today();
  const jmA=db.collaterals.filter(c=>{const l=db.loans.find(x=>x._id===c.loan_id);return l&&(S.unit==="all"||l.unit_id===S.unit)}),jq=(S.jq||"").toLowerCase(),jmL=jmA.filter(c=>(!S.jfs||c.status===S.jfs)&&(!jq||(c.type+" "+c.description+" "+(c.document_number||"")+" "+db.loans.find(l=>l._id===c.loan_id).loan_number).toLowerCase().includes(jq)));
@@ -411,7 +411,7 @@ function simLive(){try{const e=$("#sim");if(!e)return;const v=i=>($("#"+i)||{}).
 
 // ===== v1.1.158 — O7: Kartu Pinjaman (data, ringkasan, jadwal, riwayat pembayaran) untuk cetak pengurus dan portal nasabah =====
 function kartuHtml(l,o){o=o||{};const pt=db.parties.find(x=>x._id===l.party_id)||{name:"?"},t=today(),R=(a,b)=>`<tr><td>${a}</td><td class="n">${b}</td></tr>`,
- ins=db.loan_installments.filter(i=>i.loan_id===l._id).sort((a,b)=>a.installment_number-b.installment_number),pays=db.loan_payments.filter(p=>p.loan_id===l._id&&p.status!=="voided").sort((a,b)=>(a.payment_date||"").localeCompare(b.payment_date||"")),
+ ins=insL(l._id).sort((a,b)=>a.installment_number-b.installment_number),pays=payL(l._id).filter(p=>p.status!=="voided").sort((a,b)=>(a.payment_date||"").localeCompare(b.payment_date||"")),
  sisa=ins.reduce((s,i)=>s+i.principal_due-i.principal_paid,0),dibayar=pays.reduce((s,p)=>s+p.total_amount+(p.fee_amount||0)+(p.fee_tax||0),0),od=l.status==="active"?ins.filter(i=>i.status!=="paid"&&i.due_date<t):[],tg=od.reduce((s,i)=>s+owed(i,t).total,0),
  st=i=>i.status==="paid"?"Lunas":i.status!=="paid"&&i.due_date<t&&l.status==="active"?"Menunggak":i.status==="partial"?"Sebagian":"Belum";
  return`<div class="doc">${kop()}${l.unit_id&&!o.portal?`<div class="cn">Unit ${esc(unitName(l.unit_id))}</div>`:""}<h3>KARTU PINJAMAN</h3><div class="cn">No. ${esc(l.loan_number)} · dicetak ${today()}</div>
