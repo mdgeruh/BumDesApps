@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.206** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.207** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `docs/BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,7 +10,11 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.206)
+## Fitur (v1.1.210)
+- **Lonceng notifikasi (v1.1.210):** ikon lonceng di header dengan lencana jumlah; panel berisi peringatan Dashboard, pengingat backup, dan angsuran jatuh tempo 7 hari dengan tombol aksi langsung.
+- **Saklar modul di Master (v1.1.209):** sub-tab Modul di Setelan dihapus; modul Pamsimas dan Gaji diaktifkan atau dinonaktifkan langsung dari Master > Unit Usaha.
+- **Unit Usaha dan Modul selaras Pamsimas (v1.1.208):** jenis unit Pamsimas di Master > Unit Usaha, unit bawaan bernama Pamsimas (data lama Sumber Air diubah otomatis), dan kartu modul Pamsimas menampilkan unit pencatat.
+- **Daftar kerja baca meter (v1.1.207):** isian Rute dan Urutan pada data sambungan (kosong = ikut alamat pelanggan), petugas baca per rute, dan daftar kerja cetak A4 per rute (nomor meter, nama, alamat, angka bulan lalu, kolom kosong untuk angka baru, tanda tangan petugas) dari tombol di Baca Meter. Baca Meter yang dikelompokkan per rute menampilkan petugasnya.
 - **Tagihan massal dan WhatsApp (v1.1.206):** tombol Cetak & kirim tagihan di Baca Meter membuka halaman periode: cetak semua nota (A4, satu nota per halaman, urut nomor meter atau alamat) dan tombol WhatsApp/Salin per pelanggan berisi teks tagihan siap kirim (tanpa pengiriman otomatis). Tombol Kirim tagihan WhatsApp juga ada di modal tagihan.
 - **Loket pembayaran cepat (v1.1.205):** sub-tab Loket di Pamsimas: cari pelanggan (nama, telepon, alamat, nomor meter), lihat semua tunggakan, pilih tagihan, terima pembayaran sekaligus (denda keterlambatan otomatis atau dibebaskan), lalu cetak kuitansi per tagihan. Pembayaran sebagian tetap lewat Piutang.
 - **Meter rusak dan taksiran (v1.1.204):** di modal tagihan, centang Meter rusak / tidak terbaca untuk menagih pemakaian taksiran (rata-rata 3 bacaan asli terakhir, bisa diubah). Angka meter tidak dimajukan; tagihan ditandai taksiran. Pada bacaan asli berikutnya pemakaian kumulatif dikurangi taksiran yang sudah ditagih; bila taksiran terlalu tinggi, selisihnya dikreditkan (baris Koreksi taksiran). Ganti meter menutup taksiran yang menunggu.
@@ -132,7 +136,7 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 | Pengguna & peran (opsional, bawaan mati) | *Setelan > Pengguna & Peran*: login PIN (hash bergaram, kunci akun 5 menit setelah 5 kali salah), lima peran awal dengan matriks izin, reset PIN oleh Admin, pemulihan dari backup, sesi per tab, audit log mencatat *Oleh*. **Kontrol prosedur, bukan keamanan sungguhan** selama data di browser; izin ditegakkan di fungsi aksi, menu menyesuaikan peran, pembatasan per Unit tugas, matriks izin dapat diubah Admin (tercatat di audit) |
 | Keamanan data | Toast, dialog konfirmasi aksi berisiko (Void, batal cair/bayar, tutup/buka periode, Import, Reset), banner gagal simpan, pengingat backup, draf form bertahan saat render ulang, audit log |
 | Antarmuka | PWA (dipasang dari browser, jalan offline); mobile: navbar bawah dan lembar bawah untuk modal; desktop: sidebar ikon yang bisa diciutkan dan filter unit; Dashboard berperingatan (tunggakan, piutang air, periode terbuka, gaji belum dibayar), jalan pintas, tren 6 bulan, kartu dapat diklik; semua tambah/edit data lewat modal (jebakan fokus, Escape, galat di kolom, isian terjaga); Form Transaksi terpandu (akun lawan wajib, ringkasan jurnal sebelum Posting, draf dipulihkan); input Rupiah berpemisah ribuan, negatif ditolak, tanggal dd/mm/yyyy; aksesibilitas (tautan lompat, fokus terlihat, label terhubung, target 44px, kontras AA, mode gelap, `prefers-reduced-motion`); halaman masuk gabungan dan halaman developer |
-| Modul (v0.1.039) | *Setelan > Modul*: **Unit Air** dan **Gaji** bawaan **nonaktif** agar tampilan fokus ke Simpan Pinjam; dinyalakan lewat saklar. Menonaktifkan hanya menyembunyikan menu, navbar, kartu Dashboard, sub-tab Laporan Unit Air, dan Saldo Awal piutang pelanggan; data, jurnal, dan saldo tetap utuh. Data lama yang sudah berisi data Unit Air/Gaji tetap menyala saat dimuat (tidak hilang diam-diam). Dicatat di audit log |
+| Modul (v0.1.039) | *Master > Unit Usaha* (sebelumnya Setelan > Modul): **Unit Air** dan **Gaji** bawaan **nonaktif** agar tampilan fokus ke Simpan Pinjam; dinyalakan lewat saklar. Menonaktifkan hanya menyembunyikan menu, navbar, kartu Dashboard, sub-tab Laporan Unit Air, dan Saldo Awal piutang pelanggan; data, jurnal, dan saldo tetap utuh. Data lama yang sudah berisi data Unit Air/Gaji tetap menyala saat dimuat (tidak hilang diam-diam). Dicatat di audit log |
 | Setelan | Profil BUMDes dan pengaturan denda/jasa pelunasan: nama, alamat, kontak, direktur, bendahara, no. SK; tampil di menu, judul, dan kop dokumen cetak; **tempat penandatanganan** dicetak bersama tanggal dokumen di atas tanda tangan |
 | Data | Export/Import JSON (divalidasi), Reset data demo, Periode + Tutup Buku Tahunan, **Audit Log** lengkap (filter aksi, entitas, tanggal, kata kunci; muat lebih banyak) |
 
