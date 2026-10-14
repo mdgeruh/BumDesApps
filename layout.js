@@ -86,7 +86,7 @@ const RT_SUB={set:["su","pf",[["usr","pengguna"],["mod","modul"],["sp","simpan-p
  dat:["dt","bk",[["per","periode"],["aud","audit-log"]]],
  pay:["gt","proses",[["komp","komponen"],["rekap","laporan"],["transfer","transfer"]]],
  sp:["st","ringkasan",[["pinjaman","pinjaman"],["tabungan","tabungan"],["tunggakan","tunggakan"],["jaminan","jaminan"],["nasabah","nasabah"],["calon","calon"]]],
- air:["at","baca",[["samb","sambungan"],["piutang","piutang"],["tarif","tarif"],["jual","layanan-lain","penjualan-lain"],["biaya","biaya"],["adu","pengaduan"],["pel","pelanggan"],["prod","layanan","produk"]]],
+ air:["at","baca",[["samb","sambungan"],["piutang","piutang"],["loket","loket"],["tarif","tarif"],["jual","layanan-lain","penjualan-lain"],["biaya","biaya"],["adu","pengaduan"],["pel","pelanggan"],["prod","layanan","produk"]]],
  rep:["rp","neraca",[["lr","laba-rugi"],["kas","arus-kas"],["piu","piutang"],["sp","simpan-pinjam"],["air","pamsimas","unit-air"],["airdesa","ringkasan-desa"]]]};
 const rtOn=()=>typeof window!=="undefined"&&window.RT_BASE!==undefined&&typeof location!=="undefined"&&/^https?:$/.test(location.protocol)&&typeof history!=="undefined"&&!!history.pushState;
 const rtBase=()=>(typeof window!=="undefined"&&window.RT_BASE)||"/";

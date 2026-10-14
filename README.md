@@ -2,7 +2,7 @@
 
 Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
-> **Status:** MVP Tahap 1 — **v1.1.204** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
+> **Status:** MVP Tahap 1 — **v1.1.206** · satu file `bumdes.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `docs/BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
 
 ## Menjalankan
@@ -10,7 +10,9 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `bumdes.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.204)
+## Fitur (v1.1.206)
+- **Tagihan massal dan WhatsApp (v1.1.206):** tombol Cetak & kirim tagihan di Baca Meter membuka halaman periode: cetak semua nota (A4, satu nota per halaman, urut nomor meter atau alamat) dan tombol WhatsApp/Salin per pelanggan berisi teks tagihan siap kirim (tanpa pengiriman otomatis). Tombol Kirim tagihan WhatsApp juga ada di modal tagihan.
+- **Loket pembayaran cepat (v1.1.205):** sub-tab Loket di Pamsimas: cari pelanggan (nama, telepon, alamat, nomor meter), lihat semua tunggakan, pilih tagihan, terima pembayaran sekaligus (denda keterlambatan otomatis atau dibebaskan), lalu cetak kuitansi per tagihan. Pembayaran sebagian tetap lewat Piutang.
 - **Meter rusak dan taksiran (v1.1.204):** di modal tagihan, centang Meter rusak / tidak terbaca untuk menagih pemakaian taksiran (rata-rata 3 bacaan asli terakhir, bisa diubah). Angka meter tidak dimajukan; tagihan ditandai taksiran. Pada bacaan asli berikutnya pemakaian kumulatif dikurangi taksiran yang sudah ditagih; bila taksiran terlalu tinggi, selisihnya dikreditkan (baris Koreksi taksiran). Ganti meter menutup taksiran yang menunggu.
 - **Ganti meter lewat modal (v1.1.203):** tombol Ganti meter di modal detail sambungan membuka modal (meter lama dan angka akhir, nomor dan angka awal meter baru, tanggal, alasan), peringatan bila periode berjalan belum ditagih, konfirmasi sebelum simpan, riwayat dan batal di modal. Kartu isian lama di tab Sambungan dihapus.
 - **Buka pertama tanpa login (v1.1.202):** perangkat yang belum pernah masuk akun langsung membuka aplikasi dengan data lokal, tanpa halaman masuk. Masuk hanya untuk sinkronisasi (Data > Backup / ikon awan). Tautan `#masuk` dan `#portal` (nasabah) tetap membuka halaman masuk.
