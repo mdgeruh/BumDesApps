@@ -21,7 +21,9 @@ const cloudRO=()=>{const c=cloudCfg();return!!(c.token&&c.bumdes_id&&c.role==="p
 // perlu masuk? hanya bila koneksi awan terpasang dan perangkat belum punya sesi (pengurus, nasabah, atau mode lokal perangkat lama)
 // wajib masuk berlaku bila koneksi tertanam di config.js (pemasangan resmi); koneksi manual dari Setelan tidak memaksa (penanda wajib=1 untuk uji)
 // peramban otomatis (navigator.webdriver, mis. uji Playwright) tidak dipaksa masuk kecuali uji menyalakan globalThis.__ENT_TEST
-function entNeed(){try{if(typeof navigator!=="undefined"&&navigator.webdriver&&!globalThis.__ENT_TEST)return false}catch(e){}if(!entOn()||!(cloudFixed()||entGet().wajib))return false;if(S.pt)return false;if(cloudCfg().token)return false;if(nsbGet())return false;if(entGet().lokal)return false;return true}
+function entNeed(){try{if(typeof navigator!=="undefined"&&navigator.webdriver&&!globalThis.__ENT_TEST)return false}catch(e){}if(!entOn()||!(cloudFixed()||entGet().wajib))return false;if(S.pt)return false;if(cloudCfg().token)return false;if(nsbGet())return false;if(entGet().lokal)return false;if(entLocalOk()&&!entHash()){entPut({lokal:1,seen:1});return false}return true}
+// buka pertama (v1.1.202): perangkat yang belum pernah masuk langsung memakai data lokal tanpa halaman masuk; tautan #masuk tetap membuka halaman masuk (mis. untuk nasabah)
+const entHash=()=>{try{return typeof location!=="undefined"&&(location.hash==="#masuk"||location.hash==="#portal")}catch(e){return false}}
 // tautan "lanjut tanpa masuk" (v1.1.201): tersedia di perangkat mana pun yang belum pernah masuk akun (perangkat baru yang masih berisi data contoh juga boleh memakai lokal dulu; masuk hanya perlu untuk sinkronisasi)
 // setelah pernah masuk akun tautan hilang, jadi tidak bisa dipakai untuk menghindari masuk
 const entLocalOk=()=>entOn()&&!entGet().seen&&!cloudCfg().email;
