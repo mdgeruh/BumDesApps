@@ -70,3 +70,20 @@ function tgText(id){const x=db.sales.find(q=>q._id===id);if(!x||!x.bill||x.statu
 function tgLog(x,how){audit("share","party",x.party_id,"tagihan air "+x.bill.period+" ("+how+")");save()}
 function tgWa(id){const x=db.sales.find(q=>q._id===id),p=x&&cust(x.party_id),n=p&&waNo(p.phone);if(!x||!x.bill){return}if(!n){S.msg="⚠ Nomor telepon pelanggan tidak valid";render();return}tgLog(x,"WhatsApp");window.open("https://wa.me/"+n+"?text="+encodeURIComponent(tgText(id)),"_blank","noopener")}
 function tgCopy(id){const x=db.sales.find(q=>q._id===id);if(!x||!x.bill)return;const t=tgText(id);try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>{S.msg="Teks tagihan disalin";render()},()=>{S.msg="⚠ Gagal menyalin";render()});else throw 0}catch(e){S.msg="⚠ Penyalinan tidak didukung";render()}tgLog(x,"salin")}
+
+// ===== v1.1.247 (K7): pengingat piutang air bergilir lewat WhatsApp =====
+// Antrean pelanggan yang menunggak (tagihan lewat jatuh tempo) dan bernomor WhatsApp valid; yang sudah diingatkan hari ini dilewati. Satu pesan per ketukan (WhatsApp dibuka manual), tercatat di audit seperti pengingat tunggal.
+MK.arq="earq";
+const arqToday=pid=>(db.audit_logs||[]).some(a=>a.action==="share"&&a.entity==="party"&&a.entity_id===pid&&String(a.detail||"").startsWith("pengingat tagihan air")&&wd(a.at)===today());
+function arqIds(){const t=today(),seen=new Set(),U=x=>S.unit==="all"||x.unit_id===S.unit,out=[];
+ db.sales.filter(x=>x.status==="posted"&&x.party_id&&U(x)&&owedS(x)>0.005&&x.bill&&x.bill.due&&x.bill.due<t).forEach(x=>{if(seen.has(x.party_id))return;seen.add(x.party_id);const p=db.parties.find(q=>q._id===x.party_id);if(p&&waNo(p.phone)&&!arqToday(p._id))out.push(p._id)});
+ return out.sort((a,b)=>((db.parties.find(x=>x._id===a)||{}).name||"").localeCompare((db.parties.find(x=>x._id===b)||{}).name||"","id"))}
+function arqStart(){const ids=arqIds();if(!ids.length){S.msg="Tidak ada pelanggan menunggak yang bisa diingatkan (nomor WhatsApp kosong atau sudah diingatkan hari ini)";render();return}S.arq={ids,i:0,sent:0,skip:0};mdOpen("arq","x")}
+function arqAdv(){const q=S.arq;if(!q)return;q.i++;render()}
+function arqSend(){const q=S.arq;if(!q||q.i>=q.ids.length)return;const id=q.ids[q.i],p=db.parties.find(x=>x._id===id),n=p&&waNo(p.phone),x=p&&arText(id);
+ if(!n||!x){q.skip++;arqAdv();return}arLog(id,"WhatsApp bergilir");q.sent++;try{window.open("https://wa.me/"+n+"?text="+encodeURIComponent(x),"_blank","noopener")}catch(e){}arqAdv()}
+function arqSkip(){const q=S.arq;if(!q||q.i>=q.ids.length)return;q.skip++;arqAdv()}
+MD.arq=()=>{const q=S.arq;if(!q)return{t:"Pengingat bergilir",s:"mdClose()",y:"Tutup",b:"<p>Antrean tidak ditemukan.</p>",nf:1};
+ const N=q.ids.length;if(q.i>=N)return{t:"Pengingat bergilir",s:"mdClose()",y:"Selesai",nf:1,b:`<p><b>Selesai.</b> ${q.sent} pengingat dibuka di WhatsApp, ${q.skip} dilewati.</p><p class="k">Pelanggan yang sudah diingatkan hari ini tidak akan masuk antrean lagi hari ini.</p>`};
+ const id=q.ids[q.i],p=db.parties.find(x=>x._id===id)||{name:"?"},tot=arList(id).reduce((a,x)=>a+owedS(x),0);
+ return{t:"Pengingat bergilir",s:"mdClose()",y:"Tutup",nf:1,b:`<div class="fwb" role="progressbar" aria-valuemin="0" aria-valuemax="${N}" aria-valuenow="${q.i}" aria-label="Pelanggan ${q.i+1} dari ${N}"><i style="width:${Math.round(q.i/N*100)}%"></i></div><p class="k">Pelanggan ${q.i+1} dari ${N} · ${q.sent} terbuka · ${q.skip} dilewati</p><p><b>${esc(p.name)}</b><br><span class="k">Total belum dibayar ${rp(tot)}</span></p><pre id="ar-t" class="ns-t">${esc(arText(id))}</pre><div class="lda">${ib("out","Kirim WhatsApp","arqSend()")}${ib("x","Lewati","arqSkip()","s")}</div><p class="k">WhatsApp terbuka dengan pesan siap kirim; kirim manual, lalu kembali ke sini untuk pelanggan berikutnya.</p>`}};

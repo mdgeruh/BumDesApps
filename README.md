@@ -10,7 +10,55 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `index.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.233)
+## Fitur (v1.1.281)
+- **Backup lebih sederhana (v1.1.281).** Tanpa kolom tempel JSON dan tanpa panel teknis awan.
+- **Masuk dengan username, tanpa dropdown pengguna, layar masuk bercover (v1.1.280).**
+- **Tombol Keluar hanya di Profil (v1.1.279).**
+- **Hapus kartu Akun saya, avatar header sesuai akun (v1.1.278).**
+- **Nama aplikasi dinamis di layar masuk dan deskripsi halaman (v1.1.277).**
+- **Nama aplikasi dan versi di berkas backup (v1.1.276).**
+- **Setelan Pengguna & Peran: izin per peran (v1.1.275).**
+- **Profil: email akun awan hanya untuk Admin Sistem (v1.1.274).**
+- **F6 regresi tata letak, nama "Sistem Bumdes Multi Unit V…", PIN bawaan 123456, pembuat data setahun (v1.1.273).**
+- **Palet perintah di pencarian, kartu Tampilan dan Sesi di Profil, istilah Ekspor/Impor seragam (v1.1.272).**
+- **F6: pemeriksaan lima lebar layar (v1.1.271).**
+- **F5: tabel dengan urut, cari, dan kepala menempel (v1.1.270).**
+- **Tombol panah di kartu Perlu perhatian (v1.1.269).**
+- **Kartu Perlu perhatian bisa diciutkan dan diperluas (v1.1.268).**
+- **D10: filter periode kurva Tren (v1.1.267).**
+- **Perbaikan teks kartu Perlu perhatian (v1.1.266).**
+- **D9: cache perhitungan Dashboard (v1.1.265).**
+- **D7: atur tampilan Dashboard (v1.1.264).**
+- **D6: garis tren kas 30 hari (v1.1.263).**
+- **D5: kartu Perlu perhatian di Dashboard (v1.1.262).**
+- **D4: pemilih periode Dashboard (v1.1.261).**
+- **D3: perbandingan kas 30 hari dan laba bulan lalu (v1.1.260).**
+- **D2: angka dan bulan di Dashboard bisa ditekan (v1.1.259).**
+- **D1: kartu Pamsimas di Dashboard (v1.1.258).**
+- **F4: tema Terang/Gelap/Ikuti sistem, spanduk Muat ulang, status penyimpanan persisten (v1.1.257).**
+- **Tab Ringkasan Pamsimas berisi kartu angka kunci (v1.1.256).**
+- **Lencana sub-tab berupa blok warna seperti lonceng (v1.1.255).**
+- **Sub-tab bergaya tab map: abu-abu, aktif putih tebal (v1.1.254).**
+- **Tab dan sub-tab Pamsimas lebih jelas: lencana bermakna, Sambungan di Data, Tarif & Aturan, ingat sub-tab, sub-tab menempel (v1.1.253).**
+- **Kartu Hari ini dihapus; notifikasi lewat lonceng (v1.1.252).**
+- **Detail transaksi sebagai halaman (v1.1.251).**
+- **Berkas besar dipecah (v1.1.250).**
+- **Petunjuk awal dan hapus data contoh (v1.1.249).**
+- **Mode lapangan Pamsimas (v1.1.248).**
+- **Pengingat piutang air bergilir (v1.1.247).**
+- **Tanda tangan dan stempel digital (v1.1.246).**
+- **Kartu Hari ini di Dashboard (v1.1.245).**
+- **Pencarian global (v1.1.244).**
+- **Pemeriksaan kesehatan data (v1.1.243).**
+- **Salinan otomatis di perangkat (v1.1.242).**
+- **Simpan data adaptif (v1.1.241).**
+- **Detail pelanggan Pamsimas sebagai halaman (v1.1.240).**
+- **Alur per proyek hanya untuk proyek Draf atau Berjalan (v1.1.239).**
+- **Alur pengadaan memakai progress bar (v1.1.238).**
+- **RAB proyek lebih cepat diisi dan dibaca (v1.1.237).**
+- **Alur pengadaan per proyek (v1.1.236):** 8 langkah dengan satu tombol Lanjut.
+- **Perbaikan galat Bayar termin (v1.1.235):** kolom potongan opsional.
+- **RFQ lebih mudah diikuti (v1.1.234):** penunjuk langkah, panduan, dan tombol aksi utama.
 - **Header aplikasi lebih bersih dan modern (v1.1.233):** tombol dan tautan header disusun ulang.
 - **Fase PC tahap AK — laporan pertanggungjawaban proyek, rekap tahunan, checklist dokumen desa (v1.1.232):** pelaporan ke desa (PC7 roadmap 1.0).
 - **Fase PC tahap AJ — izin terperinci, benturan kepentingan, pemisahan tugas, persetujuan berjenjang (v1.1.231):** tata kelola pengadaan bila Mode Pengguna aktif (PC6 roadmap 1.0).
@@ -215,6 +263,12 @@ Satu folder datar (tanpa subfolder sumber). Sejak v1.1.224 hanya ada **satu hala
 | `modules.js` | Pengaturan modul unit usaha |
 | `loans.js` | Simpan Pinjam: nasabah, pinjaman, jadwal, pembayaran, jaminan |
 | `water.js` | Unit Air: pelanggan, penjualan, langganan, meter |
+| `water2.js` | Pamsimas bagian 2: biaya, meter induk, calon putus, pengaduan, tarif air, loket, daftar kerja |
+| `waterpage.js` | Pamsimas: halaman detail pelanggan dan mode lapangan |
+| `autobk.js` | Salinan otomatis berkala di IndexedDB (v1.1.242) |
+| `health.js` | Pemeriksaan kesehatan data (v1.1.243) |
+| `gsearch.js` | Pencarian global (v1.1.244) |
+| `detailpage.js` | Detail transaksi sebagai halaman (v1.1.251) |
 | `ui.js` | Toast, konfirmasi, draf form, komponen form dan aksesibilitas |
 | `payroll.js` | Pihak/pegawai sebagai master, penggajian, laporan gaji |
 | `reports.js` | Laporan keuangan, piutang, saldo awal terpandu, laporan air |
@@ -236,7 +290,8 @@ Satu folder datar (tanpa subfolder sumber). Sejak v1.1.224 hanya ada **satu hala
 | `calon.js` | Calon peminjam (v1.1.031): sub-tab Calon, status, jadikan nasabah |
 | `closing.js` | Tutup buku/periode, audit log, backup |
 | `users.js` | Pengguna, peran, login PIN |
-| `releases.js` | Data catatan rilis untuk tombol ? di Setelan (rilis baru ditambah di paling atas) |
+| `releases.js` | Data catatan rilis untuk tombol ? di Setelan (40 rilis terbaru; rilis baru ditambah di paling atas) |
+| `releases-lama.js` | Catatan rilis lama (`RELEASES_LAMA`), digabung ke `RELEASES` |
 | `modals.js` | Dialog modal tambah/ubah data |
 | `flow.js` | Alur pengajuan lengkap opsional (SP2): verifikasi, analisis, wewenang persetujuan, akad |
 | `rates.js` | Mesin Tarif & Biaya: `rate_master`/`tax_master` berversi, `calcFees()` murni, tampilan Master > Tarif & Biaya |
