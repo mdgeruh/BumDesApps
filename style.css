@@ -325,7 +325,7 @@ body.mk-on{overflow:hidden}
 .dgr{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);margin:12px 0}.dgr>.card,.dc{margin:0}
 @media (min-width:900px){.dgr.c2{grid-template-columns:1fr 1fr}.g.dk{grid-template-columns:repeat(4,1fr)}.g.dk>:last-child:nth-child(3n+1){grid-column:auto}.g.dk>:last-child:nth-child(4n+1){grid-column:1/-1}}
 .dc{border-radius:14px;box-shadow:var(--sh2);padding:16px;margin:12px 0}.ct{font-size:15px;font-weight:600;margin:0}.cs{color:var(--mu);font-size:12px;margin:2px 0 12px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
-.ov{display:grid;grid-template-columns:1fr 1fr}.ov>div{padding:10px 12px 12px 0}.ov>div:nth-child(even){padding-left:14px;border-left:1px solid var(--bd)}.ov>div:nth-child(n+3){border-top:1px solid var(--bd);padding-top:12px}.ovv{font-size:19px;font-weight:600;white-space:nowrap}.ovl{color:var(--mu);font-size:13px;margin:1px 0 6px}.ovd{min-height:18px}
+.ov{display:grid;grid-template-columns:1fr 1fr}.ov>*{padding:10px 12px 12px 0}.ov>*:nth-child(even){padding-left:14px;border-left:1px solid var(--bd)}.ov>*:nth-child(n+3){border-top:1px solid var(--bd);padding-top:12px}.ovv{font-size:19px;font-weight:600;white-space:nowrap}.ovl{color:var(--mu);font-size:13px;margin:1px 0 6px}.ovd{min-height:18px}
 .bars{display:flex;gap:8px;align-items:flex-end;height:210px}.bcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%}.bt{flex:1;width:100%;max-width:46px;border-radius:10px;background:color-mix(in srgb,var(--tx) 5%,var(--cd));display:flex;align-items:flex-end;overflow:hidden}.bf{width:100%;border-radius:10px;background:color-mix(in srgb,var(--tx) 14%,var(--cd))}.bcol.hi .bf{background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 60%,#fff),var(--ac))}
 .bv{font-size:11px;color:var(--mu);white-space:nowrap}.bcol.hi .bv{color:var(--tx);font-weight:600}.bi{width:22px;height:22px;border-radius:50%;color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}.bn{font-size:11px;color:var(--mu);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}.bars.wk{height:180px}
 .tw{display:grid;grid-template-columns:1fr;gap:10px}.tl .big{font-size:26px;font-weight:700;line-height:1.15}.tl .mid{font-size:16px;font-weight:600}.tc{min-width:0}.tc .lg{margin:0 0 4px}.dc.tr svg{overflow:visible}
@@ -816,3 +816,88 @@ header #usr>.b:not(.usrp):hover{background:var(--hv);color:var(--rd)}
 @media (max-width:899px){header{padding:6px 12px;gap:8px}header .hru{gap:6px}header #unit{max-width:34vw;height:40px;min-height:44px;padding:0 26px 0 12px;background-position:right 9px center}header .hst{padding:0;border:0;background:transparent;gap:0}header .hst .chip,header .hst .belb{min-width:44px;min-height:44px;height:44px;padding:0 8px;background:transparent}header .hst .chip.awc{padding-right:8px}header #usr>.b:not(.usrp){width:44px;min-height:44px;height:44px}}
 @media (max-width:480px){header h1#ttl{font-size:16px}header #unit{max-width:30vw}}
 @media print{header .hst{display:none!important}}
+
+/* v1.1.234 — RFQ: langkah dan panduan berikutnya */
+.stp{display:flex;gap:6px;margin:10px 0 6px;flex-wrap:wrap}.stpi{flex:1 1 0;min-width:70px;text-align:center;padding:6px 6px;border:1px solid var(--ln);border-radius:999px;font-size:12px;font-weight:550;color:var(--mu);background:var(--cd)}
+.stpi.ok{color:var(--ac);border-color:var(--ac)}.stpi.on{background:var(--ac);color:var(--on);border-color:var(--ac)}.gdn{margin:6px 0 12px;padding:10px 12px;border-radius:10px;background:var(--hv);font-size:13.5px}
+
+/* v1.1.236 — Alur pengadaan per proyek */
+.fw{border:1px solid var(--ln);border-radius:14px;background:var(--cd);padding:12px 14px;margin:10px 0;display:flex;flex-direction:column;gap:10px}.fwh{display:flex;flex-direction:column;gap:2px}.fwh b{font-size:14.5px}
+
+/* v1.1.237 — RAB: pengelompokan per pos, bar progres, pratinjau jumlah */
+.rbb{height:8px;border-radius:99px;background:var(--hv);overflow:hidden;margin:8px 0}.rbb i{display:block;height:100%;background:var(--ac);border-radius:99px}.rbb.ov i{background:var(--rd)}
+.rbg{margin:6px 0 12px}.rbh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:6px 2px;border-bottom:1px solid var(--ln)}.rbh b{font-size:13.5px}.boqpv{font-weight:600;color:var(--tx)}
+[aria-label="Ringkasan RAB"] .card{min-width:0}[aria-label="Ringkasan RAB"] .v{font-size:clamp(16px,5.2vw,22px);overflow-wrap:anywhere}
+[aria-label="Ringkasan RAB"] .bdg{white-space:normal;text-align:left;line-height:1.25}
+.fwb{height:10px;border-radius:99px;background:var(--hv);overflow:hidden}.fwb i{display:block;height:100%;background:var(--ac);border-radius:99px;transition:width .3s}.fwb.ok i{background:var(--ac)}
+
+/* v1.1.244 pencarian global */
+#gs{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:flex;align-items:flex-start;justify-content:center;padding:56px 12px 12px}
+#gs .gsb{background:var(--cd);color:var(--tx);border:1px solid var(--bd);border-radius:14px;width:100%;max-width:560px;max-height:calc(100vh - 80px);display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.28)}
+#gs .gsh{display:flex;gap:8px;padding:10px;border-bottom:1px solid var(--bd)}#gs .gsh input{flex:1;min-width:0}
+#gs .gsr{overflow:auto;padding:6px 10px 10px}#gs .gsg h4{margin:10px 0 4px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--mu)}#gs .gsg h4 small{font-weight:400}
+#gs .gsi2{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;text-align:left;background:transparent;border:0;border-radius:8px;padding:8px;min-height:44px;color:inherit;cursor:pointer}
+#gs .gsi2:hover,#gs .gsi2:focus-visible{background:color-mix(in srgb,var(--ac) 12%,transparent)}#gs .gsi2 small{color:var(--mu);overflow-wrap:anywhere}
+@media print{#gs{display:none!important}}
+
+/* v1.1.246 tanda tangan dan stempel digital */
+.sgx{display:block;position:relative;height:56px;margin:2px 0}.sgx .sgi{display:block;margin:0 auto;max-height:52px;max-width:100%;object-fit:contain}
+.sgx .sgst{position:absolute;left:50%;top:0;max-height:56px;max-width:90px;transform:translateX(-85%);opacity:.8;mix-blend-mode:multiply;pointer-events:none}
+@media print{.sgx{height:56px}}
+
+/* v1.1.248 mode lapangan Pamsimas */
+.wfb{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:10px 12px;margin-bottom:10px;border-radius:10px;background:var(--hv);border:1px solid var(--bd);font-size:13px}.wfb .wfa{display:flex;gap:6px}
+.wdf #wd-a{font-size:28px;height:64px;font-weight:700;text-align:center;letter-spacing:.02em}.wdf .actb .b{min-height:56px;font-size:16px}
+
+/* v1.1.253 tab Pamsimas: badge menunggu (kuning), tingkat tab dibedakan, sub-tab menempel saat gulir */
+.stt .stc.p,.stt.on .stc.p{background:#d99a1a;color:#1b1400}
+.stsub{position:sticky;top:calc(var(--hh,57px) + env(safe-area-inset-top,0px));z-index:4;background:var(--bg);margin-top:0}
+.stsub .stb{background:transparent;gap:3px;box-shadow:none;align-items:flex-end}
+.stsub .stt{font-weight:500;font-size:13px;min-height:44px;padding:8px 14px;margin:0;border-bottom-width:0;border-radius:6px 6px 0 0;background:color-mix(in srgb,var(--tx) 9%,var(--bg));color:var(--mu)}
+.stsub .stt:hover{background:color-mix(in srgb,var(--tx) 14%,var(--bg))}
+.stsub .stt.on{background:var(--cd);color:var(--tx);font-weight:700}
+.stsub .stt .stc,.stsub .stt.on .stc{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:color-mix(in srgb,var(--tx) 22%,transparent);color:var(--tx);font-weight:700;font-size:11px;opacity:1}
+.stsub .stt.on .stc{background:var(--ac);color:var(--on)}
+.stsub .stt .stc.w,.stsub .stt.on .stc.w{background:var(--rd);color:var(--on)}.stsub .stt .stc.p,.stsub .stt.on .stc.p{background:#d99a1a;color:#1b1400}
+@media print{.stsub{position:static}}
+@media (max-width:480px){.stsub .stb{gap:2px}.stsub .stt{padding:8px 6px;gap:3px;font-size:12px}.stsub .stt .stc{min-width:16px;height:16px;padding:0 4px;font-size:10.5px}}
+@media (max-width:480px){#main>.stb .stt{padding:10px 5px;gap:3px;font-size:12.5px}}
+/* v1.1.257 F4: spanduk versi baru */
+.updb{position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;background:var(--cd);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--sh2);font-size:13px}
+.updb span{flex:1 1 160px}@media (min-width:900px){.updb{left:auto;right:24px;bottom:24px;max-width:380px}}
+/* v1.1.259 D2: angka dan bulan di Dashboard bisa ditekan */
+.ovb{background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer;border-radius:8px;min-height:44px}.ovb:hover{background:var(--hv)}.ovb:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+.lnk{background:none;border:0;padding:6px 0;min-height:44px;display:inline-flex;align-items:center;font:inherit;color:var(--ac);text-decoration:underline;cursor:pointer}
+/* v1.1.262 D5: kartu Perlu perhatian; v1.1.261 D4: pemilih periode */
+.pph{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}.ppr{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:8px 10px;border-radius:10px;border-left:4px solid #d99a1a;background:var(--hv)}.ppr.er{border-left-color:var(--rd)}
+.ppm{display:flex;flex-direction:column;min-width:0}.ppm small{color:var(--mu);font-size:12px}.ppr .b{flex:0 0 auto}.dpb{margin:0 0 8px}
+@media (max-width:480px){.ppr{flex-wrap:wrap}.ppr .b{width:100%}}
+/* v1.1.263 D6: garis tren kas */
+.spk{display:block;width:100%;height:44px;margin:6px 0 2px;color:var(--ac)}.spk.dn{color:var(--rd)}
+/* v1.1.264 D7: atur tampilan Dashboard */
+.dsw{display:contents}.dsroot.dsh-attn .ds-attn,.dsroot.dsh-kpi .ds-kpi,.dsroot.dsh-ring .ds-ring,.dsroot.dsh-lru .ds-lru,.dsroot.dsh-tren .ds-tren,.dsroot.dsh-pola .ds-pola,.dsroot.dsh-kas .ds-kas,.dsroot.dsh-trx .ds-trx{display:none}
+.dsa{position:relative}.dsa summary{list-style:none;cursor:pointer;display:inline-flex}.dsa summary::-webkit-details-marker{display:none}.dsa-l{display:flex;flex-direction:column;gap:2px;margin-top:6px;padding:8px 10px;background:var(--cd);border:1px solid var(--bd);border-radius:12px}.dsa-l .ck{display:flex;align-items:center;gap:8px;min-height:36px}
+.tpk{margin:0 0 8px;gap:6px}.tpk .b{min-height:44px;padding:6px 14px}
+.dpa-c{margin:0 0 8px;gap:6px}
+.ib2{min-width:44px;padding:6px 12px;font-size:16px;line-height:1}
+/* v1.1.270 F5: tabel */
+.tbm{display:flex;align-items:center;gap:10px;margin:6px 0}.tbm .tsf{flex:1 1 180px;max-width:320px}.tbm .tbc{white-space:nowrap}
+.sc.tall{max-height:70vh;overflow:auto}.sc th.srt{cursor:pointer;user-select:none}.sc th.srt:hover{color:var(--tx)}.sc th.srt:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+.sc th.srt[aria-sort=ascending]::after{content:" ▲";font-size:10px}.sc th.srt[aria-sort=descending]::after{content:" ▼";font-size:10px}
+.sc th{position:sticky;top:0;z-index:1;background:color-mix(in srgb,var(--tx) 3.5%,var(--cd))}
+tr[hidden]{display:none}
+@media print{.sc.tall{max-height:none;overflow:visible}.tbm{display:none}}
+/* v1.1.271 F6: layar sempit 320 px tidak meluap */
+@media (max-width:899px){.g.dk{grid-template-columns:repeat(2,minmax(0,1fr))}.rsel{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.v,.rcd .rt,.rcd .rh{overflow-wrap:anywhere}
+@media (max-width:360px){.g.dk .v,.v{font-size:min(1em,5.6vw)}.g.dk>:first-child .v{font-size:22px}.rcd{padding:10px}}
+@media (max-width:360px){.v span,.v{white-space:normal}}
+.ov{grid-template-columns:repeat(2,minmax(0,1fr))}.ovb{min-width:0;width:100%;box-sizing:border-box;padding:10px 12px 12px 0}.ov>.ovb:nth-child(even){padding-left:14px}
+.avs{gap:10px}.avc{width:44px;height:44px;min-height:44px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0}.avc.on{border-color:var(--tx)}.avc:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.rlc{margin:0 0 10px;flex-wrap:nowrap;overflow-x:auto}.rlc .stt{flex:0 0 auto;white-space:nowrap}.rlh{display:flex;flex-direction:column;gap:2px;margin:4px 0 8px}.rll{max-height:none}.rlr{cursor:pointer;min-height:44px}.rlr input{width:22px;height:22px}.rlr .upm b{font-weight:500;white-space:normal}.rlr.vd2 .upm b{font-weight:600}
+.rlc{max-width:100%;min-width:0;box-sizing:border-box}.dc .rlc,.dc .rlh,.dc .rll{min-width:0;max-width:100%}
+
+/* v1.1.280: layar masuk pengguna memakai cover seperti halaman masuk awan */
+#lock.mkl{padding:0}#lock.mkl.on{display:grid;grid-template-columns:1fr;grid-auto-rows:min-content;align-content:start}
+#lock .mk-bk{text-align:left}#lock .mk-bk details{margin-top:0}#lock .mk-bk textarea{width:100%;box-sizing:border-box}
+@media (min-width:900px){#lock.mkl.on{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-content:stretch;grid-auto-rows:auto}}
