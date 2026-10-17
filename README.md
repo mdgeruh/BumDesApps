@@ -1,6 +1,6 @@
 # Sistem BUMDes Multi-Unit Usaha
 
-Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Perdagangan, dll.) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
+Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Pamsimas, dll.; unit Perdagangan dibuat sendiri bila perlu) dengan satu mesin akuntansi bersama. Bukan aplikasi koperasi: Simpan Pinjam hanyalah salah satu unit. Saat ini fokus ke Simpan Pinjam; Unit Air dan Gaji bawaan nonaktif dan dapat dinyalakan di *Setelan > Modul*.
 
 > **Status:** MVP Tahap 1 — **v1.1.207** · satu file `index.html` (HTML + CSS + JS), data di `localStorage` (key `bumdes_db_v1`)
 > **Desain:** `docs/BUMDes_Multi_Unit_Usaha_Blueprint_v2_LocalStorage.md`
@@ -10,7 +10,38 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Sumber Air, Pe
 1. Buka `index.html` di browser (tanpa install/server). Data demo dibuat otomatis saat pertama dibuka.
 2. Data hanya ada di satu browser/perangkat. **Export JSON berkala** (tab *Data*); aplikasi mengingatkan setelah 7 hari.
 
-## Fitur (v1.1.281)
+Panduan Perdagangan: `docs/PANDUAN_PERDAGANGAN.md`.
+
+## Fitur (v1.1.310)
+- **Perbaikan impor cadangan (v1.1.310).**
+- **Stok lanjutan (PL4) (v1.1.309).**
+- **Struk dan kasir harian (PL3) (v1.1.308).**
+- **Penjualan lanjutan (PL2) (v1.1.307).**
+- **Perdagangan: navigasi dan kenyamanan (PL1) (v1.1.306).**
+- **Perbaikan hasil pemeriksaan halaman Perdagangan (PL0) (v1.1.305).**
+- **Perdagangan: impor CSV, data contoh toko desa, panduan (PD8) (v1.1.304).**
+- **Perdagangan: Ringkasan hidup dan pengingat (PD7) (v1.1.303).**
+- **Perdagangan: Laporan Perdagangan (PD6) (v1.1.302).**
+- **Perdagangan: stok opname dan retur (PD5) (v1.1.301).**
+- **Perdagangan: piutang pelanggan dan kasir cepat (PD4) (v1.1.300).**
+- **Perdagangan: penjualan dengan HPP otomatis (PD3) (v1.1.299).**
+- **Perbaikan form Pembelian: isian barang dikosongkan (v1.1.298).**
+- **Perdagangan: pembelian dan utang usaha (PD2) (v1.1.297).**
+- **Perdagangan: produk, stok awal, kartu stok (PD1) (v1.1.296).**
+- **Modul Perdagangan: fondasi (PD0) (v1.1.295).**
+- **Unit tanpa modul dan hapus unit kosong (DU3) (v1.1.294).**
+- **Unit Perdagangan bawaan dihapus (v1.1.293).**
+- **Putus dan sambung kembali (PM8) (v1.1.292).**
+- **Janji bayar piutang (PM7) (v1.1.291).**
+- **Pelanggan: filter, detail, impor CSV (PM4) (v1.1.290).**
+- **Umur tunggakan per pelanggan (PM6) (v1.1.289).**
+- **Navigasi dan pencarian seragam (PM5) (v1.1.288).**
+- **Ringkasan Pamsimas hidup (PM3) (v1.1.287).**
+- **Penagihan lebih cepat (PM2) (v1.1.286).**
+- **Layanan Lain khusus non-tagihan, aksi tagihan di detail piutang (v1.1.285).**
+- **Detail piutang tetap terbuka setelah bayar, Riwayat Bayar tab sendiri (v1.1.284).**
+- **Detail piutang dan Loket jadi halaman, piutang per pelanggan (v1.1.283).**
+- **Header muat di layar sempit (v1.1.282).** Chip pengguna avatar saja di ≤400px; uji ui-sempit.
 - **Backup lebih sederhana (v1.1.281).** Tanpa kolom tempel JSON dan tanpa panel teknis awan.
 - **Masuk dengan username, tanpa dropdown pengguna, layar masuk bercover (v1.1.280).**
 - **Tombol Keluar hanya di Profil (v1.1.279).**
