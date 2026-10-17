@@ -209,11 +209,11 @@ function airDesaData(){const au=airUnit(),cs=db.water_connections.filter(c=>c.un
  inr.forEach(x=>{const g=x.bill.cls_name||"Umum",a=((cust(x.party_id)||{}).address||"").trim()||"(alamat kosong)",m=x.date.slice(0,7);
   [[G,g],[A,a]].forEach(([H,k])=>{const o=H[k]??={k,n:0,q:0,v:0};o.n++;o.q+=x.bill.usage;o.v+=x.total});
   const o=M[m]??={m,n:0,t:0,b:0};o.n++;o.t+=x.total;o.b+=paidOf(x)});
- const td=today(),AG=[["Belum jatuh tempo",0,0],["1–30 hari",0,0],["31–60 hari",0,0],["61–90 hari",0,0],["Lebih dari 90 hari",0,0]];
- bs.forEach(x=>{const o=owedS(x);if(o<=0)return;const due=x.bill.due||x.date,d=Math.round((new Date(td+"T00:00:00Z")-new Date(due+"T00:00:00Z"))/864e5),i=d<=0?0:d<=30?1:d<=60?2:d<=90?3:4;AG[i][1]++;AG[i][2]+=o});
+ const td=today(),AG=[["Belum jatuh tempo",0,0],["1–30 hari",0,0],["31–60 hari",0,0],["61–90 hari",0,0],["Lebih dari 90 hari",0,0]];const AP={};
+ bs.forEach(x=>{const o=owedS(x);if(o<=0)return;const due=x.bill.due||x.date,d=Math.round((new Date(td+"T00:00:00Z")-new Date(due+"T00:00:00Z"))/864e5),i=d<=0?0:d<=30?1:d<=60?2:d<=90?3:4;AG[i][1]++;AG[i][2]+=o;const pk=x.party_id||"-",e=AP[pk]||(AP[pk]={k:pk,v:[0,0,0,0,0],tot:0,n:0});e.v[i]+=o;e.tot+=o;e.n++});
  const by=(o)=>Object.values(o).sort((a,b)=>b.v-a.v||a.k.localeCompare(b.k)),mo=Object.values(M).sort((a,b)=>b.m.localeCompare(a.m)),sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
  return{tot:cs.length,akt:ak.length,put:cs.filter(c=>c.status==="putus").length,non:cs.filter(c=>c.status!=="aktif"&&c.status!=="putus").length,kk,G:by(G),A:by(A),mo,AG,
-  T:sum(mo,x=>x.t),Bd:sum(mo,x=>x.b),Q:sum(inr,x=>x.bill.usage),K:biayaData(),L:lossData()}}
+AP:Object.values(AP).sort((a,b)=>b.tot-a.tot||String(cust(a.k).name).localeCompare(String(cust(b.k).name),"id")),  T:sum(mo,x=>x.t),Bd:sum(mo,x=>x.b),Q:sum(inr,x=>x.bill.usage),K:biayaData(),L:lossData()}}
 const rcd=(t,s,b)=>rcard(t,s,`<h4 class="rnh">${t}</h4>`+b);
 function vAirDesa(){const D=airDesaData(),q=v=>(Math.round(v*100)/100).toLocaleString("id-ID"),pc=(a,b)=>b>0?(Math.round(a/b*1000)/10).toLocaleString("id-ID")+"%":"-",K=D.K,L=D.L,f=v=>v==null?"-":rp(Math.round(v)),pt=D.T-D.Bd,
  B=(k,v)=>`<tr><td>${k}</td><td class="n">${v}</td></tr>`;
@@ -222,13 +222,14 @@ ${rcd("Sambungan","Posisi saat ini",tbl(["Uraian","#Jumlah"],[B("Sambungan terda
 ${rcd("Pemakaian per golongan",perTxt(),D.G.length?tbl(["Golongan","#Tagihan","#m³","#Tagihan (Rp)"],D.G.map(x=>`<tr><td>${esc(x.k)}</td><td class="n">${x.n}</td><td class="n">${q(x.q)}</td><td class="n">${rp(x.v)}</td></tr>`)):'<div class="empty">Belum ada tagihan pada rentang ini.</div>')}
 ${rcd("Pemakaian per dusun / alamat",perTxt(),D.A.length?tbl(["Alamat","#Tagihan","#m³","#Tagihan (Rp)"],D.A.map(x=>`<tr><td>${esc(x.k)}</td><td class="n">${x.n}</td><td class="n">${q(x.q)}</td><td class="n">${rp(x.v)}</td></tr>`)):'<div class="empty">—</div>')}
 ${rcd("Tingkat penagihan",perTxt(),D.mo.length?tbl(["Bulan","#Tagihan","#Terbit","#Terbayar","#Persen"],[...D.mo.map(x=>`<tr><td>${x.m}</td><td class="n">${x.n}</td><td class="n">${rp(x.t)}</td><td class="n">${rp(x.b)}</td><td class="n">${pc(x.b,x.t)}</td></tr>`),`<tr><td><b>Total</b></td><td class="n">${sum0(D.mo)}</td><td class="n">${rp(D.T)}</td><td class="n">${rp(D.Bd)}</td><td class="n">${pc(D.Bd,D.T)}</td></tr>`]):'<div class="empty">—</div>')}
+${(()=>{const P=D.AP.slice(0,25);return P.length?rcd("Umur tunggakan per pelanggan","Posisi "+today()+(D.AP.length>25?" · 25 terbesar dari "+D.AP.length:""),tbl(["Pelanggan","#Tagihan","#Belum jatuh tempo","#1–30 hari","#31–60 hari","#Lebih dari 60 hari","#Total"],P.map(e=>`<tr><td>${esc(e.k==="-"?"Tanpa pelanggan":cust(e.k).name)}</td><td class="n">${e.n}</td><td class="n">${rp(e.v[0])}</td><td class="n">${rp(e.v[1])}</td><td class="n">${rp(e.v[2])}</td><td class="n">${rp(e.v[3]+e.v[4])}</td><td class="n">${rp(e.tot)}</td></tr>`))):""})()}
 ${rcd("Tunggakan (umur piutang tagihan)","Posisi "+today(),tbl(["Umur","#Tagihan","#Sisa"],[...D.AG.map(a=>`<tr><td>${a[0]}</td><td class="n">${a[1]}</td><td class="n">${rp(a[2])}</td></tr>`),`<tr><td><b>Total</b></td><td class="n">${D.AG.reduce((s,a)=>s+a[1],0)}</td><td class="n">${rp(D.AG.reduce((s,a)=>s+a[2],0))}</td></tr>`]))}
 ${rcd("Biaya dan kehilangan air",perTxt(),tbl(["Uraian","#Nilai"],[B("m³ ditagih",q(D.Q)),B("Biaya operasional",rp(K.Bt)),B("Biaya per m³",f(K.bpm)),B("Tarif rata-rata per m³",f(K.tpm)),B("Kehilangan air",L.pct==null?"belum ada bacaan meter induk":(Math.round(L.pct*10)/10).toLocaleString("id-ID")+"% (batas "+L.mx+"%)")]))}
 ${repEnd()}`}
 const sum0=a=>a.reduce((s,x)=>s+x.n,0);
 function airDesaCsv(){const D=airDesaData(),R=[["Bagian","Uraian","Nilai 1","Nilai 2","Nilai 3"],["Sambungan","Terdaftar",D.tot,"",""],["Sambungan","Aktif",D.akt,"",""],["Sambungan","Putus",D.put,"",""],["Sambungan","Pelanggan (KK) terlayani",D.kk,"",""]];
  D.G.forEach(x=>R.push(["Per golongan",x.k,x.n,Math.round(x.q*100)/100,x.v]));D.A.forEach(x=>R.push(["Per alamat",x.k,x.n,Math.round(x.q*100)/100,x.v]));
- D.mo.forEach(x=>R.push(["Penagihan",x.m,x.n,x.t,x.b]));D.AG.forEach(a=>R.push(["Tunggakan",a[0],a[1],a[2],""]));
+ D.mo.forEach(x=>R.push(["Penagihan",x.m,x.n,x.t,x.b]));D.AG.forEach(a=>R.push(["Tunggakan",a[0],a[1],a[2],""]));D.AP.forEach(e=>R.push(["Tunggakan pelanggan",e.k==="-"?"Tanpa pelanggan":cust(e.k).name,e.n,e.tot,e.v[3]+e.v[4]]));
  R.push(["Biaya","Biaya operasional","",D.K.Bt,""],["Biaya","Biaya per m³","",D.K.bpm==null?"":Math.round(D.K.bpm),""],["Kehilangan air","Persen","",D.L.pct==null?"":Math.round(D.L.pct*10)/10,""]);
  return R.map(r=>r.map(v=>typeof v==="number"?String(v):'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n")}
 function vAirRep(){const D=airData(),B=(k,v)=>`<tr><td>${k}</td><td class="n">${v}</td></tr>`,none=!D.n&&!D.bay.c;
