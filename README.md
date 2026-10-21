@@ -12,7 +12,37 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Pamsimas, dll.
 
 Panduan Perdagangan: `docs/PANDUAN_PERDAGANGAN.md`.
 
-## Fitur (v1.1.310)
+## Fitur (v1.1.340)
+- **Perbaikan Kasir: nominal cepat dan tombol Bayar (TL12) (v1.1.340).**
+- **Data > Backup kolom seimbang (TL11) (v1.1.339).**
+- **Setelan, Profil, dan Portal lebih rapi (TL10) (v1.1.338).**
+- **Data > Backup tiga kolom dan istilah cloud (TL9) (v1.1.337).**
+- **Tata letak desktop: tombol aksi di kepala halaman (TL8) (v1.1.336).**
+- **Tata letak desktop: isi rata kiri (TL7) (v1.1.335).**
+- **Tata letak desktop: regresi semua halaman (TL6) (v1.1.334).**
+- **Tata letak desktop: lebar isian (TL5) (v1.1.333).**
+- **Tata letak desktop: judul tidak ganda (TL4) (v1.1.332).**
+- **Tab Perdagangan dirapikan (UV2d) (v1.1.331).**
+- **Tautan jejak halaman bergaya sendiri (UV2c) (v1.1.330).**
+- **Jejak halaman dapat diklik (UV2b) (v1.1.329).**
+- **UI v2 tahap 9: regresi tampilan (UV9) (v1.1.328).**
+- **UI v2 tahap 8: masuk dan Portal Nasabah (UV8) (v1.1.327).**
+- **UI v2 tahap 7: formulir (UV7) (v1.1.326).**
+- **UI v2 tahap 6: sidebar dan header (UV6) (v1.1.325).**
+- **UI v2 tahap 5: bar filter dan tab (UV5) (v1.1.324).**
+- **UI v2 tahap 4: tabel dan daftar (UV4) (v1.1.323).**
+- **UI v2 tahap 3: kartu KPI (UV3) (v1.1.322).**
+- **UI v2 tahap 2: kepala halaman (UV2) (v1.1.321).**
+- **UI v2 tahap 1: fondasi gaya (UV1) (v1.1.320).**
+- **Perbaikan latar judul kartu Laporan (v1.1.319).**
+- **Tata letak desktop (TL1-TL3) (v1.1.318).**
+- **Cetak Perdagangan lengkap (PL5g-PL5i) (v1.1.317).**
+- **Kasir sebagai menu sendiri (PL5f) (v1.1.316).**
+- **Cetak struk Kasir satu ketukan (PL5e) (v1.1.315).**
+- **Halaman khusus kasir (PL5d) (v1.1.314).**
+- **Kasir: perbaikan struk dan ponsel (PL5c) (v1.1.313).** Struk menampilkan eceran, diskon, kembalian, catatan; kas bawaan; lembar Pesanan di ponsel.
+- **Kasir: rapikan elemen ganda (PL5b, v1.1.312).**
+- **Kasir tampilan baru (PL5, v1.1.311).** Dua panel dan pembayaran bertahap.
 - **Perbaikan impor cadangan (v1.1.310).**
 - **Stok lanjutan (PL4) (v1.1.309).**
 - **Struk dan kasir harian (PL3) (v1.1.308).**

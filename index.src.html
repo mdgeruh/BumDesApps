@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8">
-<script id="rt">/* v1.1.098: alamat per halaman. Di http(s), <base> menjaga berkas relatif (skrip, gaya, ikon) tetap terbaca dari /setelan/awan dst. */
+<script id="rt">/* v1.1.098: alamat per halaman. Di http(s), <base> menjaga berkas relatif (skrip, gaya, ikon) tetap terbaca dari /setelan/cloud dst. */
 (function(){try{if(!/^https?:$/.test(location.protocol))return;var R=["dashboard","laporan","transaksi","simpan-pinjam","pamsimas","unit-air","gaji","buku-besar","neraca-saldo","master","data","setelan"],p=location.pathname.split("/"),i=1;for(;i<p.length;i++)if(R.indexOf(p[i])>=0)break;var b=(i<p.length?p.slice(0,i):p.slice(0,-1)).join("/")+"/";window.RT_BASE=b;var e=document.createElement("base");e.href=b;document.head.appendChild(e)}catch(x){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Sistem Bumdes Multi Unit</title>
@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-title" content="BUMDes">
 <link rel="stylesheet" href="style.css"></head><body>
 <a class="skip" href="#main" onclick="event.preventDefault();var m=document.getElementById('main');if(m)m.focus()">Lewati ke konten</a>
-<div id="app"><aside id="sb" aria-label="Menu utama"></aside><button id="cb" type="button" onclick="togSb()"></button><div id="ct"><header><span class="kic t1 hic" id="hic" aria-hidden="true"></span><div><h1 id="ttl"></h1><div class="sub" id="sbt"></div></div><div class="hru"><span class="hdt" id="hdt"></span><select id="unit" aria-label="Filter unit usaha" style="width:auto" onchange="S.unit=this.value;render()"></select><div class="hst" role="group" aria-label="Notifikasi, awan, dan backup"><span id="gsb"></span><span id="bel"></span><span id="awc"></span><span id="bkc"></span></div><span id="usr"></span></div></header>
+<div id="app"><aside id="sb" aria-label="Menu utama"></aside><button id="cb" type="button" onclick="togSb()"></button><div id="ct"><header><span class="kic t1 hic" id="hic" aria-hidden="true"></span><div><h1 id="ttl"></h1><div class="sub" id="sbt"></div></div><div class="hru"><span class="hdt" id="hdt"></span><select id="unit" aria-label="Filter unit usaha" style="width:auto" onchange="S.unit=this.value;render()"></select><div class="hst" role="group" aria-label="Notifikasi, cloud, dan backup"><span id="gsb"></span><span id="bel"></span><span id="awc"></span><span id="bkc"></span></div><span id="usr"></span></div></header>
 <main id="main" tabindex="-1"></main></div></div>
 <button id="fab" class="fab" title="Transaksi baru" aria-label="Transaksi baru" onclick="fabGo()"></button>
 <nav id="bn" aria-label="Menu utama"></nav><div id="sheet" class="sh" onclick="S.more=0;render()"></div>
@@ -35,6 +35,7 @@
 <script src="payroll.js"></script>
 <script src="reports.js"></script>
 <script src="closing.js"></script>
+<script src="ui2.js"></script>
 <script src="users.js"></script>
 <script src="detailpage.js"></script>
 <script src="releases-lama.js"></script>
@@ -64,6 +65,7 @@
 <script src="daganglaporan.js"></script>
 <script src="dagangimpor.js"></script>
 <script src="dagangkasir.js"></script>
+<script src="dagangcetak.js"></script>
 <script src="dagangstok2.js"></script>
 <script src="pcgov.js"></script>
 <script src="pclap.js"></script>

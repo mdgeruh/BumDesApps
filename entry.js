@@ -16,9 +16,9 @@ const entFp=()=>["transactions","parties","loans","loan_installments","journal_e
 const entSeed=()=>{try{localStorage.setItem(KEY+"_seed",entFp())}catch(e){}};
 const entBlank=()=>{try{const f=localStorage.getItem(KEY+"_seed");return!!f&&f===entFp()}catch(e){return false}};
 const entPub=()=>{const c=cloudCfg();return!!(c.token&&c.bumdes_id&&(c.role==="admin"||c.role==="pengurus"))};
-// pembaca di awan: aplikasi hanya melihat (server juga menolak tulis)
+// pembaca di cloud: aplikasi hanya melihat (server juga menolak tulis)
 const cloudRO=()=>{const c=cloudCfg();return!!(c.token&&c.bumdes_id&&c.role==="pembaca")};
-// perlu masuk? hanya bila koneksi awan terpasang dan perangkat belum punya sesi (pengurus, nasabah, atau mode lokal perangkat lama)
+// perlu masuk? hanya bila koneksi cloud terpasang dan perangkat belum punya sesi (pengurus, nasabah, atau mode lokal perangkat lama)
 // wajib masuk berlaku bila koneksi tertanam di config.js (pemasangan resmi); koneksi manual dari Setelan tidak memaksa (penanda wajib=1 untuk uji)
 // peramban otomatis (navigator.webdriver, mis. uji Playwright) tidak dipaksa masuk kecuali uji menyalakan globalThis.__ENT_TEST
 function entNeed(){try{if(typeof navigator!=="undefined"&&navigator.webdriver&&!globalThis.__ENT_TEST)return false}catch(e){}if(!entOn()||!(cloudFixed()||entGet().wajib))return false;if(S.pt)return false;if(cloudCfg().token)return false;if(nsbGet())return false;if(entGet().lokal)return false;if(entLocalOk()&&!entHash()){entPut({lokal:1,seen:1});return false}return true}
@@ -27,7 +27,7 @@ const entHash=()=>{try{return typeof location!=="undefined"&&(location.hash==="#
 // tautan "lanjut tanpa masuk" (v1.1.201): tersedia di perangkat mana pun yang belum pernah masuk akun (perangkat baru yang masih berisi data contoh juga boleh memakai lokal dulu; masuk hanya perlu untuk sinkronisasi)
 // setelah pernah masuk akun tautan hilang, jadi tidak bisa dipakai untuk menghindari masuk
 const entLocalOk=()=>entOn()&&!entGet().seen&&!cloudCfg().email;
-function entLocal(){entPut({lokal:1,seen:1});S.lgmand=0;lgClose();S.msg="Memakai data lokal perangkat ini. Masuk untuk sinkronisasi kapan saja lewat Data > Backup atau ikon awan di header";render()}
+function entLocal(){entPut({lokal:1,seen:1});S.lgmand=0;lgClose();S.msg="Memakai data lokal perangkat ini. Masuk untuk sinkronisasi kapan saja lewat Data > Backup atau ikon cloud di header";render()}
 function entInit(){if(entInit.d)return;entInit.d=1;try{const n=nsbGet();if(n&&n.data&&n.data.party&&n.data.party._id&&!cloudCfg().token&&!S.pt){S.pt={pid:n.data.party._id,tab:"home",sel:null,prev:false,srv:1,at:Date.now()};S.ptl=0}}catch(e){}}
 // ----- masuk -----
 function entLogin(){const em=$("#ln-em"),pw=$("#ln-pw"),v=((em&&em.value)||"").trim();S.lgem=v;
@@ -65,7 +65,7 @@ async function nsbChgPin(){try{const v=i=>$("#"+i).value;const n=nsbGet();if(!n)
 function nsbDb(d){const h=blank();h.bumdes=[{name:d.bumdes||"BUMDes"}];h.parties=[Object.assign({type:"nasabah"},d.party)];h.loans=d.loans||[];h.loan_installments=d.ins||[];h.savings_accounts=d.sav||[];h.savings_tx=d.stx||[];h.rate_master=d.rates||[];h.settings=Object.assign(h.settings||{},d.settings||{});return h}
 function nsbWrap(f){if(!S.pt||!S.pt.srv)return f();const n=nsbGet();if(!n||!n.data||!n.data.party)return f();const bk=db;db=nsbDb(Object.assign({bumdes:n.bumdes},n.data));try{return f()}finally{db=bk}}
 function nsbInfo(){if(!S.pt||!S.pt.srv)return"";const n=nsbGet()||{},t=wkt(n.at);return`<small>${S.pt.off?"Offline · ":""}Data per ${esc(tglS(t.slice(0,10)))} ${esc(t.slice(11))}</small>`}
-// ----- arah per peran setelah masuk akun awan -----
+// ----- arah per peran setelah masuk akun cloud -----
 async function entRoute(L){const c=cloudCfg();S.lgpick=null;S.lgmand=0;
  try{if(location.hash==="#portal")history.replaceState(null,"",location.pathname+location.search)}catch(e){}
  if(!L.length){let siap=true;try{const st=await cloudReq("/rest/v1/rpc/setup_status",{method:"POST",body:{}});siap=!!(st&&st.siap)}catch(e){}
@@ -91,13 +91,13 @@ async function entSetup(){const logged=!!cloudCfg().token,v=i=>String((($("#"+i)
    cloudSet({token:j.access_token,refresh:j.refresh_token,exp:Date.now()+(+j.expires_in||3600)*1000,email:(j.user&&j.user.email)||em})}
   const id=await cloudReq("/rest/v1/rpc/setup_bumdes",{method:"POST",body:{p_name:nm},timeout:25000});
   S.cll=await cloudList();if(!S.cll.some(b=>b.id===id))throw Error("BUMDes sudah dibuat tetapi belum terbaca. Masuk ulang dengan akun yang sama");
-  if(db.bumdes[0]&&db.bumdes[0].name!==nm){db.bumdes[0].name=nm;S.clpl=1;try{save()}finally{S.clpl=0}}S.lgsetup=0;S.lgsn="";S.lgp1=S.lgp2="";S.sue="";S.lgsiap=true;entPut({seen:1});const r=await entFinish(id);S.clb=0;S.msg=S.clm="BUMDes "+nm+" siap. Anda masuk sebagai admin. Langkah berikut: lengkapi profil dan data di Setelan, lalu Simpan ke awan";render();return r}
+  if(db.bumdes[0]&&db.bumdes[0].name!==nm){db.bumdes[0].name=nm;S.clpl=1;try{save()}finally{S.clpl=0}}S.lgsetup=0;S.lgsn="";S.lgp1=S.lgp2="";S.sue="";S.lgsiap=true;entPut({seen:1});const r=await entFinish(id);S.clb=0;S.msg=S.clm="BUMDes "+nm+" siap. Anda masuk sebagai admin. Langkah berikut: lengkapi profil dan data di Setelan, lalu Simpan ke cloud";render();return r}
  catch(e){S.sue=e.message;S.msg=S.clm="⚠ "+e.message;S.fe=e.f?{id:e.f,m:e.message}:null;S.clb=0;render();entSuShow("su-er")}}
 function entSuShow(id){try{const x=$("#"+id);if(x){if(x.scrollIntoView)x.scrollIntoView({block:"center"});if(id!=="su-er"&&x.focus)x.focus()}}catch(e){}}
 async function entFinish(id){if(cloudCfg().bumdes_id!==id){const b=(S.cll||[]).find(x=>x.id===id);if(b)cloudPick(b.id)}
  const r=await entAutoLoad();lgClose();S.lgpick=null;S.lgmand=0;S.tab="dash";S.doc=null;if(typeof setTimeout==="function")setTimeout(()=>{if(typeof cloudCheck==="function")cloudCheck()},300);return r||"app"}
 async function entAutoLoad(){const c=cloudCfg();if(!c.bumdes_id)return"";
- try{const s=await cloudFetchSnap();if(s&&entBlank()&&s.data&&typeof s.data==="object"){cloudApply(s);S.msg=S.clm="Data BUMDes dimuat dari awan (versi "+s.version+")";return"muat"}}catch(e){}return""}
+ try{const s=await cloudFetchSnap();if(s&&entBlank()&&s.data&&typeof s.data==="object"){cloudApply(s);S.msg=S.clm="Data BUMDes dimuat dari cloud (versi "+s.version+")";return"muat"}}catch(e){}return""}
 async function entPickB(i){const p=S.lgpick;if(!p)return;S.clb=1;render();try{if(p.k==="nsb")await nsbEnter(p.L[i]);else await entFinish(p.L[i].id)}catch(e){S.msg=S.clm="⚠ "+e.message}S.clb=0;render()}
 function entPickBack(){S.lgpick=null;if(cloudCfg().token)cloudLogout();else render()}
 // ----- penerbitan data portal oleh pengurus -----
@@ -112,7 +112,7 @@ function nsbProj(p){const pid=p._id,L=ptLoans(pid),ids=new Set(L.map(l=>l._id)),
   rates:(db.rate_master||[]).filter(r=>pc&&r.fee_code===pc),settings:{penalty_code:pc||"",penalty_pct_day:(db.settings||{}).penalty_pct_day}}}
 const nsbPubOK=()=>!!(entOn()&&entPub()&&db.settings&&db.settings.portal);
 async function nsbPublish(o){o=o||{};const c=cloudCfg();
- try{if(!(entOn()&&entPub()))throw Error("Masuk akun awan sebagai admin atau pengurus dulu");if(!o.purge&&!(db.settings&&db.settings.portal))throw Error("Aktifkan portal nasabah dulu");if(S.nsbpb)return;
+ try{if(!(entOn()&&entPub()))throw Error("Masuk akun cloud sebagai admin atau pengurus dulu");if(!o.purge&&!(db.settings&&db.settings.portal))throw Error("Aktifkan portal nasabah dulu");if(S.nsbpb)return;
   const P=o.purge?[]:db.parties.filter(p=>p.type==="nasabah"&&p.status!=="nonaktif"&&p.portal&&p.portal.srv&&ptKey(p.phone).length>=8);
   if(S.nsbB!==c.bumdes_id){S.nsbB=c.bumdes_id;S.nsbh={};S.nsbk=""}S.nsbh=S.nsbh||{};
   const keep=P.map(p=>p._id),ks=keep.join(","),items=[],hs={};
