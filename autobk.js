@@ -1,6 +1,6 @@
 // ===== SALINAN OTOMATIS DI PERANGKAT (v1.1.242, K2) =====
 // Salinan berkala disimpan di IndexedDB (kuota jauh lebih besar dari localStorage), 5 terbaru. Melindungi dari salah impor/kosongkan dan data rusak;
-// TIDAK menggantikan Ekspor JSON atau cadangan awan, karena ikut hilang bila data situs dibersihkan.
+// TIDAK menggantikan Ekspor JSON atau cadangan cloud, karena ikut hilang bila data situs dibersihkan.
 const ABK_DB="bumdes_auto_bk",ABK_KEEP=5;
 const abkReq=r=>new Promise((ok,no)=>{r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
 const abkIdb=()=>new Promise((ok,no)=>{try{const r=indexedDB.open(ABK_DB,1);r.onupgradeneeded=()=>r.result.createObjectStore("s",{keyPath:"id"});r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}});
@@ -24,6 +24,6 @@ function abkCard(){if(!abkOn())return"";
  if(!S.abk&&!S.abkErr&&!ABK_BUSY){abkList().then(L=>{S.abk=L;render()}).catch(()=>{S.abkErr=1;render()})}
  const L=S.abk||[],ed=can("data.kelola"),
  rows=L.map(x=>`<div class="upr"><span class="upm"><b>${esc(wkt(x.id))}</b><small>${x.n} transaksi · ${x.l} pinjaman · ${Math.max(1,Math.round(x.sz/1024))} KB</small></span>${ed?`<button class="b s sm" onclick="abkAsk('${esc(x.id)}')" aria-label="Pulihkan salinan ${esc(wkt(x.id))}">Pulihkan</button>`:""}<button class="b s sm" onclick="abkDl('${esc(x.id)}')" aria-label="Unduh salinan ${esc(wkt(x.id))}">Unduh</button></div>`).join("");
- return dcard("Salinan otomatis di perangkat",S.abkErr?"Penyimpanan salinan tidak tersedia di browser ini.":"Salinan berkala ("+(bkDays()||7)+" hari sekali, maksimal "+ABK_KEEP+" terbaru) disimpan otomatis di perangkat ini. Melindungi dari salah impor atau kosongkan; tidak menggantikan Ekspor JSON atau cadangan awan karena ikut hilang bila data situs dibersihkan.",
+ return dcard("Salinan otomatis di perangkat",S.abkErr?"Penyimpanan salinan tidak tersedia di browser ini.":"Salinan berkala ("+(bkDays()||7)+" hari sekali, maksimal "+ABK_KEEP+" terbaru) disimpan otomatis di perangkat ini. Melindungi dari salah impor atau kosongkan; tidak menggantikan Ekspor JSON atau cadangan cloud karena ikut hilang bila data situs dibersihkan.",
   (L.length?`<div class="upl">${rows}</div>`:`<p class="k">${S.abk?"Belum ada salinan.":"Memuat…"}</p>`)+(S.abkErr?"":`<button class="b s bkp" onclick="abkNow()">Simpan salinan sekarang</button>`))}
 if(typeof document!=="undefined"&&document.addEventListener)document.addEventListener("visibilitychange",()=>{if(!document.hidden&&typeof db!=="undefined"&&db)abkTick()});

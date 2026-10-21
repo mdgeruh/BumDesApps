@@ -39,3 +39,20 @@ async function ksScan(){try{ksScanStop();if(!("BarcodeDetector" in window)||!(na
  o.querySelector("button").onclick=ksScanStop;const v=o.querySelector("video");v.srcObject=st;await v.play();let busy=false;
  KS_TMR=setInterval(async()=>{if(busy)return;busy=true;try{const r=await det.detect(v);if(r&&r.length&&r[0].rawValue){const c=r[0].rawValue;ksScanStop();ksQ(c)}}catch(e){}busy=false},350)}catch(e){ksScanStop();const nm=e&&e.name;S.msg="⚠ "+(nm==="NotAllowedError"?"Izin kamera ditolak; izinkan akses kamera di pengaturan peramban":nm==="NotFoundError"||nm==="OverconstrainedError"?"Kamera tidak ditemukan di perangkat ini":nm==="NotReadableError"?"Kamera sedang dipakai aplikasi lain":e&&e.message&&!nm?e.message:"Kamera tidak dapat dibuka");render()}}
 function ksFull(){S.kfs=!S.kfs;try{document.body.classList.toggle("ksfs",!!S.kfs);if(S.kfs&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});else if(!S.kfs&&document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})}catch(e){}render()}
+// Esc menutup jendela pembayaran dan lembar pesanan di Kasir
+if(typeof document!=="undefined"&&typeof document.addEventListener==="function")document.addEventListener("keydown",e=>{if(e.key==="Escape"&&(S.tab==="ksr"||S.tab==="dagang"&&S.dgv==="kasir")){if(S.kstep){ksStep(0)}else if(S.ksh){ksSheet(false)}}});
+
+/* PL5d (v1.1.314): halaman khusus kasir. Alamat #kasir membuka Kasir layar penuh tanpa sidebar, header, dan menu lain; data dan login sama dengan aplikasi. */
+function kpOk(){return typeof tabOk==="function"&&tabOk("ksr")&&can("dagang.kelola")}
+function kpUrl(h){try{if(typeof history!=="undefined"&&history.replaceState)history.replaceState(null,"",location.pathname+location.search+h)}catch(e){}}
+function kpSync(){if(S.kpage&&!kpOk()){S.kpage=0;S.msg="⚠ Halaman Kasir tidak tersedia untuk akun ini (perlu izin Perdagangan: kelola dan modul aktif)";kpUrl("")}
+ if(S.kpage){S.tab="ksr";S.dgv="kasir"}
+ try{document.body.classList.toggle("ksp",!!S.kpage);document.body.classList.toggle("ksfs",!!(S.kpage||S.kfs))}catch(e){}}
+function kpOpen(){S.kpage=1;S.tab="ksr";S.dgv="kasir";kpUrl("#kasir");render()}
+function kpExit(){S.kpage=0;S.kfs=false;try{if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})}catch(e){}kpUrl("");render()}
+function kpBar(){const un=ksUnit(),d=today(),L=db.sales.filter(x=>x.dagang&&x.unit_id===un&&x.date===d&&x.status==="posted"),t=L.reduce((a,x)=>a+(+x.total||0),0);
+ return`<div class="ksp-bar"><b>Kasir</b><span>${esc(unitName(un))} · ${esc(tglS(d))}</span><span class="ksp-s">Hari ini: ${L.length} nota · ${rp(t)}</span><button class="b s" type="button" onclick="kpExit()">Ke aplikasi</button></div>`}
+if(typeof window!=="undefined"&&window.addEventListener){if(location.hash==="#kasir")S.kpage=1;window.addEventListener("hashchange",()=>{const on=location.hash==="#kasir";if(on!==!!S.kpage){S.kpage=on?1:0;if(!on)S.kfs=false;render()}})}
+
+/* PL5f (v1.1.316): Kasir sebagai menu sendiri (sidebar dan navigasi bawah), terpisah dari tab Perdagangan */
+function vKsr(){const U=dgScope();S.dgv="kasir";if(!U.length)return`<h2>Kasir</h2>${dgNone()}`;return dgKasir(U)}
