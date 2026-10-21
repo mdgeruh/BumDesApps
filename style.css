@@ -986,7 +986,7 @@ body.ksp #main h2{display:none}body.ksp .fab,body.ksp #fab{display:none!importan
 
 /* ===== TL1-TL3 (v1.1.318): tata letak desktop. Lebar isi per jenis halaman, Dashboard dua kolom di layar lebar, bagian atas dirapikan ===== */
 @media (min-width:900px){
- main{max-width:1480px;margin-left:0;margin-right:auto}
+ main{max-width:1760px;margin-left:0;margin-right:auto}
  main[data-tab=led],main[data-tab=tb],main[data-tab=trx],main[data-tab=rep],main[data-tab=dat],main[data-tab=air],main[data-tab=sp],main[data-tab=pay],main[data-tab=pc],main[data-tab=dagang],main[data-tab=ksr]{max-width:1760px}
  .dsroot .qa{display:flex;gap:10px}.dsroot .qa .b{flex:0 1 220px;min-width:0}
  .dsroot .dpb{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.dsroot .dpb select{width:auto;min-width:240px;max-width:360px;margin-left:auto}
@@ -1098,10 +1098,10 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border
 
 /* TL8 (v1.1.336): tombol aksi di kepala halaman */
 @media screen and (min-width:900px){.v2a .b{margin:0}.v2a{align-self:center}}
-/* Data > Backup (v1.1.339): kartu mengalir seimbang dalam kolom (3 kolom di layar lebar, 2 kolom di layar sedang) */
-@media (min-width:1000px){.bkg{display:block;column-count:2;column-gap:16px}.bkg>.bkc{display:contents}.bkg .card{break-inside:avoid;margin:0 0 12px}}
-@media (min-width:1400px){.bkg{column-count:3}}
-.bkg .card{height:auto}
+/* Data > Backup (v1.1.341): kartu tersusun dalam baris sejajar (grid), tinggi satu baris sama; 2 kolom di layar sedang, 3 kolom di layar lebar */
+@media (min-width:1000px){.bkg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch;margin-bottom:16px}.bkg>.bkc{display:contents}.bkg .card{margin:0;height:100%;box-sizing:border-box}}
+@media (min-width:1500px){.bkg{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 .bks{max-width:none}
 /* TL10 (v1.1.338): Setelan, Profil, Portal tidak dibatasi sempit di layar lebar; swatch avatar bulat; versi di kepala halaman */
 .avs .avc{flex:0 0 44px}
@@ -1117,3 +1117,19 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border
 /* v1.1.340: jendela pembayaran Kasir — tombol Batal/Selesaikan selalu terlihat; nominal terpilih ditandai */
 .ksdlg>.fl:last-child{position:sticky;bottom:-18px;background:var(--cd);padding:8px 0 4px;z-index:1}
 .ksdlg .fl button.sm.on{background:var(--ac);color:var(--on)}
+/* v1.1.343–346 Perbaikan Kasir (KS1–KS4) */
+.ksg-c>.fl,.ksdlg .fl{background:none;border:0;box-shadow:none;padding:0}
+.ksg-c>.fl{display:grid;grid-template-columns:1fr auto;gap:8px}.ksg-c>.fl>*{flex:none;width:auto}.ksg-c>.fl .b:first-child{width:100%;min-height:48px;font-size:16px;justify-content:center}
+.ksg-c{max-height:calc(100dvh - 24px);overflow:auto}
+.ksg-t{position:relative}.ksg-t.in{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+.ksg-n{position:absolute;top:6px;right:6px;z-index:1;background:var(--ac);color:var(--on);border-radius:999px;padding:1px 8px;font-size:12px;font-weight:700}
+.ksg-b:disabled .ksg-a{filter:grayscale(1)}
+.ksg-lq{display:flex;align-items:center;gap:6px}.ksg-lq .ksg-us{color:var(--mu);margin-right:auto}
+.ksg-qi{width:64px;text-align:center;min-height:36px;padding:4px 6px;font-weight:700}
+.ksg-del{color:var(--rd);margin-left:auto}.ksg-lq .ksg-us+.ksg-del{margin-left:0}
+.ksg-er{margin:0}
+@media (max-width:899px){
+ .ksg-top input{flex:1 1 100%}.ksg-top>.b{flex:1 1 auto;padding:8px 10px;min-height:40px}
+ .ksg-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}.ksg-b{padding:8px}.ksg-b b{font-size:13px;line-height:1.25}.ksg-b small{font-size:11px}.ksg-a{height:30px;font-size:15px;margin-bottom:4px}
+ body:has(.ksg-bar) #toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+}

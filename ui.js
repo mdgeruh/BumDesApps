@@ -3,7 +3,7 @@
 const LB="bumdes_last_backup",NB=["sp-date","sp-cash","sp-amt","f-type","us-p","us-p2","cp-o","cp-n","cp-r","rp-p","sp-pencode","sp-feesplit","sp-twpol","rem-due","rem-late"],FS="#main input[id],#main select[id],#main textarea[id]";
 let tT=null;
 // v1.1.186: saat modal terbuka, toast diletakkan tepat di bawah header modal (tidak menutupi judul dan tombol Tutup)
-function toastPos(e){try{const h=document.body&&document.body.classList.contains("mo")&&document.querySelector("#fm.on .mh");if(h&&e.style){e.style.top=Math.round(h.getBoundingClientRect().bottom+8)+"px";e.style.bottom="auto"}else if(e.style){e.style.top="";e.style.bottom=""}}catch(x){}}
+function toastPos(e){try{const ko=document.querySelector&&document.querySelector(".ksov");if(ko&&e.style){e.style.top="10px";e.style.bottom="auto";return}const h=document.body&&document.body.classList.contains("mo")&&document.querySelector("#fm.on .mh");if(h&&e.style){e.style.top=Math.round(h.getBoundingClientRect().bottom+8)+"px";e.style.bottom="auto"}else if(e.style){e.style.top="";e.style.bottom=""}}catch(x){}}
 function toast(m,er,ud){const e=$("#toast");if(!e)return;e.textContent=m;if(ud&&!er&&document.createElement&&e.appendChild){const b=document.createElement("button");b.type="button";b.className="tsu";b.textContent="Urungkan";b.onclick=()=>toastUndo();e.appendChild(b)}e.className=(er?"on er":"on")+(ud&&!er?" tu":"");toastPos(e);if(e.setAttribute)e.setAttribute("aria-live",er?"assertive":"polite");
  if(typeof clearTimeout==="function"&&tT)clearTimeout(tT);if(typeof setTimeout==="function")tT=setTimeout(()=>{e.className=""},er?7000:ud&&!er?8000:3500)}
 
