@@ -12,7 +12,12 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Pamsimas, dll.
 
 Panduan Perdagangan: `docs/PANDUAN_PERDAGANGAN.md`.
 
-## Fitur (v1.1.340)
+## Fitur (v1.1.345)
+- **Isian Kasir bersih (KS3) (v1.1.345).**
+- **Tutup kasir bertahap (KS2) (v1.1.344).**
+- **Perbaikan Kasir dan peran Kasir (KS1) (v1.1.343).**
+- **Lebar penuh semua halaman (TL14) (v1.1.342).**
+- **Data > Backup tersusun baris sejajar (TL13) (v1.1.341).**
 - **Perbaikan Kasir: nominal cepat dan tombol Bayar (TL12) (v1.1.340).**
 - **Data > Backup kolom seimbang (TL11) (v1.1.339).**
 - **Setelan, Profil, dan Portal lebih rapi (TL10) (v1.1.338).**
