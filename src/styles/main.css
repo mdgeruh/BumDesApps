@@ -1179,3 +1179,15 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border
 @media (min-width:900px){#app.sbw:not(.col){--sw:var(--sww,230px)}#sbr{display:block;position:fixed;top:0;bottom:0;left:calc(var(--sw) - 3px);width:7px;cursor:col-resize;z-index:20;touch-action:none}#app.col #sbr{display:none}#sbr:hover,#sbr:focus-visible,#app.drg #sbr{background:color-mix(in srgb,var(--ac) 35%,transparent);outline:0}#app.drg,#app.drg *{transition:none!important;user-select:none}}
 @media (min-width:1100px){.mstw .upl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px;align-items:start}}
 @media (min-width:1700px){.mstw .upl{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* v1.1.370 — halaman detail piutang/pelanggan/Loket: dua kolom, tanpa kotak bersarang */
+@media (min-width:1000px){.pgg>.pgr{border-left:1px solid var(--ln);padding-left:20px}}
+.pgr>h3:first-child,.pgc>h3:first-child{margin-top:4px}
+.pg .dc .fl,.pg .dc>.fl{background:none;border:0;box-shadow:none;padding:0}
+.pg .dc .fl .b.sm{min-height:36px}
+.lkg2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px;max-width:640px}
+@media (max-width:560px){.lkg2{grid-template-columns:1fr}}
+.pgr>.k:first-child{margin-top:0}
+.pgr .tb,.pgr table{width:100%}
+/* v1.1.370 — filter/pencarian di dalam kartu: tanpa kotak bersarang */
+.dc .fl,.card .fl,.pg .fl,.rpb .fl{background:none;border:0;box-shadow:none;padding:0;border-radius:0}
