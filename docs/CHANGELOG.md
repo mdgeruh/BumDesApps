@@ -2,6 +2,11 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.370] — 2026-10-21
+
+### Diubah
+- Detail piutang/pelanggan/transaksi memakai dua kolom di layar lebar; ikon tombol dirapikan; Loket dirapikan.
+
 ## [1.1.369] — 2026-10-21
 
 ### Diubah

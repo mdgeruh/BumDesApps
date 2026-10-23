@@ -1,5 +1,6 @@
 // ===== CATATAN RILIS (v1.1.003): data untuk modal "?" di Setelan. Tambahkan rilis baru di PALING ATAS; sinkronkan dengan release_notes.md =====
 const RELEASES=[
+ {v:"1.1.370",d:"2026-10-21",t:"Halaman detail dua kolom (UD1)",i:["Detail piutang, pelanggan Pamsimas, dan transaksi tampil dua kolom di layar lebar","Ikon tombol sesuai fungsi (Simpan janji, Kirim pengingat, Batalkan)","Loket dan semua bilah cari/filter di dalam kartu tanpa kotak bersarang"]},
  {v:"1.1.369",d:"2026-10-21",t:"Penataan struktur berkas (ST1)",i:["Sumber ditata per modul di src/ dengan nama bermakna","Perakit di scripts/build.js, tes dikelompokkan logic/ui/checks/gen/sql","index.html hasil rakitan identik, tanpa perubahan perilaku"]},
  {v:"1.1.368",d:"2026-10-21",t:"Nama berkas ekspor dengan pengguna dan jam (EX1)",i:["Berkas ekspor diawali nama pengguna dan diakhiri jam-menit"]},
  {v:"1.1.367",d:"2026-10-21",t:"Peringatan modal Kasir lebih jelas (KR3)",i:["Ubin Kasir menampilkan rugi per satuan dan modal rata-rata"]},

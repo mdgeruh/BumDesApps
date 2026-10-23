@@ -12,7 +12,8 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Pamsimas, dll.
 
 Panduan Perdagangan: `docs/PANDUAN_PERDAGANGAN.md`.
 
-## Fitur (v1.1.369)
+## Fitur (v1.1.370)
+- **Halaman detail dua kolom (UD1) (v1.1.370).**
 - **Penataan struktur berkas (ST1) (v1.1.369).**
 - **Nama berkas ekspor dengan pengguna dan jam (EX1) (v1.1.368).**
 - **Peringatan modal Kasir lebih jelas (KR3) (v1.1.367).**
