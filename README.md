@@ -12,7 +12,8 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Pamsimas, dll.
 
 Panduan Perdagangan: `docs/PANDUAN_PERDAGANGAN.md`.
 
-## Fitur (v1.1.372)
+## Fitur (v1.1.373)
+- **Gaji: isian seragam, Transfer dan pengingat (GJ2) (v1.1.373).**
 - **Gaji: rincian jadi halaman dan daftar ringkas (GJ1) (v1.1.372).**
 - **Judul tab sesuai nama BUMDes (JT1) (v1.1.371).**
 - **Halaman detail dua kolom (UD1) (v1.1.370).**

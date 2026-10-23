@@ -1191,3 +1191,4 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border
 /* v1.1.370 — filter/pencarian di dalam kartu: tanpa kotak bersarang */
 .dc .fl,.card .fl,.pg .fl,.rpb .fl{background:none;border:0;box-shadow:none;padding:0;border-radius:0}
 .actb .b.dng{color:var(--rd);border-color:color-mix(in srgb,var(--rd) 40%,var(--ln))}.actb .b.dng:hover{border-color:var(--rd)}
+.vh{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0}

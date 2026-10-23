@@ -172,6 +172,7 @@ function alertsAll(){const T=today(),A=[],uOk=u=>S.unit==="all"||u===S.unit;
   if(lt.length)A.push({k:"du",tab:"dagang",n:lt.length,sev:"er",t:lt.length+" utang pemasok lewat jatuh tempo",d:"Sisa utang "+rp(lt.reduce((a,b)=>a+dgOwed(b),0)),a:"Bayar utang",fn:"goS('dagang',{dgv:'beli'})"});
   if(sn.length)A.push({k:"ds",tab:"dagang",n:sn.length,sev:"",t:sn.length+" utang pemasok jatuh tempo ≤ 3 hari",d:"Sisa utang "+rp(sn.reduce((a,b)=>a+dgOwed(b),0)),a:"Lihat utang",fn:"goS('dagang',{dgv:'beli'})"});
   const po=dgPoAll().filter(o=>dgPoLive(o)&&o.expect&&o.expect<T&&uOk(o.unit_id));if(po.length)A.push({k:"dp",tab:"dagang",n:po.length,sev:"",t:po.length+" pesanan pembelian lewat tanggal harapan",d:"Belum diterima semua",a:"Lihat pesanan",fn:"goS('dagang',{dgv:'beli'})"})}}catch(e){}
+ try{if(T.slice(8,10)>="25"&&modOn("pay")){const ne=db.employees.filter(e=>isAct(e)&&(e.base_salary||0)>0&&uOk(e.unit_id||S.unit)).length;if(ne&&!db.payrolls.some(p=>p.period===T.slice(0,7)&&uOk(p.unit_id)))A.push({k:"gb",tab:"pay",n:1,sev:"",t:"Gaji "+T.slice(0,7)+" belum dibuat",d:ne+" pegawai aktif punya gaji pokok",a:"Buat gaji",fn:"go('pay')"})}}catch(e){}
  const gj=db.payrolls.filter(x=>x.status==="approved"&&uOk(x.unit_id));
  if(gj.length)A.push({k:"gj",tab:"pay",n:gj.length,sev:"",t:gj.length+" gaji disetujui, belum dibayar",d:"Bayar setelah dana siap",a:"Buka gaji",fn:"go('pay')"});
  return A.filter(a=>tabOk(a.tab))}
