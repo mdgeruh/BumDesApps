@@ -2,6 +2,11 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.371] — 2026-10-21
+
+### Diubah
+- Judul tab browser kini hanya nama BUMDes (tanpa nama aplikasi, versi, dan nama halaman); layar masuk juga.
+
 ## [1.1.370] — 2026-10-21
 
 ### Diubah

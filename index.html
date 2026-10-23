@@ -3,9 +3,9 @@
 <script id="rt">/* v1.1.098: alamat per halaman. Di http(s), <base> menjaga berkas relatif (skrip, gaya, ikon) tetap terbaca dari /setelan/cloud dst. */
 (function(){try{if(!/^https?:$/.test(location.protocol))return;var R=["dashboard","laporan","transaksi","simpan-pinjam","pamsimas","unit-air","gaji","buku-besar","neraca-saldo","master","data","setelan"],p=location.pathname.split("/"),i=1;for(;i<p.length;i++)if(R.indexOf(p[i])>=0)break;var b=(i<p.length?p.slice(0,i):p.slice(0,-1)).join("/")+"/";window.RT_BASE=b;var e=document.createElement("base");e.href=b;document.head.appendChild(e)}catch(x){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
-<title>Sistem Bumdes Multi Unit V1.1.370</title>
+<title>Sistem Bumdes Multi Unit V1.1.371</title>
 <meta name="theme-color" content="#1f7a52">
-<meta name="description" content="Sistem Bumdes Multi Unit V1.1.370: simpan pinjam, unit air, gaji, dan laporan keuangan. Data tersimpan di perangkat.">
+<meta name="description" content="Sistem Bumdes Multi Unit V1.1.371: simpan pinjam, unit air, gaji, dan laporan keuangan. Data tersimpan di perangkat.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -1222,7 +1222,7 @@ let pwaPrompt=null; // kejadian beforeinstallprompt (lihat js-15-pwa.js)
 // Aman ditaruh di kode karena yang melindungi data adalah login dan RLS. JANGAN isi service_role / sb_secret_ (ditolak aplikasi).
 // Bila SB_URL dan SB_KEY terisi, kolom Koneksi di Data > Backup (bagian Cloud) disembunyikan dan nilai ini yang dipakai.
 const SB_URL="https://smpqygmtivxsdbxuypmx.supabase.co",SB_KEY="sb_publishable_yRNGwSos4JM2wsPqPUtWyA_T9i6EXmp";
-const APP_VER="1.1.370"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
+const APP_VER="1.1.371"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
 const APPBASE="Sistem Bumdes Multi Unit",APPNM=APPBASE+" V"+APP_VER; // nama aplikasi (judul tab, layar masuk, sidebar); manifest.json dan <title> dicap oleh build.js
 const KEY="bumdes_db_v1";
 const KEYS="bumdes business_units users roles permissions parties employees accounts cash_accounts transactions journal_entries journal_lines general_ledger accounting_periods loans loan_installments loan_payments collaterals products sales sale_items payments payroll_components payrolls payroll_items salary_payments approvals audit_logs water_connections water_readings".split(" ");
@@ -1482,7 +1482,7 @@ function chrome(){rtSync();const lb=Object.fromEntries(TABS),nm=bnm(),AT=alertTa
  unitPlace();
  $("#sheet").className=S.more?"sh open":"sh";
  $("#sheet").innerHTML=`<div onclick="event.stopPropagation()">`+GRV().map(([g,ks])=>{ks=ks.filter(k=>!BNV().includes(k));return ks.length?`<div class="gl"><span>${g}</span></div>`+ks.map(btn).join(""):""}).join("")+`</div>`;
- $("#ttl").textContent=lb[S.tab];$("#sbt").textContent=nm+(NU.includes(S.tab)?"":" · "+unitLbl());{const hi=$("#hic");if(hi)hi.innerHTML=ic(S.tab);const hd=$("#hdt");if(hd)hd.textContent=hdrDate()}document.title=APPNM+" · "+nm+" · "+lb[S.tab];$("#unit").style.display=NU.includes(S.tab)?"none":"";
+ $("#ttl").textContent=lb[S.tab];$("#sbt").textContent=nm+(NU.includes(S.tab)?"":" · "+unitLbl());{const hi=$("#hic");if(hi)hi.innerHTML=ic(S.tab);const hd=$("#hdt");if(hd)hd.textContent=hdrDate()}document.title=nm;$("#unit").style.display=NU.includes(S.tab)?"none":"";
  usrChip();bkChip();belChip();if(typeof awChip==="function")awChip();fabSet();hhSet()}
 // v1.1.253: tinggi header dipakai sub-tab yang menempel (sticky) agar tidak tertutup header
 function hhSet(){try{const h=document.querySelector("header");if(h&&h.offsetHeight)document.documentElement.style.setProperty("--hh",h.offsetHeight+"px")}catch(e){}}
@@ -3977,7 +3977,7 @@ function vProf(){const w=profWho();
 function gate(){const el=$("#lock");if(!el)return false;if(!rbacOn()){el.className="";el.innerHTML="";return false}
  const u=curUser();if(u&&!u.must_change){el.className="";el.innerHTML="";return false}lockRender(el,u);return true}
 const PW=(id,ac)=>`<input id="${id}" type="password" inputmode="numeric" maxlength="8" autocomplete="${ac}">`;
-function lockRender(el,u){unitHome();["#main","#sb","#bn","#sheet","#usr"].forEach(x=>{const n=$(x);if(n)n.innerHTML=""});const nm=bnm();document.title=APPNM+" · "+nm+" · Masuk";
+function lockRender(el,u){unitHome();["#main","#sb","#bn","#sheet","#usr"].forEach(x=>{const n=$(x);if(n)n.innerHTML=""});const nm=bnm();document.title=nm;
  let h;
  const cov=`<section class="mk-cv" aria-label="Tentang"><div class="mk-br"><span class="pt-logo" aria-hidden="true">${ic("user")}</span><div><div class="mk-n">${esc(nm)}</div><div class="mk-s">${APPNM}</div></div></div><h2 class="mk-h">Catat, pantau, dan laporkan usaha desa</h2><ul class="mk-ft"><li>Akses sesuai peran dan unit tugas</li><li>Setiap perubahan tercatat di audit log</li><li>Data tersimpan di perangkat ini</li></ul>${LG_ART}</section>`;
  if(u)h=cov+`<div role="main" class="mk-fm"><div class="card mk-card">${mkH("lock","Buat PIN baru")}<p class="k">Halo, ${esc(u.name)}. PIN Anda masih sementara — buat PIN baru untuk melanjutkan.</p><label>PIN sementara</label>${PW("cp-o","current-password")}<label>PIN baru (4–8 angka)</label>${PW("cp-n","new-password")}<label>Ulangi PIN baru</label>${PW("cp-r","new-password")}<button class="b" onclick="chgPin()">Simpan PIN baru</button><button class="b s" onclick="doLogout()">Keluar</button></div></div>`;
@@ -4277,6 +4277,7 @@ const RELEASES_LAMA=[
 ];
 // ===== CATATAN RILIS (v1.1.003): data untuk modal "?" di Setelan. Tambahkan rilis baru di PALING ATAS; sinkronkan dengan release_notes.md =====
 const RELEASES=[
+ {v:"1.1.371",d:"2026-10-21",t:"Judul tab sesuai nama BUMDes (JT1)",i:["Judul tab browser hanya memuat nama BUMDes"]},
  {v:"1.1.370",d:"2026-10-21",t:"Halaman detail dua kolom (UD1)",i:["Detail piutang, pelanggan Pamsimas, dan transaksi tampil dua kolom di layar lebar","Ikon tombol sesuai fungsi (Simpan janji, Kirim pengingat, Batalkan)","Loket dan semua bilah cari/filter di dalam kartu tanpa kotak bersarang"]},
  {v:"1.1.369",d:"2026-10-21",t:"Penataan struktur berkas (ST1)",i:["Sumber ditata per modul di src/ dengan nama bermakna","Perakit di scripts/build.js, tes dikelompokkan logic/ui/checks/gen/sql","index.html hasil rakitan identik, tanpa perubahan perilaku"]},
  {v:"1.1.368",d:"2026-10-21",t:"Nama berkas ekspor dengan pengguna dan jam (EX1)",i:["Berkas ekspor diawali nama pengguna dan diakhiri jam-menit"]},

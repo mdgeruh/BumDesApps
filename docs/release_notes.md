@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.370
+# Catatan Rilis — v1.1.371
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,7 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.371 | Judul tab sesuai nama BUMDes (JT1) |
 | 1.1.370 | Halaman detail dua kolom (UD1) |
 | 1.1.369 | Penataan struktur berkas (ST1) |
 | 1.1.368 | Nama berkas ekspor dengan pengguna dan jam (EX1) |

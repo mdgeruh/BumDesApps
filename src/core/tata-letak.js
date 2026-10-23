@@ -141,7 +141,7 @@ function chrome(){rtSync();const lb=Object.fromEntries(TABS),nm=bnm(),AT=alertTa
  unitPlace();
  $("#sheet").className=S.more?"sh open":"sh";
  $("#sheet").innerHTML=`<div onclick="event.stopPropagation()">`+GRV().map(([g,ks])=>{ks=ks.filter(k=>!BNV().includes(k));return ks.length?`<div class="gl"><span>${g}</span></div>`+ks.map(btn).join(""):""}).join("")+`</div>`;
- $("#ttl").textContent=lb[S.tab];$("#sbt").textContent=nm+(NU.includes(S.tab)?"":" · "+unitLbl());{const hi=$("#hic");if(hi)hi.innerHTML=ic(S.tab);const hd=$("#hdt");if(hd)hd.textContent=hdrDate()}document.title=APPNM+" · "+nm+" · "+lb[S.tab];$("#unit").style.display=NU.includes(S.tab)?"none":"";
+ $("#ttl").textContent=lb[S.tab];$("#sbt").textContent=nm+(NU.includes(S.tab)?"":" · "+unitLbl());{const hi=$("#hic");if(hi)hi.innerHTML=ic(S.tab);const hd=$("#hdt");if(hd)hd.textContent=hdrDate()}document.title=nm;$("#unit").style.display=NU.includes(S.tab)?"none":"";
  usrChip();bkChip();belChip();if(typeof awChip==="function")awChip();fabSet();hhSet()}
 // v1.1.253: tinggi header dipakai sub-tab yang menempel (sticky) agar tidak tertutup header
 function hhSet(){try{const h=document.querySelector("header");if(h&&h.offsetHeight)document.documentElement.style.setProperty("--hh",h.offsetHeight+"px")}catch(e){}}
