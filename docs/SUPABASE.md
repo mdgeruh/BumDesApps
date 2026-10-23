@@ -36,10 +36,11 @@ Semua SQL ada di folder **`sql/`**, bernomor menurut urutan pasang: `00_semua.sq
 | 5 | `sql/05_penjualan.sql` | **Tahap 5**: tabel penjualan, Unit Air, jaminan, tarif dan pajak | 1, 2 | Tabel relasional (otomatis bila ada) |
 | 6 | `sql/06_nasabah.sql` | **Portal nasabah**: login HP + PIN, data milik sendiri, kunci bertahap | 1 | Portal Nasabah |
 | 7 | `sql/07_pengguna.sql` | **Pengguna dari pegawai** (opsional): fungsi pembuat pengguna dengan PIN awal 1234 | 1 | Pengguna > Buat pengguna dari pegawai |
+| 8 | `sql/08_proyek.sql` | **Tahap 6** (opsional): tabel proyek, RAB, RFQ, penawaran, PO, kontrak, penerimaan | 1, 2 | Tabel relasional (otomatis bila ada) |
 
 - Tiap berkas diawali kepala seragam: *Isi, Prasyarat, Dijalankan, Dipakai oleh, Catatan*; semuanya **idempoten** dan tanpa rahasia.
 - **Pasang bertahap** (mis. proyek lama yang sudah berjalan): jalankan hanya berkas yang belum dipasang, sesuai nomor. Untuk proyek lama berpola banyak BUMDes, gunakan reset di atas.
-- **`sql/00_semua.sql` dibangkitkan otomatis** oleh `node build.js` (dan diperiksa `node build.js --check`). Jangan diedit; ubah berkas bagiannya.
+- **`sql/00_semua.sql` dibangkitkan otomatis** oleh `node scripts/build.js` (dan diperiksa `node scripts/build.js --check`). Jangan diedit; ubah berkas bagiannya.
 
 ## Menambah pengurus dan peran
 
@@ -95,5 +96,5 @@ Dari SQL Editor: `select public.buat_pengguna_dari_pegawai('UUID-BUMDES'::uuid);
 
 ## Uji
 
-- Aplikasi: `tests/logic-72.js` (pembantu awan), `tests/ui-awan.py` dan `ui-awan2.py` (Supabase palsu via Playwright).
+- Aplikasi: `tests/logic/logic-72.js` (pembantu awan), `tests/ui/ui-awan.py` dan `ui-awan2.py` (Supabase palsu via Playwright).
 - SQL (Postgres 16 lokal): `sh tests/sql-run.sh` memasang berkas terpisah pada basis data baru lalu menjalankan `tests/supabase-test.sql`, `-test2`, `-test3`, `-test4`, `-test5` (117 pemeriksaan). `sh tests/sql-run.sh semua` memasang **hanya** `sql/00_semua.sql` dua kali (uji idempoten) lalu menjalankan uji yang sama. Stub Supabase: `tests/supabase-stub.sql`.

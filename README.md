@@ -12,7 +12,8 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Pamsimas, dll.
 
 Panduan Perdagangan: `docs/PANDUAN_PERDAGANGAN.md`.
 
-## Fitur (v1.1.368)
+## Fitur (v1.1.369)
+- **Penataan struktur berkas (ST1) (v1.1.369).**
 - **Nama berkas ekspor dengan pengguna dan jam (EX1) (v1.1.368).**
 - **Peringatan modal Kasir lebih jelas (KR3) (v1.1.367).**
 - **RBAC Rilis 3: persetujuan transaksi (RB3) (v1.1.366).**
@@ -338,70 +339,46 @@ Cocok untuk prototype, simulasi, validasi engine, dan demo satu perangkat. Belum
 `data/bumdes-data-dummy.json` — backup contoh siap impor; lihat `data/README.md` (hanya lokal, tidak diunggah ke Git).
 
 ## Struktur berkas dan alur kerja
-Satu folder datar (tanpa subfolder sumber). Sejak v1.1.224 hanya ada **satu halaman: `index.html`**, berkas mandiri berisi seluruh gaya dan skrip (hasil `node build.js`), jadi **di-host apa adanya** di hosting statis (Vercel, GitHub Pages, Netlify) dan tidak lagi bergantung pada berkas `.js`/`.css` lain.
+Sejak v1.1.369 sumber ditata **per modul di `src/`** dengan nama berkas yang bermakna (kebab-case); hasil rakitannya tetap **satu halaman: `index.html`** (mandiri, di-host apa adanya di Vercel, GitHub Pages, Netlify).
+
+```
+index.html  sw.js  manifest.json  icons/  vercel.json   ← permukaan deploy (root)
+src/        index.html (templat) · styles/main.css · core/ sistem/ akuntansi/ gaji/ simpan-pinjam/ pamsimas/ proyek/ perdagangan/
+scripts/    build.js (perakit + pemeriksa)
+sql/        01..09 + 00_semua.sql (dibangkitkan)
+docs/       dokumentasi
+tests/      logic/ ui/ checks/ gen/ sql/ + run.js, suite.js (hanya lokal)
+```
+
+Urutan skrip di `src/index.html` penting (semua berbagi satu lingkup global). Menambah berkas skrip: letakkan di folder modulnya, daftarkan di `src/index.html`, lalu `node scripts/build.js`.
 
 | Berkas | Isi |
 |---|---|
-| `index.html` | **Aplikasi satu berkas (mandiri)**, hasil rakitan `node build.js`; satu-satunya halaman yang dibuka/di-host. Jangan diedit langsung |
-| `index.src.html` | Templat sumber (khusus pengembangan): memuat `style.css` dan skrip di bawah (urutan penting); dibaca `build.js` |
-| `style.css` | Seluruh gaya |
-| `config.js` | Konfigurasi, konstanta, versi (`APP_VER`) |
-| `accounting.js` | Penyimpanan, ID, mesin akuntansi, pelaporan dasar |
-| `layout.js` | Ikon, sidebar, navigasi bawah, peringatan, tren |
-| `views.js` | Tampilan utama: dashboard, laporan, transaksi, master, setelan |
-| `modules.js` | Pengaturan modul unit usaha |
-| `loans.js` | Simpan Pinjam: nasabah, pinjaman, jadwal, pembayaran, jaminan |
-| `water.js` | Unit Air: pelanggan, penjualan, langganan, meter |
-| `water2.js` | Pamsimas bagian 2: biaya, meter induk, calon putus, pengaduan, tarif air, loket, daftar kerja |
-| `waterpage.js` | Pamsimas: halaman detail pelanggan dan mode lapangan |
-| `autobk.js` | Salinan otomatis berkala di IndexedDB (v1.1.242) |
-| `health.js` | Pemeriksaan kesehatan data (v1.1.243) |
-| `gsearch.js` | Pencarian global (v1.1.244) |
-| `detailpage.js` | Detail transaksi sebagai halaman (v1.1.251) |
-| `ui.js` | Toast, konfirmasi, draf form, komponen form dan aksesibilitas |
-| `payroll.js` | Pihak/pegawai sebagai master, penggajian, laporan gaji |
-| `reports.js` | Laporan keuangan, piutang, saldo awal terpandu, laporan air |
-| `uikit.js` | Kontrol form kustom (v1.1.033): dropdown, kalender, bulan, berkas |
-| `cloud.js` | Sinkron awan Supabase Tahap 1 (v1.1.042): koneksi, masuk, simpan/muat dengan kunci versi |
-| `sql/00_semua.sql` | **Pasang semua sekaligus** untuk proyek baru: gabungan otomatis 7 berkas di bawah (dibangkitkan `node build.js`, jangan diedit) |
-| `sql/98_kosongkan_isi.sql` | Kosongkan isi semua tabel data dan snapshot (versi awan kembali nol); struktur, BUMDes, anggota, dan akun tetap |
-| `sql/99_reset.sql` | Kosongkan database (hapus semua tabel dan fungsi) untuk mulai dari awal |
-| `sql/01_inti.sql` | [1/9] Tahap 1: snapshot, riwayat, kunci versi, peran, RLS |
-| `sql/02_akuntansi.sql` | [2/9] Tahap 2: tabel akuntansi dan Simpan Pinjam + migrasi |
-| `sql/03_pegawai.sql` | [3/9] Tahap 3: tabel pegawai dan gaji |
-| `sql/04_tabungan.sql` | [4/9] Tahap 4: tabel tabungan (rekening dan mutasi) |
-| `sql/05_penjualan.sql` | [5/9] Tahap 5: tabel penjualan, Unit Air, jaminan, tarif dan pajak |
-| `sql/06_nasabah.sql` | [6/9] Portal nasabah (HP + PIN) |
-| `sql/07_pengguna.sql` | [7/9] Pengguna dari pegawai (opsional) |
-| `sql/08_proyek.sql` | [8/9] Tabel proyek, pengadaan, kontrak, penerimaan (opsional) |
-| `sql/09_perdagangan.sql` | [9/9] Tahap 7: tabel gerakan stok, pembelian, dan pesanan pembelian Perdagangan (opsional) |
-| `docs/SUPABASE.md` | Panduan pasang cepat, urutan berkas SQL, peran, keamanan, uji |
-| `portal.js` | Portal nasabah mode demo (v1.1.038): masuk HP + PIN, pinjaman, tabungan, profil |
-| `calon.js` | Calon peminjam (v1.1.031): sub-tab Calon, status, jadikan nasabah |
-| `closing.js` | Tutup buku/periode, audit log, backup |
-| `users.js` | Pengguna, peran, login PIN |
-| `releases.js` | Data catatan rilis untuk tombol ? di Setelan (40 rilis terbaru; rilis baru ditambah di paling atas) |
-| `releases-lama.js` | Catatan rilis lama (`RELEASES_LAMA`), digabung ke `RELEASES` |
-| `modals.js` | Dialog modal tambah/ubah data |
-| `flow.js` | Alur pengajuan lengkap opsional (SP2): verifikasi, analisis, wewenang persetujuan, akad |
-| `rates.js` | Mesin Tarif & Biaya: `rate_master`/`tax_master` berversi, `calcFees()` murni, tampilan Master > Tarif & Biaya |
-| `keyboard.js` | Keyboard layar dan pintasan |
-| `permissions.js` | Penjagaan izin per aksi (dimuat setelah semua fungsi) |
-| `pwa.js` | Pendaftaran service worker, tombol pasang aplikasi |
-| `app.js` | Memulai aplikasi (dimuat paling akhir) |
-| `manifest.json`, `sw.js` | PWA: pasang dari browser, jalan offline |
-| `icons/` | Ikon aplikasi: `icon.svg`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` |
-| `vercel.json` | Pengaturan Vercel (tanpa build; sw.js tidak di-cache) |
-| `bumdes.html` | *Dihapus sejak v1.1.224 (digantikan `index.html`); hapus berkas lama ini dari root Git bila masih ada* |
-| `build.js`, `package.json` | Perakit `index.html` dan skrip dev (tidak perlu diunggah ke hosting) |
-| `README.md` | Dokumentasi utama (satu-satunya dokumen di folder utama) |
-| `docs/` | Dokumentasi lain: `release_notes.md`, `CHANGELOG.md`, `CHANGELOG_ARSIP.md`, `SUMMARY.md`, `ROADMAP.md`, `ROADMAP_ARSIP.md`, `SUPABASE.md`, blueprint |
-| `tests/`, `data/` | Tes dan data dummy — **hanya lokal, tidak diunggah ke Git** (`.gitignore`) |
+| `index.html` | **Aplikasi satu berkas**, hasil `node scripts/build.js`. Jangan diedit langsung |
+| `sw.js`, `manifest.json`, `icons/`, `vercel.json` | PWA dan pengaturan Vercel (tetap di root agar bisa di-host) |
+| `scripts/build.js`, `package.json` | Perakit/pemeriksa dan skrip dev |
+| `sql/` | Skema Supabase; `00_semua.sql` dibangkitkan |
+| `docs/` | `release_notes.md`, `CHANGELOG*.md`, `SUMMARY.md`, `ROADMAP*.md`, `SUPABASE.md`, blueprint |
+| `tests/`, `data/` | Tes dan data dummy — **hanya lokal, tidak diunggah ke Git** |
+
+**Peta nama lama → baru** (folder `src/`):
+
+| Folder | Berkas (lama → baru) |
+|---|---|
+| `styles/` | `style.css` → `main.css` |
+| `core/` | `config.js` → `config.js`; `accounting.js` → `penyimpanan-jurnal.js`; `layout.js` → `tata-letak.js`; `views.js` → `tampilan-utama.js`; `ui.js` → `pengendali-ui.js`; `uikit.js` → `kontrol-kustom.js`; `ui2.js` → `kepala-halaman.js`; `keyboard.js` → `keyboard-layar.js`; `detailpage.js` → `halaman-detail.js`; `modals.js` → `modal-data-master.js`; `gsearch.js` → `pencarian-global.js`; `pwa.js` → `pwa.js`; `app.js` → `mulai-aplikasi.js` |
+| `sistem/` | `users.js` → `pengguna-peran.js`; `permissions.js` → `izin-aksi.js`; `approval.js` → `persetujuan.js`; `entry.js` → `masuk.js`; `cloud.js` → `awan-supabase.js`; `autobk.js` → `salinan-otomatis.js`; `health.js` → `kesehatan-data.js`; `modules.js` → `pengaturan-modul.js`; `closing.js` → `tutup-buku-audit.js`; `releases.js` → `catatan-rilis.js`; `releases-lama.js` → `catatan-rilis-lama.js` |
+| `akuntansi/` | `reports.js` → `laporan-keuangan.js` |
+| `gaji/` | `payroll.js` → `pihak-pegawai-gaji.js` |
+| `simpan-pinjam/` | `loans.js` → `pinjaman.js`; `rates.js` → `tarif-biaya.js`; `flow.js` → `alur-pengajuan.js`; `savings.js` → `tabungan.js`; `share.js` → `ringkasan-nasabah.js`; `sod.js` → `pemisahan-tugas.js`; `collection.js` → `kolektibilitas-penagihan.js`; `restruct.js` → `restrukturisasi.js`; `spaudit.js` → `audit.js`; `calon.js` → `calon-peminjam.js`; `portal.js` → `portal-nasabah.js` |
+| `pamsimas/` | `water.js` → `unit-air.js`; `water2.js` → `unit-air-lanjutan.js`; `waterpage.js` → `halaman-pelanggan.js` |
+| `proyek/` | `proyek.js` → `proyek.js`; `pengadaan.js` → `rab-vendor.js`; `rfq.js` → `rfq.js`; `kontrak.js` → `kontrak.js`; `serah.js` → `serah-terima.js`; `bayar.js` → `pembayaran.js`; `pcfin.js` → `keuangan.js`; `pcgov.js` → `tata-kelola.js`; `pclap.js` → `laporan.js`; `pcalur.js` → `alur-pengadaan.js` |
+| `perdagangan/` | `dagang.js` → `modul.js`; `dagangbeli.js` → `pembelian.js`; `dagangbeli2.js` → `pesanan-pembelian.js`; `dagangwh.js` → `gudang.js`; `dagangjual.js` → `penjualan.js`; `dagangpiutang.js` → `piutang-kasir.js`; `dagangkoreksi.js` → `koreksi.js`; `daganglaporan.js` → `laporan.js`; `daganglaporan2.js` → `analitik.js`; `dagangimpor.js` → `impor-produk.js`; `dagangimpor2.js` → `impor-transaksi.js`; `dagangkasir.js` → `struk-tutup-kasir.js`; `dagangcetak.js` → `cetak.js`; `dagangstok2.js` → `stok-lanjutan.js` |
 
 **Deploy Git → Vercel:** unggah seluruh isi paket Git (semua berkas datar di root repo, tanpa `tests/` dan `data/`) ke GitHub; hubungkan repo ke Vercel (Framework Preset: *Other*). `vercel.json` sudah mengatur tanpa build dan folder keluaran `.`, jadi tidak perlu mengisi apa pun. Pada tiap commit Vercel men-deploy ulang.
 
-**Hosting statis lain (unggah manual):** cukup unggah `index.html`, `sw.js`, `manifest.json`, ikon, dan `vercel.json`. Berkas sumber (`index.src.html`, `style.css`, `*.js`, `build.js`), `package.json`, dan dokumen tidak diperlukan agar aplikasi berjalan.
+**Hosting statis lain (unggah manual):** cukup unggah `index.html`, `sw.js`, `manifest.json`, ikon, dan `vercel.json`. Berkas sumber (`src/`, `scripts/`), `package.json`, dan dokumen tidak diperlukan agar aplikasi berjalan.
 
 **Pasang sebagai aplikasi (PWA):** setelah di-host lewat https, pilih *Pasang aplikasi* di browser. Dari `file://` aplikasi tetap jalan tetapi tidak bisa dipasang.
 
-**Alur pengembangan:** edit berkas sumber → `node build.js` (menyegarkan `index.html`) → `npm test` (cek sinkron + versi + daftar cache) atau `npm run test:cepat` (uji pra-rilis ±1,5 menit; butuh `tests/` lokal) dan `npm run test:lengkap` (semua uji termasuk seluruh uji UI). Saat menambah/ganti nama berkas skrip: ubah daftar `<script src>` di `index.src.html` (`sw.js` tidak perlu diubah: hanya menyimpan `index.html`, manifest, dan ikon).
+**Alur pengembangan:** edit berkas sumber → `node scripts/build.js` (menyegarkan `index.html`) → `npm test` (cek sinkron + versi + daftar cache) atau `npm run test:cepat` (uji pra-rilis ±1,5 menit; butuh `tests/` lokal) dan `npm run test:lengkap` (semua uji termasuk seluruh uji UI). Saat menambah/ganti nama berkas skrip: ubah daftar `<script src>` di `src/index.html` (`sw.js` tidak perlu diubah: hanya menyimpan `index.html`, manifest, dan ikon).

@@ -2,6 +2,1158 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.369] — 2026-10-21
+
+### Diubah
+- Struktur berkas ditata ulang mengikuti praktik pengembangan web app: src/<modul>/, src/styles/, scripts/, tests/<jenis>/; index.html tetap satu berkas identik; peta nama lama→baru di README.
+
+## [1.1.368] — 2026-10-21
+
+### Diubah
+- EX1: dlN() untuk backup, arsip audit, laporan, buku besar, audit log, gaji
+
+## [1.1.367] — 2026-10-21
+
+### Diubah
+- KR3: teks peringatan modal > harga di ubin Kasir
+
+## [1.1.366] — 2026-10-21
+
+### Diubah
+- RB3: approval.js; izin trx.setujui; db.approvals
+
+## [1.1.365] — 2026-10-21
+
+### Diubah
+- TL18: style.css .card/h2 dirapikan; bukti gaya hitungan identik; check-css menjaga agar tidak dobel lagi
+
+## [1.1.364] — 2026-10-21
+
+### Diubah
+- PL9: dagangwh.js (dg_wh, dg_tf)
+
+## [1.1.363] — 2026-10-21
+
+### Diubah
+- PL8: dagangimpor2.js, sql/09_perdagangan.sql, tbl7 di cloud.js
+
+## [1.1.362] — 2026-10-21
+
+### Diubah
+- PL7: kartu analitik di Laporan Perdagangan (daganglaporan2.js)
+
+## [1.1.361] — 2026-10-21
+
+### Diubah
+- PL6: PO, terima sebagian, angkut dan diskon, bayar banyak nota, pengingat lonceng
+
+## [1.1.360] — 2026-10-21
+
+### Diubah
+- Render sebagian Kasir; banner tipis; sidebar dapat diatur; Master multi-kolom
+
+## [1.1.359] — 2026-10-21
+
+### Diubah
+- Perbaikan tumpang tindih kartu Backup; uji lengkap lulus
+
+## [1.1.358] — 2026-10-21
+
+### Diubah
+- Kartu ringkasan Kasir menggantikan tombol Riwayat nota
+
+## [1.1.357] — 2026-10-21
+
+### Diubah
+- Perbaikan kartu dan modal Riwayat nota Kasir
+
+## [1.1.356] — 2026-10-21
+
+### Diubah
+- Kasir memakai daftar barang, bukan ubin
+
+## [1.1.355] — 2026-10-21
+
+### Diubah
+- PIN penyelia untuk diskon di atas batas Kasir
+
+## [1.1.354] — 2026-10-21
+
+### Diubah
+- Pelanggan toko dipisah dari pelanggan air; kartu Periksa harga
+
+## [1.1.353] — 2026-10-21
+
+### Diubah
+- Optimalisasi halaman Tagihan Pamsimas setelah Perdagangan dipisah
+
+## [1.1.352] — 2026-10-21
+
+### Diubah
+- Perbaikan: penjualan Perdagangan tidak lagi tampil di Pamsimas (Loket, tunggakan, WA piutang, laporan)
+
+## [1.1.351] — 2026-10-21
+
+### Diubah
+- Kasir: perbaikan layar Pembayaran berhasil (render setelah penjualan tercatat), ketukan ganda diabaikan, peringatan modal lebih tinggi dari harga jual pada ubin
+
+## [1.1.350] — 2026-10-21
+
+### Diubah
+- Kasir: baris barang lain/jasa berharga bebas tanpa stok (sale_items berlabel, tanpa HPP dan pergerakan stok), dapat dicampur dengan produk dan semua metode bayar
+
+## [1.1.349] — 2026-10-21
+
+### Diubah
+- Pemilih tanggal dan bulan dapat diketik manual (kotak Ketik di popup dan ketik langsung dari tombol), dengan validasi tanggal dan batas
+
+## [1.1.348] — 2026-10-21
+
+### Diubah
+- Kasir: pintasan papan ketik, baris Sering dibeli, peringatan stok menipis, struk WhatsApp, batas diskon kasir (atur di Perdagangan > Data)
+
+## [1.1.347] — 2026-10-21
+
+### Diubah
+- Kasir: metode bayar Transfer dan QRIS (rekening, referensi), kredit dengan uang muka (DP), rincian per metode di ringkasan, riwayat, nota, dan Tutup kasir
+
+## [1.1.346] — 2026-10-21
+
+### Diubah
+- Halaman Kasir: ringkasan hari ini, riwayat nota dengan struk dan batal, tahan/lanjutkan keranjang, pelanggan dipilih sejak awal dan tercatat pada penjualan tunai
+
+## [1.1.345] — 2026-10-21
+
+### Diubah
+- Isian Kasir (uang diterima, diskon, catatan, uang fisik tutup kasir) tidak terbawa ke transaksi berikutnya: draf isian dihapus setelah transaksi selesai, saat Kosongkan, dan setelah tutup kasir
+
+## [1.1.344] — 2026-10-21
+
+### Diubah
+- Tutup kasir harian menjadi dialog bertahap (Rekap, Hitung uang laci, Selesai) dengan selisih langsung, tombol Sesuai, dan cetak rekap; kas bawaan dipilih otomatis
+
+## [1.1.343] — 2026-10-21
+
+### Diubah
+- Halaman Kasir: izin baru dagang.kasir untuk peran Kasir, lencana jumlah di ubin, jumlah dapat diketik, hapus per baris, panel Pesanan dirapikan, Tutup kasir dapat dilipat, galat di dekat tombol, dialog menutup saat pindah halaman, tampilan mobile lebih padat, nota tunai Tutup kasir konsisten dengan nominal
+
+## [1.1.342] — 2026-10-21
+
+### Diubah
+- TL14: batas lebar 1760 px untuk semua halaman
+
+## [1.1.341] — 2026-10-21
+
+### Diubah
+- TL13: Backup tersusun dalam grid baris sejajar
+
+## [1.1.340] — 2026-10-21
+
+### Diubah
+- TL12: perbaikan nominal cepat Kasir, tombol Selesaikan, dan bilah aksi
+
+## [1.1.339] — 2026-10-21
+
+### Diubah
+- TL11: kartu Backup mengalir seimbang dalam kolom
+
+## [1.1.338] — 2026-10-21
+
+### Diubah
+- TL10: Setelan, Profil, Portal lebih rapi di layar lebar
+
+## [1.1.337] — 2026-10-21
+
+### Diubah
+- TL9: Data > Backup tiga kolom; istilah awan diganti cloud
+
+## [1.1.336] — 2026-10-21
+
+### Diubah
+- TL7-TL8: isi rata kiri dan lebih lebar; tombol aksi pindah ke kepala halaman di desktop
+
+## [1.1.335] — 2026-10-21
+
+### Diubah
+- TL7: isi halaman rata kiri dengan batas lebar baru
+
+## [1.1.334] — 2026-10-21
+
+### Diubah
+- TL6: uji regresi tata letak semua tab
+
+## [1.1.333] — 2026-10-21
+
+### Diubah
+- TL5: batas lebar isian dan tombol di layar lebar
+
+## [1.1.332] — 2026-10-21
+
+### Diubah
+- TL4: judul ganda disembunyikan di desktop; jejak tanpa lencana
+
+## [1.1.331] — 2026-10-21
+
+### Diubah
+- Tab Perdagangan dirapikan: tanpa sub-tab Kasir, Penjualan dan Piutang menjadi tab (UV2d)
+
+## [1.1.330] — 2026-10-21
+
+### Diubah
+- Tautan jejak halaman bergaya sendiri (UV2c)
+
+## [1.1.329] — 2026-10-21
+
+### Diubah
+- Jejak halaman dapat diklik (UV2b)
+
+## [1.1.328] — 2026-10-21
+
+### Diubah
+- UI v2 tahap 9 (UV9): uji regresi tampilan semua tab x 4 lebar, mode gelap
+
+## [1.1.327] — 2026-10-21
+
+### Diubah
+- UI v2 tahap 8 (UV8): layar masuk dan portal nasabah
+
+## [1.1.326] — 2026-10-21
+
+### Diubah
+- UI v2 tahap 7 (UV7): formulir dan dialog
+
+## [1.1.325] — 2026-10-21
+
+### Diubah
+- UI v2 tahap 6 (UV6): sidebar dan header
+
+## [1.1.324] — 2026-10-21
+
+### Diubah
+- UI v2 tahap 5 (UV5): tab dan bar filter
+
+## [1.1.323] — 2026-10-21
+
+### Diubah
+- UI v2 tahap 4 (UV4): gaya tabel, daftar, lencana, dan tombol sekunder
+
+## [1.1.322] — 2026-10-21
+
+### Diubah
+- UI v2 tahap 3 (UV3): kartu KPI dengan ubin ikon pastel, angka besar, dan garis aksen
+
+## [1.1.321] — 2026-10-21
+
+### Diubah
+- UI v2 tahap 2 (UV2): kepala halaman desktop berisi judul besar, jejak halaman, dan area tombol aksi; judul header disembunyikan di desktop
+- ui2.js baru (pgHead); tes ui-lebar.py memeriksa kepala halaman di desktop dan ponsel
+
+## [1.1.320] — 2026-10-21
+
+### Diubah
+- UI v2 tahap 1 (UV1): token radius 16 px, bayangan lembut, kartu lebih lega, judul lebih tegas, kolom isian dan tombol membulat
+
+## [1.1.319] — 2026-10-21
+
+### Diperbaiki
+- Kartu pilihan laporan: judul dan keterangan berlatar hijau karena kelas `.rt` bentrok dengan warna batang tren Pamsimas; aturan dipersempit ke `i.rt` dan `.rlg.rt` (juga `.rb`)
+- Pengaman lebar halaman Data: kolom `.bkg` min-width 0, teks panjang tak terputus turun baris, `#ct` tidak melebar (overflow-x: clip)
+- Pengaman lebar halaman Data: kolom `.bkg` min-width 0, teks panjang tak terputus turun baris, `#ct` tidak melebar (overflow-x: clip)
+
+## [1.1.318] — 2026-10-21
+
+### Diubah
+- Lebar isi desktop per jenis halaman (1180 px untuk Dashboard/Setelan/Master/Profil, 1320 px untuk tabel dan modul operasional)
+- Dashboard di layar 1500 px ke atas: dua kolom, Perlu perhatian di kolom kanan (menempel saat gulir)
+- Bagian atas Dashboard dirapikan (aksi cepat ringkas, Atur tampilan dan periode sebaris)
+
+### Diperbaiki
+- Teks `preserveAspectRatio="none">` bocor di kartu Saldo Kas dan Bank (tanda petik di aria-label grafik)
+
+## [1.1.317] — 2026-10-21
+
+### Ditambah
+- Halaman Perdagangan yang dicetak memakai kop, judul, tanggal, dan tanda tangan; tombol Cetak halaman ini; tombol aksi dan kisi Kasir tidak tercetak
+- Cetak daftar stok bernilai dan katalog harga (A4)
+- Pesan kaki struk yang dapat diatur; jam transaksi pada nota penjualan
+
+### Diubah
+- Lembar hitung opname: nomor, kolom isian berkotak, judul kolom berulang
+- Struk: Jumlah dan Diskon sebaris
+- tests/ui-cetak-pdf.py: 10 kasus Perdagangan baru
+
+## [1.1.316] — 2026-10-20
+
+### Ditambah
+- Menu Kasir tersendiri di sidebar dan navigasi bawah, terpisah dari tab Perdagangan
+
+## [1.1.315] — 2026-10-20
+
+### Diubah
+- Cetak struk Kasir: dari dialog Berhasil langsung mencetak (tanpa pratinjau struk dan halaman nota perantara), lalu kembali ke Kasir
+- Dialog pembayaran menjadi dua langkah; Lewati struk menjadi Transaksi baru
+
+## [1.1.314] — 2026-10-20
+
+### Ditambah
+- Halaman khusus kasir (#kasir) layar penuh dengan bar ringkasan hari ini
+- Pembukaan lewat tombol Halaman kasir atau alamat langsung; ditolak bila modul nonaktif atau tanpa izin Perdagangan kelola
+
+## [1.1.313] — 2026-10-20
+
+### Ditambah
+- Kasir: perbaikan struk, kas bawaan, lembar pesanan ponsel
+
+## [1.1.312] — 2026-10-20
+
+### Diubah
+- Halaman Jual > Kasir: judul "Kasir" yang sama dengan tab disembunyikan (hanya tampil di layar penuh)
+- Tombol Layar penuh tidak ganda saat layar penuh aktif (tersisa tombol Keluar layar penuh di atas)
+- Ponsel: tombol di bilah ringkasan menjadi Bayar (sebelumnya Pesanan, yang menggulir ke panel)
+
+## [1.1.311] — 2026-10-19
+
+### Diubah
+- Kasir (Perdagangan) memakai tampilan dua panel: kartu produk per kategori dengan stok di kiri, panel pesanan di kanan (di ponsel bertumpuk dengan bilah ringkasan)
+- Pembayaran bertahap dalam satu jendela: Pembayaran, Berhasil, Cetak struk, Transaksi baru
+- Produk berstok habis dinonaktifkan; stok di bawah minimum ditandai merah
+- Tidak ada perubahan pada logika penjualan, stok, jurnal, tutup kasir, dan struk
+
+## [1.1.310] — 2026-10-17
+
+### Ditambah
+- Perbaikan impor cadangan: deteksi berkas terpotong
+
+## [1.1.309] — 2026-10-17
+
+### Ditambah
+- Opname bersesi, usulan pembelian, satuan ganda, riwayat harga beli, kedaluwarsa
+
+## [1.1.308] — 2026-10-17
+
+### Ditambah
+- Struk, tutup kasir harian, pindai kamera, layar penuh
+
+## [1.1.307] — 2026-10-17
+
+### Ditambah
+- Diskon, harga bertingkat, catatan, batas kredit, bayar sebagian, kuitansi
+
+## [1.1.306] — 2026-10-17
+
+### Ditambah
+- Perdagangan PL1: sub-tab berkelompok lima (kunci S.dgv dan alamat tidak berubah), preset periode Laporan, filter kategori dan Tampilkan semua di Kasir, tombol Retur dari rincian penjualan dan pembelian.
+- Piutang penjualan toko dikeluarkan dari piu() dan lkParts() sehingga Loket Pamsimas hanya menampilkan tunggakan Pamsimas.
+- Uji logic-234 (26 pemeriksaan) dan alur UI di ui-dagang.py.
+
+## [1.1.305] — 2026-10-17
+
+### Ditambah
+- Perbaikan Perdagangan hasil pemeriksaan halaman: tabel Laporan terlihat (kelas pembungkus dgtw menggantikan po yang tersembunyi), kartu Tahap pengembangan dihapus, Stok menipis di Laporan termasuk barang habis, pemilih berkas CSV tidak ganda (kelas uh), kolom Margin dan HPP disembunyikan di ponsel, label umur piutang 0–30 hari, data contoh dengan 97% piutang terbayar.
+- Bagian baru 1.1d di ROADMAP: tahap lanjutan PL1–PL8.
+- Uji: regresi tabel Laporan terlihat (logic-231, ui-dagang.py), pemilih berkas, ui-modul 4 saklar, path uji UI relatif.
+
+## [1.1.304] — 2026-10-17
+
+### Ditambah
+- Perdagangan PD8: impor produk dan stok awal dari CSV (pratinjau konfirmasi, duplikat dilewati), data contoh toko desa setahun di unit sendiri (UNIT-DGDEMO) yang dapat dihapus utuh, penyimpanan ditunda selama pembuatan data massal.
+- Panduan pengguna docs/PANDUAN_PERDAGANGAN.md.
+- Uji logic-233 (26 pemeriksaan) dan alur UI di ui-dagang.py.
+
+## [1.1.303] — 2026-10-17
+
+### Ditambah
+- Perdagangan PD7, Ringkasan: blok Perlu tindakan (stok menipis/habis, piutang lebih dari 30 hari, utang jatuh tempo ≤ 7 hari/terlambat) dengan tautan ke sub-tab, tren penjualan 6 bulan, tombol cepat Kasir, Pembelian baru, Piutang (disembunyikan untuk Pengawas).
+- Uji logic-232 (11 pemeriksaan) dan alur UI di ui-dagang.py.
+
+## [1.1.302] — 2026-10-17
+
+### Ditambah
+- Perdagangan PD6, sub-tab Laporan: laba rugi unit dari jurnal (tanpa jurnal penutup), penjualan per produk dan per bulan dari sales dan sale_items dikurangi retur, terlaris dan lambat, nilai persediaan, umur piutang (nota) dan umur utang (jatuh tempo), stok menipis.
+- Filter tanggal dan unit; Cetak dan Unduh CSV (enam bagian).
+- Uji logic-231 (18 pemeriksaan) dan alur UI di ui-dagang.py.
+
+## [1.1.301] — 2026-10-17
+
+### Ditambah
+- Perdagangan PD5, sub-tab Koreksi: stok opname (jenis jurnal opname; Dr 5910 / Cr 1500 untuk kurang, Dr 1500 / Cr 5910 untuk lebih), retur penjualan (jenis retur_jual; Dr pendapatan / Cr kas atau 1400 plus Dr 1500 / Cr 5900), retur pembelian (jenis retur_beli; Dr kas atau 2100 / Cr 1500). Mutasi stok kind opname, retjual, retbeli.
+- Retur yang mengurangi piutang atau utang tercatat sebagai pembayaran bertanda retur dan hanya dibatalkan lewat Koreksi.
+- Penjualan atau pembelian dengan retur aktif tidak bisa dibatalkan; jurnal opname dan retur tidak bisa dibatalkan dari menu Transaksi.
+- Uji logic-230 (44 pemeriksaan) dan alur UI di ui-dagang.py.
+
+## [1.1.300] — 2026-10-17
+
+### Ditambah
+- Perdagangan PD4, sub-tab Piutang: pelanggan berutang (jumlah nota, nota tertua, umur, total), cari pelanggan, terima pembayaran penuh beberapa nota sekaligus (satu pembayaran dan satu jurnal per nota, dapat dibatalkan satu per satu) dengan kuitansi gabungan (`kuitg`).
+- Perdagangan PD4, sub-tab Kasir: cari/pindai kode, keranjang +/−, cek stok, tunai dengan uang diterima dan kembalian (tidak dijurnal) atau kredit; memakai simpan penjualan PD3 sehingga HPP tetap otomatis; cetak nota terakhir.
+- Piutang penjualan toko disaring dari daftar Pamsimas > Piutang.
+- Uji `logic-229` (28 pemeriksaan) dan alur UI di `ui-dagang.py`.
+- Keterbatasan: total piutang per pelanggan di Loket Pamsimas masih menjumlahkan utang toko bila pelanggannya sama.
+
+## [1.1.299] — 2026-10-17
+
+### Ditambah
+- Perdagangan PD3: penjualan banyak barang dari satu unit dagang, tunai (Dr kas/bank, Cr 4300) atau kredit (Dr 1400 Piutang, Cr 4300); pelanggan opsional untuk tunai, wajib untuk kredit. Memakai tabel `sales`, `sale_items`, `payments` yang sama dengan Pamsimas (`sale.dagang`) dan nomor penjualan bersama.
+- HPP otomatis rata-rata bergerak: jurnal terpisah jenis `hpp_jual` (Dr 5900 Harga Pokok Penjualan, Cr 1500 Persediaan) dan mutasi stok jenis `jual`; menjual seluruh stok menghabiskan nilainya tepat nol. Penjualan melebihi stok (termasuk gabungan baris keranjang) ditolak.
+- Rincian penjualan: HPP per barang, laba kotor, Nota, terima dan batalkan pembayaran piutang, batalkan penjualan (jurnal penjualan dan HPP dibalik, mutasi stok dibatalkan; ditolak bila ada pembayaran aktif).
+- Penjualan bulan ini: penjualan, laba kotor, piutang; Ringkasan memuat laba kotor bulan ini.
+- Penjualan dan produk unit Perdagangan tidak lagi bisa dijual atau dibatalkan lewat form Pamsimas (produk disaring dari daftar layanan Pamsimas); jurnal penjualan dan HPP tidak bisa dibatalkan dari menu Transaksi. Penjualan lama di unit dagang (tanpa HPP) tetap tampil dan dapat dibatalkan.
+- Diskon belum tersedia di penjualan Perdagangan. Piutang dagang masih tampil juga di Pamsimas > Piutang bila filter unit "semua" (disatukan lebih lanjut di PD4).
+- Uji `logic-228` (38 pemeriksaan) dan alur UI di `ui-dagang.py`.
+
+## [1.1.298] — 2026-10-17
+
+### Diperbaiki
+- Form Pembelian baru (PD2): isian produk, jumlah, dan harga tidak dikosongkan setelah Tambah barang, sehingga ketukan berulang menambah baris yang sama berkali-kali (dilaporkan pengguna lewat tangkapan layar). Kini isian dikosongkan seperti form penjualan Pamsimas, dan barang yang sama dengan harga yang sama digabung menjadi satu baris (jumlah dijumlahkan).
+- Uji: `logic-227` (barang sama digabung, harga beda terpisah) dan `ui-dagang.py` (isian dikosongkan di browser).
+
+## [1.1.297] — 2026-10-17
+
+### Ditambah
+- Perdagangan PD2: pembelian banyak barang dari pemasok (pihak jenis Pemasok), tunai (Dr 1500 Persediaan, Cr kas/bank, saldo kas dicek) atau kredit (Cr 2100 Utang, jatuh tempo dalam hari); nomor `BL-tahun-urut`; koleksi data baru `purchases` dan mutasi stok jenis `beli`.
+- Harga beli rata-rata bergerak: harga beli produk diperbarui dari nilai dibagi jumlah stok setiap pembelian.
+- Bayar utang pemasok (Dr 2100, Cr kas/bank; tidak boleh melebihi sisa atau mendahului tanggal pembelian), batalkan pembayaran, batalkan pembelian (ditolak bila stok sudah berkurang atau ada pembayaran aktif). Transaksi pembelian tidak dapat dibatalkan dari menu Transaksi.
+- Jenis transaksi baru: Pembelian Tunai, Pembelian Kredit, Bayar Utang Usaha; entitas audit `purchase`.
+- Daftar pembelian dengan pencarian dan total utang usaha di sub-tab Pembelian dan Ringkasan.
+- Uji `logic-227` (38 pemeriksaan) dan alur UI di `ui-dagang.py`. Cermin tabel relasional awan untuk `purchases` belum dibuat.
+
+## [1.1.296] — 2026-10-17
+
+### Ditambah
+- Perdagangan PD1: katalog produk dagang (kode otomatis DGP001, satuan, kategori, harga beli dan jual, stok minimum), daftar stok dengan pencarian, lencana Menipis dan Habis, nonaktifkan produk (stok harus nol).
+- Stok awal per produk dengan jurnal Debit 1500 Persediaan, Kredit 3100 Modal BUMDes (jenis transaksi baru "Stok Awal Barang"); hanya sekali per produk, bisa dibatalkan (jurnal dibalik) selama belum ada mutasi lain. Transaksi stok awal tidak dapat dibatalkan dari menu Transaksi.
+- Koleksi data baru `stock_moves` (mutasi stok bertanda, nilai per mutasi) dan kartu stok per produk dengan saldo berjalan.
+- Ringkasan: nilai persediaan dan jumlah stok menipis; tab Data: kecocokan nilai stok dengan saldo akun 1500 unit dagang.
+- Asumsi sementara Gerbang PD-K (dapat diubah pengurus): nilai persediaan rata-rata bergerak, satu gudang per unit, satu tingkat harga jual.
+- Uji `logic-226` (33 pemeriksaan) dan alur UI di `ui-dagang.py`. Cermin tabel relasional awan untuk `stock_moves` belum dibuat (ikut snapshot awan dan backup).
+
+## [1.1.295] — 2026-10-17
+
+### Ditambah
+- Modul Perdagangan, tahap PD0 (fondasi): saklar modul (bawaan nonaktif), tab Perdagangan di grup Operasional (alamat `/perdagangan`) dengan sub-tab Ringkasan, Penjualan, Stok, Pembelian, Data; berkas baru `dagang.js`.
+- Izin `dagang.kelola` (mencakup `dagang.lihat`) dan `dagang.lihat`; peran bawaan: Bendahara dan Petugas Unit mengelola, Pengawas melihat (peran yang sudah tersimpan diatur lewat matriks izin).
+- Akun `5900 Harga Pokok Penjualan` dan `5910 Selisih Stok` dibuat saat modul diaktifkan (kode 5100 sudah dipakai Beban Gaji, jadi tidak sama dengan blueprint awal). Belum ada jurnal atau stok yang berubah.
+- Jenis unit Perdagangan kini punya modul: saran "Aktifkan modul" dan "Tambah unit" di kartu kecocokan unit dan modul.
+- Uji `logic-225` (38 pemeriksaan).
+
+## [1.1.294] — 2026-10-17
+
+### Ditambah
+- DU3: label "Belum ada modul" untuk unit jenis Lainnya (daftar, rincian, dan kartu Unit tanpa modul di Modul Unit Usaha).
+- Hapus unit usaha yang masih kosong (dengan konfirmasi dan audit); unit yang dipakai transaksi, jurnal, pinjaman, penjualan, produk, pegawai, sambungan, proyek, atau gaji hanya dapat dinonaktifkan. Unit Simpan Pinjam atau Pamsimas terakhir tidak dapat dihapus.
+
+## [1.1.293] — 2026-10-17
+
+### Diubah
+- Unit Perdagangan tidak lagi dibuat otomatis (bawaan hanya Simpan Pinjam dan Pamsimas); unit perdagangan dibuat sendiri lewat Setelan > Unit Usaha (jenis Perdagangan). Data contoh diperbarui dan ada berkas data setahun penuh baru; tombol SP1/SP2/Putus di Calon Putus dan tombol aksi Pengaduan kini berjajar rapi (Simpan Pinjam, Pamsimas, Jasa dan Proyek; tanpa Perdagangan dan Wisata Desa).
+
+## [1.1.292] — 2026-10-17
+
+### Diubah
+- Putus dan sambung kembali: riwayat status per sambungan, biaya sambung kembali otomatis (opsional, piutang akun 4220), dan tagihan ditolak untuk sambungan yang sedang diputus.
+
+## [1.1.291] — 2026-10-17
+
+### Diubah
+- Janji bayar pada piutang Pamsimas: tanggal dan catatan dari halaman detail piutang, lencana Janji di daftar, filter Ada janji bayar, dan peringatan Perlu tindakan di Ringkasan saat janji jatuh tempo.
+
+## [1.1.290] — 2026-10-17
+
+### Diubah
+- Daftar Pelanggan: filter (aktif, nonaktif, menunggak, tanpa telepon), tombol Detail ke sambungan pelanggan, dan Impor CSV (nama, telepon, alamat) dengan konfirmasi dan pelewatan duplikat.
+
+## [1.1.289] — 2026-10-17
+
+### Diubah
+- Laporan Ringkasan Pamsimas: kartu umur tunggakan per pelanggan (belum jatuh tempo, 1–30, 31–60, lebih dari 60 hari) dan baris CSV-nya; rekap per golongan dan per dusun/alamat sudah ada sebelumnya.
+
+## [1.1.288] — 2026-10-17
+
+### Diubah
+- Tab Pamsimas muat di layar 320 px, kolom cari di Biaya dan Pengaduan, serta pencarian pelanggan global di Ringkasan (langsung ke Loket atau Detail).
+
+## [1.1.287] — 2026-10-17
+
+### Diubah
+- Ringkasan Pamsimas: blok Perlu tindakan (belum dibaca, lewat jatuh tempo, pengaduan baru), tombol cepat Baca Meter/Loket/Cetak tunggakan, dan tren tagihan vs terkumpul 6 bulan.
+
+## [1.1.286] — 2026-10-17
+
+### Diubah
+- Cetak/bagikan daftar tunggakan (per pelanggan dan keseluruhan, PDF dan WhatsApp) dan kuitansi gabungan di Loket untuk beberapa tagihan sekaligus; sudah termasuk PM1 (v1.1.285).
+
+## [1.1.285] — 2026-10-17
+
+### Diubah
+- Tab Layanan Lain hanya berisi penjualan layanan di luar tagihan air dan saldo awal (kartu Penjualan Layanan Lain, dengan pencarian nama atau nomor). Halaman detail piutang kini punya tombol Batalkan tagihan atau penjualan (jurnal pembalik) di samping Cetak dan Struk; tagihan yang dibatalkan ditandai Dibatalkan tanpa form pembayaran.
+
+## [1.1.284] — 2026-10-16
+
+### Diubah
+- Setelah menerima pembayaran dari halaman detail piutang, aplikasi tetap di halaman itu dan menampilkan bagian Pembayaran tercatat (tanggal, jumlah, denda) dengan tombol Kuitansi (cetak) dan Batalkan, sehingga pembayaran bisa dicetak atau dibatalkan langsung. Riwayat Pembayaran dipindah dari bawah daftar Piutang ke tab sendiri, Riwayat Bayar (grup Tagihan, alamat #/pamsimas/riwayat-bayar), dengan pencarian nama atau nomor tagihan.
+
+## [1.1.283] — 2026-10-16
+
+### Diubah
+- Detail piutang dan Loket kini berupa halaman sendiri (dengan tombol Kembali dan Esc), bukan dialog atau panel di bawah daftar. Daftar Piutang dikelompokkan per pelanggan (satu baris dengan jumlah tagihan, total, dan lencana terlambat; pelanggan dengan beberapa tagihan membuka Loket-nya) dengan pilihan tampilan Per tagihan dan urutan Terbaru, Tertua, Terbesar, atau Terlambat dulu. Loket mengingat rekening kas terakhir, dan Enter di pencarian langsung membuka pelanggan pertama. Setelah pembayaran dari halaman detail, aplikasi kembali ke daftar.
+
+## [1.1.282] — 2026-10-16
+
+### Diubah
+- Header tidak lagi meluap di layar sempit (320–400px): chip pengguna menjadi avatar saja di ≤400px, tombol dan nama unit dirapatkan di ≤340px, angka besar Dashboard mengecil. Uji baru ui-sempit.py (320 dan 360px, mode pengguna aktif, semua menu). F6 data-act tetap ditunda.
+
+## [1.1.281] — 2026-10-16
+
+### Diubah
+- Form Ganti kata sandi dihapus dari Backup (ganti sandi lewat Profil); Isi data contoh dihapus dari kartu Kosongkan data; Pemeriksaan kesehatan data hanya untuk Admin Sistem; konfirmasi impor menampilkan nama berkas, versi aplikasi, dan tanggal pembuatan cadangan.
+- Data > Backup disederhanakan untuk pengguna akhir: kolom tempel JSON dihapus (impor hanya lewat pilih berkas; layar Lupa PIN sama), dan di Pengaturan lanjutan awan bagian Koneksi (bila diatur di config.js), Tentang awan, dan petunjuk SQL disembunyikan.
+
+## [1.1.280] — 2026-10-16
+
+### Diubah
+- Layar masuk pengguna kini bercover seperti halaman masuk awan (panel nama BUMDes dan versi, kartu Masuk; desktop dua kolom), termasuk layar buat PIN baru.
+- Layar masuk memakai kolom Username dan PIN; daftar nama pengguna tidak lagi ditampilkan kepada siapa pun yang membuka aplikasi.
+- Username dibuat otomatis dari nama untuk akun yang sudah ada (misalnya Kadek Surya menjadi kadek.surya; nama kembar diberi nomor); admin dapat mengubahnya di Edit pengguna. Aturan: 3–20 karakter huruf kecil, angka, titik, garis bawah, atau strip; unik.
+- Pesan gagal masuk untuk username tak dikenal atau akun nonaktif dibuat umum (Username atau PIN salah) agar tidak membocorkan akun; pembatasan percobaan PIN tetap berlaku.
+- Username tampil di daftar pengguna dan halaman Profil.
+- Uji logic-224.js.
+
+## [1.1.279] — 2026-10-16
+
+### Diubah
+- Tombol Keluar di header dihapus; Keluar tersedia di halaman Profil (dibuka lewat avatar di header). Header lebih lega di layar sempit dan tidak lagi mudah salah tekan.
+
+## [1.1.278] — 2026-10-16
+
+### Diubah
+- Kartu Akun saya di Pengguna & Peran dihapus karena profil sudah dibuka lewat ikon di header.
+- Avatar di header memakai warna avatar pilihan akun yang masuk (sebelumnya selalu hijau), sama dengan halaman Profil.
+
+## [1.1.277] — 2026-10-16
+
+### Diubah
+- Layar masuk awan dan deskripsi halaman (meta description) memakai nama dan versi aplikasi "Sistem Bumdes Multi Unit V<versi>" secara dinamis; judul tab, sidebar, manifest, dan backup sudah mengikuti sebelumnya.
+
+## [1.1.276] — 2026-10-16
+
+### Diubah
+- Berkas backup JSON kini memuat meta.app "Sistem Bumdes Multi Unit" dan meta.version sesuai versi aplikasi (sebelumnya "bumdes-mvp" dan 1); distempel otomatis saat simpan dan ekspor, backup lama tetap bisa diimpor.
+
+## [1.1.275] — 2026-10-16
+
+### Diubah
+- Izin peran kini dipilih per peran (chip peran, lalu daftar izin dengan kotak centang) sehingga terbaca di HP; matriks semua peran dipindah ke bagian Tampilkan matriks.
+- Tombol pembuatan pengguna dari pegawai menyebut PIN 123456 (sebelumnya 1234) dan tidak lagi meluap di layar sempit.
+- Uji ui-peran.py.
+
+## [1.1.274] — 2026-10-16
+
+### Diubah
+- Halaman Profil tidak lagi menampilkan email, peran akun awan, dan nama BUMDes akun awan kepada semua pengguna; hanya pengguna dengan izin Kelola setelan (Admin Sistem) yang melihatnya. Uji logic-223 diperluas.
+
+## [1.1.273] — 2026-10-16
+
+### Ditambah
+- Uji ui-tataletak.py membandingkan posisi dan ukuran elemen utama 11 halaman pada 3 lebar layar dengan baseline (toleransi 12 px).
+- Nama aplikasi menjadi "Sistem Bumdes Multi Unit V<versi>": judul tab, sidebar, layar masuk, dan manifest PWA (dicap otomatis oleh build.js; build.js --check ikut memeriksa).
+- PIN bawaan semua pengguna baru dan semua berkas data contoh menjadi 123456 (sebelumnya 1234 dan 246813).
+- Pembuat data baru tests/gen-setahun.js melengkapi backup sampai setahun penuh (Jan–Okt): tagihan air, penjualan, tabungan, gaji, dan PIN 123456 untuk pengguna dan nasabah portal. gen-mertha ikut mencakup Jan–Sep dan penjualan kini wajib memilih pelanggan.
+- Uji logic-223.js.
+
+## [1.1.272] — 2026-10-16
+
+### Ditambah
+- Palet perintah: pencarian global (tombol cari atau /) kini juga menjalankan perintah: Buka menu, Catat penerimaan/pengeluaran, Tema, Unduh backup, Periksa kesehatan data; hanya yang boleh dibuka akun itu.
+- Profil: kartu Tampilan (tema dan warna avatar enam pilihan) dan kartu Sesi dan riwayat masuk (masuk, keluar, gagal masuk, PIN diganti).
+- Istilah seragam: Export/Import menjadi Ekspor/Impor di seluruh tampilan; pemeriksaan otomatis check-bahasa mencegah istilah Inggris kembali.
+
+## [1.1.271] — 2026-10-16
+
+### Ditambah
+- Uji otomatis lima lebar layar (320, 360, 390, 768, 1280 px) untuk 11 halaman utama; memperbaiki kartu Dashboard, Ringkasan Bulan Ini, pilihan laporan, dan Neraca Saldo yang meluap ke samping di layar 320 px.
+
+## [1.1.270] — 2026-10-16
+
+### Ditambah
+- Semua tabel di aplikasi: judul kolom bisa diklik (atau Enter) untuk mengurutkan naik/turun, baris Total tetap di bawah; tabel 12 baris ke atas punya kotak pencarian dan jumlah baris, serta bergulir di dalam kotaknya dengan judul kolom menempel.
+- Diuji dengan 5.000 transaksi: Dashboard pertama kali sekitar 35 ms, berikutnya dari cache; daftar Transaksi hanya menggambar 30 baris.
+
+## [1.1.269] — 2026-10-16
+
+### Diubah
+- Tombol ciut/buka dan lihat semua pada kartu Perlu perhatian kini berupa ikon panah tanpa label (label tetap ada untuk pembaca layar dan tooltip).
+
+## [1.1.268] — 2026-10-16
+
+### Ditambah
+- Kartu Perlu perhatian punya tombol Ciutkan/Buka daftar dan Lihat semua/Tampilkan 3 teratas; bawaan tetap tiga teratas.
+
+## [1.1.267] — 2026-10-16
+
+### Ditambah
+- Kurva Tren di Dashboard punya filter periode 3, 6, 12, atau 24 bulan terakhir; judul, total, tabel angka, dan titik sentuh mengikuti, label sumbu dijarangkan untuk periode panjang.
+
+## [1.1.266] — 2026-10-16
+
+### Diperbaiki
+- Kartu Perlu perhatian di Dashboard menampilkan keterangan notifikasi dengan benar (sebelumnya tag HTML tampil sebagai teks, mis. pada tunggakan pinjaman).
+
+## [1.1.265] — 2026-10-16
+
+### Ditambah
+- Perhitungan Dashboard (laba rugi, kas 30 hari, pola transaksi, transaksi terakhir) disimpan di cache dan dihitung ulang hanya saat data berubah.
+
+## [1.1.264] — 2026-10-16
+
+### Ditambah
+- Tombol Atur tampilan di Dashboard untuk menyembunyikan bagian yang tidak diperlukan; pilihan tersimpan per perangkat.
+
+## [1.1.263] — 2026-10-16
+
+### Ditambah
+- Kartu Saldo Kas & Bank menampilkan garis tren saldo 30 hari terakhir; berwarna merah bila saldo turun.
+
+## [1.1.262] — 2026-10-16
+
+### Ditambah
+- Kartu Perlu perhatian di Dashboard menampilkan tiga notifikasi teratas (kesalahan lebih dulu) dengan tombol langsung dan tautan ke lonceng bila lebih banyak.
+
+## [1.1.261] — 2026-10-16
+
+### Ditambah
+- Dashboard punya pemilih periode (Semua, Bulan ini, Bulan lalu, Tahun ini, Rentang tanggal) untuk kartu Pendapatan, Beban, Laba, dan Laba Rugi per Unit.
+
+## [1.1.260] — 2026-10-16
+
+### Ditambah
+- Kartu Total Kas & Bank menampilkan selisih terhadap 30 hari lalu dan tanda peringatan bila turun lebih dari 20%; kartu Laba/Rugi menampilkan selisih terhadap bulan lalu.
+
+## [1.1.259] — 2026-10-16
+
+### Ditambah
+- Angka Ringkasan Bulan Ini (pendapatan, beban, laba, transaksi) dan bulan di tabel Tren 6 Bulan membuka Laba Rugi atau Transaksi pada bulan itu dengan rentang tanggal terisi.
+
+## [1.1.258] — 2026-10-16
+
+### Ditambah
+- Dashboard punya kartu Tagihan Pamsimas bulan berjalan (total, persen terkumpul, jumlah tagihan) yang membuka tab Ringkasan Pamsimas; kartu tidak tampil bila modul Pamsimas mati.
+
+## [1.1.257] — 2026-10-16
+
+### Ditambah
+- Setelan > Profil punya kartu Tampilan dan perangkat: tema Ikuti sistem, Terang, atau Gelap (tersimpan di perangkat), versi aplikasi, tombol Periksa pembaruan dan Muat ulang.
+- Bila versi baru terpasang saat aplikasi terbuka, muncul spanduk dengan tombol Muat ulang; halaman tidak dimuat ulang paksa agar isian yang sedang diketik aman.
+- Aplikasi meminta penyimpanan persisten ke browser dan menampilkan statusnya; bila belum persisten, ada peringatan agar rutin mengunduh backup.
+
+## [1.1.256] — 2026-10-15
+
+### Ditambah
+- Tab baru Ringkasan (paling kiri) memuat kartu angka kunci Pamsimas: pelanggan aktif, tagihan, terkumpul, piutang, dan air tak berekening. Kartu tidak lagi ditumpuk di atas tab lain, jadi tab kerja langsung terlihat.
+- Pamsimas kini terbuka di Ringkasan (kecuali awal bulan dengan tagihan terlambat, langsung ke Piutang). Kartu tetap bisa ditekan menuju tab terkait.
+- Tab grup diperkecil sedikit di HP agar lima tab muat tanpa digeser.
+
+## [1.1.255] — 2026-10-15
+
+### Diubah
+- Angka pada sub-tab kembali berupa lencana penuh seperti di lonceng: merah untuk yang perlu ditindak, kuning untuk yang menunggu, hijau pada tab aktif, abu-abu pada tab lain.
+
+## [1.1.254] — 2026-10-15
+
+### Diubah
+- Sub-tab di semua halaman kini bergaya tab map: tab abu-abu, tab aktif putih dengan teks tebal, dan angka berwarna aksen tanpa lencana bulat (merah/kuning tetap menandai yang perlu ditindak).
+
+## [1.1.253] — 2026-10-15
+
+### Diubah
+- Lencana tab: merah/kuning hanya untuk yang perlu ditindak. Baca Meter menampilkan sisa 'belum N' (kuning); hitungan netral dihapus.
+- Sambungan dipindah ke grup Data; Loket ke grup Tagihan; Pengaturan diganti nama menjadi Tarif & Aturan.
+- Sub-tab kini berbentuk pil dan menempel di bawah header saat menggulir; grup dan sub-tab lebih mudah dibedakan.
+- Pamsimas membuka grup yang paling relevan dan mengingat sub-tab terakhir tiap grup; tombol cepat Loket pembayaran di Baca Meter.
+
+## [1.1.252] — 2026-10-15
+
+### Dihapus
+- `views.js`: `vHariIni()` dan pemanggilannya di Dashboard; `style.css`: `.card.hri`; `tests/ui-hariini.py`. `tests/logic-215.js` tinggal menguji notifikasi termin.
+
+## [1.1.251] — 2026-10-15
+
+### Diubah
+- `detailpage.js`: `tdPage`, `tdBack`, `vTdPage`, Esc; `modals.js`: `mdOpen('td')` membuka halaman; `closing.js`, `layout.js`, `users.js`: render, navigasi, tombol +, keluar mengenali `S.tdp`; `views.js`: setelah ubah transaksi, halaman pindah ke transaksi baru.
+- `tests/ui-trx.py`, `tests/ui-form.py` disesuaikan; `tests/ui-detailtrx.py` baru.
+
+## [1.1.250] — 2026-10-15
+
+### Diubah (tanpa perubahan perilaku)
+- `releases.js` (40 rilis terbaru) dan `releases-lama.js` (sisanya, `RELEASES_LAMA`); `water.js` dipecah menjadi `water.js`, `water2.js` (biaya, meter induk, calon putus dan pengaduan, tarif air, loket, daftar kerja), `waterpage.js` (halaman detail pelanggan, mode lapangan). `index.src.html` memuat berkas baru berurutan.
+
+## [1.1.249] — 2026-10-15
+
+### Ditambah
+- `views.js`: `demoClear`, petunjuk dan tombol pada `vOnb`; `accounting.js`: `demo()` mencatat `meta.demo_ids`; `closing.js`: konfirmasi `demoClear`.
+- `tests/logic-218.js`, `tests/ui-contoh.py`.
+
+## [1.1.248] — 2026-10-15
+
+### Ditambah
+- `water.js`: `wfStart`, `wfSkip`, `wfLeft`, `wfBar`; `vWdPage` memakai kelas `wdf` pada mode lapangan; `layout.js`: `go()` mengakhiri mode; `permissions.js`: izin `air.kelola`; gaya `.wfb`, `.wdf`.
+- `tests/ui-lapangan.py`.
+
+## [1.1.247] — 2026-10-15
+
+### Ditambah
+- `share.js`: `arqIds`, `arqStart`, `arqSend`, `arqSkip`, `MD.arq`; tombol di `water.js` (Piutang); `permissions.js`: izin `air.kelola`.
+- `tests/logic-217.js`, `tests/ui-bergilir.py`.
+
+## [1.1.246] — 2026-10-15
+
+### Ditambah
+- `layout.js`: `sigImgs`, `sigSet`, `sigDel`, `setSigOn`, `sigPick`, `sigCard`; `sig()` mencetak gambar di atas nama Direktur/Bendahara dan stempel; `permissions.js`: tiga fungsi baru dijaga izin Setelan; gaya `.sgx`.
+- `tests/logic-216.js`, `tests/ui-ttd.py`.
+
+## [1.1.245] — 2026-10-15
+
+### Ditambah
+- `views.js`: `vHariIni()` pada Dashboard; `layout.js`: notifikasi termin proyek belum dibayar, tombol cari terpisah (`#gsb`).
+- `tests/logic-215.js`, `tests/ui-hariini.py`.
+
+## [1.1.244] — 2026-10-15
+
+### Ditambah
+- `gsearch.js`: `gsRun`, `gsOpen`, `gsClose`, `gsGo`, pintasan / dan Ctrl+K; tombol cari di `layout.js` (ikon `search`); gaya `#gs` di `style.css`.
+- `tests/ui-cari.py`.
+
+## [1.1.243] — 2026-10-15
+
+### Ditambah
+- `health.js`: `hcRun`, `hcGo`, `hcFix`, `hcCard`; konfirmasi `hcFix` di `closing.js`; kartu di Data > Backup.
+- `tests/logic-214.js`, `tests/ui-kesehatan.py` (data contoh lengkap tidak menghasilkan temuan palsu).
+
+## [1.1.242] — 2026-10-15
+
+### Ditambah
+- `autobk.js`: salinan otomatis berkala di IndexedDB (`abkSnap`, `abkTick`, `abkNow`, `abkAsk`, `abkDl`, `abkCard`), 5 terbaru, pemulihan lewat konfirmasi impor yang sudah ada.
+### Diubah
+- `closing.js`: pengingat backup berat (>= 3x interval) tanpa tombol Nanti. `views.js`: kartu di Data > Backup. `app.js`: salinan dicek 1,5 detik setelah dibuka dan saat tab kembali aktif.
+- `tests/ui-abk.py`.
+
+## [1.1.241] — 2026-10-15
+
+### Diubah
+- `accounting.js`: `save()` adaptif (`saveNow`, `saveFlush`, penggabungan 300 ms bila tulis >60 ms; kembali langsung bila <25 ms); tulis tuntas pada `pagehide`, `beforeunload`, `visibilitychange`.
+- `tests/logic-213.js`: uji mode cepat/lambat, flush, beban 20.000 transaksi.
+
+## [1.1.240] — 2026-10-15
+
+### Diubah
+- `water.js`: `wdPage`, `wdBack`, `vWdPage`, `wdSnap`, `wdAfter`, pintasan tombol; `mdOpen('wd')` membuka halaman (`S.wdp`).
+- `closing.js`, `layout.js`, `users.js`, `modals.js`: render, navigasi, FAB, dan keluar mengenali halaman detail.
+- Tes UI Pamsimas (detailair, lanjut, taksiran, gantimeter, sambung, konfirmasi, petugas, struk, tarifair, air) disesuaikan untuk halaman.
+
+## [1.1.239] — 2026-10-15
+
+### Diperbaiki
+- `pcalur.js`: filter proyek di `vAlur` (Draf/Berjalan), pemeriksaan `rqOpenP` pada langkah RFQ.
+- Tes: `logic-211.js` (19 langkah).
+
+## [1.1.238] — 2026-10-15
+
+### Diubah
+- `pcalur.js`: penanda angka diganti `.fwb` (progressbar ARIA); `style.css`: `.fwb`, `.fws`/`.fwd` dihapus.
+- Tes: `logic-211.js`, `ui-alur.py` disesuaikan.
+
+## [1.1.237] — 2026-10-15
+
+### Ditambah
+- `pengadaan.js`: `boqSeed`, `boqPv`, `boqReset`; `saveBoq(again)`; daftar `vRab` per pos dan bar progres; saran satuan.
+- `style.css`: blok v1.1.237.
+- Tes: `logic-212.js`, `ui-rab.py`.
+
+## [1.1.236] — 2026-10-15
+
+### Ditambah
+- `pcalur.js`: `pcFlow`, `pcFlowGo`, `vAlur`; `vRfq` memuat kartu alur di atas daftar dokumen.
+- `style.css`: blok v1.1.236 (`.fw`, `.fwd`).
+- Tes: `logic-211.js` (16 langkah), `ui-alur.py`.
+
+## [1.1.235] — 2026-10-15
+
+### Diperbaiki
+- `bayar.js`, `kontrak.js`, `serah.js`, `rfq.js`: pembaca kolom `v()` aman terhadap elemen yang tidak ada (`payTerm`, `payRet`).
+- Tes: `ui-bayar.py` menambah skenario tanpa Master Tarif proyek.
+
+## [1.1.234] — 2026-10-15
+
+### Diubah
+- `rfq.js`: `rqStatus({id,to})` (pintasan tanpa modal), langkah `.stp` dan panduan `.gdn` di `MD.pcy`; Pilih hanya setelah skor lengkap.
+- `style.css`: blok v1.1.234.
+- Tes: `logic-210.js`.
+
+## [1.1.233] — 2026-10-15
+
+### Diubah
+- `index.src.html`: urutan elemen `.hru` (tanggal, `#unit`, kelompok `.hst` berisi `#bel`/`#awc`/`#bkc`, `#usr`).
+- `style.css`: blok v1.1.233 untuk header (tinggi, pil unit, kapsul status, profil, mode HP dan cetak).
+
+## [1.1.232] — 2026-10-15
+
+### Ditambah
+- `pclap.js`: `pcChk`, `pcCheckSet`, `vPcChk`, `vLpj`, `vPrt`, `pcYears`, `pcRekapData`; dokumen `lpj` dan `prt` di `vDoc`.
+- `pcAct(p,yr)` memfilter tahun; checklist manual disimpan di `project.chk`.
+- Tes: `logic-209.js` (13 langkah), `ui-lpj.py`.
+
+## [1.1.231] — 2026-10-14
+
+### Ditambah
+- `pcgov.js`: `pcCfg` (`settings.pc_gov`), `pcNeed`, `pcSod`, `poNeed`, `poApprove`, `setPcGov`, `saveTiers`, `vPcGov` (kartu di tab Metode), `vPcAudit` (jejak audit di Laporan Proyek).
+- Izin `pc.pengadaan`, `pc.evaluasi`, `pc.setujui`, `pc.kontrak`, `pc.terima`, `pc.bayar`, `pc.audit` (`PERMS`); `can()` menganggap `pc.proyek` mencakup semuanya (`PCST`) dan izin virtual `pc.status`, `pc.kstatus` (`PCV`). `GUARD`/`KPERM` dipecah; `rqStatus` dan `ctStatus` memeriksa izin di dalam fungsi (PO terbit dan kontrak berjalan butuh `pc.setujui`).
+- `by_id` pada RFQ, PO, kontrak, dan penerimaan; `rfq.eval_by_id`; `rfq.coi`; `po.approvals`.
+- Tes: `logic-208.js` (43 langkah), `ui-pcgov.py`; `logic-154/203/204` dan `ui-rfq.py` disesuaikan.
+
+## [1.1.230] — 2026-10-14
+
+### Ditambah
+- `pcfin.js`: `pcSeedAcc` (akun 1650, 2250, 2260, 4700, 5800 saat modul aktif dan saat memuat data), `pcAct` (realisasi dari `journal_lines` bertanda `project_id`, tidak termasuk transaksi dibatalkan), `pcFin`, `vPcFin` (rincian proyek), `vRepProyek` (laporan), `pcDash` (kartu Dashboard).
+- `proyek.js`: pos anggaran punya `account_id` (satu akun satu pos per jenis). `reports.js`: laporan Proyek bersyarat modul. `views.js`: kartu Dashboard. `bayar.js`: akun bawaan pembayaran.
+- `sql/08_proyek.sql` [8/8]: tabel `projects`, `project_budget_lines`, `procurement_methods`, `project_boq_items`, `project_rfqs`, `project_quotes`, `purchase_orders`, `project_contracts`, `project_receipts`; fungsi `migrate_snapshot_to_tables6`, `tabel_status6`. Penomoran berkas SQL lain menjadi [n/8]. `cloud.js`: `TBL6`, `tbl6`, `tblLocal`/`tblCmp` (total PO dan kontrak), pesan bila fungsi belum ada.
+- Tes: `logic-207.js` (26 langkah), `ui-pcfin.py`; `ui-awan2.py` menyiapkan stub tahap 6; `ui-tarif-ringkas.py` diberi jeda toggle.
+
+## [1.1.229] — 2026-10-14
+
+### Ditambah
+- `bayar.js`: tagihan termin (`saveInv`), pembayaran (`payTerm`, jurnal `proj_pay` lewat `post`), pembatalan (`payVoid` memakai `rev`), retensi (`payRet`, `retVoid`, jurnal `proj_ret`), `ctPaid`, `ctRetHeld`, `feeProj` (kode tarif jenis `proyek` berdasar `nilai`). Modal `cpi`, `cpy`, `cpr`.
+- `accounting.js`: `post()` menerima `project_id` (transaksi dan `journal_lines`); `voidT` memblokir `proj_pay`/`proj_ret`. `views.js`: Jurnal Manual memuat pilihan Proyek. `config.js`: label `proj_pay`, `proj_ret`. `rates.js`: jenis biaya `proyek` dan dasar `nilai`.
+- `kontrak.js`: termin menampilkan status dan tombol pembayaran; blokir batal kontrak bila ada pembayaran; addendum tidak di bawah total dibayar.
+- Tes: `logic-206.js` (42 langkah), `ui-bayar.py`.
+
+## [1.1.228] — 2026-10-14
+
+### Ditambah
+- `serah.js`: koleksi `project_receipts` (di `NEWK`). Penerimaan (`RC_T`: draf→selesai→batal), QC (`QC_S`), `rcAcc`/`rcStat`/`rcSync` (mengisi `po.received` dan `po.received_full`), dokumentasi (`saveRcDoc`, `rcDocDel`), `vBast` (cetak, `S.doc={k:"bast"}` lewat `vDoc` di `loans.js`). Modal `rc`, `rce`, `rcs`, `rcd`.
+- Kartu Serah terima di sub-tab Pengadaan; tombol Catat penerimaan di modal PO; izin `pc.proyek`; audit `receipt`, `receipt_status`.
+- `proyek.js`: proyek dengan catatan penerimaan tidak bisa dihapus.
+- Tes: `logic-205.js` (40 langkah), `ui-serah.py`.
+
+## [1.1.227] — 2026-10-14
+
+### Ditambah
+- `kontrak.js`: koleksi `project_contracts` (di `NEWK`). Kontrak (`CT_T`: draf→aktif→selesai/batal), termin persen (`ctTerms` menyerap pembulatan di termin terakhir), retensi, addendum berversi (`ctVal`, `ctEnd`, `ctVer`), batas nilai kumulatif ≤ anggaran biaya (`ctBudget`), `vSpk` (cetak, `S.doc={k:"spk"}` lewat `vDoc` di `loans.js`). Modal `ck`, `cke`, `ckt`, `cka`, `cks`.
+- Kartu Kontrak/SPK di sub-tab Pengadaan; tombol buat/buka kontrak di modal PO; izin `pc.proyek` untuk semua aksi baru; audit `contract`, `contract_status`, `contract_add`.
+- `rfq.js`: PO dengan kontrak tidak bisa dibatalkan. `proyek.js`: proyek dengan kontrak tidak bisa dibatalkan/dihapus; rincian memuat nilai kontrak.
+- Tes: `logic-204.js` (55 langkah), `ui-kontrak.py`.
+
+## [1.1.226] — 2026-10-14
+
+### Ditambah
+- `rfq.js`: koleksi `project_rfqs`, `project_quotes`, `purchase_orders` (di `NEWK`). RFQ (`RQ_T`: draf→terbuka→evaluasi→dipilih/batal), penawaran, evaluasi berbobot (`rqScores`), `pcWin` (pengecualian wajib beralasan), PO (`PO_T`), `pcCommit` (komitmen PO terbit ≤ anggaran biaya), `rqNum` (RFQ/PO-tahun-nnn). Modal `pcq`, `pcy` (detail RFQ), `pcu`, `pcv`, `pcz`, `pco`.
+- Sub-tab Pengadaan di `vPc()` (rute `/proyek/pengadaan`); `fabCfg`/`fabGo`; izin `pc.proyek` untuk semua aksi baru; audit `rfq`, `quote`, `purchase_order`, `rfq_status`, `rfq_win`, `po_status`.
+- `proyek.js`: hapus/batal proyek diblokir bila ada RFQ/PO; rincian memuat Komitmen PO.
+- Tes: `logic-203.js` (52 langkah), `ui-rfq.py`; `ui-pengadaan.py` disesuaikan (lima sub-tab).
+
+### Catatan
+- Kunci modal detail RFQ sengaja `pcy` agar tidak menimpa modal revisi anggaran `pcr` milik PC1.
+
+## [1.1.225] — 2026-10-14
+
+### Ditambah
+- `pengadaan.js`: koleksi `procurement_methods` dan `project_boq_items` (di `NEWK`). `vPc()` kini `subT` dengan kunci `S.pcv` (proyek, rab, vendor, metode; rute `/proyek/rab` dst. lewat `RT_SUB`). Catatan: kunci `S.pt` sudah dipakai portal nasabah sehingga tidak dipakai.
+- Metode pemilihan: `pcSeedM()` (3 contoh, otomatis saat `setMod('pc',true)` dan tombol `seedMethods`), `saveMethod`, `togMethod`, modal `pcm`; proyek menyimpan `method_id` (form dan rincian proyek).
+- RAB: `saveBoq`, `delBoq`, modal `pcb`; `pcBoqAmt = round(qty × price)`; `vRab` (ringkasan total RAB, anggaran, selisih; per pos), terkunci selain Draf/Berjalan; tombol "Buka RAB" di rincian proyek. `pcHapus` ikut menghapus item RAB.
+- Vendor: `vVendor` memakai `parties` jenis `pemasok` (tambah/ubah lewat modal `py`).
+- Izin: GUARD `pc.proyek` untuk `saveMethod togMethod seedMethods saveBoq delBoq`; KPERM `pcm`, `pcb`; `fabCfg`/`fabGo` kontekstual per sub-tab. Audit: entitas `procurement_method`, `project_boq`.
+- Tes: `logic-202.js` (39 langkah), `ui-pengadaan.py`.
+
+## [1.1.224] — 2026-10-14
+
+### Diubah
+- Satu halaman: templat multi-berkas `index.html` diganti nama `index.src.html`; `node build.js` kini menulis `index.html` (mandiri) dan tidak lagi membuat `bumdes.html` (dihapus). `build.js --check` memeriksa `index.html` sinkron dan tanpa `<script src>`/`<link rel="stylesheet">` luar.
+- `sw.js`: `ASSETS` hanya `./`, `index.html`, `manifest.json`, dan ikon (skrip/gaya tidak lagi berkas terpisah).
+- Tes dan alat (128 berkas: suite, run, gen-*, ui-*, CI): rujukan `bumdes.html` menjadi `index.html`; `check-css` dan `check-pwa` membaca `index.src.html`. Skrip rilis: daftar Git memuat `index.src.html`; pemeriksaan skrip membaca templat.
+- README/SUMMARY/tests README disesuaikan (struktur berkas, hosting, alur pengembangan).
+
+## [1.1.223] — 2026-10-14
+
+### Diperbaiki
+- Halaman kosong di semua tab (v1.1.221–222): daftar berkas zip Git (`/tmp/g.txt`, alat rilis) tidak memuat `proyek.js` sehingga `vPc` tidak terdefinisi dan `render()` (peta tab di closing.js) melempar ReferenceError. Skrip rilis kini menambah semua skrip `index.html` dan aset `sw.js` ke daftar Git dan menggagalkan paket bila ada yang tertinggal.
+- closing.js: peta tab memakai rujukan malas untuk `pc` (`typeof vPc==="function"`); bila berkas hilang, tab lain tetap tampil dan tab Proyek menampilkan pesan.
+- Tes: `ui-proyek.py` menambah uji ketahanan tanpa `proyek.js`.
+
+## [1.1.222] — 2026-10-14
+
+### Diubah
+- `UNIT_T`/`UNIT_M`/`UNIT_H`, `unitType()`, `modNm()` (views.js): jenis unit `simpan_pinjam`, `air`, `dagang`, `proyek`, `lainnya`; jenis tak dikenal menjadi `lainnya`. `saveUnit`, modal `u`, dan rincian unit memakai peta yang sama. `migr()` mengubah unit DAG "Perdagangan" berjenis `lainnya` menjadi `dagang`; data baru memakai `dagang`.
+- `unitStat()`: ringkasan aktivitas per jenis (pinjaman aktif, sambungan, penjualan posted, proyek tidak batal, transaksi) pada baris daftar unit, bersama status modul terkait.
+- `unitIssues()`/`unitFix()`: kartu "Kecocokan unit dan modul" (unit berjenis air/proyek tetapi modul nonaktif, modul aktif tanpa unit cocok, lebih dari satu unit Pamsimas aktif) dengan tombol `setMod`/`mdOpen('u')`.
+- Form Proyek (`MD.pcp`): pilihan "Pilih unit usaha…" kosong bawaan; ikut filter unit bila spesifik; unit nonaktif disembunyikan kecuali sudah dipakai proyek itu.
+- Tes: `logic-201.js` (18 langkah), `ui-unit.py`; `ui-proyek.py` disesuaikan.
+
+## [1.1.221] — 2026-10-14
+
+### Ditambah
+- Modul opsional `pc` ("Proyek dan Pengadaan"): `MODS`, tab `pc` (TABS, grup Operasional, `TP`, `ROUTES` rute `proyek`, ikon, `fabCfg`), izin `pc.proyek` (GUARD `savePc pcStatus pcHapus pcLineSave pcLineDel pcRevSave`, `KPERM` pcp/pcl/pcr/pcs; Bendahara bawaan), info modul di `modInfo`.
+- `proyek.js`: koleksi `projects` dan `project_budget_lines` (didaftarkan di `NEWK`), `vPc`/`pcList` (kartu ringkas, pencarian, filter status, keadaan kosong), modal `pcp` (data), `pcd` (detail), `pcl` (pos Draf), `pcr` (revisi), `pcs` (status). Status `PJ_T`; kode `PRJ-tahun-nnn`; `pcSum`/`pcLines` per revisi; revisi menyalin seluruh pos ke Rev n+1 dengan id baru dan mencatat `revs` (alasan, perubahan).
+- Aturan: Draf → Berjalan butuh pos biaya > 0; batal wajib beralasan; selesai/batal terkunci; hapus hanya Draf/Dibatalkan tanpa `transactions.project_id`; anggaran harus tetap punya pos biaya.
+- Audit: entitas `project`, `project_budget`; aksi `project_status`, `project_rev` (AUD_D/AUD_V/AUD_L).
+- Tes: `logic-200.js` (45 langkah), `ui-proyek.py`; `logic-146` dan `logic-154` disesuaikan (modul dan tab baru).
+
+## [1.1.220] — 2026-10-14
+
+### Diubah
+- `tierDet()` (water.js): akordeon rincian blok tarif (0–10, 10–20, di atas 20 atau semua pemakaian) dan riwayat perubahan tarif (5 entri terakhir dari `audit_logs`, entitas `settings/air`) di kartu Tarif standar. (UX-13)
+- Golongan tarif dan Diskon dibungkus `details.tgd.tgs` (tertutup bawaan; `S.tgo` + `tgTog()` mengingat keadaan buka). Denda dan Biaya pasang baru tetap kartu ringkas yang membuka modal. (UX-13/14)
+- `WGR`: grup Harian (baca, loket, adu), Tagihan (samb, piutang), Keuangan (jual, biaya), Data (pel, prod, set). Pelanggan dan Layanan tab sendiri (baris tab ketiga dihapus); kartu angka kunci disembunyikan di tarif, pel, prod. `fabCfg`/`fabGo` mencakup Pelanggan dan Layanan. CSS tab kecil dirapatkan di ≤480 px. (UX-14)
+- Tes: `logic-199.js`, `ui-tarif-ringkas.py`; `logic-33`, `logic-73`, `logic-197`, `ui-pengaturan`, `ui-tabs`, `ui-tab-grup`, `ui-modal`, `ui-tarifair`, dan peta grup `WG` di uji UI Pamsimas disesuaikan.
+
+## [1.1.219] — 2026-10-14
+
+### Ditambah
+- `wEmp()` (water.js): keadaan kosong berikon dengan tombol langkah berikutnya untuk Piutang, Riwayat pembayaran, Loket, Layanan Lain, Biaya, dan Pengaduan; tombol tambah hanya bila punya izin `air.kelola`. (UX-10)
+- Toast dengan tombol Urungkan: `toast(m,er,ud)` (ui.js), `udSet`/`toastUndo` (water.js), `S.ud={fn,ids,m}` terikat pada pesan yang sama sehingga tidak bocor ke toast lain. Dipakai pada tagihan dari baris (`bmSave`, `batalJual`), `terima`, dan `loketBayar` (`batalTerima`). `hlSet`/`hlc` menyorot baris yang baru berubah 4 detik (`.upr.hl`). (UX-11)
+- Kartu angka kunci memakai istilah Piutang (sama dengan tab). Tanggal di daftar sudah seragam lewat `tglView` (tidak diubah). (UX-12)
+- Tes: `logic-198.js`, `ui-urungkan.py`; `logic-140`, `logic-195`, `ui-pamsimas-kpi` disesuaikan.
+
+## [1.1.218] — 2026-10-14
+
+### Diubah
+- `WGR` (water.js): tab Pamsimas dua tingkat. Baris atas empat grup (`harian`, `tagihan`, `keu`, `data`; lencana tunggakan di Tagihan), baris kedua tab kerja grup aktif; nilai `S.at` tidak berubah sehingga rute dan tes lama tetap berlaku. (UX-7)
+- `fabCfg`/`fabGo` (layout.js): tombol melayang Pamsimas kontekstual (Isi meter memfokus isian angka, Bayar memfokus pencarian Loket, lainnya membuka modal tambah); tersembunyi di Piutang dan Pengaturan atau tanpa izin `air.kelola`. `.fabsp` memberi jarak bawah halaman. (UX-8)
+- Modal piutang `MD.wb` dan panel Loket: tombol Rincian sambungan membuka modal `wd` (filter, pencarian, dan posisi halaman tetap). (UX-9)
+- Tes: `logic-197.js`, `ui-tab-grup.py`; `logic-33`, `logic-73`, `ui-pengaturan`, `ui-modal`, `ui-tabs`, `ui-layanan` disesuaikan; helper `wt()` di sembilan uji UI untuk berpindah grup.
+
+## [1.1.217] — 2026-10-14
+
+### Ditambah
+- Baca Meter: baris sambungan belum ditagih berisi isian `#bm_<id>` (`inputmode="decimal"`), pratinjau `bmPrev` dan tombol Tagih; `bmKey` (Enter) dan `bmSave(id)` menerbitkan lewat `bilChk`/`bilPrep`/`bilPost` lalu memfokuskan baris berikutnya. Tanggal tagihan `#bm-d` (`S.wdd`) di kartu Periode. (UX-4)
+- Filter chip `.wch/.wc` (`S.wf`: belum, sudah, cek, semua) dan filter rute `S.wr`; `bmCek()` menandai tagihan taksiran, pemakaian 0, atau lonjakan; lencana "Perlu cek". Daftar dimuat bertahap (`pgLim("bmr")`). (UX-5)
+- `bmSpike()`: pemakaian >3× rata-rata `estUse` memberi peringatan di pratinjau (baris dan modal); di baris perlu penekanan kedua untuk menyimpan (`S.bmw`). Angka lebih kecil dari angka awal tetap ditolak. (UX-6)
+### Diubah
+- Select "Filter status tagihan" diganti chip; tes `ui-detailair`, `ui-lanjut`, `ui-penyempurnaan`, `ui-air`, `logic-141` disesuaikan.
+- Tes: `logic-196.js`, `ui-baca-cepat.py`.
+
+## [1.1.216] — 2026-10-14
+
+### Ditambah
+- `airKpi()` (water.js): baris kartu `g dk` di atas tab Pamsimas (kecuali Pengaturan): pelanggan aktif, tagihan periode (`S.bp` atau bulan ini), terkumpul, tunggakan, dan air tak berekening (dari `lossData()` bila ada bacaan meter induk); tiap kartu tombol ke tab terkait. Disembunyikan saat cetak. (UX-1)
+- Baca Meter: batang progres kedua "terbayar dari tagihan" (`.wpg2`). (UX-2)
+### Diubah
+- Kartu Periode: `.wpr` (bulan pemakaian dan tombol daftar kerja satu baris) dan `details.wpd` untuk keterangan. (UX-3)
+- Tes: `logic-195.js`, `ui-pamsimas-kpi.py`.
+
+## [1.1.215] — 2026-10-14
+
+### Diubah (performa)
+- `insL(id)` dan `payL(id)` (accounting.js) mengembalikan angsuran dan pembayaran per pinjaman dari indeks `WX` selama `render()` (salinan; di luar render tetap pencarian langsung). Menggantikan `db.loan_installments.filter(i=>i.loan_id===...)` dan `db.loan_payments.filter(p=>p.loan_id===...)` di loans, reports, collection, restruct, flow, modals, share, portal, dan spaudit.
+- Pengukuran (600 pinjaman, 7.200 angsuran, 3.000 transaksi): tab Simpan Pinjam ±250 ms menjadi 15–30 ms; Laporan ±360 ms menjadi ±145 ms.
+- Tes: `logic-194.js`.
+
+## [1.1.214] — 2026-10-14
+
+### Diubah (performa)
+- Indeks sementara `WX` (accounting.js, dibuka dan ditutup oleh `render()` di closing.js; null di luar render) dipakai `cust`, `paidOf`, `piu`, `wRds`, `billOf`, `arrears`, `wConn`, dan `saleOf` (water.js): pencarian O(n) per baris menjadi O(1). Hasil sama dengan pencarian langsung (diuji).
+- `vAir`: urut transaksi hanya pada tab Layanan Lain dan Piutang; riwayat pembayaran hanya dihitung di tab Piutang; isi tab Layanan Lain, Piutang, Pelanggan, dan Layanan dibangun lewat getter (hanya tab terbuka).
+- Pengukuran (800 pelanggan, 9.600 tagihan, 9.000 pembayaran): render Baca Meter ±5.300 ms menjadi ±20 ms; tab lain ±1.500–3.000 ms menjadi 13–90 ms.
+- Tes: `logic-193.js`.
+
+## [1.1.213] — 2026-10-14
+
+### Diubah
+- Form inline Pamsimas dipindah ke modal (`MD.jl`, `by`, `rv`, `sr`, `sb`, `ad`, `tf` di modals.js; kunci di `MK`, izin `air.kelola` di `KPERM`). ID isian dan fungsi simpan tidak berubah; fungsi simpan memanggil `okM()` saat berhasil dan modal tetap terbuka bila ada galat. Cart Layanan Lain tampil di dalam modal. `tarifForm()` dipisah dari `vTarif`; halaman Tarif menampilkan ringkasan, simulasi tetap inline.
+- Tes: `logic-192.js`; `logic-19/21/140/141/177/178` dan `ui-air/biaya/layanan/meter/nav/pengaturan/putus` disesuaikan.
+
+## [1.1.212] — 2026-10-14
+
+### Diubah
+- Panel lonceng ringkas: tiap notifikasi satu tombol baris (`.beli`, judul `.belt` dan tautan aksi), keterangan menjadi `title`.
+- `belItems` ditambah: pengajuan menunggu persetujuan (`submitted`), pinjaman disetujui belum dicairkan (`approved`), tagihan taksiran menunggu koreksi, dan sambungan aktif belum dibaca periode berjalan (mulai tanggal 20); mengikuti filter unit dan modul aktif.
+- Tes: `logic-191.js` diperluas.
+
+## [1.1.211] — 2026-10-14
+
+### Diubah
+- `vDash` tidak lagi menampilkan blok Perlu perhatian (daftar peringatan, tombol Tampilkan semua, dan pesan aman); semuanya ada di lonceng header (`belItems`). `alertsAll()` tetap dipakai lonceng dan titik lencana navigasi.
+- Tes: `logic-31/126/183` dan `ui-dash` disesuaikan (periksa lonceng).
+
+## [1.1.210] — 2026-10-14
+
+### Ditambah
+- Lonceng notifikasi di header (`#bel`, `belChip`, `belItems`, `belTog` di layout.js): gabungan `alertsAll()`, pengingat backup (`bkDue`), dan angsuran jatuh tempo 7 hari; lencana merah bila ada peringatan berat (`er`). Panel tertutup lewat klik luar, Escape, atau aksi; disembunyikan saat cetak. Mengikuti filter unit dan izin tab.
+- Tes: `logic-191.js`, `ui-lonceng.py`.
+
+## [1.1.209] — 2026-10-14
+
+### Diubah
+- `vMod` (saklar modul Pamsimas dan Gaji) dipindah dari Setelan > Modul ke Master > Unit Usaha (di bawah Daftar Unit Usaha); sub-tab Modul dan rute `/setelan/modul` dihapus. `setMod` dan `db.settings.modules` tidak berubah.
+- Tes: `logic-34/104/111/146`, `ui-modul`, `ui-route`, `ui-nav` disesuaikan.
+
+## [1.1.208] — 2026-10-14
+
+### Diubah (penyelarasan Pamsimas)
+- Jenis unit `air` (label Pamsimas) ditambah di form unit dan `saveUnit`; seed unit bawaan `AIR` bernama Pamsimas bertipe `air`.
+- `migr()`: unit berkode AIR, bernama Sumber Air, bertipe lainnya di-rename menjadi Pamsimas bertipe `air`. Unit lain tidak disentuh.
+- Setelan > Modul: kartu Pamsimas menampilkan unit pencatat (`modAirUnit`) dan saran bila jenisnya belum Pamsimas.
+- Tes: `logic-190.js`; `logic-11`, `logic-14`, `ui-nav`, `ui-sp0` disesuaikan dengan nama Pamsimas.
+
+## [1.1.207] — 2026-10-14
+
+### Ditambah (ROADMAP 1.0e tahap V: DK-1, DK-2)
+- Sambungan memiliki isian opsional `rute` dan `urut` (form sambungan, saran rute dari rute yang ada); kosong = ikut alamat pelanggan (`rtOf`). Disimpan di objek sambungan (kolom `doc` jsonb), tanpa perubahan SQL.
+- **Daftar kerja baca meter (DK-1):** `vDk` (water.js; dokumen `dk` di `vDoc`), dibuka dari tombol di Baca Meter: lembar A4 per rute (`.dkp`) berisi No, nomor meter, nama, alamat, angka bulan lalu, kolom kosong angka bulan ini dan keterangan, serta tanda tangan petugas; pilihan rute dan isi (hanya belum ditagih atau semua sambungan aktif); pengaturan tidak ikut tercetak. Urutan baris mengikuti `urut` lalu nomor meter.
+- **Petugas per rute (DK-2):** `db.settings.air_rute` (disinkronkan bersama setelan) diatur lewat `rtSet` (izin `air.kelola`, tercatat di audit); nama petugas tampil di lembar dan di kepala kelompok Baca Meter ("Kelompok per rute/alamat", urutan mengikuti `urut`) bersama kemajuan "n dari m ditagih".
+- Tes: `logic-189.js`, `ui-daftarkerja.py` (termasuk PDF A4: satu halaman per rute).
+
+## [1.1.206] — 2026-10-14
+
+### Ditambah (ROADMAP 1.0e tahap U: TM-1, TM-2)
+- **Cetak tagihan massal (TM-1):** `vTagihM` (share.js; dokumen `tagihm` di `vDoc`) memuat seluruh nota tagihan satu periode (`tgBills`, unit terpilih, urut nomor meter numerik atau alamat) dengan satu nota per halaman A4 (`.tgp`, aturan cetak di style.css). Nota memakai `tagihBody` (dipisah dari `vTagih`). Dibuka dari tombol *Cetak & kirim tagihan* di Baca Meter.
+- **WhatsApp (TM-2):** `tgText`, `tgWa`, `tgCopy` (izin `air.kelola`): teks tagihan (meter, pemakaian, total, sudah dibayar, sisa, jatuh tempo) lewat tautan wa.me atau salin; tanpa pengiriman otomatis, tercatat di audit. Tombol per pelanggan di halaman periode dan tombol *Kirim tagihan WhatsApp* di modal tagihan. Pelanggan tanpa nomor ditandai.
+- Daftar kirim di halaman periode tidak ikut tercetak (`noprint`). Tidak ada perubahan skema SQL.
+- Tes: `logic-188.js`, `ui-tagihm.py` (termasuk PDF A4: halaman = jumlah nota).
+
+## [1.1.205] — 2026-10-14
+
+### Ditambah (ROADMAP 1.0e tahap T: LK-1)
+- Sub-tab **Loket** di Pamsimas (`vLoket`, water.js; rute `loket`, `S.lkp/lks/lkr/lkd`): pencarian pelanggan (nama, telepon, alamat, nomor meter; tanpa pencarian = tunggakan terbesar), daftar tagihan belum lunas pelanggan terpilih dengan kotak centang (Pilih semua, Kosongkan), ringkasan tagihan, denda, dan total, tanggal bayar dan kas/bank.
+- `loketBayar()` (izin `air.kelola`, konfirmasi `askC`): melunasi tagihan terpilih sekaligus; satu pembayaran dan satu jurnal per tagihan (denda keterlambatan otomatis lewat `lateFine` atau dibebaskan dengan centang); validasi tanggal dan periode tutup sebelum memposting apa pun. Kuitansi per pembayaran dibuka dari kartu Pembayaran tercatat. Pembayaran sebagian tetap lewat Piutang. Tidak ada perubahan skema SQL.
+- Tes: `logic-187.js`, `ui-loket.py`.
+
+## [1.1.204] — 2026-10-14
+
+### Ditambah (ROADMAP 1.0e tahap S: MR-1, MR-2)
+- **Taksiran meter rusak (MR-1):** kotak centang *Meter rusak / tidak terbaca* di modal tagihan (`wd-e`, `wdEst`, `wdEstOn`) mengisi pemakaian taksiran `estUse` (rata-rata 3 bacaan asli terakhir, bisa diubah). `bilPrep(...,est)` menghasilkan tagihan dengan `bill.est=1`; bacaan diberi `est:1` dan `curr=prev` (angka meter tidak maju). Bacaan taksiran tidak masuk rata-rata. Nota, catatan tagihan, riwayat, dan konfirmasi menyebut taksiran.
+- **Koreksi (MR-2):** `estPend` mendaftar tagihan taksiran yang belum dikoreksi. Tagihan bacaan asli berikutnya menagih `max(0, kumulatif − taksiran)` m³; bila kumulatif lebih kecil dari taksiran, selisih dikreditkan pada harga rata-rata taksiran (baris `Koreksi taksiran`, `bill.adj={from,est,phys,credit}`); kredit yang melebihi tagihan ditolak dengan arahan. Tagihan taksiran ditandai `est_adj`.
+- Ganti meter menutup taksiran yang menunggu (`est_adj="G"+id`, dikembalikan saat ganti meter dibatalkan); membatalkan tagihan koreksi mengembalikan taksiran ke status menunggu. Tidak ada perubahan skema SQL (kolom jsonb).
+- Tes: `logic-186.js`, `ui-taksiran.py`.
+
+## [1.1.203] — 2026-10-14
+
+### Ditambah (ROADMAP 1.0e tahap R: GM-1 sampai GM-3)
+- Modal **Ganti meter** (`MD.gm`, modals.js; `S.egm`): dibuka dari modal detail sambungan (tombol di Kelola sambungan). Menampilkan nomor meter lama, angka akhir terakhir, dan bacaan terakhir; isian nomor meter baru, angka awal, tanggal, dan alasan (`GM_ALASAN`, disimpan di bacaan jenis "ganti" sebagai `reason`). Peringatan bila periode berjalan belum ditagih (tautan ke modal tagihan). Konfirmasi lewat `askC('gantiMeter')` (closing.js) dengan validasi yang sama.
+- Riwayat ganti meter per sambungan di modal (tombol batal untuk penggantian terbaru) dan di tab Sambungan (kini memuat alasan).
+- Kartu isian "Ganti Meter" di tab Sambungan dihapus. `gantiMeter()` memakai sambungan modal bila modal terbuka. Tidak ada perubahan skema SQL.
+- Tes: `logic-185.js`, `ui-gantimeter.py`; `logic-141` disesuaikan.
+
+## [1.1.202] — 2026-10-14
+
+### Diubah (permintaan pengguna: lewati halaman login saat buka pertama)
+- `entNeed` (entry.js): bila `entLocalOk()` (belum pernah masuk akun) dan URL bukan `#masuk`/`#portal`, perangkat otomatis ditandai `{lokal:1,seen:1}` dan halaman masuk dilewati. Setelah itu perilaku sama dengan memilih tombol *Lanjut tanpa masuk*. Tautan `#masuk` dan `#portal` tetap membuka halaman masuk (nasabah). Pernah masuk lalu keluar: halaman masuk wajib seperti semula.
+- Tes: `logic-184`, `logic-97` dan `ui-masuk` disesuaikan.
+
+## [1.1.201] — 2026-10-14
+
+### Diubah (permintaan pengguna: buka lokal dulu, login hanya untuk sinkronisasi)
+- `entLocalOk` (entry.js) tidak lagi mensyaratkan perangkat berisi data: tombol *Lanjut tanpa masuk (data lokal)* (`#ln-lokal`, cloud.js) tampil di perangkat mana pun yang belum pernah masuk akun (`seen`, email). Setelah pernah masuk akun tombol hilang. Perangkat baru yang masih berisi data contoh tetap dianggap kosong (`entBlank`), sehingga masuk kemudian memuat data dari awan; bila data sudah diubah, sinkronisasi manual lewat Data > Backup.
+- Teks penjelasan dan pesan setelah memilih lokal diperbarui. Alur nasabah (nomor HP + PIN) dan sesi yang ada tidak berubah.
+- Tes: `logic-184.js`; `logic-97` dan `ui-masuk` disesuaikan.
+
+## [1.1.200] — 2026-10-14
+
+### Ditambah (PY-5, PY-6; tahap Q — rencana Payroll lanjutan dan kualitas selesai)
+- Dashboard: `onbSteps`, `vOnb`, `onbHide` (views.js; izin `master.kelola`, setelan `onb_hide`): enam langkah awal tercentang otomatis dari data; kartu hilang bila semua selesai atau disembunyikan; hanya untuk pengguna yang boleh membuka Master.
+- CI: `.github/workflows/ci.yml` menjalankan `node build.js --check` pada tiap push/pull request, serta `node tests/suite.js cepat` (Playwright + poppler) bila `tests/suite.js` ada. Catatan: `tests/` dan `data/` ada di `.gitignore` (dipakai lokal), jadi di Git yang berjalan hanya pemeriksaan sinkron build; hapus dua baris itu dari `.gitignore` bila suite ingin dijalankan di CI.
+- Data uji: uji logika dan UI sudah dibekukan pada tanggal tetap (`run.js` 2026-09-30, `pg.clock.set_fixed_time` di uji UI), jadi tidak bergantung tanggal nyata; yang tidak bergantung pada tanggal tetap itu hanyalah data demo (bertanggal 2026-09) — mengubah tanggal beku memunculkan beberapa kegagalan (logic-10, 16, 24, 31) yang dicatat di ROADMAP sebagai pemeliharaan uji.
+- Tes: `logic-183.js`, `ui-onboarding.py`.
+
+## [1.1.199] — 2026-10-14
+
+### Ditambah (PY-3, PY-4; tahap P)
+- `CALC.per_satuan` ("Tarif per satuan (jam/hari)"): komponen menyimpan `unit` (≤ 12 huruf, bawaan jam) dan `value` sebagai tarif bawaan; form komponen memuat kolom *Satuan* (`pk-s`, `pkCalc` menampilkan/menyembunyikan). Tarif per pegawai memakai `components[].amount` lewat `kChecklist`/`kRead`/`posPick` (label Rp / satuan). `ecAmt` = 0 untuk komponen ini sehingga tidak masuk gaji tetap dan `payGen` tidak membuat barisnya.
+- `psTarif`, `psForm`, `piQty` (izin `gaji.kelola`): form *Tambah per satuan* di rincian gaji Draf; baris `{name:"Lembur (2,5 jam × Rp 20.000)", base:"Lembur", qty, unit, rate, amount}`; tarif pegawai didahulukan dari tarif master, tarif 0 ditolak, jumlah 0 atau > 1.000 ditolak, gaji bersih negatif ditolak. Daftar komponen manual (`pi-c`) tidak memuat komponen per satuan.
+- Laporan gaji per komponen mengelompokkan lewat `base` bila ada.
+- Tes: `logic-182.js`, `ui-satuan.py`.
+
+## [1.1.198] — 2026-10-14
+
+### Ditambah (PY-1, PY-2; tahap O)
+- Pegawai: `nik` (16 digit, unik), `bank`, `acc_no` (5–25 digit), `acc_name` (kosong = nama pegawai) pada `saveEmp` dan form `pg`; daftar menampilkan bank •• empat digit akhir dan NIK disamarkan (`nikMask`). Tabel relasional `employees` tidak berubah (kolom `data` jsonb menampung semuanya).
+- Gaji > *Transfer* (`trfPer`, `trfData`, `trfCsv`, `trfDl`, `vTransfer`; rute `/gaji/transfer`): daftar transfer per periode, peringatan pegawai tanpa rekening, cetak A4, CSV. Slip gaji memuat baris *Rekening* bila ada.
+- Roadmap: bagian 1.0d (Payroll lanjutan dan kualitas, tahap O sampai Q).
+- Tes: `logic-181.js`, `ui-transfer.py`.
+
+## [1.1.197] — 2026-10-13
+
+### Ditambah (PM-7, PM-8, PM-9; tahap N — Pamsimas selesai)
+- `calonPutus`, `vPutus` (water.js): kartu *Calon Putus* di tab Piutang; pelanggan aktif dengan jumlah tagihan belum lunas ≥ `cut_months` (0 = mati); tombol SP1, SP2, dan Putus (`askC('togConn')`).
+- Surat peringatan: `spwData`, `vSpw`, `spwSave`; dokumen `spw` (A4) berisi tunggakan per tagihan dan batas waktu (SP1 7 hari, SP2 3 hari, `SP_DAYS`); *Catat terkirim* menyimpan ke `db.settings.air_sp` (nomor `SPn-tahun-nnn`) dan audit.
+- Pengaduan: tab *Pengaduan* (`vAdu`, `adSave`, `adSt`, `adDel`), `db.settings.air_comp`, status Baru/Ditangani/Selesai, filter status; rute `/pamsimas/pengaduan`. Tanpa jurnal.
+- Perbaikan nama: fungsi baru memakai `spwData`/`vPutus` karena `spData` (reports.js) dan `vCalon` (calon.js) sudah dipakai.
+- Tes: `logic-180.js`, `ui-putus.py`; `ui-tabs` dan `ui-pengaturan` disesuaikan (tujuh tab).
+
+## [1.1.196] — 2026-10-13
+
+### Ditambah (PM-6; tahap M)
+- Laporan > *Ringkasan Desa* (`airDesaData`, `vAirDesa`, `airDesaCsv` di reports.js; rute `/laporan/ringkasan-desa`): sambungan (aktif/putus/KK), pemakaian per golongan dan per alamat, tingkat penagihan per bulan (terbit vs terbayar), umur tunggakan (0, 1–30, 31–60, 61–90, >90 hari), biaya per m³, kehilangan air. Judul bagian tercetak lewat `rcd` (`h4.rnh`); kartu biaya dan kehilangan air di Laporan Pamsimas ikut berjudul saat cetak.
+- Tes: `logic-179.js`, `ui-desa.py` (termasuk PDF A4 ≤ 2 halaman).
+
+## [1.1.195] — 2026-10-13
+
+### Ditambah (PM-5; tahap L)
+- Meter induk/sumber: `srcSave`, `srcDel`, `lossSet`, `lossData`, `lossCard`, `vSrc` (water.js), disimpan di `db.settings.air_src` (tanpa jurnal) dan batas di `db.settings.air_loss` (bawaan 20%). Ditampilkan di tab *Biaya* (bagian *Meter Induk*).
+- Persen kehilangan per bulan = (produksi − m³ ditagih pada periode yang sama) ÷ produksi; bulan di atas batas ditandai; kartu *Kehilangan air (meter induk)* di Laporan Pamsimas.
+- Tes: `logic-178.js`, `ui-meter.py`; `ui-biaya` tetap.
+
+## [1.1.194] — 2026-10-13
+
+### Ditambah (PM-3, PM-4; tahap K)
+- Tab *Biaya* di Pamsimas (`vBiaya`, `biayaSave`): catat biaya (listrik pompa, bahan kimia, perawatan pipa, honor operator, BBM, lain) sebagai transaksi `out` pada unit Pamsimas; daftar biaya membuka modal transaksi (bisa dibatalkan). Rute `/pamsimas/biaya`.
+- Akun beban 5410, 5420, 5430 lewat `ensureAirAcc` (juga dipanggil di `reset()`, dan sebelum menyimpan biaya).
+- `biayaData()`: biaya per bulan/jenis dari jurnal, m³ dan pendapatan dari tagihan terbit; kartu *Biaya operasional dan kecukupan tarif* di Laporan Pamsimas (biaya/m³, tarif rata-rata/m³, penanda defisit).
+- Dana pemeliharaan (`db.settings.air_rsv.pct`, `biayaRsv`): hanya saran di laporan, tanpa jurnal pencadangan.
+- Tes: `logic-177.js`, `ui-biaya.py`.
+
+## [1.1.193] — 2026-10-13
+
+### Diubah (PM-1, PM-2; tahap J)
+- Semua label *Unit Air* menjadi *Pamsimas* (menu `TABS`, `MODS`, header, laporan `LAPORAN PAMSIMAS`, setelan modul, izin `air.kelola`, pesan). Nama internal `air`, kunci data, dan akun tidak berubah.
+- Rute: `/pamsimas` (alamat lama `/unit-air` dan `/laporan/unit-air` tetap diterima lewat alias di `rtParse`); sub-tab `layanan-lain` dan `layanan` (alias `penjualan-lain`, `produk`). `vercel.json` dan `index.html` memuat kedua slug.
+- `water.js`: tab *Penjualan Lain* → *Layanan Lain* (form *Catat layanan*, pelanggan wajib, tanpa opsi Umum, tombol *Simpan layanan*), sub-tab *Produk* → *Layanan* (*Layanan & Biaya Lain*), nota menjadi *BUKTI PEMBAYARAN LAYANAN* (kolom Pelanggan/Petugas), pesan dan jurnal memakai kata *Layanan*; penjualan lama tanpa pelanggan tampil *Tanpa pelanggan*. Laporan Pamsimas: *Pendapatan*, *Per layanan*, *Transaksi*.
+### Ditambah
+- `layananDef()` (tombol *Tambah layanan bawaan*): Sambung kembali, Ganti meter, Balik nama, Perbaikan sambungan (akun 4200, tarif 0 dengan penanda *Tarif belum diisi*); izin `air.kelola`.
+- Uji: `ui-layanan.py` (baru); `logic-6/17/21/22/26/27/33/34/139/140/171` dan `ui-air/nav/pengaturan/modal/pwa/route/cetak-pdf/struk` disesuaikan.
+
+## [1.1.192] — 2026-10-10
+
+### Diubah
+- `modals.js` dan `water.js`: tombol struk diberi nama berbeda (*Struk tagihan*, *Struk kuitansi*, *Struk nota*) agar tidak tampil dua tombol *Cetak struk* di modal yang sama. `ui-struk.py` disesuaikan.
+
+## [1.1.191] — 2026-10-10
+
+### Diubah
+- `style.css`: saat dicetak, sel tabel dalam `.sc` (laporan dan daftar) boleh turun baris (`overflow-wrap:break-word`; kolom angka tetap satu baris). Memperbaiki tabel *Kepatuhan pemisahan tugas* di Laporan Simpan Pinjam yang melebar sampai 895 px dan terpotong di kanan halaman A4.
+### Ditambah
+- `tests/ui-cetak-pdf.py` (masuk `suite.js cepat`): membuat PDF asli (Chromium, media cetak) untuk Buku Besar, Neraca Saldo, enam laporan, kartu pinjaman, akad, rekap dan buku tabungan, slip gaji, laporan gaji, dua dokumen portal, dan enam bukti dalam A4/80/58 mm (34 PDF); memeriksa ukuran kertas, elemen tidak melewati batas kanan, tidak ada halaman kosong, jumlah halaman, nomor halaman, isi kunci, tanpa teks `undefined`/`NaN`.
+- Hasil audit: tidak ada halaman kosong atau tabel terpotong selain tabel di atas; halaman akad dan laporan panjang terpecah wajar.
+
+## [1.1.190] — 2026-10-10
+
+### Ditambah
+- `layout.js`: `PAPERS`, `paperDef` (bawaan per perangkat, `localStorage bumdes_paper`), `paperCur` (`S.ppr` sementara), `strukP`, `dcl(st)` (kelas `doc st s80|s58`), `docBar(st)` (Cetak/Cetak struk, pilihan ukuran, Kembali), `docPaper`, `setPaper`, `pgStruk` (menyetel `@page struk` dengan lebar 80/58 mm dan tinggi sesuai isi) dan `cetakDoc`. Setelan > Dokumen Cetak: pilihan *Ukuran kertas bukti di perangkat ini*.
+- `savings.js`: dokumen `ks` (`vBuktiSav`, nomor `BS-tahun-nomor`) untuk setoran dan penarikan tabungan; tombol *Struk* pada mutasi di modal rekening. Setoran tabungan kini mencatat `officer` (`byN()`).
+- `style.css`: blok struk (`.doc.st`, `.s80`, `.s58`, tabel item bertumpuk, nilai turun ke baris bawah di 58 mm, `@page struk` tanpa margin dan tanpa nomor halaman).
+- Tombol *Cetak struk* di modal pembayaran, tagihan, nota (`modals.js`, `kwBtn`) dan *Struk* pada riwayat angsuran (`loans.js`). `openDoc/docOpen` menerima ukuran awal.
+### Diubah
+- Dokumen kuitansi air, nota, nota tagihan, kwitansi angsuran, dan bukti pencairan memakai `docBar` dan `dcl`; tampilan A4 tidak berubah.
+- Uji: `logic-176.js`, `ui-struk.py` (baru; PDF 80/58 mm diperiksa: satu halaman, lebar kertas, isi, petugas; A4 tetap A4).
+
+## [1.1.189] — 2026-10-10
+
+### Ditambah
+- `views.js`: `bktNo(id)` (nomor bukti `BKT-tahun-nomor`), `ledPrint(D)` (tabel cetak Buku Besar: `colgroup`, saldo awal, jumlah mutasi, saldo akhir, baris batal dicoret), tabel cetak Neraca Saldo di `vTb` (Kode, Nama akun, Tipe, Debit, Kredit, jumlah, status seimbang) dengan `repHead` dan `repEnd`.
+- `ledCsv`: kolom *No. Bukti*. `modals.js` `MD.td`: baris *No. bukti*.
+- `style.css`: aturan cetak `.lgp/.lgt` (tabel 9pt, judul kolom berulang, baris tidak terpotong, `tfoot` tidak berulang).
+### Diubah
+- Kartu KPI, daftar kartu Buku Besar, dan kartu Neraca Saldo diberi `noprint`; layar tidak berubah.
+- Uji: `logic-175.js`, `ui-bukubesar.py` (baru; PDF diperiksa `pdftotext`: judul kolom berulang, semua baris, saldo, tanda tangan; juga Neraca Saldo); `logic-138` dan `logic-139` disesuaikan.
+
+## [1.1.188] — 2026-10-10
+
+### Ditambah
+- `layout.js`: `offId/offName` (pengguna login, lalu petugas perangkat di `localStorage bumdes_officer`), `bendName` (Profil `treasurer`, lalu pegawai aktif berjabatan *bendahara*), `petugas(rec)` (`rec.officer` → `offName()` → `bendName()`), `byN()` (`{officer}` untuk disimpan), `ptgR(rec)` (baris tabel Petugas), `setOfficer(v)` (audit `setting officer`); `tres()` kini `bendName()`.
+- Pencatatan `officer` pada `db.payments` (terima), `db.sales` (jual dan `bilPost`), `db.loan_payments`, `db.savings_tx` (setor lewat `savings.js:72`, tarik). Nama field `officer` dipilih karena `by` sudah dipakai di `savings_tx` pencairan (rincian biaya).
+- Setelan > Dokumen Cetak: pilihan *Petugas di perangkat ini*. Profil BUMDes: `datalist` pegawai untuk Direktur dan Bendahara (teks bebas tetap diterima).
+### Diubah
+- Kuitansi air, nota penjualan, kwitansi angsuran: tanda tangan kedua = Petugas (`petugas(rec)`) dan baris Petugas; nota tagihan: baris Petugas; slip gaji dan akhir laporan: Bendahara lewat `tres()`; akhir laporan: "oleh nama" tanpa syarat RBAC aktif; kartu pinjaman, buku dan rekap tabungan: `petugas()`.
+- Data lama tanpa `officer`: memakai rantai nama (tanpa galat).
+- Uji: `logic-174.js`, `ui-petugas.py` (baru; PDF cetak diperiksa dengan `pdftotext`); `logic-22` disesuaikan.
+
 ## [1.1.187] — 2026-10-10
 
 ### Diubah (struktur berkas, tanpa perubahan fungsi)
@@ -398,7 +1550,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar.
 ### Ditambah
 - Profil: pengguna yang login (mode pengguna lokal) dapat mengubah data sendiri lewat kartu **Ubah data saya** (`saveProf`, users.js): nama, telepon, alamat. Berlaku untuk semua peran, termasuk peran hanya-lihat, karena hanya menyentuh akun sendiri (tidak termasuk `GUARD`). Peran, unit tugas, status, dan PIN tidak berubah dari sini. Pegawai yang tertaut (`employee_id`) ikut diperbarui. Validasi: nama wajib (maks 60, unik tanpa peka huruf), telepon 6–20 karakter angka, alamat maks 200. Tercatat di jejak audit (`user_ubah`, "oleh pemilik akun"); tanpa perubahan tidak mencatat apa pun. Baris Telepon dan Alamat tampil di Identitas.
 - Simpan Pinjam (SP-U): **dialog per aksi** Setujui, Cairkan, Bayar angsuran, dan Lunasi (modal `ls`, `lc`, `lw`, `lz`, modals.js). Kartu global Tanggal/Kas-Bank/Jumlah di rincian pinjaman dihapus. Nilai bawaan terisi, galat tampil per kolom, Batal kembali ke rincian, sukses kembali ke rincian. ID kolom (`sp-date`, `sp-cash`, `sp-mode`, `sp-amt`, `sp-hint`, `cr-hint`, `sp-pay`) dipertahankan sehingga fungsi aksi tidak berubah.
-- Data contoh `data/bumdes-data-pihak-pegawai.json` (21 pihak, 8 pegawai, 8 pengguna dengan peran, PIN 246813, tanpa transaksi), pembuatnya `tests/gen-pihak-pegawai.js`, dan panduan `data/setup.md`.
+- Data contoh `data/bumdes-data-pihak-pegawai.json` (21 pihak, 8 pegawai, 8 pengguna dengan peran, PIN 123456, tanpa transaksi), pembuatnya `tests/gen-pihak-pegawai.js`, dan panduan `data/setup.md`.
 
 ### Diperbaiki
 - Uji usang: `ui-a11y.py` (tombol Reset data demo), `ui-cal.py` (geser 6px akibat header menciut), `ui-p0.py` (teks "closed" menjadi "Ditutup").
