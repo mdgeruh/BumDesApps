@@ -1,0 +1,44 @@
+// Membuat index.html (satu file mandiri, yang di-host) dari index.src.html + style.css + skrip yang dimuat index.src.html.
+//   node build.js          -> tulis index.html dan sql/00_semua.sql
+//   node build.js --check  -> gagal (exit 1) bila index.html tidak sinkron, versi tidak cocok, cache sw.js kurang berkas, atau catatan rilis tertinggal
+// Urutan skrip = urutan <script src> di index.src.html (urutan penting: berkas berbagi lingkup global).
+// Sejak v1.1.224 hanya ada satu halaman: index.html (hasil rakitan, mandiri). index.src.html hanya templat sumber untuk pengembangan.
+const fs=require('fs'),path=require('path');
+const D=__dirname,rd=f=>fs.readFileSync(path.join(D,f),'utf8');
+const html=rd('index.src.html');
+const css=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)">/g)].map(m=>m[1]);
+const js=[...html.matchAll(/<script src="([^"]+)"><\/script>/g)].map(m=>m[1]);
+if(!css.length||!js.length){console.error('index.src.html: tidak ada stylesheet/skrip');process.exit(1)}
+let out=html;
+for(const f of css)out=out.replace(`<link rel="stylesheet" href="${f}">`,()=>`<style>\n${rd(f)}</style>`);
+js.forEach((f,i)=>{out=out.replace(`<script src="${f}"></script>\n`,()=>i===js.length-1?`<script>\n${js.map(rd).join('')}</script>`:'')});
+// versi: package.json "1.1.1" -> "1.1.001" harus sama dengan APP_VER di config.js
+const pk=JSON.parse(rd('package.json')).version.split('.'),VER=pk[0]+'.'+pk[1]+'.'+String(pk[2]).padStart(3,'0');
+out=out.replace(/(<meta name="description" content=")Sistem BUMDes Multi-Unit Usaha/,'$1Sistem Bumdes Multi Unit V'+VER);
+out=out.replace(/<title>[^<]*<\/title>/,()=>'<title>Sistem Bumdes Multi Unit V'+VER+'</title>');
+const APPN='Sistem Bumdes Multi Unit V'+VER,mfp=path.join(D,'manifest.json'),mfo=(()=>{const m=JSON.parse(rd('manifest.json'));m.name=APPN;m.short_name='BUMDes';return JSON.stringify(m,null,1)+'\n'})();
+// sql/00_semua.sql = gabungan berkas SQL terpisah menurut urutan pasang (sekali tempel untuk proyek baru)
+const SQLP=['01_inti','02_akuntansi','03_pegawai','04_tabungan','05_penjualan','06_nasabah','07_pengguna','08_proyek','09_perdagangan'];
+const sqlAll=()=>{const bar='-- '+'='.repeat(76);return[bar,'-- Sistem BUMDes · Supabase · SEMUA SEKALIGUS (proyek baru)','-- '+'-'.repeat(76),
+ '-- Gabungan otomatis dari '+SQLP.length+' berkas di bawah, urutan pasang sudah benar. JANGAN diedit di sini:','-- ubah berkas bagiannya, lalu jalankan: node build.js',
+ '-- Cara pakai: Supabase > SQL Editor > New query > tempel SELURUH berkas ini > Run. Idempoten (aman diulang).',
+ '-- Bagian: '+SQLP.map((f,i)=>(i+1)+'='+f.replace(/^\d+_/,'')).join(', '),
+ '-- Setelah selesai: buka aplikasi > layar masuk > Siapkan BUMDes (pendaftar pertama otomatis admin).',bar,''].join('\n')
+ +SQLP.map((f,i)=>'\n\n-- >>>>> BAGIAN '+(i+1)+'/'+SQLP.length+': sql/'+f+'.sql '+'>'.repeat(40)+'\n\n'+rd('sql/'+f+'.sql').replace(/\s+$/,'')+'\n').join('')};
+const sqlOut=sqlAll(),sqlTarget=path.join(D,'sql/00_semua.sql');
+const target=path.join(D,'index.html');
+if(process.argv.includes('--check')){
+ let bad=0;const e=m=>{console.error(m);bad++};
+ const cur=fs.existsSync(target)?fs.readFileSync(target,'utf8'):'';
+ if(cur!==out)e('index.html tidak sinkron dengan file sumber — jalankan: node build.js');
+ const sc=fs.existsSync(sqlTarget)?fs.readFileSync(sqlTarget,'utf8'):'';if(sc!==sqlOut)e('sql/00_semua.sql tidak sinkron dengan berkas SQL bagiannya — jalankan: node build.js');
+ if(!rd('config.js').includes('APP_VER="'+VER+'"'))e('APP_VER di config.js tidak sama dengan package.json ('+VER+')');
+ if(rd('manifest.json')!==mfo)e('manifest.json: name/short_name harus mengikuti versi — jalankan: node build.js');
+ if(/<script src=|<link rel="stylesheet"/.test(cur))e('index.html masih merujuk skrip/gaya luar; harus mandiri');
+ const sw=rd('sw.js');for(const f of ['index.html','manifest.json'])if(!sw.includes('"./'+f+'"'))e('sw.js: berkas belum masuk daftar cache: '+f);
+ const rl=rd('releases.js'),first=(rl.match(/\{v:"([^"]+)"/)||[])[1];if(first!==VER)e('releases.js: entri paling atas ('+first+') harus '+VER);
+ if(!rd('docs/release_notes.md').split('\n')[0].includes('v'+VER))e('docs/release_notes.md: judul harus menyebut v'+VER);
+ if(!rd('docs/CHANGELOG.md').includes('## ['+VER+']'))e('docs/CHANGELOG.md: belum ada entri ['+VER+']');
+ if(bad)process.exit(1);
+ console.log('OK: index.html sinkron ('+out.length+' byte), versi '+VER+', cache sw.js lengkap, catatan rilis sinkron');
+}else{fs.writeFileSync(mfp,mfo);fs.writeFileSync(sqlTarget,sqlOut);fs.writeFileSync(target,out);console.log('index.html dirakit ('+out.length+' byte, '+js.length+' skrip + '+css.length+' gaya)')}
