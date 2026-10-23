@@ -2,6 +2,11 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.373] — 2026-10-21
+
+### Diubah
+- Gaji tahap GJ2 dan GJ3: isian memakai fld(), teks dipersingkat, keadaan kosong baru, banner rekening Transfer, judul ganda dihapus, pengingat gaji belum dibuat, pintasan Riwayat gaji dari Pegawai.
+
 ## [1.1.372] — 2026-10-21
 
 ### Diubah
