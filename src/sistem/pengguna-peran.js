@@ -121,7 +121,7 @@ function vProf(){const w=profWho();
 function gate(){const el=$("#lock");if(!el)return false;if(!rbacOn()){el.className="";el.innerHTML="";return false}
  const u=curUser();if(u&&!u.must_change){el.className="";el.innerHTML="";return false}lockRender(el,u);return true}
 const PW=(id,ac)=>`<input id="${id}" type="password" inputmode="numeric" maxlength="8" autocomplete="${ac}">`;
-function lockRender(el,u){unitHome();["#main","#sb","#bn","#sheet","#usr"].forEach(x=>{const n=$(x);if(n)n.innerHTML=""});const nm=bnm();document.title=APPNM+" · "+nm+" · Masuk";
+function lockRender(el,u){unitHome();["#main","#sb","#bn","#sheet","#usr"].forEach(x=>{const n=$(x);if(n)n.innerHTML=""});const nm=bnm();document.title=nm;
  let h;
  const cov=`<section class="mk-cv" aria-label="Tentang"><div class="mk-br"><span class="pt-logo" aria-hidden="true">${ic("user")}</span><div><div class="mk-n">${esc(nm)}</div><div class="mk-s">${APPNM}</div></div></div><h2 class="mk-h">Catat, pantau, dan laporkan usaha desa</h2><ul class="mk-ft"><li>Akses sesuai peran dan unit tugas</li><li>Setiap perubahan tercatat di audit log</li><li>Data tersimpan di perangkat ini</li></ul>${LG_ART}</section>`;
  if(u)h=cov+`<div role="main" class="mk-fm"><div class="card mk-card">${mkH("lock","Buat PIN baru")}<p class="k">Halo, ${esc(u.name)}. PIN Anda masih sementara — buat PIN baru untuk melanjutkan.</p><label>PIN sementara</label>${PW("cp-o","current-password")}<label>PIN baru (4–8 angka)</label>${PW("cp-n","new-password")}<label>Ulangi PIN baru</label>${PW("cp-r","new-password")}<button class="b" onclick="chgPin()">Simpan PIN baru</button><button class="b s" onclick="doLogout()">Keluar</button></div></div>`;
