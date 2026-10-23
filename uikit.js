@@ -45,6 +45,19 @@ function uiSelUI(p){const c=p.c,el=p.el,os=[...c.options],big=os.length>12;el.se
 // kalender
 function uiDateUI(p){const c=p.c,mo=c.type==="month",v=c.value,now=(typeof today==="function"?today():new Date().toISOString().slice(0,10)),base=/^\d{4}-\d{2}/.test(v)?v:now;p.y=+base.slice(0,4);p.m=+base.slice(5,7)-1;p.sel=v;p.now=now;p.mo=mo;uiDateDraw(p)}
 function uiInR(c,s){return!(c.min&&s<c.min.slice(0,s.length))&&!(c.max&&s>c.max.slice(0,s.length))}
+// ketik tanggal manual: 21/10/2026, 21-10-2026, 21102026, 211026, 21/10, 21, 2026-10-21 (bulan: 10/2026, 102026, 2026-10)
+function uiParse(s,mo,now){s=String(s||"").trim();if(!s)return null;const Y=+now.slice(0,4),M=+now.slice(5,7);let y,m,d,x;
+ if(mo){if(x=/^(\d{4})-(\d{1,2})$/.exec(s)){y=+x[1];m=+x[2]}else if(x=/^(\d{1,2})[\/.\-\s]?(\d{4}|\d{2})$/.exec(s)){m=+x[1];y=+x[2];if(y<100)y+=2000}else return null;return m>=1&&m<=12?y+"-"+uiP2(m):null}
+ if(x=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s)){y=+x[1];m=+x[2];d=+x[3]}
+ else if(x=/^(\d{1,2})[\/.\-\s](\d{1,2})[\/.\-\s](\d{4}|\d{2})$/.exec(s)){d=+x[1];m=+x[2];y=+x[3];if(y<100)y+=2000}
+ else if(x=/^(\d{1,2})[\/.\-\s](\d{1,2})$/.exec(s)){d=+x[1];m=+x[2];y=Y}
+ else if(x=/^(\d{2})(\d{2})(\d{4})$/.exec(s)){d=+x[1];m=+x[2];y=+x[3]}
+ else if(x=/^(\d{2})(\d{2})(\d{2})$/.exec(s)){d=+x[1];m=+x[2];y=2000+ +x[3]}
+ else if(x=/^(\d{1,2})$/.exec(s)){d=+x[1];m=M;y=Y}
+ else return null;
+ const o=new Date(Date.UTC(y,m-1,d));return y>=1900&&o.getUTCFullYear()===y&&o.getUTCMonth()===m-1&&o.getUTCDate()===d?y+"-"+uiP2(m)+"-"+uiP2(d):null}
+function uiApply(p){const x=p.el.querySelector(".utx"),er=p.el.querySelector(".uer");if(!x)return;const v=uiParse(x.value,p.mo,p.now),bad=m=>{if(er){er.textContent=m;er.hidden=false}x.setAttribute("aria-invalid","true");x.focus()};
+ if(!v){bad(p.mo?"Bulan tidak valid atau format tidak dikenali. Contoh: 10/2026":"Tanggal tidak valid atau format tidak dikenali. Contoh: 21/10/2026");return}if(!uiInR(p.c,v)){bad("Di luar batas yang diizinkan");return}uiClose();uiSet(p.c,v)}
 function uiDateDraw(p,focus){const c=p.c,el=p.el,mo=p.mo;el.setAttribute("role","dialog");el.setAttribute("aria-label",mo?"Pilih bulan":"Pilih tanggal");
  const hd=(t)=>`<div class="uhd"><button type="button" class="un" data-n="-1" aria-label="${mo?"Tahun":"Bulan"} sebelumnya"><svg class="uc" viewBox="0 0 24 24" width="18" height="18"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><b aria-live="polite">${t}</b><button type="button" class="un" data-n="1" aria-label="${mo?"Tahun":"Bulan"} berikutnya"><svg class="uc" viewBox="0 0 24 24" width="18" height="18"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`;
  let body;
@@ -52,11 +65,12 @@ function uiDateDraw(p,focus){const c=p.c,el=p.el,mo=p.mo;el.setAttribute("role",
  else{const f=(new Date(p.y,p.m,1).getDay()+6)%7,n=new Date(p.y,p.m+1,0).getDate();let g=UI_HR.map(h=>`<span class="uw">${h}</span>`).join("");for(let i=0;i<f;i++)g+="<span></span>";
   for(let d=1;d<=n;d++){const s=p.y+"-"+uiP2(p.m+1)+"-"+uiP2(d);g+=`<button type="button" class="ud${s===p.sel?" on":""}" data-v="${s}"${uiInR(c,s)?"":" disabled"}${s===p.now?' aria-current="date"':""} aria-label="${d} ${UI_BLN[p.m]} ${p.y}">${d}</button>`}body='<div class="udg">'+g+"</div>"}
  const inT=uiInR(c,mo?p.now.slice(0,7):p.now);
- el.innerHTML=hd(mo?p.y:UI_BLN[p.m]+" "+p.y)+body+`<div class="uft"><button type="button" class="b s" data-a="today"${inT?"":" disabled"}>${mo?"Bulan ini":"Hari ini"}</button>${c.value?'<button type="button" class="b s" data-a="clear">Hapus</button>':""}<button type="button" class="b s" data-a="close">Tutup</button></div>`;
+ el.innerHTML=`<div class="uti"><input type="text" class="utx" inputmode="numeric" autocomplete="off" placeholder="${mo?"Ketik: 10/2026":"Ketik: 21/10/2026"}" aria-label="${mo?"Ketik bulan":"Ketik tanggal"}"><button type="button" class="b s" data-a="typed">OK</button></div><p class="uer" role="alert" hidden></p>`+hd(mo?p.y:UI_BLN[p.m]+" "+p.y)+body+`<div class="uft"><button type="button" class="b s" data-a="today"${inT?"":" disabled"}>${mo?"Bulan ini":"Hari ini"}</button>${c.value?'<button type="button" class="b s" data-a="clear">Hapus</button>':""}<button type="button" class="b s" data-a="close">Tutup</button></div>`;
  el.onclick=e=>{const t=e.target.closest("button");if(!t||t.disabled)return;
   if(t.dataset.n){const n=+t.dataset.n;if(mo)p.y+=n;else{p.m+=n;if(p.m<0){p.m=11;p.y--}if(p.m>11){p.m=0;p.y++}}uiDateDraw(p);const x=el.querySelector(".un[data-n='"+n+"']");if(x)x.focus();return}
   if(t.dataset.v){uiClose();uiSet(c,t.dataset.v);return}
-  const a=t.dataset.a;if(a==="today"){uiClose();uiSet(c,mo?p.now.slice(0,7):p.now)}else if(a==="clear"){uiClose();uiSet(c,"")}else if(a==="close")uiClose()};
+  const a=t.dataset.a;if(a==="typed"){uiApply(p);return}if(a==="today"){uiClose();uiSet(c,mo?p.now.slice(0,7):p.now)}else if(a==="clear"){uiClose();uiSet(c,"")}else if(a==="close")uiClose()};
+ {const tx=el.querySelector(".utx");if(tx)tx.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();e.stopPropagation();uiApply(p)}}}
  if(focus){const f=el.querySelector('[data-v="'+focus+'"]');if(f)f.focus()}uiPlace(p)}
 function uiKey(e){const p=UIP;if(!p)return;const k=e.key,t=e.target;
  if(k==="Escape"){e.preventDefault();e.stopImmediatePropagation();uiClose();return}
@@ -73,7 +87,8 @@ function uiKey(e){const p=UIP;if(!p)return;const k=e.key,t=e.target;
 if(typeof document!=="undefined"&&document.addEventListener){
  document.addEventListener("keydown",uiKey,true);
  document.addEventListener("focusin",e=>{const t=e.target;if(t&&t.classList&&t.classList.contains("uh")&&t._b&&t.type!=="file"&&t._b.focus)t._b.focus()},true);
- document.addEventListener("keydown",e=>{const t=e.target;if(!UIP&&t&&t.classList&&t.classList.contains("ub")&&t._c&&t._c.type!=="file"&&(e.key==="ArrowDown"||e.key==="ArrowUp")){e.preventDefault();uiOpen(t._c)}},false);
+ document.addEventListener("keydown",e=>{const t=e.target;if(!UIP&&t&&t.classList&&t.classList.contains("dt")&&t._c&&/^[0-9]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!t._c.disabled){e.preventDefault();uiOpen(t._c);const x=UIP&&UIP.el.querySelector(".utx");if(x){x.value=e.key;x.focus()}return}
+  if(!UIP&&t&&t.classList&&t.classList.contains("ub")&&t._c&&t._c.type!=="file"&&(e.key==="ArrowDown"||e.key==="ArrowUp")){e.preventDefault();uiOpen(t._c)}},false);
  if(typeof window!=="undefined"&&window.addEventListener){window.addEventListener("resize",()=>{if(UIP)uiPlace(UIP)});window.addEventListener("scroll",e=>{if(UIP&&!UIP.el.contains(e.target))uiPlace(UIP)},true)}}
 // nilai yang diubah lewat kode (c.value = ...) ikut menyegarkan tombol kustom
 if(typeof HTMLInputElement!=="undefined"){[HTMLInputElement,HTMLSelectElement].forEach(K=>{const d=Object.getOwnPropertyDescriptor(K.prototype,"value");if(!d||!d.set)return;Object.defineProperty(K.prototype,"value",{get:d.get,set(v){d.set.call(this,v);if(this._b)uiSync(this)},configurable:true})});

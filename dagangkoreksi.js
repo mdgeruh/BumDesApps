@@ -9,7 +9,7 @@ const DGK={opname:["Opname","wr"],retjual:["Retur jual","ok"],retbeli:["Retur be
  dgkCashBack=(kind,key,id)=>Math.round((db.stock_moves||[]).filter(m=>m.kind===kind&&m[key]===id&&m.status!=="void"&&m.method==="kas").reduce((a,m)=>a+(m.refund||0),0)),
  dgkSales=()=>dgjAll().filter(s=>s.status==="posted"&&db.sale_items.some(i=>i.sale_id===s._id)).sort((a,b)=>String(b.date).localeCompare(String(a.date))),
  dgkBuys=()=>dgPurch().filter(b=>b.status==="posted").sort((a,b)=>String(b.date).localeCompare(String(a.date))),
- dgkPn=id=>(db.products.find(p=>p._id===id)||{}).name||"-",
+ dgkPn=id=>String(id||"").startsWith("~")?id.slice(1):(db.products.find(p=>p._id===id)||{}).name||"-",
  dgkEnough=(k,a)=>{const sk=net(acc(k.account_id),bal(()=>true));if(sk<a)throw fe("dk-k","Saldo kas/bank tidak cukup (tersedia Rp "+fm(sk)+")")};
 function dgKoreksi(U){if(S.dgse){const s0=dgsGet(S.dgse);if(s0)return dgsView(s0)}const ok2=can("dagang.kelola"),L=dgkMoves(),n=S.lim||30,U2=dgUnits();
  const rows=L.slice(0,n).map(m=>{const K=DGK[m.kind];return`<div class="upr${m.status==="void"?" vd":""}"><span class="upm"><b>${esc(dgkPn(m.product_id))}</b><small>${esc(m.date)} · ${esc(m.note||K[0])} · ${m.qty>0?"+":""}${qf(m.qty)} · ${rp(Math.abs(m.value))}</small></span><span class="upa"><span class="bdg ${m.status==="void"?"ng":K[1]}">${m.status==="void"?"Batal":K[0]}</span>${ok2&&m.status!=="void"?ib("undo","Batalkan","askC('dgkBatal','"+m._id+"')","x"):""}</span></div>`}).join("");
@@ -31,7 +31,7 @@ function dgoSave(){try{negAny();const un=S.edgo,d=$("#do-d").value.trim();if(!mo
 // ----- retur penjualan -----
 MK.dgr="edgr";
 function dgrS(v){S.dgrh=Object.assign({},S.dgrh,{s:v});render()}
-MD.dgr=()=>{const h=S.dgrh=S.dgrh||{},A=dgkSales(),x=A.find(s=>s._id===h.s)||A[0],its=x?db.sale_items.filter(i=>i.sale_id===x._id).filter(i=>i.qty-dgkRet("retjual","sale_id",x._id,i.product_id)>0.0004):[],cr=x&&x.payment_type==="credit";
+MD.dgr=()=>{const h=S.dgrh=S.dgrh||{},A=dgkSales(),x=A.find(s=>s._id===h.s)||A[0],its=x?db.sale_items.filter(i=>i.sale_id===x._id&&i.product_id).filter(i=>i.qty-dgkRet("retjual","sale_id",x._id,i.product_id)>0.0004):[],cr=x&&x.payment_type==="credit";
  if(!A.length)return{t:"Retur penjualan",s:"mdClose()",y:"Tutup",b:"<p>Belum ada penjualan yang bisa diretur.</p>",nf:1};
  return{t:"Retur penjualan",s:"dgrSave()",y:"Catat retur",b:`<p class="k">Barang kembali dari pelanggan. Dijurnal: pendapatan berkurang, kas atau piutang berkurang, dan stok kembali pada HPP penjualan asal.</p>`
  +fld("dr-s","Penjualan",{t:"select",a:' onchange="dgrS(this.value)"',opts:opt(A,s=>[s._id,s.sale_number+" · "+s.date+" · "+dgCustNm(s.party_id)],x._id)})

@@ -18,7 +18,7 @@ out=out.replace(/(<meta name="description" content=")Sistem BUMDes Multi-Unit Us
 out=out.replace(/<title>[^<]*<\/title>/,()=>'<title>Sistem Bumdes Multi Unit V'+VER+'</title>');
 const APPN='Sistem Bumdes Multi Unit V'+VER,mfp=path.join(D,'manifest.json'),mfo=(()=>{const m=JSON.parse(rd('manifest.json'));m.name=APPN;m.short_name='BUMDes';return JSON.stringify(m,null,1)+'\n'})();
 // sql/00_semua.sql = gabungan berkas SQL terpisah menurut urutan pasang (sekali tempel untuk proyek baru)
-const SQLP=['01_inti','02_akuntansi','03_pegawai','04_tabungan','05_penjualan','06_nasabah','07_pengguna','08_proyek'];
+const SQLP=['01_inti','02_akuntansi','03_pegawai','04_tabungan','05_penjualan','06_nasabah','07_pengguna','08_proyek','09_perdagangan'];
 const sqlAll=()=>{const bar='-- '+'='.repeat(76);return[bar,'-- Sistem BUMDes · Supabase · SEMUA SEKALIGUS (proyek baru)','-- '+'-'.repeat(76),
  '-- Gabungan otomatis dari '+SQLP.length+' berkas di bawah, urutan pasang sudah benar. JANGAN diedit di sini:','-- ubah berkas bagiannya, lalu jalankan: node build.js',
  '-- Cara pakai: Supabase > SQL Editor > New query > tempel SELURUH berkas ini > Run. Idempoten (aman diulang).',

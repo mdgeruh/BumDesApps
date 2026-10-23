@@ -4,9 +4,9 @@
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
 header{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:10px 14px;position:sticky;top:env(safe-area-inset-top,0px);z-index:15;background:var(--bg);border-bottom:1px solid var(--bd)}#unit{max-width:46vw}.sbu{padding:2px 8px 10px}.sbu label{display:block;font-size:12px;color:var(--mu);margin:0 0 4px}#sb #unit{width:100%!important;max-width:none}.sub{color:var(--mu);font-size:12px;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60vw}
-h1{font-size:17px;margin:0}h2{font-size:15px;margin:18px 0 8px}
+h1{font-size:17px;margin:0}
 main{padding:0 14px 40px;max-width:900px;margin:auto}
-.card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:10px}
+.card{background:var(--cd);border:1px solid var(--bd);margin-bottom:10px}
 .g{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .k{color:var(--mu);font-size:12px}.v{font-size:19px;font-weight:600}
 .sc{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px}
@@ -121,9 +121,9 @@ details.tr summary{cursor:pointer;color:var(--mu);font-size:12px;min-height:44px
 body{font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
 header{background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(10px);backdrop-filter:saturate(1.4) blur(10px);padding:8px 14px;border-bottom:1px solid var(--ln)}
 h1{font-size:17px;font-weight:650;letter-spacing:-.01em}.sub{font-size:12px}
-h2{font-size:14px;font-weight:650;letter-spacing:-.005em;margin:18px 0 8px}
+h2{letter-spacing:-.005em;margin:18px 0 8px}
 main{padding-top:12px}
-.card{border-radius:var(--r);box-shadow:var(--sh);padding:12px 14px;border-color:var(--ln)}
+.card{border-radius:var(--r);box-shadow:var(--sh);border-color:var(--ln)}
 .k{font-size:12px;letter-spacing:.01em}.v{font-weight:650;letter-spacing:-.01em}
 label{font-size:12px;font-weight:500;margin:10px 0 4px}
 input,select,textarea{padding:8px 10px;border-radius:8px;background:var(--cd);border-color:var(--bd);transition:border-color .15s,box-shadow .15s}
@@ -1099,7 +1099,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border
 /* TL8 (v1.1.336): tombol aksi di kepala halaman */
 @media screen and (min-width:900px){.v2a .b{margin:0}.v2a{align-self:center}}
 /* Data > Backup (v1.1.341): kartu tersusun dalam baris sejajar (grid), tinggi satu baris sama; 2 kolom di layar sedang, 3 kolom di layar lebar */
-@media (min-width:1000px){.bkg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch;margin-bottom:16px}.bkg>.bkc{display:contents}.bkg .card{margin:0;height:100%;box-sizing:border-box}}
+@media (min-width:1000px){.bkg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch;margin-bottom:16px}.bkg>.bkc{display:contents}.bkg .card{margin:0;box-sizing:border-box}.bkg>.bkc>.card,.bkg>.card{height:100%}}
 @media (min-width:1500px){.bkg{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
 .bks{max-width:none}
@@ -1133,3 +1133,49 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border
  .ksg-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}.ksg-b{padding:8px}.ksg-b b{font-size:13px;line-height:1.25}.ksg-b small{font-size:11px}.ksg-a{height:30px;font-size:15px;margin-bottom:4px}
  body:has(.ksg-bar) #toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 }
+/* v1.1.346 Kasir harian (KH1–KH4) */
+.ksg-rs{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:0 0 10px;padding:8px 12px;border:1px solid var(--ln);border-radius:var(--r);background:var(--cd);color:var(--mu);font-size:13px}
+.ksg-rs b{color:var(--tx)}.ksg-rs .b{margin-left:auto}.ksg-rs .b+.b{margin-left:0}
+.ksg-pi{margin:-4px 0 0}
+.ksl .upr.vd{opacity:.55}.ksl .upa{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.ksg-seg4{grid-template-columns:repeat(4,1fr)}.ksg-seg4 button{padding:10px 4px}
+.ksg-c>.fl{grid-template-columns:1fr 1fr}.ksg-c>.fl .b:first-child{grid-column:1/-1}
+/* v1.1.348 Kasir lanjutan (KX1–KX4) */
+.ksg-fv{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px}.ksg-fv>span{color:var(--mu);font-size:13px;margin-right:4px}
+.ksg-lw{color:var(--rd)}.ksg-hk{color:var(--mu);text-align:center}
+@media (max-width:899px){.ksg-hk{display:none}}
+/* v1.1.349 ketik tanggal manual di pemilih tanggal */
+.uti{display:flex;gap:8px;padding:10px 10px 0}.uti .utx{flex:1;min-width:0}.uti .b{margin:0;min-height:40px}
+.uer{margin:4px 10px 0;color:var(--rd);font-size:13px}
+/* v1.1.356 (KL1): daftar barang Kasir berbentuk list (bukan ubin) */
+.ksg-grid{display:flex;flex-direction:column;gap:6px;grid-template-columns:none}
+.ksg-t{flex-direction:column;border-radius:10px}
+.ksg-b{display:grid;grid-template-columns:40px 1fr;column-gap:12px;row-gap:1px;align-items:center;padding:8px 12px;min-height:56px}
+.ksg-b .ksg-a{grid-column:1;grid-row:1/span 4;width:40px;height:40px;margin:0;font-size:15px}
+.ksg-b b,.ksg-b small{grid-column:2;font-size:14px;line-height:1.3}.ksg-b small{font-size:12px}
+.ksg-n{top:50%;transform:translateY(-50%);right:10px}
+@media (min-width:900px){.ksg-b{grid-template-columns:40px 1fr}}
+/* v1.1.357 (KR1): kartu dan modal Riwayat nota */
+.ksg-rs{display:flex;flex-direction:column;gap:8px;align-items:stretch;padding:10px 12px}
+.ksg-rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px}
+.ksg-rk{display:flex;flex-direction:column;gap:1px;padding:6px 10px;border-radius:8px;background:var(--hv)}.ksg-rk small{font-size:11px;color:var(--mu)}.ksg-rk b{font-size:14px;color:var(--tx)}
+.ksg-ra{display:flex;gap:8px;flex-wrap:wrap}.ksg-ra .b{margin:0}
+.ksr{display:flex;flex-direction:column;max-height:86dvh;width:min(560px,100%)}
+.ksr-h{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}.ksr-h h3{margin:0}.ksr-h .k{margin:2px 0 0}.ksr-h input{width:auto;min-height:38px}
+.ksr-f{margin:10px 0;flex-wrap:wrap}.ksr-f small{opacity:.7}
+.ksr-l{overflow:auto;flex:1;min-height:120px;border:1px solid var(--ln);border-radius:var(--r)}
+.ksr-r{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 12px;border-bottom:1px solid var(--ln)}.ksr-r:last-child{border-bottom:0}.ksr-r.vd{opacity:.55}
+.ksr-i{display:flex;flex-direction:column;gap:1px;min-width:0}.ksr-m{font-size:12px;color:var(--mu)}.ksr-t{text-align:right;align-self:center}
+.ksr-a{grid-column:1/-1;display:flex;gap:6px;justify-content:flex-end}
+.ksr-e{padding:16px;text-align:center}
+.ksr-s{display:flex;justify-content:space-between;padding:10px 4px;font-size:14px}
+.ksg-seg.ksr-f{display:flex;flex-wrap:wrap}.ksr-f button{padding:7px 12px}.ksr-f button.on{background:var(--ac);color:var(--on);border-color:var(--ac)}
+.ksg-rg{align-content:start;grid-auto-rows:min-content;grid-template-columns:repeat(auto-fit,minmax(92px,1fr))}.ksg-rk{min-height:0;height:auto;align-self:start}
+.ksg-rs{display:block}.ksg-rs .ksg-rg{margin-bottom:8px}
+.ksg-rs{padding:6px}.ksg-rs>.ksg-rg{display:grid;width:100%;margin:0;padding:4px;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;border-radius:var(--r)}.ksg-rs>.ksg-rg:hover .ksg-rk{background:color-mix(in srgb,var(--ac) 12%,var(--hv))}.ksg-rs>.ksg-ra{margin-top:6px;padding:0 4px 4px}
+/* v1.1.360: banner penyimpanan tipis, lebar sidebar, Master multi-kolom */
+.wn.stl{padding:4px 10px;margin:6px 0;font-size:12.5px;line-height:1.3;gap:4px 8px}.wn.stl .b{min-height:30px;padding:3px 10px;font-size:12.5px}
+#sbr{display:none}
+@media (min-width:900px){#app.sbw:not(.col){--sw:var(--sww,230px)}#sbr{display:block;position:fixed;top:0;bottom:0;left:calc(var(--sw) - 3px);width:7px;cursor:col-resize;z-index:20;touch-action:none}#app.col #sbr{display:none}#sbr:hover,#sbr:focus-visible,#app.drg #sbr{background:color-mix(in srgb,var(--ac) 35%,transparent);outline:0}#app.drg,#app.drg *{transition:none!important;user-select:none}}
+@media (min-width:1100px){.mstw .upl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px;align-items:start}}
+@media (min-width:1700px){.mstw .upl{grid-template-columns:repeat(3,minmax(0,1fr))}}

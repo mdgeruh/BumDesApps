@@ -44,7 +44,7 @@ function remBox(){const L=db.loans.filter(l=>(S.unit==="all"||l.unit_id===S.unit
 // ===== v1.1.186: pengingat tagihan air yang belum dibayar (UA-11): teks untuk WhatsApp, salin, atau bagikan =====
 // Isi: semua piutang pelanggan yang belum lunas pada saat teks dibuat (snapshot). Berisi data keuangan pribadi: kirim hanya ke pelanggan yang bersangkutan.
 MK.ar="ear";
-const arList=pid=>db.sales.filter(x=>x.party_id===pid&&x.status==="posted"&&owedS(x)>0.005).sort((a,b)=>String(a.bill?a.bill.due:a.date).localeCompare(String(b.bill?b.bill.due:b.date)));
+const arList=pid=>db.sales.filter(x=>notDg(x)&&x.party_id===pid&&x.status==="posted"&&owedS(x)>0.005).sort((a,b)=>String(a.bill?a.bill.due:a.date).localeCompare(String(b.bill?b.bill.due:b.date)));
 function arText(pid){const p=db.parties.find(x=>x._id===pid),L=p?arList(pid):[];if(!L.length)return"";const t=today(),T=["*"+bnm()+"*","Pengingat tagihan air","","Yth. Bapak/Ibu "+p.name+",","Kami mengingatkan tagihan berikut belum dibayar:"];let tot=0,fine=0;
  L.forEach(x=>{const o=owedS(x),lf=x.bill?lateFine(x,t,o):null;tot+=o;if(lf>0)fine+=lf;
   if(x.bill){const dl=Math.round((Date.parse(t)-Date.parse(x.bill.due))/864e5);T.push("- Air "+x.bill.period+" ("+x.sale_number+"): Rp "+fm(o)+" · jatuh tempo "+tglS(x.bill.due)+(dl>0?", terlambat "+dl+" hari":""))}

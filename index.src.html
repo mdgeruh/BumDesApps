@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-title" content="BUMDes">
 <link rel="stylesheet" href="style.css"></head><body>
 <a class="skip" href="#main" onclick="event.preventDefault();var m=document.getElementById('main');if(m)m.focus()">Lewati ke konten</a>
-<div id="app"><aside id="sb" aria-label="Menu utama"></aside><button id="cb" type="button" onclick="togSb()"></button><div id="ct"><header><span class="kic t1 hic" id="hic" aria-hidden="true"></span><div><h1 id="ttl"></h1><div class="sub" id="sbt"></div></div><div class="hru"><span class="hdt" id="hdt"></span><select id="unit" aria-label="Filter unit usaha" style="width:auto" onchange="S.unit=this.value;render()"></select><div class="hst" role="group" aria-label="Notifikasi, cloud, dan backup"><span id="gsb"></span><span id="bel"></span><span id="awc"></span><span id="bkc"></span></div><span id="usr"></span></div></header>
+<div id="app"><aside id="sb" aria-label="Menu utama"></aside><button id="cb" type="button" onclick="togSb()"></button><div id="sbr" role="separator" aria-orientation="vertical" aria-label="Ubah lebar menu (seret, atau tombol panah kiri dan kanan)" tabindex="0" title="Seret untuk mengubah lebar menu; klik dua kali untuk mengembalikan"></div><div id="ct"><header><span class="kic t1 hic" id="hic" aria-hidden="true"></span><div><h1 id="ttl"></h1><div class="sub" id="sbt"></div></div><div class="hru"><span class="hdt" id="hdt"></span><select id="unit" aria-label="Filter unit usaha" style="width:auto" onchange="S.unit=this.value;render()"></select><div class="hst" role="group" aria-label="Notifikasi, cloud, dan backup"><span id="gsb"></span><span id="bel"></span><span id="awc"></span><span id="bkc"></span></div><span id="usr"></span></div></header>
 <main id="main" tabindex="-1"></main></div></div>
 <button id="fab" class="fab" title="Transaksi baru" aria-label="Transaksi baru" onclick="fabGo()"></button>
 <nav id="bn" aria-label="Menu utama"></nav><div id="sheet" class="sh" onclick="S.more=0;render()"></div>
@@ -59,11 +59,16 @@
 <script src="pcfin.js"></script>
 <script src="dagang.js"></script>
 <script src="dagangbeli.js"></script>
+<script src="dagangbeli2.js"></script>
+<script src="dagangwh.js"></script>
+<script src="approval.js"></script>
 <script src="dagangjual.js"></script>
 <script src="dagangpiutang.js"></script>
 <script src="dagangkoreksi.js"></script>
 <script src="daganglaporan.js"></script>
+<script src="daganglaporan2.js"></script>
 <script src="dagangimpor.js"></script>
+<script src="dagangimpor2.js"></script>
 <script src="dagangkasir.js"></script>
 <script src="dagangcetak.js"></script>
 <script src="dagangstok2.js"></script>

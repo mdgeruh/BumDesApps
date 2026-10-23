@@ -15,6 +15,9 @@ function dgTutup(U){const un=ksUnit(),h=S.tkh=S.tkh||{},d=h.d||today(),K=db.cash
  const hist=H.length?`<div class="upl">${H.map(c=>`<div class="upr"><span class="upm"><b>${esc(tglS(c.date))} · ${esc((db.cash_accounts.find(x=>x._id===c.cash_id)||{}).name||"-")}</b><small>Seharusnya Rp ${fm(c.expected)} · hitung Rp ${fm(c.counted)} · ${c.diff===0?"pas":(c.diff<0?"kurang Rp "+fm(-c.diff):"lebih Rp "+fm(c.diff))}</small></span><span class="upa">${ib("print","Rekap","openDoc('tk','"+c._id+"')","s")}${ib("x","Batalkan","askC('dgTutupBatal','"+c._id+"')","x")}</span></div>`).join("")}</div>`:`<p class="k">Belum ada penutupan kasir.</p>`;
  const step=S.tks||0;
  return dcard("Tutup kasir harian",unitName(un),`<p class="k">Cocokkan uang di laci dengan catatan penjualan hari itu. Selisih dijurnal ke akun Selisih Kas.</p><div class="fl"><button class="b" onclick="tkStep(1)">Tutup kasir</button></div><h3>Riwayat penutupan</h3>`+hist,"")+(step?tkDlg(step,{un,d,K,kid,D,cnt,df,done}):"")}
+function tkMet(un,d){const B={tunai:[0,0],transfer:[0,0],qris:[0,0],kredit:[0,0]};db.sales.filter(x=>isDgSale(x)&&x.unit_id===un&&x.date===d&&x.status==="posted").forEach(x=>{const m=saleMeth(x);B[m][0]++;B[m][1]+=x.total});
+ const R=m=>B[m][0]?`<div class="upr"><span class="upm"><b>${methL(m)} (${B[m][0]} nota)</b></span><span class="upa"><b>Rp ${fm(B[m][1])}</b></span></div>`:"";const h=R("tunai")+R("transfer")+R("qris")+R("kredit");
+ return h?`<p class="k"><b>Penjualan menurut metode</b></p><div class="upl">${h}</div>${B.transfer[0]+B.qris[0]?`<p class="k">Transfer dan QRIS masuk ke rekening, tidak dihitung sebagai uang di laci.</p>`:""}`:""}
 function tkStep(n){S.tks=n;if(n===1){S.msg="";S.fe=null}if(!n)S.msg="";render()}
 function tkKid(){const h=S.tkh||{};return h.k||S.kk0||(db.cash_accounts.filter(isAct)[0]||{})._id||""}
 function tkPas(){const D=dgTkData(ksUnit(),(S.tkh||{}).d||today(),tkKid());dgTkH("c",String(D.exp))}
@@ -23,7 +26,7 @@ function tkDlg(step,o){const R=(a,v)=>`<div class="upr"><span class="upm"><b>${a
  hd=`<ol class="kss">${["Rekap penjualan","Hitung uang laci","Selesai"].map((l,i)=>`<li class="${i+1<step?"done":i+1===step?"on":""}">${l}</li>`).join("")}</ol>`,
  er=S.msg&&String(S.msg).startsWith("⚠")?`<p class="ksg-er" role="alert">${esc(S.msg)}</p>`:"";let b="";
  if(step===1){b=`<h3>Tutup kasir harian</h3><p class="k">${esc(unitName(o.un))}</p>`+fld("tk-d","Tanggal",{type:"date",value:o.d,a:' onchange="dgTkH(\'d\',this.value)"'})+fld("tk-k","Kas/bank laci",{t:"select",a:' onchange="dgTkH(\'k\',this.value)"',opts:opt(o.K,c=>[c._id,c.name],o.kid)})
-  +`<div class="upl">${R("Penjualan tunai ("+D.notaTunai+" nota)","Rp "+fm(D.tunai))}${R("Piutang diterima","Rp "+fm(D.piutang))}${R("Retur tunai ("+D.nretur+")","Rp "+fm(D.retur))}${R("Kas seharusnya","Rp "+fm(D.exp))}</div><p class="k">Penjualan kredit hari ini: ${D.notaKredit} nota · Rp ${fm(D.jualKredit)} (tidak masuk laci).</p>`
+  +tkMet(o.un,o.d)+`<div class="upl">${R("Penjualan tunai ("+D.notaTunai+" nota)","Rp "+fm(D.tunai))}${R("Piutang diterima","Rp "+fm(D.piutang))}${R("Retur tunai ("+D.nretur+")","Rp "+fm(D.retur))}${R("Kas seharusnya","Rp "+fm(D.exp))}</div><p class="k">Penjualan kredit hari ini: ${D.notaKredit} nota · Rp ${fm(D.jualKredit)} (tidak masuk laci).</p>`
   +(o.done?`<p class="ksg-er">⚠ Kas ini sudah ditutup untuk tanggal tersebut. Batalkan penutupan di Riwayat bila perlu mengulang.</p>`:"")
   +er+`<div class="fl"><button class="b s" onclick="tkStep(0)">Batal</button><button class="b" onclick="tkStep(2)"${o.done?" disabled":""}>Lanjut</button></div>`}
  else if(step===2){b=`<h3>Hitung uang di laci</h3><p class="k">Kas seharusnya</p><p class="ksg-big">${rp(D.exp)}</p>`
