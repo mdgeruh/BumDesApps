@@ -1,0 +1,34 @@
+# Pemeriksaan otomatis tiap dorongan dan permintaan tarik.
+# - Selalu: node scripts/build.js --check (index.html sinkron dengan sumber, versi, cache sw.js, catatan rilis).
+# - Bila folder tests/ ikut diunggah (saat ini di .gitignore): suite cepat (uji logika + UI Playwright).
+name: ci
+on:
+  push:
+  pull_request:
+jobs:
+  build-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Periksa index.html sinkron dengan sumber
+        run: node scripts/build.js --check
+      - name: Ada uji?
+        id: t
+        run: |
+          if [ -f tests/suite.js ]; then echo "ada=1" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-python@v5
+        if: steps.t.outputs.ada == '1'
+        with:
+          python-version: "3.12"
+      - name: Siapkan Playwright dan poppler
+        if: steps.t.outputs.ada == '1'
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
+          sudo apt-get install -y poppler-utils
+      - name: Suite cepat
+        if: steps.t.outputs.ada == '1'
+        run: node tests/suite.js cepat

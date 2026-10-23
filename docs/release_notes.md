@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.187
+# Catatan Rilis — v1.1.369
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,188 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.369 | Penataan struktur berkas (ST1) |
+| 1.1.368 | Nama berkas ekspor dengan pengguna dan jam (EX1) |
+| 1.1.367 | Peringatan modal Kasir lebih jelas (KR3) |
+| 1.1.366 | RBAC Rilis 3: persetujuan transaksi (RB3) |
+| 1.1.365 | Gabung CSS kartu dan judul (TL18) |
+| 1.1.364 | Multi gudang dan transfer stok (PL9) |
+| 1.1.363 | Skala dan integrasi Perdagangan (PL8) |
+| 1.1.362 | Analitik perdagangan (PL7) |
+| 1.1.361 | Pembelian dan utang lanjutan (PL6) (PL6) |
+| 1.1.360 | Render sebagian Kasir, sidebar, banner, Master (KX8) |
+| 1.1.359 | Suite lengkap hijau dan perbaikan Data > Backup (TS1) |
+| 1.1.358 | Kartu Hari ini membuka daftar nota (KR2) |
+| 1.1.357 | Riwayat nota Kasir diperbaiki (KR1) |
+| 1.1.356 | Kasir berbentuk daftar (KL1) |
+| 1.1.355 | PIN penyelia untuk diskon Kasir (KX7) |
+| 1.1.354 | Pelanggan toko terpisah dan periksa harga (PB3) |
+| 1.1.353 | Tagihan Pamsimas dioptimalkan (PB2) |
+| 1.1.352 | Pamsimas bebas Perdagangan (PB1) |
+| 1.1.351 | Perbaikan layar sukses Kasir (KB1) |
+| 1.1.350 | Kasir: barang lain / jasa harga bebas (KX5) |
+| 1.1.349 | Ketik tanggal manual (KT1) |
+| 1.1.348 | Kasir lanjutan: pintasan, sering dibeli, WhatsApp, batas diskon (KX1) |
+| 1.1.347 | Kasir: Transfer, QRIS, dan uang muka (DP) (KP1) |
+| 1.1.346 | Kasir harian: riwayat nota, tahan keranjang, pelanggan (KH1) |
+| 1.1.345 | Isian Kasir bersih (KS3) |
+| 1.1.344 | Tutup kasir bertahap (KS2) |
+| 1.1.343 | Perbaikan Kasir dan peran Kasir (KS1) |
+| 1.1.342 | Lebar penuh semua halaman (TL14) |
+| 1.1.341 | Data > Backup tersusun baris sejajar (TL13) |
+| 1.1.340 | Perbaikan Kasir: nominal cepat dan tombol Bayar (TL12) |
+| 1.1.339 | Data > Backup kolom seimbang (TL11) |
+| 1.1.338 | Setelan, Profil, dan Portal lebih rapi (TL10) |
+| 1.1.337 | Data > Backup tiga kolom dan istilah cloud (TL9) |
+| 1.1.336 | Tata letak desktop: tombol aksi di kepala halaman (TL8) |
+| 1.1.335 | Tata letak desktop: isi rata kiri (TL7) |
+| 1.1.334 | Tata letak desktop: regresi semua halaman (TL6) |
+| 1.1.333 | Tata letak desktop: lebar isian (TL5) |
+| 1.1.332 | Tata letak desktop: judul tidak ganda (TL4) |
+| 1.1.331 | Tab Perdagangan dirapikan (UV2d) |
+| 1.1.330 | Tautan jejak halaman bergaya sendiri (UV2c) |
+| 1.1.329 | Jejak halaman dapat diklik (UV2b) |
+| 1.1.328 | UI v2 tahap 9: regresi tampilan (UV9) |
+| 1.1.327 | UI v2 tahap 8: masuk dan Portal Nasabah (UV8) |
+| 1.1.326 | UI v2 tahap 7: formulir (UV7) |
+| 1.1.325 | UI v2 tahap 6: sidebar dan header (UV6) |
+| 1.1.324 | UI v2 tahap 5: bar filter dan tab (UV5) |
+| 1.1.323 | UI v2 tahap 4: tabel dan daftar (UV4) |
+| 1.1.322 | UI v2 tahap 3: kartu KPI (UV3) |
+| 1.1.321 | UI v2 tahap 2: kepala halaman (UV2) |
+| 1.1.320 | UI v2 tahap 1: fondasi gaya (UV1) |
+| 1.1.319 | Perbaikan latar judul kartu Laporan |
+| 1.1.318 | Tata letak desktop (TL1-TL3) |
+| 1.1.317 | Cetak Perdagangan lengkap (PL5g-PL5i) |
+| 1.1.316 | Kasir sebagai menu sendiri (PL5f) |
+| 1.1.315 | Cetak struk Kasir satu ketukan (PL5e) |
+| 1.1.314 | Halaman khusus kasir (PL5d) |
+| 1.1.313 | Kasir: perbaikan struk dan ponsel (PL5c) |
+| 1.1.312 | Kasir: rapikan elemen ganda (PL5b) |
+| 1.1.311 | Kasir tampilan baru (PL5) |
+| 1.1.310 | Perbaikan impor cadangan |
+| 1.1.309 | Stok lanjutan (PL4) |
+| 1.1.308 | Struk dan kasir harian (PL3) |
+| 1.1.307 | Penjualan lanjutan (PL2) |
+| 1.1.306 | Perdagangan: navigasi dan kenyamanan (PL1) |
+| 1.1.305 | Perbaikan hasil pemeriksaan halaman Perdagangan (PL0) |
+| 1.1.304 | Perdagangan: impor CSV, data contoh toko desa, panduan (PD8) |
+| 1.1.303 | Perdagangan: Ringkasan hidup dan pengingat (PD7) |
+| 1.1.302 | Perdagangan: Laporan Perdagangan (PD6) |
+| 1.1.301 | Perdagangan: stok opname dan retur (PD5) |
+| 1.1.300 | Perdagangan: piutang pelanggan dan kasir cepat (PD4) |
+| 1.1.299 | Perdagangan: penjualan dengan HPP otomatis (PD3) |
+| 1.1.298 | Perbaikan form Pembelian: isian barang dikosongkan |
+| 1.1.297 | Perdagangan: pembelian dan utang usaha (PD2) |
+| 1.1.296 | Perdagangan: produk, stok awal, kartu stok (PD1) |
+| 1.1.295 | Modul Perdagangan: fondasi (PD0) |
+| 1.1.294 | Unit tanpa modul dan hapus unit kosong (DU3) |
+| 1.1.293 | Unit Perdagangan bawaan dihapus |
+| 1.1.292 | Putus dan sambung kembali (PM8) |
+| 1.1.291 | Janji bayar piutang (PM7) |
+| 1.1.290 | Pelanggan: filter, detail, impor CSV (PM4) |
+| 1.1.289 | Umur tunggakan per pelanggan (PM6) |
+| 1.1.288 | Navigasi dan pencarian seragam (PM5) |
+| 1.1.287 | Ringkasan Pamsimas hidup (PM3) |
+| 1.1.286 | Penagihan lebih cepat (PM2) |
+| 1.1.285 | Layanan Lain khusus non-tagihan, aksi tagihan di detail piutang |
+| 1.1.284 | Detail piutang tetap terbuka setelah bayar, Riwayat Bayar tab sendiri |
+| 1.1.283 | Detail piutang dan Loket jadi halaman, piutang per pelanggan |
+| 1.1.282 | Header muat di layar sempit |
+| 1.1.281 | Backup lebih sederhana untuk pengguna akhir |
+| 1.1.280 | Masuk dengan username, tanpa dropdown, layar bercover |
+| 1.1.279 | Tombol Keluar hanya di Profil |
+| 1.1.278 | Hapus kartu Akun saya, avatar header sesuai akun |
+| 1.1.277 | Nama aplikasi dinamis di layar masuk dan deskripsi halaman |
+| 1.1.276 | Nama aplikasi dan versi di berkas backup |
+| 1.1.275 | Setelan Pengguna & Peran: izin per peran |
+| 1.1.274 | Profil: email akun awan hanya untuk Admin Sistem |
+| 1.1.273 | F6: uji regresi tata letak |
+| 1.1.272 | Palet perintah, profil, dan bahasa seragam |
+| 1.1.271 | F6: pemeriksaan lima lebar layar |
+| 1.1.270 | F5: tabel dengan urut, cari, dan kepala menempel |
+| 1.1.269 | Tombol panah di kartu Perlu perhatian |
+| 1.1.268 | Kartu Perlu perhatian bisa diciutkan dan diperluas |
+| 1.1.267 | D10: filter periode kurva Tren |
+| 1.1.266 | Perbaikan teks di kartu Perlu perhatian |
+| 1.1.265 | D9: cache perhitungan Dashboard |
+| 1.1.264 | D7: atur tampilan Dashboard |
+| 1.1.263 | D6: garis tren kas 30 hari |
+| 1.1.262 | D5: kartu Perlu perhatian di Dashboard |
+| 1.1.261 | D4: pemilih periode Dashboard |
+| 1.1.260 | D3: perbandingan kas 30 hari dan laba bulan lalu |
+| 1.1.259 | D2: angka dan bulan di Dashboard bisa ditekan |
+| 1.1.258 | D1: kartu Pamsimas di Dashboard |
+| 1.1.257 | F4: tema, pembaruan, penyimpanan persisten |
+| 1.1.256 | Tab Ringkasan Pamsimas |
+| 1.1.255 | Lencana sub-tab seperti lonceng |
+| 1.1.254 | Gaya sub-tab seperti tab map |
+| 1.1.253 | Tab dan sub-tab Pamsimas lebih jelas |
+| 1.1.252 | Kartu Hari ini dihapus dari Dashboard |
+| 1.1.251 | Detail transaksi menjadi halaman |
+| 1.1.250 | Rapikan kode: berkas besar dipecah |
+| 1.1.249 | Petunjuk awal dan hapus data contoh |
+| 1.1.248 | Mode lapangan Pamsimas |
+| 1.1.247 | Pengingat piutang air bergilir lewat WhatsApp |
+| 1.1.246 | Tanda tangan dan stempel digital pada dokumen cetak |
+| 1.1.245 | Kartu Hari ini di Dashboard |
+| 1.1.244 | Pencarian global |
+| 1.1.243 | Pemeriksaan kesehatan data |
+| 1.1.242 | Salinan otomatis di perangkat dan pengingat backup tegas |
+| 1.1.241 | Simpan data adaptif untuk data besar |
+| 1.1.240 | Detail pelanggan Pamsimas menjadi halaman penuh (bukan modal) |
+| 1.1.239 | Perbaikan: Alur per proyek hanya untuk proyek yang masih berjalan |
+| 1.1.238 | Alur pengadaan: progress bar menggantikan angka langkah |
+| 1.1.237 | RAB proyek lebih cepat diisi dan dibaca |
+| 1.1.236 | Alur pengadaan per proyek: 8 langkah dengan satu tombol Lanjut |
+| 1.1.235 | Perbaikan: Bayar termin dan form Pengadaan tidak lagi galat bila kolom opsional tidak ada |
+| 1.1.234 | RFQ lebih mudah diikuti: penunjuk langkah, panduan, dan tombol aksi utama per tahap |
+| 1.1.233 | Header aplikasi lebih bersih dan modern; tombol dan tautan di header disusun ulang |
+| 1.1.232 | Fase PC tahap AK: laporan pertanggungjawaban per proyek, rekap tahunan, dan checklist dokumen untuk desa (PC7) |
+| 1.1.231 | Fase PC tahap AJ: izin terperinci, pernyataan benturan kepentingan, pemisahan tugas, dan persetujuan berjenjang (PC6) |
+| 1.1.230 | Fase PC tahap AI: anggaran vs realisasi, akun proyek, laporan, Dashboard, dan tabel awan (PC5b) |
+| 1.1.229 | Fase PC tahap AH: jurnal proyek, tagihan dan pembayaran termin, retensi (PC5a) |
+| 1.1.228 | Fase PC tahap AG: serah terima/penerimaan dengan QC, BAST, dan dokumentasi (PC4) |
+| 1.1.227 | Fase PC tahap AF: Kontrak/SPK, termin pembayaran, retensi, dan addendum (PC3) |
+| 1.1.226 | Fase PC tahap AE: RFQ, evaluasi penawaran, dan Purchase Order (PC2b) |
+| 1.1.225 | Fase PC tahap AD: RAB/BoQ, metode pemilihan, dan vendor (PC2a) |
+| 1.1.224 | Satu halaman: index.html menggantikan bumdes.html |
+| 1.1.223 | Perbaikan: halaman kosong bila berkas proyek.js belum terunggah |
+| 1.1.222 | Master Unit Usaha: jenis mengikuti modul dan kecocokan unit-modul |
+| 1.1.221 | Fase PC tahap AC: Proyek dan Kegiatan (PC1) |
+| 1.1.220 | Pamsimas: Tarif ringkas dan Pengaturan dipecah |
+| 1.1.219 | Pamsimas: keadaan kosong, Urungkan, sorot baris |
+| 1.1.218 | Pamsimas: tab berkelompok dan tombol aksi per tab |
+| 1.1.217 | Baca Meter: isi angka langsung di baris |
+| 1.1.216 | Pamsimas: ringkasan angka kunci dan periode ringkas |
+| 1.1.215 | Simpan Pinjam dan laporan lebih cepat |
+| 1.1.214 | Pamsimas jauh lebih cepat untuk data besar |
+| 1.1.213 | Pamsimas: isian lewat modal |
+| 1.1.212 | Lonceng lebih ringkas dan lebih lengkap |
+| 1.1.211 | Peringatan Dashboard pindah ke lonceng |
+| 1.1.210 | Lonceng notifikasi di header |
+| 1.1.209 | Saklar modul pindah ke Master > Unit Usaha |
+| 1.1.208 | Unit usaha dan Modul selaras dengan Pamsimas |
+| 1.1.207 | Pamsimas: daftar kerja baca meter dan petugas per rute |
+| 1.1.206 | Pamsimas: cetak tagihan massal dan WhatsApp |
+| 1.1.205 | Pamsimas: loket pembayaran cepat |
+| 1.1.204 | Pamsimas: meter rusak dan taksiran |
+| 1.1.203 | Pamsimas: ganti meter lewat modal |
+| 1.1.202 | Buka pertama langsung ke aplikasi, tanpa halaman login |
+| 1.1.201 | Buka di perangkat baru dengan data lokal dulu |
+| 1.1.200 | Langkah awal di Dashboard dan pemeriksaan otomatis (CI) |
+| 1.1.199 | Payroll: komponen per jam atau per hari |
+| 1.1.198 | Payroll: rekening pegawai dan daftar transfer gaji |
+| 1.1.197 | Pamsimas: calon putus, surat peringatan, pengaduan |
+| 1.1.196 | Pamsimas: Ringkasan Desa satu halaman |
+| 1.1.195 | Pamsimas: meter induk dan kehilangan air |
+| 1.1.194 | Pamsimas: biaya operasional dan kecukupan tarif |
+| 1.1.193 | Pamsimas: ganti nama dan Layanan & Biaya Lain |
+| 1.1.192 | Perbaikan nama tombol struk |
+| 1.1.191 | Cetak tahap I: audit semua dokumen dan uji cetak otomatis |
+| 1.1.190 | Cetak tahap H: struk thermal 80 mm dan 58 mm |
+| 1.1.189 | Cetak tahap G: Buku Besar dan Neraca Saldo seperti tabel buku |
+| 1.1.188 | Cetak tahap F: nama petugas di dokumen |
 | 1.1.187 | Perapian folder: dokumen dan ikon |
 | 1.1.186 | Unit Air tahap E: penyempurnaan Baca Meter, toast, dan pengingat tunggakan |
 | 1.1.185 | Unit Air tahap D: struktur tab dan satu halaman Tarif |

@@ -3,9 +3,9 @@
 <script id="rt">/* v1.1.098: alamat per halaman. Di http(s), <base> menjaga berkas relatif (skrip, gaya, ikon) tetap terbaca dari /setelan/cloud dst. */
 (function(){try{if(!/^https?:$/.test(location.protocol))return;var R=["dashboard","laporan","transaksi","simpan-pinjam","pamsimas","unit-air","gaji","buku-besar","neraca-saldo","master","data","setelan"],p=location.pathname.split("/"),i=1;for(;i<p.length;i++)if(R.indexOf(p[i])>=0)break;var b=(i<p.length?p.slice(0,i):p.slice(0,-1)).join("/")+"/";window.RT_BASE=b;var e=document.createElement("base");e.href=b;document.head.appendChild(e)}catch(x){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
-<title>Sistem Bumdes Multi Unit V1.1.368</title>
+<title>Sistem Bumdes Multi Unit V1.1.369</title>
 <meta name="theme-color" content="#1f7a52">
-<meta name="description" content="Sistem Bumdes Multi Unit V1.1.368: simpan pinjam, unit air, gaji, dan laporan keuangan. Data tersimpan di perangkat.">
+<meta name="description" content="Sistem Bumdes Multi Unit V1.1.369: simpan pinjam, unit air, gaji, dan laporan keuangan. Data tersimpan di perangkat.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -1210,7 +1210,7 @@ let pwaPrompt=null; // kejadian beforeinstallprompt (lihat js-15-pwa.js)
 // Aman ditaruh di kode karena yang melindungi data adalah login dan RLS. JANGAN isi service_role / sb_secret_ (ditolak aplikasi).
 // Bila SB_URL dan SB_KEY terisi, kolom Koneksi di Data > Backup (bagian Cloud) disembunyikan dan nilai ini yang dipakai.
 const SB_URL="https://smpqygmtivxsdbxuypmx.supabase.co",SB_KEY="sb_publishable_yRNGwSos4JM2wsPqPUtWyA_T9i6EXmp";
-const APP_VER="1.1.368"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
+const APP_VER="1.1.369"; // harus sama dengan package.json (1.1.1 => 1.1.001); dicek node build.js --check
 const APPBASE="Sistem Bumdes Multi Unit",APPNM=APPBASE+" V"+APP_VER; // nama aplikasi (judul tab, layar masuk, sidebar); manifest.json dan <title> dicap oleh build.js
 const KEY="bumdes_db_v1";
 const KEYS="bumdes business_units users roles permissions parties employees accounts cash_accounts transactions journal_entries journal_lines general_ledger accounting_periods loans loan_installments loan_payments collaterals products sales sale_items payments payroll_components payrolls payroll_items salary_payments approvals audit_logs water_connections water_readings".split(" ");
@@ -4265,6 +4265,7 @@ const RELEASES_LAMA=[
 ];
 // ===== CATATAN RILIS (v1.1.003): data untuk modal "?" di Setelan. Tambahkan rilis baru di PALING ATAS; sinkronkan dengan release_notes.md =====
 const RELEASES=[
+ {v:"1.1.369",d:"2026-10-21",t:"Penataan struktur berkas (ST1)",i:["Sumber ditata per modul di src/ dengan nama bermakna","Perakit di scripts/build.js, tes dikelompokkan logic/ui/checks/gen/sql","index.html hasil rakitan identik, tanpa perubahan perilaku"]},
  {v:"1.1.368",d:"2026-10-21",t:"Nama berkas ekspor dengan pengguna dan jam (EX1)",i:["Berkas ekspor diawali nama pengguna dan diakhiri jam-menit"]},
  {v:"1.1.367",d:"2026-10-21",t:"Peringatan modal Kasir lebih jelas (KR3)",i:["Ubin Kasir menampilkan rugi per satuan dan modal rata-rata"]},
  {v:"1.1.366",d:"2026-10-21",t:"RBAC Rilis 3: persetujuan transaksi (RB3)",i:["Antrean persetujuan untuk transaksi manual, jurnal, dan pembatalan di atas ambang","Izin baru Menyetujui transaksi (Direktur), pembuat tidak boleh menyetujui sendiri","Aturan ambang di Setelan > Persetujuan, lonceng dan modal antrean untuk penyetuju"]},
