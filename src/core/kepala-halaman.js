@@ -4,7 +4,7 @@ function pgHead(){
   if(typeof document==="undefined"||!document.querySelector)return;
   const m=document.querySelector("#main");if(!m||!m.insertAdjacentHTML)return;
   const old=m.querySelector(":scope > .v2h");if(old)old.remove();
-  if(S.doc||S.pp||S.kpage||S.wdp||S.bdp||S.lkp||S.tdp)return;
+  if(S.doc||S.pp||S.kpage||S.wdp||S.bdp||S.lkp||S.tdp||(S.pd&&S.tab==="pay"))return;
   const lb=Object.fromEntries(TABS),t=lb[S.tab];if(!t)return;
   const crumb=[];
   crumb.push("Beranda");

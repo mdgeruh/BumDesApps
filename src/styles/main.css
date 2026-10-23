@@ -511,10 +511,9 @@ a.lkx{display:inline-flex;align-items:center;gap:4px;color:var(--ac);font-weight
 /* v1.1.137 — UI-9b Unit Air (Baca Meter, Sambungan, Tarif) */
 @media (min-width:900px){.dc.alf:has(#gm-c){max-width:720px}}
 /* v1.1.138 — UI-10 Gaji: kartu seragam dashboard, daftar gaji dan komponen berbaris */
-.upr.gjr .upm small+small{color:var(--mu);opacity:.85}.dc.alf .gjf{margin-top:12px;padding-top:4px;border-top:1px solid var(--bd)}.dc.alf .gjf label:first-of-type{margin-top:8px}
+.dc.alf .gjf{margin-top:12px;padding-top:4px;border-top:1px solid var(--bd)}.dc.alf .gjf label:first-of-type{margin-top:8px}
 .g.dk.gjk{grid-template-columns:repeat(2,minmax(0,1fr))}.g.dk.gjk>.card{grid-column:auto}@media (min-width:900px){.g.dk.gjk{grid-template-columns:repeat(4,minmax(0,1fr))}}@media (max-width:480px){.g.dk.gjk .v{font-size:18px}}
 .upr.alr .tri{font-size:15px}
-.upr.gjr{flex-wrap:wrap}.upr.gjr .alb.gjb{flex:0 0 100%;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin:0;padding-left:44px;box-sizing:border-box}
 /* v1.1.139 — UI-11a Master (Unit Usaha, Kas & Bank, COA): kartu dan daftar berbaris */
 .upr.mdr .upm{flex:1 1 0;min-width:0}.upr.mdr .upm b{white-space:normal;overflow-wrap:break-word}.upr.mdr .upm small{color:var(--mu);overflow-wrap:anywhere}.upr.mdr .upa{align-items:flex-end;text-align:right;gap:3px}.upr.mdr .upa small{color:var(--mu);font-size:12px}
 .upr.mdr.vd .upm b,.upr.mdr.vd .bi{opacity:.6}
@@ -1191,3 +1190,4 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border
 .pgr .tb,.pgr table{width:100%}
 /* v1.1.370 — filter/pencarian di dalam kartu: tanpa kotak bersarang */
 .dc .fl,.card .fl,.pg .fl,.rpb .fl{background:none;border:0;box-shadow:none;padding:0;border-radius:0}
+.actb .b.dng{color:var(--rd);border-color:color-mix(in srgb,var(--rd) 40%,var(--ln))}.actb .b.dng:hover{border-color:var(--rd)}

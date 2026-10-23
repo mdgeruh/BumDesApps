@@ -1,5 +1,6 @@
 // ===== CATATAN RILIS (v1.1.003): data untuk modal "?" di Setelan. Tambahkan rilis baru di PALING ATAS; sinkronkan dengan release_notes.md =====
 const RELEASES=[
+ {v:"1.1.372",d:"2026-10-21",t:"Gaji: rincian jadi halaman dan daftar ringkas (GJ1)",i:["Baris gaji ringkas (nama, periode, bersih, status); ketuk untuk membuka halaman rincian","Halaman rincian dua kolom dengan aksi sesuai status (Setujui/Hapus, Bayar, Slip/Batalkan pembayaran)","Filter cari, periode, status pada daftar gaji; tanggal dan kas bayar digabung ke Proses massal"]},
  {v:"1.1.371",d:"2026-10-21",t:"Judul tab sesuai nama BUMDes (JT1)",i:["Judul tab browser hanya memuat nama BUMDes"]},
  {v:"1.1.370",d:"2026-10-21",t:"Halaman detail dua kolom (UD1)",i:["Detail piutang, pelanggan Pamsimas, dan transaksi tampil dua kolom di layar lebar","Ikon tombol sesuai fungsi (Simpan janji, Kirim pengingat, Batalkan)","Loket dan semua bilah cari/filter di dalam kartu tanpa kotak bersarang"]},
  {v:"1.1.369",d:"2026-10-21",t:"Penataan struktur berkas (ST1)",i:["Sumber ditata per modul di src/ dengan nama bermakna","Perakit di scripts/build.js, tes dikelompokkan logic/ui/checks/gen/sql","index.html hasil rakitan identik, tanpa perubahan perilaku"]},

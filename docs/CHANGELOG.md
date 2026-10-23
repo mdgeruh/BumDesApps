@@ -2,6 +2,11 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.372] — 2026-10-21
+
+### Diubah
+- Daftar gaji diringkas, rincian gaji menjadi halaman (Esc/Kembali), aksi per status di bilah bawah, filter daftar, pembayaran massal digabung ke kartu Proses massal.
+
 ## [1.1.371] — 2026-10-21
 
 ### Diubah
