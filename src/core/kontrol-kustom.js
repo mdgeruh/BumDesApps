@@ -16,7 +16,7 @@ function uiSync(c){const b=c._b;if(!b)return;let t,ph=false;
  if(c.tagName==="SELECT"){const o=c.options[c.selectedIndex];t=o?o.text:"";ph=!!o&&o.value===""}
  else if(c.type==="file"){t=c.files&&c.files.length?c.files[0].name:"Belum ada berkas";ph=!(c.files&&c.files.length)}
  else{t=uiFmt(c);if(!t){t=c.type==="month"?"Pilih bulan":"Pilih tanggal";ph=true}}
- const s=b.firstChild;if(s.textContent!==t)s.textContent=t;b.classList.toggle("ph",ph);if(b.disabled!==c.disabled)b.disabled=c.disabled;
+ if(c.id==="unit"&&t==="Semua unit"&&typeof innerWidth!=="undefined"&&innerWidth<=480)t="Semua";const s=b.firstChild;if(s.textContent!==t)s.textContent=t;b.classList.toggle("ph",ph);if(b.disabled!==c.disabled)b.disabled=c.disabled;
  const nm=uiName(c),al=(nm?nm+", ":"")+t;if(b.getAttribute("aria-label")!==al)b.setAttribute("aria-label",al)}
 function uiEnh(){if(!document.querySelectorAll)return;
  if(UIP&&!document.body.contains(UIP.b))uiClose(true);

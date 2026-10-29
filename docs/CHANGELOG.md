@@ -2,6 +2,51 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.382] — 2026-10-21
+
+### Diubah
+- Dashboard Tren: pilihan metrik Laba (DB7).
+
+## [1.1.381] — 2026-10-21
+
+### Diubah
+- Dashboard: batas persentase dan Pola dilipat (DB6).
+
+## [1.1.380] — 2026-10-21
+
+### Diubah
+- Dashboard dirapikan: 4 KPI utama, perbandingan hari yang sama, baris Umum (DB1–DB4).
+
+## [1.1.379] — 2026-10-21
+
+### Diubah
+- Pemilih unit kepala halaman tidak lagi terpotong di HP (UX3).
+
+## [1.1.378] — 2026-10-21
+
+### Diubah
+- Calon Putus: aksi pindah ke rincian pelanggan (UX2).
+
+## [1.1.377] — 2026-10-21
+
+### Diubah
+- Judul halaman di HP tidak lagi terpotong (UX1).
+
+## [1.1.376] — 2026-10-21
+
+### Diubah
+- Pesan tidak_berhak dari cloud diperjelas (CL1).
+
+## [1.1.375] — 2026-10-21
+
+### Diubah
+- Bayar semua gaji disetujui kini lewat dialog (GJ5).
+
+## [1.1.374] — 2026-10-21
+
+### Diubah
+- Setor potongan gaji dan Buat gaji periode dipindah ke dialog seperti modul lain; dialog menutup setelah sukses, galat tampil per kolom.
+
 ## [1.1.373] — 2026-10-21
 
 ### Diubah

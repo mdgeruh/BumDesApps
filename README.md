@@ -12,7 +12,16 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Pamsimas, dll.
 
 Panduan Perdagangan: `docs/PANDUAN_PERDAGANGAN.md`.
 
-## Fitur (v1.1.373)
+## Fitur (v1.1.382)
+- **Dashboard: Tren dengan pilihan metrik (DB7) (v1.1.382).**
+- **Dashboard: persentase ekstrem dan Pola dilipat (DB6) (v1.1.381).**
+- **Dashboard: KPI utama dan perbandingan hari yang sama (DB1) (v1.1.380).**
+- **Pemilih unit ringkas di HP (UX3) (v1.1.379).**
+- **Pamsimas: Calon Putus klik baris (UX2) (v1.1.378).**
+- **Kepala halaman HP: judul tidak terpotong (UX1) (v1.1.377).**
+- **Cloud: pesan peran pembaca lebih jelas (CL1) (v1.1.376).**
+- **Gaji: Bayar semua lewat modal (GJ5) (v1.1.375).**
+- **Gaji: setor potongan dan buat gaji lewat modal (GJ4) (v1.1.374).**
 - **Gaji: isian seragam, Transfer dan pengingat (GJ2) (v1.1.373).**
 - **Gaji: rincian jadi halaman dan daftar ringkas (GJ1) (v1.1.372).**
 - **Judul tab sesuai nama BUMDes (JT1) (v1.1.371).**
