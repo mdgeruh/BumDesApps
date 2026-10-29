@@ -1,4 +1,4 @@
-# Catatan Rilis — v1.1.373
+# Catatan Rilis — v1.1.382
 
 **Sistem BUMDes Multi-Unit Usaha** · 4 Oktober 2026 · satu file `bumdes.html`, data di `localStorage` browser.
 
@@ -48,6 +48,15 @@ Skema versi `1.1.NNN` dimulai di v1.1.001 (sebelumnya `0.1.NNN`) bersamaan denga
 ## Riwayat singkat
 | Versi | Isi |
 |---|---|
+| 1.1.382 | Dashboard: Tren dengan pilihan metrik (DB7) |
+| 1.1.381 | Dashboard: persentase ekstrem dan Pola dilipat (DB6) |
+| 1.1.380 | Dashboard: KPI utama dan perbandingan hari yang sama (DB1) |
+| 1.1.379 | Pemilih unit ringkas di HP (UX3) |
+| 1.1.378 | Pamsimas: Calon Putus klik baris (UX2) |
+| 1.1.377 | Kepala halaman HP: judul tidak terpotong (UX1) |
+| 1.1.376 | Cloud: pesan peran pembaca lebih jelas (CL1) |
+| 1.1.375 | Gaji: Bayar semua lewat modal (GJ5) |
+| 1.1.374 | Gaji: setor potongan dan buat gaji lewat modal (GJ4) |
 | 1.1.373 | Gaji: isian seragam, Transfer dan pengingat (GJ2) |
 | 1.1.372 | Gaji: rincian jadi halaman dan daftar ringkas (GJ1) |
 | 1.1.371 | Judul tab sesuai nama BUMDes (JT1) |
