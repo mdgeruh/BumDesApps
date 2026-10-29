@@ -1,278 +1,2328 @@
 // ===== MODAL CRUD (v0.1.032): tambah/edit master data lewat dialog modal =====
 // S.md = jenis modal terbuka; id yang diedit tetap di S.eu/ec/ea/ey/eg/en/ep/epr/ecn/ek/eus (null = baru); S.rp = id untuk reset PIN
-const DLG=["lc","lw","lz","ls"],PGK=["ld","lp","la"];
-const MK={gp:"egp",gb:"egb",gs:"egs",jl:"ejl",by:"eby",rv:"erv",sr:"esr",sb:"esb",ad:"ead",tf:"etf",ps:"ps",lq:"elq",rn:"ern",ld:"eld",cj:"ecj",jd:"ejd",nd:"end",lp:"elp",la:"ela",lr:"elr",lb:"elb",lc:"elc",lw:"elw",lz:"elz",ls:"els",u:"eu",c:"ec",a:"ea",py:"ey",pg:"eg",n:"en",pl:"ep",pr:"epr",cn:"ecn",wd:"ewd",gm:"egm",wb:"ewb",gl:"egl",dn:"edn",pb:"epb",sk:"esk",ds:"eds",pk:"ek",us:"eus",rp:"rp",tn:"etn",jm:"ejm",td:"etd"};
-const addB=(t,k)=>`<div class="fl"><button class="b ad" onclick="mdOpen('${k}','')">${ic("plus")}<span>${t}</span></button></div>`;
-const mdId=()=>S.md?(S[MK[S.md]]||""):"",mdKey=()=>S.md?S.md+"|"+mdId():"";
-function mdOpen(k,id){if(!MK[k])return;if(k==="wd"){wdPage(id);return}if(k==="wb"&&typeof bdPage==="function"){bdPage(id);return}if(k==="td"&&typeof tdPage==="function"){tdPage(id);return}if(PGK.includes(k)){pgOpen(k,id);return}const kp=(k==="lr"||k==="lb"||DLG.includes(k))&&(S.md==="ld"||DLG.includes(S.md)||(S.pp&&S.pp.k==="ld"))?(S.eld||(S.pp&&S.pp.id)):null;for(const x in MK)S[MK[x]]=null;if(kp)S.eld=kp;S[MK[k]]=id||null;S.md=k;if(k==="la"){const e=db.loans.find(x=>x._id===id);S.elp=e&&Array.isArray(e.disb_codes)?e.disb_codes.slice():null;S.elq=e&&e.disb_qty?Object.assign({},e.disb_qty):null}S.mv=null;S.mf="";S.msg="";S.fe=null;
- if(typeof document!=="undefined"&&document.activeElement)cfFrom=tKey(document.activeElement);render()}
-function mdClose(){S.lpp=null;S.lpc=null;S.cjl=null;S.md=null;S.mv=null;S.fe=null;for(const x in MK)S[MK[x]]=null;render()}
-function okM(){S.elp=null;S.elq=null;S.lpp=null;S.lpc=null;S.etn=null;S.md=null;S.mv=null}
-function openM(k,id){S.mt=k==="u"?"unit":k==="c"?"kas":"coa";mdOpen(k,id)}
-function openP(id){S.mt="pihak";mdOpen("py",id)}
-function openG(id){S.mt="peg";mdOpen("pg",id)}
-function openK(id){S.gt="komp";mdOpen("pk",id)}
-function openE(k,id){S.at=k==="ep"?"pel":"prod";mdOpen(k==="ep"?"pl":"pr",id)}
-function openC(id){S.at="samb";mdOpen("cn",id)}
-function editN(id){S.st="nasabah";mdOpen("n",id)}
-function editAjuan(id){mdOpen("la",id)}function tolakAjuan(id){mdOpen("lr",id)}function batalAjuan(id){mdOpen("lb",id)}
-function cancelM(){mdClose()}function cancelE(){mdClose()}function cancelK(){mdClose()}
-const RPA=' inputmode="numeric" autocomplete="off" oninput="fmtR(this)"',EN=(e,a,b)=>e?a:b;
-const MD={
- u:()=>{const e=db.business_units.find(x=>x._id===S.eu);return{t:EN(e,"Edit unit","Unit baru"),s:"saveUnit()",y:EN(e,"Simpan perubahan","Tambah unit"),
-  b:fld("u-c","Kode",{value:e?e.code:nextUnitCode(),hint:e?"":"Otomatis (UNT004, ...); boleh diganti, mis. SP atau AIR."})+fld("u-n","Nama unit",{value:e?e.name:"",req:1})+fld("u-t","Jenis unit",{t:"select",hint:"Simpan Pinjam: dasar pinjaman. Pamsimas: unit tagihan air minum desa (modul Pamsimas). Perdagangan: penjualan barang. Proyek dan Jasa: modul Proyek dan Pengadaan. Lainnya: unit tanpa modul khusus.",opts:opt(Object.keys(UNIT_T).map(k=>[k,UNIT_T[k]]),x=>x,e?unitType(e.type):"lainnya")})}},
- c:()=>{const e=db.cash_accounts.find(x=>x._id===S.ec);return{t:EN(e,"Edit rekening","Rekening baru"),s:"saveCash()",y:EN(e,"Simpan perubahan","Tambah rekening"),
-  b:fld("c-n","Nama rekening",{value:e?e.name:"",req:1})+fld("c-t","Jenis",{t:"select",opts:["kas","bank"].map(t=>`<option${e&&e.type===t?" selected":""}>${t}</option>`).join("")})
-  +fld("c-a","Akun COA"+EN(e," (tidak dapat diubah)",""),{t:"select",a:e?" disabled":"",opts:opt(db.accounts.filter(a=>postable(a)&&isAct(a)&&a.type==="asset"),a=>[a._id,a.code+" "+a.name],e?e.account_id:"")})}},
- a:()=>{const e=acc(S.ea),lk=e&&hasJ(e._id);return{t:EN(e,"Edit akun","Akun baru"),s:"saveAcc()",y:EN(e,"Simpan perubahan","Tambah akun"),
-  b:fld("a-c","Kode"+EN(e," (tidak dapat diubah)"," (4 digit, otomatis menurut tipe)"),{value:e?e.code:nextAccCode("asset"),a:e?" disabled":""})+fld("a-n","Nama akun",{value:e?e.name:"",req:1})
-  +fld("a-t","Tipe"+(lk?" (terkunci: akun sudah dipakai jurnal)":""),{t:"select",a:lk?" disabled":(e?"":' onchange="accTipe(this.value)"'),opts:["asset","liability","equity","revenue","expense"].map(t=>`<option${e&&e.type===t?" selected":""}>${t}</option>`).join("")})}},
- py:()=>{const e=db.parties.find(x=>x._id===S.ey),lk=e&&pRef(e._id);return{t:EN(e,"Edit pihak","Pihak baru"),s:"savePihak()",y:EN(e,"Simpan perubahan","Tambah pihak"),
-  b:fld("py-t","Jenis"+(lk?" (terkunci: sudah dipakai pinjaman/penjualan)":""),{t:"select",a:lk?" disabled":"",opts:opt(Object.keys(PT),k=>[k,PT[k]],e?e.type:"pemasok")})
-  +fld("py-n","Nama",{value:e?e.name:"",req:1})+fld("py-p","Telepon",{type:"tel",value:e?e.phone:""})+fld("py-a","Alamat",{value:e?e.address:""})}},
- pg:()=>{posSync();const e=db.employees.find(x=>x._id===S.eg),us=db.business_units.filter(u=>isAct(u)||(e&&e.unit_id===u._id));return{t:EN(e,"Edit pegawai","Pegawai baru"),s:"saveEmp()",y:EN(e,"Simpan perubahan","Tambah pegawai"),
-  b:(e&&db.payrolls.some(p=>p.employee_id===e._id)?`<div class="lda">${dkb("Riwayat gaji ("+db.payrolls.filter(p=>p.employee_id===e._id).length+")","mdClose();payHist('"+e._id+"')","cash")}</div>`:"")+fld("pg-n","Nama pegawai",{value:e?e.name:"",req:1})+fld("pg-j","Jabatan",{t:"select",a:' onchange="posPick()"',opts:`<option value="">— pilih jabatan —</option>`+opt(posList(),x=>[x,x],e?e.position:"")})+fld("pg-jn","Jabatan baru (isi bila belum ada di daftar)",{value:""})
-  +fld("pg-u","Unit usaha",{t:"select",opts:`<option value="">Umum (semua unit)</option>`+opt(us,u=>[u._id,u.name],e?e.unit_id:"")})
-  +fld("pg-p","Telepon",{type:"tel",value:e?e.phone:""})+fld("pg-a","Alamat",{value:e?e.address:""})+fld("pg-d","Tanggal mulai bekerja",{type:"date",value:e?e.start_date:""})+fld("pg-nik","NIK (16 digit, opsional)",{type:"text",a:' inputmode="numeric" maxlength="16" autocomplete="off"',value:e?e.nik||"":""})+fld("pg-bk","Bank (opsional)",{value:e?e.bank||"":""})+fld("pg-rk","Nomor rekening (opsional)",{type:"text",a:' inputmode="numeric" autocomplete="off"',value:e?e.acc_no||"":""})+fld("pg-an","Atas nama rekening (kosong = nama pegawai)",{value:e?e.acc_name||"":""})
-  +[["g","Gaji pokok (Rp / bulan)","base_salary"],["t","Tunjangan tetap (Rp / bulan)","allowance"],["o","Potongan tetap (Rp / bulan)","deduction"]].map(([k,l,f])=>fld("pg-"+k,l,{type:"text",a:RPA,value:e&&e[f]?fm(e[f]):""})).join("")
-  +kChecklist("pg",e?ecList(e):[])}},
- rn:()=>({t:"Catatan rilis · v"+APP_VER,s:"mdClose()",y:"Tutup",b:vRelease(),nf:1}),
- ld:()=>{const l=db.loans.find(x=>x._id===S.eld);if(!l)return{t:"Pinjaman",s:"mdClose()",y:"Tutup",b:"<p>Pinjaman tidak ditemukan.</p>",nf:1};return{t:l.loan_number+" · "+party(l.party_id).name,s:"mdClose()",y:"Tutup",b:vLoan(l),nf:1}},
- lp:()=>({t:"Pengajuan pinjaman baru",s:"ajukan()",y:"Ajukan",
-  b:fld("l-pty","Nasabah",{t:"select",req:1,a:' onchange="simLive()"',opts:opt(db.parties.filter(p=>p.type==="nasabah"&&p.status!=="nonaktif"),p=>[p._id,p.name],S.lpp),hint:db.parties.some(p=>p.type==="nasabah"&&p.status!=="nonaktif")?"":"Belum ada nasabah aktif: tambahkan di sub-tab Nasabah"})
-  +fld("l-u","Unit usaha",{t:"select",opts:opt(spUnits(),u=>[u._id,u.name])})+fld("l-d","Tanggal pengajuan",{type:"date",value:today(),req:1,a:' onchange="jasaAuto();simLive()"'})
-  +fld("l-p","Pokok (Rp)",{type:"text",value:(()=>{const c=S.lpc&&clAll().find(x=>x._id===S.lpc);return c&&c.amount>0?Number(c.amount).toLocaleString("id-ID"):""})(),a:RPA.replace('fmtR(this)','fmtR(this);jasaAuto();simLive()'),req:1})+(()=>{const J=jasaRates(today());return J.length?fld("l-rc","Tarif jasa dari Master Tarif & Biaya",{t:"select",a:' onchange="pickJasa(this.value)"',opts:opt(J,j=>[j.code,j.name+(j.tiers?" · bertingkat menurut pokok":" · "+String(j.rate).replace(".",",")+"% per tahun")],J[0].code),hint:"Jasa mengikuti tarif ini secara otomatis dan tidak dapat diubah di sini. Untuk mengubah angka jasa, ubah tarifnya di Master > Tarif & Biaya."})+'<div class="k" id="l-rc-i" aria-live="polite"></div>':""})()+fld("l-r","Jasa (% per tahun)"+(jasaRates(today()).length?" (dari master)":""),{type:"text",a:' inputmode="decimal" autocomplete="off" oninput="simLive()"'+(jasaRates(today()).length?' readonly aria-readonly="true"':''),value:(()=>{const J=jasaRates(today());return J.length&&J[0].rate!=null?String(J[0].rate).replace(".",","):J.length?String(jasaFor(J[0].code,0,today())).replace(".",","):"12"})()})
-  +fld("l-m","Metode jasa",{t:"select",a:' onchange="simLive()"',opts:opt([["flat","Flat (dari pokok awal)"],["menurun","Menurun (dari sisa pokok)"],["anuitas","Anuitas (angsuran tetap)"]],x=>x,"flat")})
-  +fld("l-t","Tenor (bulan)",{type:"text",a:' inputmode="numeric" autocomplete="off" oninput="simLive()"',value:"12",req:1})+''+feeChecklist(),side:SIMH,xb:'<button class="b s" onclick="simpanDraf()">Simpan sebagai draf</button>'}),
- la:()=>{const e=db.loans.find(x=>x._id===S.ela);if(!e)return{t:"Ubah pengajuan",s:"mdClose()",y:"Tutup",b:"<p>Pengajuan tidak ditemukan.</p>"};return{t:"Ubah pengajuan "+e.loan_number,s:"saveAjuan()",y:"Simpan perubahan",
-  b:fld("la-pty","Nasabah",{t:"select",opts:opt(db.parties.filter(p=>p.type==="nasabah"&&(p.status!=="nonaktif"||p._id===e.party_id)),p=>[p._id,p.name],e.party_id)})+fld("la-u","Unit usaha",{t:"select",opts:opt(spUnits(),u=>[u._id,u.name],e.unit_id)})
-  +fld("la-d","Tanggal pengajuan",{type:"date",value:e.application_date,a:' onchange="jasaAuto();simLive()"'})+fld("la-p","Pokok (Rp)",{type:"text",a:RPA.replace('fmtR(this)','fmtR(this);jasaAuto();simLive()'),value:fm(e.principal)})+(()=>{const J=jasaRates(today());return J.length?fld("l-rc","Tarif jasa dari Master Tarif & Biaya",{t:"select",a:' onchange="pickJasa(this.value)"',opts:opt(J,j=>[j.code,j.name+(j.tiers?" · bertingkat menurut pokok":" · "+String(j.rate).replace(".",",")+"% per tahun")],(J.some(j=>j.code===e.rate_code)?e.rate_code:J[0].code)),hint:"Jasa mengikuti tarif ini otomatis dan tidak dapat diubah di sini. Untuk mengubah angka jasa, ubah tarifnya di Master > Tarif & Biaya."})+'<div class="k" id="l-rc-i" aria-live="polite"></div>':""})()+fld("la-r","Jasa (% per tahun)"+(jasaRates(today()).length?" (dari master)":""),{type:"text",a:' inputmode="decimal" autocomplete="off" oninput="simLive()"'+(jasaRates(today()).length?' readonly aria-readonly="true"':''),value:(()=>{const J=jasaRates(today());if(!J.length)return e.interest_rate;const c=J.some(j=>j.code===e.rate_code)?e.rate_code:J[0].code,r=jasaFor(c,e.principal,e.application_date);return r!=null?String(r).replace(".",","):String(e.interest_rate)})()})
-  +fld("la-m","Metode jasa",{t:"select",a:' onchange="simLive()"',opts:opt([["flat","Flat (dari pokok awal)"],["menurun","Menurun (dari sisa pokok)"],["anuitas","Anuitas (angsuran tetap)"]],x=>x,e.interest_method)})+fld("la-t","Tenor (bulan)",{type:"text",a:' inputmode="numeric" autocomplete="off" oninput="simLive()"',value:e.tenor})+feeChecklist(),side:SIMH}},
- ls:()=>{const l=db.loans.find(x=>x._id===S.els);if(!l)return{t:"Setujui pengajuan",s:"mdBackLd()",y:"Tutup",b:'<p class="k">Pinjaman tidak ditemukan.</p>'};const dt=S.sd||today();
-  return{t:"Setujui "+l.loan_number,s:"lst('"+l._id+"','approved')",y:"Setujui pengajuan",c:"mdBackLd()",b:'<p class="k">'+esc(party(l.party_id).name)+" · Rp "+fm(l.principal)+"</p>"+fld("sp-date","Tanggal persetujuan",{type:"date",value:dt,req:1,a:' onchange="S.sd=this.value"'})+'<p class="k">Pengajuan tidak dapat diubah lagi sesudah disetujui; pencairan dilakukan terpisah.</p>'}},
- lc:()=>{const l=db.loans.find(x=>x._id===S.elc);if(!l)return{t:"Cairkan pinjaman",s:"mdBackLd()",y:"Tutup",b:'<p class="k">Pinjaman tidak ditemukan.</p>'};const dt=S.sd||today();
-  return{t:"Cairkan "+l.loan_number,s:"cairkan('"+l._id+"')",y:"Cairkan pinjaman",c:"mdBackLd()",b:'<p class="k">'+esc(party(l.party_id).name)+" · Rp "+fm(l.principal)+"</p>"+fld("sp-date","Tanggal pencairan",{type:"date",value:dt,req:1,a:' onchange="S.sd=this.value;amtSync()"'})+fld("sp-cash","Kas/Bank",{t:"select",req:1,a:' onchange="S.sc=this.value"',opts:opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name],S.sc)})+'<div class="k" id="cr-hint">'+esc(disbTxt(l,dt))+'</div><p class="k">Kas/bank berkurang sebesar dana bersih, jadwal angsuran dibuat, dan pinjaman menjadi Aktif.</p>'}},
- lw:()=>{const l=db.loans.find(x=>x._id===S.elw),md=S.pm||"full",dt=S.sd||today(),a=l?payAuto(l,md,dt):{fu:null};
-  if(!l||!a.fu)return{t:"Bayar angsuran",s:"mdBackLd()",y:"Tutup",b:'<p class="k">Tidak ada angsuran yang perlu dibayar.</p>'};
-  return{t:"Bayar angsuran "+l.loan_number,s:"bayar('"+a.fu._id+"')",y:payLbl(md,a),yid:"sp-pay",c:"mdBackLd()",b:'<p class="k">'+esc(party(l.party_id).name)+" · sisa pokok Rp "+fm(insL(l._id).reduce((s,i)=>s+i.principal_due-i.principal_paid,0))+"</p>"+fld("sp-date","Tanggal pembayaran",{type:"date",value:dt,req:1,a:' onchange="S.sd=this.value;amtSync()"'})+fld("sp-cash","Kas/Bank",{t:"select",req:1,a:' onchange="S.sc=this.value"',opts:opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name],S.sc)})+fld("sp-mode","Jenis pembayaran",{t:"select",a:' onchange="amtSync()"',opts:opt(PMODES,x=>x,md)})+fld("sp-amt","Jumlah bayar (Rp)"+(md==="nom"?" — ketik nominal; lebih kecil dari tagihan = sebagian":" — otomatis"),{type:"text",a:RPA+(md==="nom"?"":" readonly")+' onchange="S.sa=this.value"',value:md==="nom"?(S.sa||(a.o?fm(a.o.total):"")):(a.o?fm(a.amt):"")})+'<div class="k" id="sp-hint">'+esc(payHint(a))+"</div>"}},
- lz:()=>{const l=db.loans.find(x=>x._id===S.elz);if(!l)return{t:"Lunasi pinjaman",s:"mdBackLd()",y:"Tutup",b:'<p class="k">Pinjaman tidak ditemukan.</p>'};const dt=S.sd||today(),po=S.po&&S.po.id===l._id&&l.status==="active";
-  return{t:"Lunasi "+l.loan_number,s:"poPrev('"+l._id+"')",y:"Hitung rincian",nf:po,c:"mdBackLd()",b:'<p class="k">'+esc(party(l.party_id).name)+" · pelunasan dipercepat</p>"+fld("sp-date","Tanggal pelunasan",{type:"date",value:dt,req:1,a:' onchange="S.sd=this.value"'})+fld("sp-cash","Kas/Bank",{t:"select",req:1,a:' onchange="S.sc=this.value"',opts:opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name],S.sc)})+(po?poCard():'<p class="k">Tekan Hitung rincian untuk melihat sisa pokok, jasa, denda, dan biaya sebelum melunasi.</p>')}},
- lr:()=>{const e=db.loans.find(x=>x._id===S.elr);return{t:"Tolak pengajuan"+(e?" "+e.loan_number:""),s:"saveTolak()",y:"Tolak pengajuan",b:(e?'<p class="k">'+esc(party(e.party_id).name)+" · Rp "+fm(e.principal)+"</p>":"")+fld("lr-a","Alasan penolakan",{t:"textarea",req:1})}},
- lb:()=>{const e=db.loans.find(x=>x._id===S.elb);return{t:"Batalkan pengajuan"+(e?" "+e.loan_number:""),s:"saveBatalAjuan()",y:"Batalkan pengajuan",b:(e?'<p class="k">'+esc(party(e.party_id).name)+" · Rp "+fm(e.principal)+". Nomor pinjaman tidak dipakai ulang.</p>":"")+fld("lb-a","Alasan pembatalan",{t:"textarea",req:1})}},
- cj:()=>({t:"Tambah jaminan",s:"saveJam()",y:"Tambah jaminan",b:fld("c-l","Pinjaman",{t:"select",opts:opt(db.loans,l=>[l._id,l.loan_number+" – "+party(l.party_id).name],S.cjl)})+fld("c-t","Jenis",{t:"select",opts:["BPKB","Sertifikat","Emas","Lainnya"].map(x=>`<option>${x}</option>`).join("")})+fld("c-d","Deskripsi",{req:1})+fld("c-v","Nilai taksiran (Rp)",{type:"text",a:RPA})+fld("c-n","No. dokumen")}),
- jd:()=>{const c=db.collaterals.find(x=>x._id===S.ejd);if(!c)return{t:"Jaminan",s:"mdClose()",y:"Tutup",b:"<p>Jaminan tidak ditemukan.</p>",nf:1};const l=db.loans.find(x=>x._id===c.loan_id),R=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`;
-  return{t:c.type+" · "+l.loan_number,s:"mdClose()",y:"Tutup",nf:1,b:`<div class="ldw"><div class="lds"><span class="bdg ${c.status==="dipegang"?"wr":"ok"}">${c.status==="dipegang"?"Dipegang":"Dikembalikan"}</span><b>${rp(c.estimated_value)}</b></div><div class="kvg">${R("Pinjaman",`<a href="#" class="lkx" onclick="event.preventDefault();openLoan('${l._id}')">${esc(l.loan_number)}${ic("next")}</a>`)}${R("Nasabah",esc(party(l.party_id).name))}${R("Jenis",esc(c.type))}${R("Deskripsi",esc(c.description))}${R("No. dokumen",esc(c.document_number||"-"))}${R("Status pinjaman",LS[l.status]||l.status)}</div><div class="lda">${c.status==="dipegang"?ib("check","Kembalikan","kembalikan('"+c._id+"')","s"):""}</div></div>`}},
- nd:()=>{const p=db.parties.find(x=>x._id===S.end);if(!p)return{t:"Nasabah",s:"mdClose()",y:"Tutup",b:"<p>Nasabah tidak ditemukan.</p>",nf:1};const ls=db.loans.filter(l=>l.party_id===p._id),R=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`;
-  return{t:p.name,s:"mdClose()",y:"Tutup",nf:1,b:`<div class="ldw"><div class="lds"><span class="bdg ${p.status==="nonaktif"?"":"ok"}">${p.status==="nonaktif"?"Nonaktif":"Aktif"}</span></div><div class="kvg">${R("Telepon",esc(p.phone||"-"))}${R("Alamat",esc(p.address||"-"))}${R("Pinjaman",ls.length)}${R("Tabungan",rp(savOf(p._id)))}${R("Sisa pokok aktif",rp(ls.filter(l=>l.status==="active").reduce((s,l)=>s+insL(l._id).reduce((a,i)=>a+i.principal_due-i.principal_paid,0),0)))}</div><div class="lda">${p.status!=="nonaktif"?ib("plus","Ajukan pinjaman","ajukanDari('"+p._id+"')"):""}${ib("out","Bagikan ringkasan","mdOpen('ns','"+p._id+"')","s")}${ib("lock",p.portal?"Ganti PIN portal":"PIN portal","mdOpen('pp','"+p._id+"')","s")}${savOf(p._id)>0||(db.savings_accounts||[]).some(x=>x.party_id===p._id&&x.status==="aktif")?ib("print","Rekap tabungan","docOpen('rt','"+p._id+"')","s"):""}${ib("user","Pratinjau portal","ptPreview('"+p._id+"')","s")}${ib("edit","Edit","editN('"+p._id+"')","s")}${p.status==="nonaktif"?ib("check","Aktifkan","togN('"+p._id+"')","s"):ib("lock","Nonaktifkan","togN('"+p._id+"')","s")}</div>${nasSavHtml(p)}${typeof ptLogHtml==="function"?ptLogHtml(p):""}<h3>Pinjaman</h3>${ls.length?`<div class="ll">${ls.map(l=>`<button class="li" onclick="openLoan('${l._id}')"><span class="l1"><b>${esc(l.loan_number)}</b><small>${esc(unitName(l.unit_id))}</small></span><span class="l2">${l.tenor}× · ${l.interest_rate}% ${l.interest_method}</span><span class="n l3">${rp(l.principal)}</span><span class="n l4"></span><span class="l5">${lbadge(l)}</span><span class="l6">${ic("next")}</span></button>`).join("")}</div>`:`<p class="k">Belum ada pinjaman.</p>`}</div>`}},
- n:()=>{const e=db.parties.find(x=>x._id===S.en);return{t:EN(e,"Edit nasabah","Nasabah baru"),s:"saveNasabah()",y:EN(e,"Simpan perubahan","Tambah nasabah"),
-  b:fld("n-n","Nama nasabah",{value:e?e.name:"",req:1})+fld("n-p","Telepon",{type:"tel",value:e?e.phone:""})+fld("n-a","Alamat",{value:e?e.address:""})+(typeof ptOn==="function"&&ptOn()?fld("n-pin","PIN portal (opsional)",{type:"password",a:' inputmode="numeric" maxlength="8" autocomplete="new-password"'+(e&&e.portal?' placeholder="PIN sudah diatur (kosongkan bila tidak diganti)"':""),value:"",hint:(e&&e.portal?"Sudah punya PIN. Isi hanya untuk menggantinya. ":"")+"Nasabah masuk portal dengan nomor telepon di atas dan PIN ini (4–8 angka). Kosongkan bila belum perlu."}):"")}},
- pl:()=>{const e=db.parties.find(x=>x._id===S.ep);return{t:EN(e,"Edit pelanggan","Pelanggan baru"),s:"savePel()",y:EN(e,"Simpan perubahan","Tambah pelanggan"),
-  b:fld("pl-n","Nama pelanggan",{value:e?e.name:"",req:1})+fld("pl-p","Telepon",{type:"tel",value:e?e.phone:""})+fld("pl-a","Alamat",{value:e?e.address:""})}},
- pr:()=>{const e=db.products.find(x=>x._id===S.epr);return{t:EN(e,"Edit layanan","Layanan baru"),s:"saveProd()",y:EN(e,"Simpan perubahan","Tambah layanan"),
-  b:fld("pr-n","Nama",{value:e?e.name:"",req:1})+fld("pr-s","Satuan (mis. m³, bulan)",{value:e?e.unit:"m³"})+fld("pr-h","Tarif per satuan (Rp)",{type:"text",a:RPA,value:e?fm(e.price):"",req:1})
-  +fld("pr-u","Unit usaha",{t:"select",opts:opt(db.business_units,u=>[u._id,u.name],e?e.unit_id:"UNIT-002")})
-  +fld("pr-a","Akun pendapatan",{t:"select",opts:opt(db.accounts.filter(a=>postable(a)&&a.type==="revenue"),a=>[a._id,a.code+" "+a.name],e?e.revenue_account:"ACC4200")})}},
- cn:()=>{const e=db.water_connections.find(c=>c._id===S.ecn),used=e&&db.water_readings.some(r=>r.conn_id===e._id),pel=db.parties.filter(p=>p.type==="pelanggan"&&isAct(p));return{t:EN(e,"Edit sambungan","Sambungan baru"),s:"saveConn()",y:EN(e,"Simpan perubahan","Tambah sambungan"),
-  b:(e?fld("cn-x","Pelanggan",{value:cust(e.party_id).name,a:" disabled"}):fld("cn-c","Pelanggan",{t:"select",req:1,opts:`<option value="">Pilih pelanggan</option>`+opt(pel,p=>[p._id,p.name])}))
-  +fld("cn-m","Nomor meter",{value:e?e.meter_no:"",req:1})
-  +fld("cn-r","Rute / dusun (opsional)",{value:e&&e.rute?e.rute:"",hint:"Untuk daftar kerja baca meter; kosong = ikut alamat pelanggan",a:' maxlength="60" list="cn-rl" autocomplete="off"'})+`<datalist id="cn-rl">${dkRoutes().map(r=>`<option value="${esc(r)}">`).join("")}</datalist>`
-  +fld("cn-u","Urutan di rute (opsional)",{value:e&&e.urut!==undefined?e.urut:"",type:"text",a:' inputmode="numeric" autocomplete="off"'})
-  +fld("cn-a","Angka meter saat dipasang / awal pakai",{type:"text",a:' inputmode="decimal" autocomplete="off"'+(used?" readonly":""),value:e?qf(e.initial):""})
-  +fld("cn-d","Tanggal pasang",{type:"date",value:e?e.installed:today(),req:1})
-  +((()=>{const G=aClasses().filter(g=>g.active!==false||(e&&e.cls===g.code));return G.length?fld("cn-g","Golongan tarif",{t:"select",opts:'<option value="">Standar</option>'+opt(G,g=>[g.code,g.name],e?e.cls:"")}):""})())
-  +((()=>{const D=aDiscs().filter(d=>(d.active!==false||(e&&e.disc===d.code))&&d.scope!=="penjualan");return D.length?fld("cn-ds","Diskon tagihan",{t:"select",opts:'<option value="">Tanpa diskon</option>'+opt(D,d=>[d.code,d.name+" ("+(d.type==="persen"?String(d.val).replace(".",",")+"%":"Rp "+fm(d.val))+")"],e?e.disc:"")}):""})())
-  +(!e&&aInst().on?fld("cn-bp","Tagihkan "+aInst().name.toLowerCase()+" Rp "+fm(aInst().amt),{t:"select",opts:'<option value="1">Ya, masuk Piutang</option><option value="0">Tidak</option>'}):"")}},
- ps:()=>{const x=(db.settings.positions||[])[+S.ps];if(!x)return{t:"Jabatan",s:"mdClose()",y:"Tutup",b:"<p>Jabatan tidak ditemukan.</p>",nf:1};return{t:"Bawaan jabatan · "+x.name,s:"savePosDef()",y:"Simpan bawaan",b:`<p class="k">Nilai ini mengisi otomatis form pegawai baru saat jabatan dipilih; tetap bisa diubah per pegawai.</p>`+[["g","Gaji pokok standar (Rp / bulan)","base_salary"],["t","Tunjangan tetap standar (Rp / bulan)","allowance"],["o","Potongan tetap standar (Rp / bulan)","deduction"]].map(([k,l,f])=>fld("ps-"+k,l,{type:"text",a:RPA,value:x[f]?fm(x[f]):""})).join("")+fld("ps-r","Peran pengguna bawaan (untuk akun baru dari pegawai berjabatan ini)",{t:"select",opts:`<option value="">— tidak diatur —</option>`+opt(db.roles.filter(r=>r.status!=="nonaktif"&&r._id!=="ROL-SUP"),r=>[r._id,r.name],x.role_id||"")})+kChecklist("ps",(x.comps||[]).filter(q=>PK(q.component_id)))}},
- pk:()=>{const e=PK(S.ek),lk=e&&kUsed(e._id);return{t:EN(e,"Edit komponen","Komponen baru"),s:"saveComp()",y:EN(e,"Simpan perubahan","Tambah komponen"),
-  b:fld("pk-n","Nama komponen",{value:e?e.name:"",req:1})+fld("pk-t","Jenis"+(lk?" (terkunci: sudah dipakai)":""),{t:"select",a:lk?" disabled":"",opts:opt(Object.keys(PKT),k=>[k,PKT[k]],e?e.type:"earning")})
-  +fld("pk-c","Cara hitung"+(lk?" (terkunci: sudah dipakai)":""),{t:"select",a:(lk?" disabled":"")+' onchange="pkCalc()"',opts:opt(Object.keys(CALC),k=>[k,CALC[k]],e&&e.calc||"tetap")})
-  +fld("pk-v","Nilai bawaan (Rp, tarif per satuan, atau %; boleh kosong)",{type:"text",a:' inputmode="decimal" autocomplete="off"',value:e&&e.value?((e.calc||"tetap")==="tetap"||e.calc==="per_satuan"?fm(e.value):rtp(e.value)):""})
-  +`<div id="pk-sw"${e&&e.calc==="per_satuan"?"":' hidden'}>`+fld("pk-s","Satuan (jam, hari, dll.)",{value:e&&e.unit?e.unit:"jam"})+`<p class="k">Nilai bawaan di atas dipakai sebagai tarif per satuan; tarif tiap pegawai bisa diisi lewat ceklist komponen. Jumlah satuan diisi pada gaji berstatus Draf.</p></div>`
-  +`<div id="pk-bw"${e&&e.calc==="persen_laba"?"":' hidden'}>`+fld("pk-b","Dasar laba",{t:"select",opts:opt(Object.keys(BASIS),k=>[k,BASIS[k]],e&&e.basis||"sesudah")})+`<p class="k">Laba = pendapatan dikurangi beban pada bulan gaji (unit pegawai bila diisi). "Sebelum beban gaji" tidak memotong gaji; "sesudah" mengurangi gaji pokok, tunjangan, dan komponen non-laba. Bila laba rugi, komponen bernilai 0.</p></div>`}},
- us:()=>{const e=db.users.find(x=>x._id===S.eus);return{t:EN(e,"Edit pengguna","Tambah pengguna"),s:"saveUser()",y:EN(e,"Simpan","Tambah pengguna"),
-  b:fld("us-e","Pegawai (pilih dari daftar pegawai; nama, unit, dan peran terisi otomatis)",{t:"select",a:' onchange="usPick()"',opts:`<option value="">— bukan pegawai / isi manual —</option>`+opt(db.employees.filter(x=>isAct(x)||(e&&e.employee_id===x._id)),x=>[x._id,x.emp_number+" · "+x.name+" · "+x.position],e?e.employee_id:"")})+fld("us-n","Nama *",{a:' autocomplete="off"',value:e?e.name:"",req:1})+fld("us-un","Username (dipakai untuk masuk; kosongkan agar dibuat otomatis dari nama)",{a:' autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="20"',value:e?e.username||"":""})+fld("us-r","Peran *",{t:"select",req:1,opts:opt(db.roles.filter(r=>r.status!=="nonaktif"&&(r._id!=="ROL-SUP"||cuSup()||(e&&e.role_id==="ROL-SUP"))),r=>[r._id,r.name],e?e.role_id:"ROL-PTU")})
-  +`<label>Unit tugas (kosong = semua unit; bila diisi, pengguna hanya bisa memilih dan mencatat di unit ini)</label>`
-  +db.business_units.map(x=>`<div><label class="ck"><input type="checkbox" id="us-u-${x._id}"${e&&(e.unit_ids||[]).includes(x._id)?" checked":""}> ${esc(x.name)}</label></div>`).join("")
-  +(e?"":`<label>PIN awal (4–8 angka; kosongkan untuk memakai 1234; wajib diganti saat masuk pertama)</label>${PW("us-p","new-password")}<label>Ulangi PIN awal</label>${PW("us-p2","new-password")}`)}},
- rp:()=>{const u=db.users.find(x=>x._id===S.rp)||{name:""};return{t:"Reset PIN — "+u.name,s:"resetPin()",y:"Reset PIN",
-  b:`<p class="k">Isi PIN sementara. Pengguna wajib menggantinya saat masuk; kunci akun dibuka.</p><label>PIN sementara (4–8 angka)</label>${PW("rp-p","new-password")}`}}
+const DLG = ["lc", "lw", "lz", "ls"],
+  PGK = ["ld", "lp", "la"];
+const MK = {
+  gp: "egp",
+  gb: "egb",
+  gs: "egs",
+  jl: "ejl",
+  by: "eby",
+  rv: "erv",
+  sr: "esr",
+  sb: "esb",
+  ad: "ead",
+  tf: "etf",
+  ps: "ps",
+  lq: "elq",
+  rn: "ern",
+  ld: "eld",
+  cj: "ecj",
+  jd: "ejd",
+  nd: "end",
+  lp: "elp",
+  la: "ela",
+  lr: "elr",
+  lb: "elb",
+  lc: "elc",
+  lw: "elw",
+  lz: "elz",
+  ls: "els",
+  u: "eu",
+  c: "ec",
+  a: "ea",
+  py: "ey",
+  pg: "eg",
+  n: "en",
+  pl: "ep",
+  pr: "epr",
+  cn: "ecn",
+  wd: "ewd",
+  gm: "egm",
+  wb: "ewb",
+  gl: "egl",
+  dn: "edn",
+  pb: "epb",
+  sk: "esk",
+  ds: "eds",
+  pk: "ek",
+  us: "eus",
+  rp: "rp",
+  tn: "etn",
+  jm: "ejm",
+  td: "etd",
 };
-function mdHtml(){if(!S.md||!MD[S.md])return"";let f;try{f=MD[S.md]()}catch(e){return""}
- return`<div class="mb" tabindex="-1"><div class="mh"><h3 id="fm-t">${esc(f.t)}</h3><button class="ib s" aria-label="Tutup" title="Tutup" onclick="${f.c||"mdClose()"}">${ic("x")}</button></div><div class="mc">${f.b}${f.side||""}${f.xb?`<div class="fl">${f.xb}</div>`:""}</div>${f.nf?"":`<div class="mf">${f.fb||`<button class="b s" onclick="${f.c||"mdClose()"}">Batal</button><button class="b"${f.yid?` id="${f.yid}"`:""} onclick="${f.s}">${esc(f.y)}</button>`}</div>`}</div>`}
-const MSK=/^(INPUT|SELECT|TEXTAREA)$/,SIMH='<div class="card sim" id="sim-fee"></div><div class="card sim" id="sim"></div><div id="sim-w" aria-live="polite"></div>';
+const addB = (t, k) =>
+  `<div class="fl"><button class="b ad" onclick="mdOpen('${k}','')">${ic("plus")}<span>${t}</span></button></div>`;
+const mdId = () => (S.md ? S[MK[S.md]] || "" : ""),
+  mdKey = () => (S.md ? S.md + "|" + mdId() : "");
+function mdOpen(k, id) {
+  if (!MK[k]) return;
+  if (k === "wd") {
+    wdPage(id);
+    return;
+  }
+  if (k === "wb" && typeof bdPage === "function") {
+    bdPage(id);
+    return;
+  }
+  if (k === "td" && typeof tdPage === "function") {
+    tdPage(id);
+    return;
+  }
+  if (PGK.includes(k)) {
+    pgOpen(k, id);
+    return;
+  }
+  const kp =
+    (k === "lr" || k === "lb" || DLG.includes(k)) &&
+    (S.md === "ld" || DLG.includes(S.md) || (S.pp && S.pp.k === "ld"))
+      ? S.eld || (S.pp && S.pp.id)
+      : null;
+  for (const x in MK) S[MK[x]] = null;
+  if (kp) S.eld = kp;
+  S[MK[k]] = id || null;
+  S.md = k;
+  if (k === "la") {
+    const e = db.loans.find((x) => x._id === id);
+    S.elp = e && Array.isArray(e.disb_codes) ? e.disb_codes.slice() : null;
+    S.elq = e && e.disb_qty ? Object.assign({}, e.disb_qty) : null;
+  }
+  S.mv = null;
+  S.mf = "";
+  S.msg = "";
+  S.fe = null;
+  if (typeof document !== "undefined" && document.activeElement)
+    cfFrom = tKey(document.activeElement);
+  render();
+}
+function mdClose() {
+  S.lpp = null;
+  S.lpc = null;
+  S.cjl = null;
+  S.md = null;
+  S.mv = null;
+  S.fe = null;
+  for (const x in MK) S[MK[x]] = null;
+  render();
+}
+function okM() {
+  S.elp = null;
+  S.elq = null;
+  S.lpp = null;
+  S.lpc = null;
+  S.etn = null;
+  S.md = null;
+  S.mv = null;
+}
+function openM(k, id) {
+  S.mt = k === "u" ? "unit" : k === "c" ? "kas" : "coa";
+  mdOpen(k, id);
+}
+function openP(id) {
+  S.mt = "pihak";
+  mdOpen("py", id);
+}
+function openG(id) {
+  S.mt = "peg";
+  mdOpen("pg", id);
+}
+function openK(id) {
+  S.gt = "komp";
+  mdOpen("pk", id);
+}
+function openE(k, id) {
+  S.at = k === "ep" ? "pel" : "prod";
+  mdOpen(k === "ep" ? "pl" : "pr", id);
+}
+function openC(id) {
+  S.at = "samb";
+  mdOpen("cn", id);
+}
+function editN(id) {
+  S.st = "nasabah";
+  mdOpen("n", id);
+}
+function editAjuan(id) {
+  mdOpen("la", id);
+}
+function tolakAjuan(id) {
+  mdOpen("lr", id);
+}
+function batalAjuan(id) {
+  mdOpen("lb", id);
+}
+function cancelM() {
+  mdClose();
+}
+function cancelE() {
+  mdClose();
+}
+function cancelK() {
+  mdClose();
+}
+const RPA = ' inputmode="numeric" autocomplete="off" oninput="fmtR(this)"',
+  EN = (e, a, b) => (e ? a : b);
+const MD = {
+  u: () => {
+    const e = db.business_units.find((x) => x._id === S.eu);
+    return {
+      t: EN(e, "Edit unit", "Unit baru"),
+      s: "saveUnit()",
+      y: EN(e, "Simpan perubahan", "Tambah unit"),
+      b:
+        fld("u-c", "Kode", {
+          value: e ? e.code : nextUnitCode(),
+          hint: e
+            ? ""
+            : "Otomatis (UNT004, ...); boleh diganti, mis. SP atau AIR.",
+        }) +
+        fld("u-n", "Nama unit", { value: e ? e.name : "", req: 1 }) +
+        fld("u-t", "Jenis unit", {
+          t: "select",
+          hint: "Simpan Pinjam: dasar pinjaman. Pamsimas: unit tagihan air minum desa (modul Pamsimas). Perdagangan: penjualan barang. Proyek dan Jasa: modul Proyek dan Pengadaan. Lainnya: unit tanpa modul khusus.",
+          opts: opt(
+            Object.keys(UNIT_T).map((k) => [k, UNIT_T[k]]),
+            (x) => x,
+            e ? unitType(e.type) : "lainnya",
+          ),
+        }),
+    };
+  },
+  c: () => {
+    const e = db.cash_accounts.find((x) => x._id === S.ec);
+    return {
+      t: EN(e, "Edit rekening", "Rekening baru"),
+      s: "saveCash()",
+      y: EN(e, "Simpan perubahan", "Tambah rekening"),
+      b:
+        fld("c-n", "Nama rekening", { value: e ? e.name : "", req: 1 }) +
+        fld("c-t", "Jenis", {
+          t: "select",
+          opts: ["kas", "bank"]
+            .map(
+              (t) =>
+                `<option${e && e.type === t ? " selected" : ""}>${t}</option>`,
+            )
+            .join(""),
+        }) +
+        fld("c-a", "Akun COA" + EN(e, " (tidak dapat diubah)", ""), {
+          t: "select",
+          a: e ? " disabled" : "",
+          opts: opt(
+            db.accounts.filter(
+              (a) => postable(a) && isAct(a) && a.type === "asset",
+            ),
+            (a) => [a._id, a.code + " " + a.name],
+            e ? e.account_id : "",
+          ),
+        }),
+    };
+  },
+  a: () => {
+    const e = acc(S.ea),
+      lk = e && hasJ(e._id);
+    return {
+      t: EN(e, "Edit akun", "Akun baru"),
+      s: "saveAcc()",
+      y: EN(e, "Simpan perubahan", "Tambah akun"),
+      b:
+        fld(
+          "a-c",
+          "Kode" +
+            EN(e, " (tidak dapat diubah)", " (4 digit, otomatis menurut tipe)"),
+          { value: e ? e.code : nextAccCode("asset"), a: e ? " disabled" : "" },
+        ) +
+        fld("a-n", "Nama akun", { value: e ? e.name : "", req: 1 }) +
+        fld(
+          "a-t",
+          "Tipe" + (lk ? " (terkunci: akun sudah dipakai jurnal)" : ""),
+          {
+            t: "select",
+            a: lk ? " disabled" : e ? "" : ' onchange="accTipe(this.value)"',
+            opts: ["asset", "liability", "equity", "revenue", "expense"]
+              .map(
+                (t) =>
+                  `<option${e && e.type === t ? " selected" : ""}>${t}</option>`,
+              )
+              .join(""),
+          },
+        ),
+    };
+  },
+  py: () => {
+    const e = db.parties.find((x) => x._id === S.ey),
+      lk = e && pRef(e._id);
+    return {
+      t: EN(e, "Edit pihak", "Pihak baru"),
+      s: "savePihak()",
+      y: EN(e, "Simpan perubahan", "Tambah pihak"),
+      b:
+        fld(
+          "py-t",
+          "Jenis" + (lk ? " (terkunci: sudah dipakai pinjaman/penjualan)" : ""),
+          {
+            t: "select",
+            a: lk ? " disabled" : "",
+            opts: opt(
+              Object.keys(PT),
+              (k) => [k, PT[k]],
+              e ? e.type : "pemasok",
+            ),
+          },
+        ) +
+        fld("py-n", "Nama", { value: e ? e.name : "", req: 1 }) +
+        fld("py-p", "Telepon", { type: "tel", value: e ? e.phone : "" }) +
+        fld("py-a", "Alamat", { value: e ? e.address : "" }),
+    };
+  },
+  pg: () => {
+    posSync();
+    const e = db.employees.find((x) => x._id === S.eg),
+      us = db.business_units.filter(
+        (u) => isAct(u) || (e && e.unit_id === u._id),
+      );
+    return {
+      t: EN(e, "Edit pegawai", "Pegawai baru"),
+      s: "saveEmp()",
+      y: EN(e, "Simpan perubahan", "Tambah pegawai"),
+      b:
+        (e && db.payrolls.some((p) => p.employee_id === e._id)
+          ? `<div class="lda">${dkb("Riwayat gaji (" + db.payrolls.filter((p) => p.employee_id === e._id).length + ")", "mdClose();payHist('" + e._id + "')", "cash")}</div>`
+          : "") +
+        fld("pg-n", "Nama pegawai", { value: e ? e.name : "", req: 1 }) +
+        fld("pg-j", "Jabatan", {
+          t: "select",
+          a: ' onchange="posPick()"',
+          opts:
+            `<option value="">— pilih jabatan —</option>` +
+            opt(posList(), (x) => [x, x], e ? e.position : ""),
+        }) +
+        fld("pg-jn", "Jabatan baru (isi bila belum ada di daftar)", {
+          value: "",
+        }) +
+        fld("pg-u", "Unit usaha", {
+          t: "select",
+          opts:
+            `<option value="">Umum (semua unit)</option>` +
+            opt(us, (u) => [u._id, u.name], e ? e.unit_id : ""),
+        }) +
+        fld("pg-p", "Telepon", { type: "tel", value: e ? e.phone : "" }) +
+        fld("pg-a", "Alamat", { value: e ? e.address : "" }) +
+        fld("pg-d", "Tanggal mulai bekerja", {
+          type: "date",
+          value: e ? e.start_date : "",
+        }) +
+        fld("pg-nik", "NIK (16 digit, opsional)", {
+          type: "text",
+          a: ' inputmode="numeric" maxlength="16" autocomplete="off"',
+          value: e ? e.nik || "" : "",
+        }) +
+        fld("pg-bk", "Bank (opsional)", { value: e ? e.bank || "" : "" }) +
+        fld("pg-rk", "Nomor rekening (opsional)", {
+          type: "text",
+          a: ' inputmode="numeric" autocomplete="off"',
+          value: e ? e.acc_no || "" : "",
+        }) +
+        fld("pg-an", "Atas nama rekening (kosong = nama pegawai)", {
+          value: e ? e.acc_name || "" : "",
+        }) +
+        [
+          ["g", "Gaji pokok (Rp / bulan)", "base_salary"],
+          ["t", "Tunjangan tetap (Rp / bulan)", "allowance"],
+          ["o", "Potongan tetap (Rp / bulan)", "deduction"],
+        ]
+          .map(([k, l, f]) =>
+            fld("pg-" + k, l, {
+              type: "text",
+              a: RPA,
+              value: e && e[f] ? fm(e[f]) : "",
+            }),
+          )
+          .join("") +
+        kChecklist("pg", e ? ecList(e) : []),
+    };
+  },
+  rn: () => ({
+    t: "Catatan rilis · v" + APP_VER,
+    s: "mdClose()",
+    y: "Tutup",
+    b: vRelease(),
+    nf: 1,
+  }),
+  ld: () => {
+    const l = db.loans.find((x) => x._id === S.eld);
+    if (!l)
+      return {
+        t: "Pinjaman",
+        s: "mdClose()",
+        y: "Tutup",
+        b: "<p>Pinjaman tidak ditemukan.</p>",
+        nf: 1,
+      };
+    return {
+      t: l.loan_number + " · " + party(l.party_id).name,
+      s: "mdClose()",
+      y: "Tutup",
+      b: vLoan(l),
+      nf: 1,
+    };
+  },
+  lp: () => ({
+    t: "Pengajuan pinjaman baru",
+    s: "ajukan()",
+    y: "Ajukan",
+    b:
+      fld("l-pty", "Nasabah", {
+        t: "select",
+        req: 1,
+        a: ' onchange="simLive()"',
+        opts: opt(
+          db.parties.filter(
+            (p) => p.type === "nasabah" && p.status !== "nonaktif",
+          ),
+          (p) => [p._id, p.name],
+          S.lpp,
+        ),
+        hint: db.parties.some(
+          (p) => p.type === "nasabah" && p.status !== "nonaktif",
+        )
+          ? ""
+          : "Belum ada nasabah aktif: tambahkan di sub-tab Nasabah",
+      }) +
+      fld("l-u", "Unit usaha", {
+        t: "select",
+        opts: opt(spUnits(), (u) => [u._id, u.name]),
+      }) +
+      fld("l-d", "Tanggal pengajuan", {
+        type: "date",
+        value: today(),
+        req: 1,
+        a: ' onchange="jasaAuto();simLive()"',
+      }) +
+      fld("l-p", "Pokok (Rp)", {
+        type: "text",
+        value: (() => {
+          const c = S.lpc && clAll().find((x) => x._id === S.lpc);
+          return c && c.amount > 0
+            ? Number(c.amount).toLocaleString("id-ID")
+            : "";
+        })(),
+        a: RPA.replace("fmtR(this)", "fmtR(this);jasaAuto();simLive()"),
+        req: 1,
+      }) +
+      (() => {
+        const J = jasaRates(today());
+        return J.length
+          ? fld("l-rc", "Tarif jasa dari Master Tarif & Biaya", {
+              t: "select",
+              a: ' onchange="pickJasa(this.value)"',
+              opts: opt(
+                J,
+                (j) => [
+                  j.code,
+                  j.name +
+                    (j.tiers
+                      ? " · bertingkat menurut pokok"
+                      : " · " +
+                        String(j.rate).replace(".", ",") +
+                        "% per tahun"),
+                ],
+                J[0].code,
+              ),
+              hint: "Jasa mengikuti tarif ini secara otomatis dan tidak dapat diubah di sini. Untuk mengubah angka jasa, ubah tarifnya di Master > Tarif & Biaya.",
+            }) + '<div class="k" id="l-rc-i" aria-live="polite"></div>'
+          : "";
+      })() +
+      fld(
+        "l-r",
+        "Jasa (% per tahun)" +
+          (jasaRates(today()).length ? " (dari master)" : ""),
+        {
+          type: "text",
+          a:
+            ' inputmode="decimal" autocomplete="off" oninput="simLive()"' +
+            (jasaRates(today()).length ? ' readonly aria-readonly="true"' : ""),
+          value: (() => {
+            const J = jasaRates(today());
+            return J.length && J[0].rate != null
+              ? String(J[0].rate).replace(".", ",")
+              : J.length
+                ? String(jasaFor(J[0].code, 0, today())).replace(".", ",")
+                : "12";
+          })(),
+        },
+      ) +
+      fld("l-m", "Metode jasa", {
+        t: "select",
+        a: ' onchange="simLive()"',
+        opts: opt(
+          [
+            ["flat", "Flat (dari pokok awal)"],
+            ["menurun", "Menurun (dari sisa pokok)"],
+            ["anuitas", "Anuitas (angsuran tetap)"],
+          ],
+          (x) => x,
+          "flat",
+        ),
+      }) +
+      fld("l-t", "Tenor (bulan)", {
+        type: "text",
+        a: ' inputmode="numeric" autocomplete="off" oninput="simLive()"',
+        value: "12",
+        req: 1,
+      }) +
+      "" +
+      feeChecklist(),
+    side: SIMH,
+    xb: '<button class="b s" onclick="simpanDraf()">Simpan sebagai draf</button>',
+  }),
+  la: () => {
+    const e = db.loans.find((x) => x._id === S.ela);
+    if (!e)
+      return {
+        t: "Ubah pengajuan",
+        s: "mdClose()",
+        y: "Tutup",
+        b: "<p>Pengajuan tidak ditemukan.</p>",
+      };
+    return {
+      t: "Ubah pengajuan " + e.loan_number,
+      s: "saveAjuan()",
+      y: "Simpan perubahan",
+      b:
+        fld("la-pty", "Nasabah", {
+          t: "select",
+          opts: opt(
+            db.parties.filter(
+              (p) =>
+                p.type === "nasabah" &&
+                (p.status !== "nonaktif" || p._id === e.party_id),
+            ),
+            (p) => [p._id, p.name],
+            e.party_id,
+          ),
+        }) +
+        fld("la-u", "Unit usaha", {
+          t: "select",
+          opts: opt(spUnits(), (u) => [u._id, u.name], e.unit_id),
+        }) +
+        fld("la-d", "Tanggal pengajuan", {
+          type: "date",
+          value: e.application_date,
+          a: ' onchange="jasaAuto();simLive()"',
+        }) +
+        fld("la-p", "Pokok (Rp)", {
+          type: "text",
+          a: RPA.replace("fmtR(this)", "fmtR(this);jasaAuto();simLive()"),
+          value: fm(e.principal),
+        }) +
+        (() => {
+          const J = jasaRates(today());
+          return J.length
+            ? fld("l-rc", "Tarif jasa dari Master Tarif & Biaya", {
+                t: "select",
+                a: ' onchange="pickJasa(this.value)"',
+                opts: opt(
+                  J,
+                  (j) => [
+                    j.code,
+                    j.name +
+                      (j.tiers
+                        ? " · bertingkat menurut pokok"
+                        : " · " +
+                          String(j.rate).replace(".", ",") +
+                          "% per tahun"),
+                  ],
+                  J.some((j) => j.code === e.rate_code)
+                    ? e.rate_code
+                    : J[0].code,
+                ),
+                hint: "Jasa mengikuti tarif ini otomatis dan tidak dapat diubah di sini. Untuk mengubah angka jasa, ubah tarifnya di Master > Tarif & Biaya.",
+              }) + '<div class="k" id="l-rc-i" aria-live="polite"></div>'
+            : "";
+        })() +
+        fld(
+          "la-r",
+          "Jasa (% per tahun)" +
+            (jasaRates(today()).length ? " (dari master)" : ""),
+          {
+            type: "text",
+            a:
+              ' inputmode="decimal" autocomplete="off" oninput="simLive()"' +
+              (jasaRates(today()).length
+                ? ' readonly aria-readonly="true"'
+                : ""),
+            value: (() => {
+              const J = jasaRates(today());
+              if (!J.length) return e.interest_rate;
+              const c = J.some((j) => j.code === e.rate_code)
+                  ? e.rate_code
+                  : J[0].code,
+                r = jasaFor(c, e.principal, e.application_date);
+              return r != null
+                ? String(r).replace(".", ",")
+                : String(e.interest_rate);
+            })(),
+          },
+        ) +
+        fld("la-m", "Metode jasa", {
+          t: "select",
+          a: ' onchange="simLive()"',
+          opts: opt(
+            [
+              ["flat", "Flat (dari pokok awal)"],
+              ["menurun", "Menurun (dari sisa pokok)"],
+              ["anuitas", "Anuitas (angsuran tetap)"],
+            ],
+            (x) => x,
+            e.interest_method,
+          ),
+        }) +
+        fld("la-t", "Tenor (bulan)", {
+          type: "text",
+          a: ' inputmode="numeric" autocomplete="off" oninput="simLive()"',
+          value: e.tenor,
+        }) +
+        feeChecklist(),
+      side: SIMH,
+    };
+  },
+  ls: () => {
+    const l = db.loans.find((x) => x._id === S.els);
+    if (!l)
+      return {
+        t: "Setujui pengajuan",
+        s: "mdBackLd()",
+        y: "Tutup",
+        b: '<p class="k">Pinjaman tidak ditemukan.</p>',
+      };
+    const dt = S.sd || today();
+    return {
+      t: "Setujui " + l.loan_number,
+      s: "lst('" + l._id + "','approved')",
+      y: "Setujui pengajuan",
+      c: "mdBackLd()",
+      b:
+        '<p class="k">' +
+        esc(party(l.party_id).name) +
+        " · Rp " +
+        fm(l.principal) +
+        "</p>" +
+        fld("sp-date", "Tanggal persetujuan", {
+          type: "date",
+          value: dt,
+          req: 1,
+          a: ' onchange="S.sd=this.value"',
+        }) +
+        '<p class="k">Pengajuan tidak dapat diubah lagi sesudah disetujui; pencairan dilakukan terpisah.</p>',
+    };
+  },
+  lc: () => {
+    const l = db.loans.find((x) => x._id === S.elc);
+    if (!l)
+      return {
+        t: "Cairkan pinjaman",
+        s: "mdBackLd()",
+        y: "Tutup",
+        b: '<p class="k">Pinjaman tidak ditemukan.</p>',
+      };
+    const dt = S.sd || today();
+    return {
+      t: "Cairkan " + l.loan_number,
+      s: "cairkan('" + l._id + "')",
+      y: "Cairkan pinjaman",
+      c: "mdBackLd()",
+      b:
+        '<p class="k">' +
+        esc(party(l.party_id).name) +
+        " · Rp " +
+        fm(l.principal) +
+        "</p>" +
+        fld("sp-date", "Tanggal pencairan", {
+          type: "date",
+          value: dt,
+          req: 1,
+          a: ' onchange="S.sd=this.value;amtSync()"',
+        }) +
+        fld("sp-cash", "Kas/Bank", {
+          t: "select",
+          req: 1,
+          a: ' onchange="S.sc=this.value"',
+          opts: opt(
+            db.cash_accounts.filter(isAct),
+            (c) => [c._id, c.name],
+            S.sc,
+          ),
+        }) +
+        '<div class="k" id="cr-hint">' +
+        esc(disbTxt(l, dt)) +
+        '</div><p class="k">Kas/bank berkurang sebesar dana bersih, jadwal angsuran dibuat, dan pinjaman menjadi Aktif.</p>',
+    };
+  },
+  lw: () => {
+    const l = db.loans.find((x) => x._id === S.elw),
+      md = S.pm || "full",
+      dt = S.sd || today(),
+      a = l ? payAuto(l, md, dt) : { fu: null };
+    if (!l || !a.fu)
+      return {
+        t: "Bayar angsuran",
+        s: "mdBackLd()",
+        y: "Tutup",
+        b: '<p class="k">Tidak ada angsuran yang perlu dibayar.</p>',
+      };
+    return {
+      t: "Bayar angsuran " + l.loan_number,
+      s: "bayar('" + a.fu._id + "')",
+      y: payLbl(md, a),
+      yid: "sp-pay",
+      c: "mdBackLd()",
+      b:
+        '<p class="k">' +
+        esc(party(l.party_id).name) +
+        " · sisa pokok Rp " +
+        fm(
+          insL(l._id).reduce(
+            (s, i) => s + i.principal_due - i.principal_paid,
+            0,
+          ),
+        ) +
+        "</p>" +
+        fld("sp-date", "Tanggal pembayaran", {
+          type: "date",
+          value: dt,
+          req: 1,
+          a: ' onchange="S.sd=this.value;amtSync()"',
+        }) +
+        fld("sp-cash", "Kas/Bank", {
+          t: "select",
+          req: 1,
+          a: ' onchange="S.sc=this.value"',
+          opts: opt(
+            db.cash_accounts.filter(isAct),
+            (c) => [c._id, c.name],
+            S.sc,
+          ),
+        }) +
+        fld("sp-mode", "Jenis pembayaran", {
+          t: "select",
+          a: ' onchange="amtSync()"',
+          opts: opt(PMODES, (x) => x, md),
+        }) +
+        fld(
+          "sp-amt",
+          "Jumlah bayar (Rp)" +
+            (md === "nom"
+              ? " — ketik nominal; lebih kecil dari tagihan = sebagian"
+              : " — otomatis"),
+          {
+            type: "text",
+            a:
+              RPA +
+              (md === "nom" ? "" : " readonly") +
+              ' onchange="S.sa=this.value"',
+            value:
+              md === "nom"
+                ? S.sa || (a.o ? fm(a.o.total) : "")
+                : a.o
+                  ? fm(a.amt)
+                  : "",
+          },
+        ) +
+        '<div class="k" id="sp-hint">' +
+        esc(payHint(a)) +
+        "</div>",
+    };
+  },
+  lz: () => {
+    const l = db.loans.find((x) => x._id === S.elz);
+    if (!l)
+      return {
+        t: "Lunasi pinjaman",
+        s: "mdBackLd()",
+        y: "Tutup",
+        b: '<p class="k">Pinjaman tidak ditemukan.</p>',
+      };
+    const dt = S.sd || today(),
+      po = S.po && S.po.id === l._id && l.status === "active";
+    return {
+      t: "Lunasi " + l.loan_number,
+      s: "poPrev('" + l._id + "')",
+      y: "Hitung rincian",
+      nf: po,
+      c: "mdBackLd()",
+      b:
+        '<p class="k">' +
+        esc(party(l.party_id).name) +
+        " · pelunasan dipercepat</p>" +
+        fld("sp-date", "Tanggal pelunasan", {
+          type: "date",
+          value: dt,
+          req: 1,
+          a: ' onchange="S.sd=this.value"',
+        }) +
+        fld("sp-cash", "Kas/Bank", {
+          t: "select",
+          req: 1,
+          a: ' onchange="S.sc=this.value"',
+          opts: opt(
+            db.cash_accounts.filter(isAct),
+            (c) => [c._id, c.name],
+            S.sc,
+          ),
+        }) +
+        (po
+          ? poCard()
+          : '<p class="k">Tekan Hitung rincian untuk melihat sisa pokok, jasa, denda, dan biaya sebelum melunasi.</p>'),
+    };
+  },
+  lr: () => {
+    const e = db.loans.find((x) => x._id === S.elr);
+    return {
+      t: "Tolak pengajuan" + (e ? " " + e.loan_number : ""),
+      s: "saveTolak()",
+      y: "Tolak pengajuan",
+      b:
+        (e
+          ? '<p class="k">' +
+            esc(party(e.party_id).name) +
+            " · Rp " +
+            fm(e.principal) +
+            "</p>"
+          : "") + fld("lr-a", "Alasan penolakan", { t: "textarea", req: 1 }),
+    };
+  },
+  lb: () => {
+    const e = db.loans.find((x) => x._id === S.elb);
+    return {
+      t: "Batalkan pengajuan" + (e ? " " + e.loan_number : ""),
+      s: "saveBatalAjuan()",
+      y: "Batalkan pengajuan",
+      b:
+        (e
+          ? '<p class="k">' +
+            esc(party(e.party_id).name) +
+            " · Rp " +
+            fm(e.principal) +
+            ". Nomor pinjaman tidak dipakai ulang.</p>"
+          : "") + fld("lb-a", "Alasan pembatalan", { t: "textarea", req: 1 }),
+    };
+  },
+  cj: () => ({
+    t: "Tambah jaminan",
+    s: "saveJam()",
+    y: "Tambah jaminan",
+    b:
+      fld("c-l", "Pinjaman", {
+        t: "select",
+        opts: opt(
+          db.loans,
+          (l) => [l._id, l.loan_number + " – " + party(l.party_id).name],
+          S.cjl,
+        ),
+      }) +
+      fld("c-t", "Jenis", {
+        t: "select",
+        opts: ["BPKB", "Sertifikat", "Emas", "Lainnya"]
+          .map((x) => `<option>${x}</option>`)
+          .join(""),
+      }) +
+      fld("c-d", "Deskripsi", { req: 1 }) +
+      fld("c-v", "Nilai taksiran (Rp)", { type: "text", a: RPA }) +
+      fld("c-n", "No. dokumen"),
+  }),
+  jd: () => {
+    const c = db.collaterals.find((x) => x._id === S.ejd);
+    if (!c)
+      return {
+        t: "Jaminan",
+        s: "mdClose()",
+        y: "Tutup",
+        b: "<p>Jaminan tidak ditemukan.</p>",
+        nf: 1,
+      };
+    const l = db.loans.find((x) => x._id === c.loan_id),
+      R = (k, v) =>
+        `<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`;
+    return {
+      t: c.type + " · " + l.loan_number,
+      s: "mdClose()",
+      y: "Tutup",
+      nf: 1,
+      b: `<div class="ldw"><div class="lds"><span class="bdg ${c.status === "dipegang" ? "wr" : "ok"}">${c.status === "dipegang" ? "Dipegang" : "Dikembalikan"}</span><b>${rp(c.estimated_value)}</b></div><div class="kvg">${R("Pinjaman", `<a href="#" class="lkx" onclick="event.preventDefault();openLoan('${l._id}')">${esc(l.loan_number)}${ic("next")}</a>`)}${R("Nasabah", esc(party(l.party_id).name))}${R("Jenis", esc(c.type))}${R("Deskripsi", esc(c.description))}${R("No. dokumen", esc(c.document_number || "-"))}${R("Status pinjaman", LS[l.status] || l.status)}</div><div class="lda">${c.status === "dipegang" ? ib("check", "Kembalikan", "kembalikan('" + c._id + "')", "s") : ""}</div></div>`,
+    };
+  },
+  nd: () => {
+    const p = db.parties.find((x) => x._id === S.end);
+    if (!p)
+      return {
+        t: "Nasabah",
+        s: "mdClose()",
+        y: "Tutup",
+        b: "<p>Nasabah tidak ditemukan.</p>",
+        nf: 1,
+      };
+    const ls = db.loans.filter((l) => l.party_id === p._id),
+      R = (k, v) =>
+        `<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`;
+    return {
+      t: p.name,
+      s: "mdClose()",
+      y: "Tutup",
+      nf: 1,
+      b: `<div class="ldw"><div class="lds"><span class="bdg ${p.status === "nonaktif" ? "" : "ok"}">${p.status === "nonaktif" ? "Nonaktif" : "Aktif"}</span></div><div class="kvg">${R("Telepon", esc(p.phone || "-"))}${R("Alamat", esc(p.address || "-"))}${R("Pinjaman", ls.length)}${R("Tabungan", rp(savOf(p._id)))}${R("Sisa pokok aktif", rp(ls.filter((l) => l.status === "active").reduce((s, l) => s + insL(l._id).reduce((a, i) => a + i.principal_due - i.principal_paid, 0), 0)))}</div><div class="lda">${p.status !== "nonaktif" ? ib("plus", "Ajukan pinjaman", "ajukanDari('" + p._id + "')") : ""}${ib("out", "Bagikan ringkasan", "mdOpen('ns','" + p._id + "')", "s")}${ib("lock", p.portal ? "Ganti PIN portal" : "PIN portal", "mdOpen('pp','" + p._id + "')", "s")}${savOf(p._id) > 0 || (db.savings_accounts || []).some((x) => x.party_id === p._id && x.status === "aktif") ? ib("print", "Rekap tabungan", "docOpen('rt','" + p._id + "')", "s") : ""}${ib("user", "Pratinjau portal", "ptPreview('" + p._id + "')", "s")}${ib("edit", "Edit", "editN('" + p._id + "')", "s")}${p.status === "nonaktif" ? ib("check", "Aktifkan", "togN('" + p._id + "')", "s") : ib("lock", "Nonaktifkan", "togN('" + p._id + "')", "s")}</div>${nasSavHtml(p)}${typeof ptLogHtml === "function" ? ptLogHtml(p) : ""}<h3>Pinjaman</h3>${ls.length ? `<div class="ll">${ls.map((l) => `<button class="li" onclick="openLoan('${l._id}')"><span class="l1"><b>${esc(l.loan_number)}</b><small>${esc(unitName(l.unit_id))}</small></span><span class="l2">${l.tenor}× · ${l.interest_rate}% ${l.interest_method}</span><span class="n l3">${rp(l.principal)}</span><span class="n l4"></span><span class="l5">${lbadge(l)}</span><span class="l6">${ic("next")}</span></button>`).join("")}</div>` : `<p class="k">Belum ada pinjaman.</p>`}</div>`,
+    };
+  },
+  n: () => {
+    const e = db.parties.find((x) => x._id === S.en);
+    return {
+      t: EN(e, "Edit nasabah", "Nasabah baru"),
+      s: "saveNasabah()",
+      y: EN(e, "Simpan perubahan", "Tambah nasabah"),
+      b:
+        fld("n-n", "Nama nasabah", { value: e ? e.name : "", req: 1 }) +
+        fld("n-p", "Telepon", { type: "tel", value: e ? e.phone : "" }) +
+        fld("n-a", "Alamat", { value: e ? e.address : "" }) +
+        (typeof ptOn === "function" && ptOn()
+          ? fld("n-pin", "PIN portal (opsional)", {
+              type: "password",
+              a:
+                ' inputmode="numeric" maxlength="8" autocomplete="new-password"' +
+                (e && e.portal
+                  ? ' placeholder="PIN sudah diatur (kosongkan bila tidak diganti)"'
+                  : ""),
+              value: "",
+              hint:
+                (e && e.portal
+                  ? "Sudah punya PIN. Isi hanya untuk menggantinya. "
+                  : "") +
+                "Nasabah masuk portal dengan nomor telepon di atas dan PIN ini (4–8 angka). Kosongkan bila belum perlu.",
+            })
+          : ""),
+    };
+  },
+  pl: () => {
+    const e = db.parties.find((x) => x._id === S.ep);
+    return {
+      t: EN(e, "Edit pelanggan", "Pelanggan baru"),
+      s: "savePel()",
+      y: EN(e, "Simpan perubahan", "Tambah pelanggan"),
+      b:
+        fld("pl-n", "Nama pelanggan", { value: e ? e.name : "", req: 1 }) +
+        fld("pl-p", "Telepon", { type: "tel", value: e ? e.phone : "" }) +
+        fld("pl-a", "Alamat", { value: e ? e.address : "" }),
+    };
+  },
+  pr: () => {
+    const e = db.products.find((x) => x._id === S.epr);
+    return {
+      t: EN(e, "Edit layanan", "Layanan baru"),
+      s: "saveProd()",
+      y: EN(e, "Simpan perubahan", "Tambah layanan"),
+      b:
+        fld("pr-n", "Nama", { value: e ? e.name : "", req: 1 }) +
+        fld("pr-s", "Satuan (mis. m³, bulan)", { value: e ? e.unit : "m³" }) +
+        fld("pr-h", "Tarif per satuan (Rp)", {
+          type: "text",
+          a: RPA,
+          value: e ? fm(e.price) : "",
+          req: 1,
+        }) +
+        fld("pr-u", "Unit usaha", {
+          t: "select",
+          opts: opt(
+            db.business_units,
+            (u) => [u._id, u.name],
+            e ? e.unit_id : "UNIT-002",
+          ),
+        }) +
+        fld("pr-a", "Akun pendapatan", {
+          t: "select",
+          opts: opt(
+            db.accounts.filter((a) => postable(a) && a.type === "revenue"),
+            (a) => [a._id, a.code + " " + a.name],
+            e ? e.revenue_account : "ACC4200",
+          ),
+        }),
+    };
+  },
+  cn: () => {
+    const e = db.water_connections.find((c) => c._id === S.ecn),
+      used = e && db.water_readings.some((r) => r.conn_id === e._id),
+      pel = db.parties.filter((p) => p.type === "pelanggan" && isAct(p));
+    return {
+      t: EN(e, "Edit sambungan", "Sambungan baru"),
+      s: "saveConn()",
+      y: EN(e, "Simpan perubahan", "Tambah sambungan"),
+      b:
+        (e
+          ? fld("cn-x", "Pelanggan", {
+              value: cust(e.party_id).name,
+              a: " disabled",
+            })
+          : fld("cn-c", "Pelanggan", {
+              t: "select",
+              req: 1,
+              opts:
+                `<option value="">Pilih pelanggan</option>` +
+                opt(pel, (p) => [p._id, p.name]),
+            })) +
+        fld("cn-m", "Nomor meter", { value: e ? e.meter_no : "", req: 1 }) +
+        fld("cn-r", "Rute / dusun (opsional)", {
+          value: e && e.rute ? e.rute : "",
+          hint: "Untuk daftar kerja baca meter; kosong = ikut alamat pelanggan",
+          a: ' maxlength="60" list="cn-rl" autocomplete="off"',
+        }) +
+        `<datalist id="cn-rl">${dkRoutes()
+          .map((r) => `<option value="${esc(r)}">`)
+          .join("")}</datalist>` +
+        fld("cn-u", "Urutan di rute (opsional)", {
+          value: e && e.urut !== undefined ? e.urut : "",
+          type: "text",
+          a: ' inputmode="numeric" autocomplete="off"',
+        }) +
+        fld("cn-a", "Angka meter saat dipasang / awal pakai", {
+          type: "text",
+          a:
+            ' inputmode="decimal" autocomplete="off"' +
+            (used ? " readonly" : ""),
+          value: e ? qf(e.initial) : "",
+        }) +
+        fld("cn-d", "Tanggal pasang", {
+          type: "date",
+          value: e ? e.installed : today(),
+          req: 1,
+        }) +
+        (() => {
+          const G = aClasses().filter(
+            (g) => g.active !== false || (e && e.cls === g.code),
+          );
+          return G.length
+            ? fld("cn-g", "Golongan tarif", {
+                t: "select",
+                opts:
+                  '<option value="">Standar</option>' +
+                  opt(G, (g) => [g.code, g.name], e ? e.cls : ""),
+              })
+            : "";
+        })() +
+        (() => {
+          const D = aDiscs().filter(
+            (d) =>
+              (d.active !== false || (e && e.disc === d.code)) &&
+              d.scope !== "penjualan",
+          );
+          return D.length
+            ? fld("cn-ds", "Diskon tagihan", {
+                t: "select",
+                opts:
+                  '<option value="">Tanpa diskon</option>' +
+                  opt(
+                    D,
+                    (d) => [
+                      d.code,
+                      d.name +
+                        " (" +
+                        (d.type === "persen"
+                          ? String(d.val).replace(".", ",") + "%"
+                          : "Rp " + fm(d.val)) +
+                        ")",
+                    ],
+                    e ? e.disc : "",
+                  ),
+              })
+            : "";
+        })() +
+        (!e && aInst().on
+          ? fld(
+              "cn-bp",
+              "Tagihkan " +
+                aInst().name.toLowerCase() +
+                " Rp " +
+                fm(aInst().amt),
+              {
+                t: "select",
+                opts: '<option value="1">Ya, masuk Piutang</option><option value="0">Tidak</option>',
+              },
+            )
+          : ""),
+    };
+  },
+  ps: () => {
+    const x = (db.settings.positions || [])[+S.ps];
+    if (!x)
+      return {
+        t: "Jabatan",
+        s: "mdClose()",
+        y: "Tutup",
+        b: "<p>Jabatan tidak ditemukan.</p>",
+        nf: 1,
+      };
+    return {
+      t: "Bawaan jabatan · " + x.name,
+      s: "savePosDef()",
+      y: "Simpan bawaan",
+      b:
+        `<p class="k">Nilai ini mengisi otomatis form pegawai baru saat jabatan dipilih; tetap bisa diubah per pegawai.</p>` +
+        [
+          ["g", "Gaji pokok standar (Rp / bulan)", "base_salary"],
+          ["t", "Tunjangan tetap standar (Rp / bulan)", "allowance"],
+          ["o", "Potongan tetap standar (Rp / bulan)", "deduction"],
+        ]
+          .map(([k, l, f]) =>
+            fld("ps-" + k, l, {
+              type: "text",
+              a: RPA,
+              value: x[f] ? fm(x[f]) : "",
+            }),
+          )
+          .join("") +
+        fld(
+          "ps-r",
+          "Peran pengguna bawaan (untuk akun baru dari pegawai berjabatan ini)",
+          {
+            t: "select",
+            opts:
+              `<option value="">— tidak diatur —</option>` +
+              opt(
+                db.roles.filter(
+                  (r) => r.status !== "nonaktif" && r._id !== "ROL-SUP",
+                ),
+                (r) => [r._id, r.name],
+                x.role_id || "",
+              ),
+          },
+        ) +
+        kChecklist(
+          "ps",
+          (x.comps || []).filter((q) => PK(q.component_id)),
+        ),
+    };
+  },
+  pk: () => {
+    const e = PK(S.ek),
+      lk = e && kUsed(e._id);
+    return {
+      t: EN(e, "Edit komponen", "Komponen baru"),
+      s: "saveComp()",
+      y: EN(e, "Simpan perubahan", "Tambah komponen"),
+      b:
+        fld("pk-n", "Nama komponen", { value: e ? e.name : "", req: 1 }) +
+        fld("pk-t", "Jenis" + (lk ? " (terkunci: sudah dipakai)" : ""), {
+          t: "select",
+          a: lk ? " disabled" : "",
+          opts: opt(
+            Object.keys(PKT),
+            (k) => [k, PKT[k]],
+            e ? e.type : "earning",
+          ),
+        }) +
+        fld("pk-c", "Cara hitung" + (lk ? " (terkunci: sudah dipakai)" : ""), {
+          t: "select",
+          a: (lk ? " disabled" : "") + ' onchange="pkCalc()"',
+          opts: opt(
+            Object.keys(CALC),
+            (k) => [k, CALC[k]],
+            (e && e.calc) || "tetap",
+          ),
+        }) +
+        fld(
+          "pk-v",
+          "Nilai bawaan (Rp, tarif per satuan, atau %; boleh kosong)",
+          {
+            type: "text",
+            a: ' inputmode="decimal" autocomplete="off"',
+            value:
+              e && e.value
+                ? (e.calc || "tetap") === "tetap" || e.calc === "per_satuan"
+                  ? fm(e.value)
+                  : rtp(e.value)
+                : "",
+          },
+        ) +
+        `<div id="pk-sw"${e && e.calc === "per_satuan" ? "" : " hidden"}>` +
+        fld("pk-s", "Satuan (jam, hari, dll.)", {
+          value: e && e.unit ? e.unit : "jam",
+        }) +
+        `<p class="k">Nilai bawaan di atas dipakai sebagai tarif per satuan; tarif tiap pegawai bisa diisi lewat ceklist komponen. Jumlah satuan diisi pada gaji berstatus Draf.</p></div>` +
+        `<div id="pk-bw"${e && e.calc === "persen_laba" ? "" : " hidden"}>` +
+        fld("pk-b", "Dasar laba", {
+          t: "select",
+          opts: opt(
+            Object.keys(BASIS),
+            (k) => [k, BASIS[k]],
+            (e && e.basis) || "sesudah",
+          ),
+        }) +
+        `<p class="k">Laba = pendapatan dikurangi beban pada bulan gaji (unit pegawai bila diisi). "Sebelum beban gaji" tidak memotong gaji; "sesudah" mengurangi gaji pokok, tunjangan, dan komponen non-laba. Bila laba rugi, komponen bernilai 0.</p></div>`,
+    };
+  },
+  us: () => {
+    const e = db.users.find((x) => x._id === S.eus);
+    return {
+      t: EN(e, "Edit pengguna", "Tambah pengguna"),
+      s: "saveUser()",
+      y: EN(e, "Simpan", "Tambah pengguna"),
+      b:
+        fld(
+          "us-e",
+          "Pegawai (pilih dari daftar pegawai; nama, unit, dan peran terisi otomatis)",
+          {
+            t: "select",
+            a: ' onchange="usPick()"',
+            opts:
+              `<option value="">— bukan pegawai / isi manual —</option>` +
+              opt(
+                db.employees.filter(
+                  (x) => isAct(x) || (e && e.employee_id === x._id),
+                ),
+                (x) => [
+                  x._id,
+                  x.emp_number + " · " + x.name + " · " + x.position,
+                ],
+                e ? e.employee_id : "",
+              ),
+          },
+        ) +
+        fld("us-n", "Nama *", {
+          a: ' autocomplete="off"',
+          value: e ? e.name : "",
+          req: 1,
+        }) +
+        fld(
+          "us-un",
+          "Username (dipakai untuk masuk; kosongkan agar dibuat otomatis dari nama)",
+          {
+            a: ' autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="20"',
+            value: e ? e.username || "" : "",
+          },
+        ) +
+        fld("us-r", "Peran *", {
+          t: "select",
+          req: 1,
+          opts: opt(
+            db.roles.filter(
+              (r) =>
+                r.status !== "nonaktif" &&
+                (r._id !== "ROL-SUP" ||
+                  cuSup() ||
+                  (e && e.role_id === "ROL-SUP")),
+            ),
+            (r) => [r._id, r.name],
+            e ? e.role_id : "ROL-PTU",
+          ),
+        }) +
+        `<label>Unit tugas (kosong = semua unit; bila diisi, pengguna hanya bisa memilih dan mencatat di unit ini)</label>` +
+        db.business_units
+          .map(
+            (x) =>
+              `<div><label class="ck"><input type="checkbox" id="us-u-${x._id}"${e && (e.unit_ids || []).includes(x._id) ? " checked" : ""}> ${esc(x.name)}</label></div>`,
+          )
+          .join("") +
+        (e
+          ? ""
+          : `<label>PIN awal (4–8 angka; kosongkan untuk memakai 1234; wajib diganti saat masuk pertama)</label>${PW("us-p", "new-password")}<label>Ulangi PIN awal</label>${PW("us-p2", "new-password")}`),
+    };
+  },
+  rp: () => {
+    const u = db.users.find((x) => x._id === S.rp) || { name: "" };
+    return {
+      t: "Reset PIN — " + u.name,
+      s: "resetPin()",
+      y: "Reset PIN",
+      b: `<p class="k">Isi PIN sementara. Pengguna wajib menggantinya saat masuk; kunci akun dibuka.</p><label>PIN sementara (4–8 angka)</label>${PW("rp-p", "new-password")}`,
+    };
+  },
+};
+function mdHtml() {
+  if (!S.md || !MD[S.md]) return "";
+  let f;
+  try {
+    f = MD[S.md]();
+  } catch (e) {
+    return "";
+  }
+  return `<div class="mb" tabindex="-1"><div class="mh"><h3 id="fm-t">${esc(f.t)}</h3><button class="ib s" aria-label="Tutup" title="Tutup" onclick="${f.c || "mdClose()"}">${ic("x")}</button></div><div class="mc">${f.b}${f.side || ""}${f.xb ? `<div class="fl">${f.xb}</div>` : ""}</div>${f.nf ? "" : `<div class="mf">${f.fb || `<button class="b s" onclick="${f.c || "mdClose()"}">Batal</button><button class="b"${f.yid ? ` id="${f.yid}"` : ""} onclick="${f.s}">${esc(f.y)}</button>`}</div>`}</div>`;
+}
+const MSK = /^(INPUT|SELECT|TEXTAREA)$/,
+  SIMH =
+    '<div class="card sim" id="sim-fee"></div><div class="card sim" id="sim"></div><div id="sim-w" aria-live="polite"></div>';
 // isian modal dijaga lewat render ulang (mis. galat validasi): disalin sebelum render, dipulihkan sesudahnya; PIN tidak pernah disalin
-function mdSnap(){if(!S.md||PGK.includes(S.md)||!document.querySelectorAll||S.mo!==mdKey())return;const v={};let n=0;
- document.querySelectorAll("#fm [id]").forEach(e=>{if(!MSK.test(e.tagName)||e.type==="file"||e.type==="password"||NB.includes(e.id))return;v[e.id]=e.type==="checkbox"?e.checked:e.value;n++});
- const a=document.activeElement;S.mf=a&&a.id&&a.closest&&a.closest("#fm")?a.id:"";if(n)S.mv={k:mdKey(),v}}
-function mdLock(on){if(document.body&&document.body.classList)document.body.classList.toggle("mo",!!on)}
-function mdr(){const el=$("#fm");if(!el)return;const k=mdKey(),was=S.mo||"";
- if(!S.md||!MD[S.md]||PGK.includes(S.md)){el.className="";el.innerHTML="";S.mo="";S.mv=null;mdLock(0);if(was)cfBack();return}
- el.innerHTML=mdHtml();el.className="on";mdLock(1);
- if(S.mv&&S.mv.k===k&&document.querySelectorAll)document.querySelectorAll("#fm [id]").forEach(e=>{if(!(e.id in S.mv.v))return;const v=S.mv.v[e.id];
-  if(e.type==="checkbox")e.checked=!!v;else if(e.tagName==="SELECT"){if([...e.options].some(o=>o.value===v||o.text===v))e.value=v}else e.value=v});
- S.mo=k;if(S.md==="tn")rows();if(S.md==="wd")wdPrev();if(S.md==="jm")jlSum();if(S.md==="lp"||S.md==="la"){simLive();jasaInfo()}if(S.md==="ld"||S.md==="lw"||S.md==="lc"){const sm=$("#sp-mode");if(sm&&S.pm)sm.value=S.pm;const sa=$("#sp-amt");if(sa&&S.pm==="full"&&sm&&S.sa==="")sa.value="";amtSync()}
- if(typeof uiEnh==="function")uiEnh();
- if(!S.fe&&!S.cf&&el.querySelector){const co=typeof matchMedia==="function"&&matchMedia("(pointer:coarse)").matches,f=S.wgo&&S.md==="wd"&&$("#wd-a")?$("#wd-a"):was===k&&S.mf?$("#"+S.mf):co&&was!==k?el.querySelector(".mb"):el.querySelector(".mc input:not([disabled]):not([type=checkbox]):not(.uh),.mc .ub:not([disabled]),.mc select:not([disabled]):not(.uh),.mc textarea:not([disabled])")||el.querySelector(".mb")||el.querySelector("button");S.wgo=0;if(f&&f.focus){if(was!==k){const c=el.querySelector(".mc");if(c)c.scrollTop=0}f.focus({preventScroll:was!==k})}}vvFit()}
-if(document.addEventListener)document.addEventListener("keydown",e=>{if(S.cf||!S.md||PGK.includes(S.md))return;const el=$("#fm");if(!el||!el.querySelectorAll)return;
- if(e.key==="Escape"){e.preventDefault();mdClose();return}
- if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"&&e.target.type!=="checkbox"&&!(e.target.closest&&e.target.closest(".card,.noent"))){e.preventDefault();const b=el.querySelector(".mf .b:last-child");if(b)b.click();return}
- if(e.key==="Tab"){const f=[...el.querySelectorAll("button,input,select,textarea")].filter(x=>!x.disabled&&x.getClientRects().length&&!x.classList.contains("uh"));if(!f.length)return;const i=f.indexOf(document.activeElement);
-  if(e.shiftKey&&i<=0){e.preventDefault();f[f.length-1].focus()}else if(!e.shiftKey&&(i<0||i===f.length-1)){e.preventDefault();f[0].focus()}}});
+function mdSnap() {
+  if (
+    !S.md ||
+    PGK.includes(S.md) ||
+    !document.querySelectorAll ||
+    S.mo !== mdKey()
+  )
+    return;
+  const v = {};
+  let n = 0;
+  document.querySelectorAll("#fm [id]").forEach((e) => {
+    if (
+      !MSK.test(e.tagName) ||
+      e.type === "file" ||
+      e.type === "password" ||
+      NB.includes(e.id)
+    )
+      return;
+    v[e.id] = e.type === "checkbox" ? e.checked : e.value;
+    n++;
+  });
+  const a = document.activeElement;
+  S.mf = a && a.id && a.closest && a.closest("#fm") ? a.id : "";
+  if (n) S.mv = { k: mdKey(), v };
+}
+function mdLock(on) {
+  if (document.body && document.body.classList)
+    document.body.classList.toggle("mo", !!on);
+}
+function mdr() {
+  const el = $("#fm");
+  if (!el) return;
+  const k = mdKey(),
+    was = S.mo || "";
+  if (!S.md || !MD[S.md] || PGK.includes(S.md)) {
+    el.className = "";
+    el.innerHTML = "";
+    S.mo = "";
+    S.mv = null;
+    mdLock(0);
+    if (was) cfBack();
+    return;
+  }
+  el.innerHTML = mdHtml();
+  el.className = "on";
+  mdLock(1);
+  if (S.mv && S.mv.k === k && document.querySelectorAll)
+    document.querySelectorAll("#fm [id]").forEach((e) => {
+      if (!(e.id in S.mv.v)) return;
+      const v = S.mv.v[e.id];
+      if (e.type === "checkbox") e.checked = !!v;
+      else if (e.tagName === "SELECT") {
+        if ([...e.options].some((o) => o.value === v || o.text === v))
+          e.value = v;
+      } else e.value = v;
+    });
+  S.mo = k;
+  if (S.md === "tn") rows();
+  if (S.md === "wd") wdPrev();
+  if (S.md === "jm") jlSum();
+  if (S.md === "lp" || S.md === "la") {
+    simLive();
+    jasaInfo();
+  }
+  if (S.md === "ld" || S.md === "lw" || S.md === "lc") {
+    const sm = $("#sp-mode");
+    if (sm && S.pm) sm.value = S.pm;
+    const sa = $("#sp-amt");
+    if (sa && S.pm === "full" && sm && S.sa === "") sa.value = "";
+    amtSync();
+  }
+  if (typeof uiEnh === "function") uiEnh();
+  if (!S.fe && !S.cf && el.querySelector) {
+    const co =
+        typeof matchMedia === "function" &&
+        matchMedia("(pointer:coarse)").matches,
+      f =
+        S.wgo && S.md === "wd" && $("#wd-a")
+          ? $("#wd-a")
+          : was === k && S.mf
+            ? $("#" + S.mf)
+            : co && was !== k
+              ? el.querySelector(".mb")
+              : el.querySelector(
+                  ".mc input:not([disabled]):not([type=checkbox]):not(.uh),.mc .ub:not([disabled]),.mc select:not([disabled]):not(.uh),.mc textarea:not([disabled])",
+                ) ||
+                el.querySelector(".mb") ||
+                el.querySelector("button");
+    S.wgo = 0;
+    if (f && f.focus) {
+      if (was !== k) {
+        const c = el.querySelector(".mc");
+        if (c) c.scrollTop = 0;
+      }
+      f.focus({ preventScroll: was !== k });
+    }
+  }
+  vvFit();
+}
+if (document.addEventListener)
+  document.addEventListener("keydown", (e) => {
+    if (S.cf || !S.md || PGK.includes(S.md)) return;
+    const el = $("#fm");
+    if (!el || !el.querySelectorAll) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      mdClose();
+      return;
+    }
+    if (
+      e.key === "Enter" &&
+      e.target &&
+      e.target.tagName === "INPUT" &&
+      e.target.type !== "checkbox" &&
+      !(e.target.closest && e.target.closest(".card,.noent"))
+    ) {
+      e.preventDefault();
+      const b = el.querySelector(".mf .b:last-child");
+      if (b) b.click();
+      return;
+    }
+    if (e.key === "Tab") {
+      const f = [...el.querySelectorAll("button,input,select,textarea")].filter(
+        (x) =>
+          !x.disabled &&
+          x.getClientRects().length &&
+          !x.classList.contains("uh"),
+      );
+      if (!f.length) return;
+      const i = f.indexOf(document.activeElement);
+      if (e.shiftKey && i <= 0) {
+        e.preventDefault();
+        f[f.length - 1].focus();
+      } else if (!e.shiftKey && (i < 0 || i === f.length - 1)) {
+        e.preventDefault();
+        f[0].focus();
+      }
+    }
+  });
 
 // ===== v1.1.009: transaksi lewat modal (form baru, jurnal multi-baris, rincian) =====
-MD.tn=()=>({t:"Transaksi baru",s:"submitT()",y:"Posting",b:`<div class="frm">${trxFormHtml()}<div class="prev" id="f-prev" aria-live="polite"></div></div>`});
-MD.jm=()=>({t:"Jurnal multi-baris",s:"postJnl()",y:"Posting jurnal",b:vJnl()});
+MD.tn = () => ({
+  t: "Transaksi baru",
+  s: "submitT()",
+  y: "Posting",
+  b: `<div class="frm">${trxFormHtml()}<div class="prev" id="f-prev" aria-live="polite"></div></div>`,
+});
+MD.jm = () => ({
+  t: "Jurnal multi-baris",
+  s: "postJnl()",
+  y: "Posting jurnal",
+  b: vJnl(),
+});
 
 // ===== v1.1.177: detail pelanggan Pamsimas (modal): ringkasan sambungan, angka meter terakhir, terbitkan tagihan, riwayat =====
-MD.wd=()=>{const c=wConn(S.ewd);if(!c._id)return{t:"Detail pelanggan",s:"mdClose()",y:"Tutup",b:"<p>Sambungan tidak ditemukan.</p>",nf:1};
- const p=cust(c.party_id),per=S.bp||today().slice(0,7),b=billOf(c._id,per),a=arrears(c._id),o=a.reduce((t,x)=>t+owedS(x),0),off=c.status!=="aktif",lb=wLastB(c._id),
-  R=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,
-  hist=db.sales.filter(x=>x.bill&&x.bill.conn_id===c._id&&x.status==="posted"&&x!==b).sort((x,y)=>y.bill.period.localeCompare(x.bill.period)||y._id.localeCompare(x._id)).slice(0,6),
-  ok=!off&&!b&&!noPerm("air.kelola"),
-  st=`<div class="lds"><span class="bdg ${off?"":"ok"}">${off?"Diputus":"Aktif"}</span>${off?"":b?`<span class="bdg ok">✓ Ditagih ${esc(per)}</span>`:`<span class="bdg wr">Belum ditagih ${esc(per)}</span>`}${a.length?`<span class="bdg wr">Belum lunas ${a.length}</span>`:""}</div>`,
-  info=`<h3>Rincian</h3><div class="kvg">${R("Nomor meter",esc(c.meter_no))}${R("Angka terakhir",qf(wPrev(c._id))+" m³")}${R("Telepon",esc(p.phone||"-"))}${R("Alamat",esc(p.address||"-"))}${R("Golongan",esc(c.cls?clsName(c.cls):"Standar"))}${R("Bacaan terakhir",lb?esc(lb.period):"Belum ada")}${R("Tunggakan",a.length?rp(o):"Tidak ada")}${R("Piutang total",rp(piu(p._id||c.party_id)))}</div>`,
-  fm_=ok?`<h3>Terbitkan tagihan</h3>${estPend(c._id).length?`<p class="k smw">Ada ${estPend(c._id).length} tagihan taksiran (${qf(estPend(c._id).reduce((t,x)=>t+x.bill.usage,0))} m³). Tagihan berikutnya dengan angka meter asli dikoreksi otomatis terhadap pemakaian taksiran itu.</p>`:""}${fld("wd-a","Angka meter akhir (angka terakhir "+qf(wPrev(c._id))+")",{type:"text",lid:"wd-al",a:' inputmode="decimal" autocomplete="off" placeholder="angka akhir" oninput="wdPrev()" aria-describedby="wd-pv"',value:""})}<label class="ck"><input type="checkbox" id="wd-e" onchange="wdEst()"> Meter rusak / tidak terbaca (taksir pemakaian)</label><div class="k wdp" id="wd-pv" aria-live="polite"></div><div class="wdg2"><div>${fld("wd-p","Bulan pemakaian",{type:"month",value:per,a:' onchange="bpChg(this.value)"'})}</div><div>${fld("wd-d","Tanggal tagihan",{type:"date",value:S.wdd||today()})}</div></div>`
-   :b?`<h3>Tagihan ${esc(per)}</h3><div class="kvg">${R("Nomor",esc(b.sale_number))}${R("Pemakaian",qf(b.bill.usage)+" m³"+(b.bill.est?" (taksiran)":""))}${R("Tagihan",rp(b.total))}${R("Sisa",owedS(b)>0.005?rp(owedS(b)):'<span class="bdg ok">Lunas</span>')}</div><div class="lda">${dkb("Cetak tagihan","mdClose();openDoc('tagih','"+b._id+"')")}${dkb("Struk tagihan","mdClose();openDoc('tagih','"+b._id+"','"+strukP()+"')")}${payOk(b).length===1?kwBtn(payOk(b)[0],1):payOk(b).map(y=>kwBtn(y)).join("")}${owedS(b)>0.005&&waNo(p.phone)?dkb("Kirim tagihan WhatsApp","tgWa('"+b._id+"')","out"):""}</div>`
-   :off?`<p class="k">Sambungan diputus, tidak ditagih sampai disambung kembali.</p>`:`<p class="k">Anda hanya dapat melihat data ini; menerbitkan tagihan membutuhkan izin kelola Pamsimas.</p>`,
-  ow=a.slice().sort((x,y)=>x.bill.period.localeCompare(y.bill.period)),
-  pay=ow.length&&!noPerm("air.kelola")?`<h3>Pembayaran</h3><div class="noent"><div class="wdg2"><div>${fld("wp-d","Tanggal bayar",{type:"date",value:today()})}</div><div>${fld("wp-k","Kas/Bank",{t:"select",opts:opt(db.cash_accounts.filter(isAct),k=>[k._id,k.name])})}</div></div>${fld("wp-a","Jumlah (Rp) — kosong = lunasi sisa",{type:"text",a:RPA,value:""})}${aLate().on?fld("wp-f","Denda keterlambatan (Rp) — kosong = hitung otomatis bila terlambat; isi 0 untuk membebaskan",{type:"text",a:RPA,value:""}):""}</div><div class="upl">${ow.map(x=>{const lf=lateFine(x,today(),owedS(x));return`<div class="upr alr"><span class="upm"><b>${esc(x.bill.period)}</b><small>${esc(x.sale_number)} · jatuh tempo ${esc(x.bill.due||"-")}${lf?" · denda bila dibayar hari ini Rp "+fm(lf):""}</small></span><span class="upa"><b>${rp(owedS(x))}</b><small>sisa dari ${rp(x.total)}</small><span class="alb">${ib("cash","Bayar","terima('"+x._id+"','wp')")}</span></span></div>`}).join("")}</div>`:"",
-  kl=noPerm("air.kelola")?"":`<h3>Kelola sambungan</h3><div class="lda">${dkb("Edit sambungan","mdOpen('cn','"+c._id+"')","edit")}${dkb("Ganti meter","mdOpen('gm','"+c._id+"')","edit")}${!off&&typeof arrears==="function"&&arrears(c._id).length?dkb("Surat peringatan 1","openDoc('spw','"+c._id+":1')")+dkb("Surat peringatan 2","openDoc('spw','"+c._id+":2')"):""}${off?dkb("Sambungkan kembali","askC('togConn','"+c._id+"')","check"):dkb("Putus sambungan","askC('togConn','"+c._id+"')","x","dng")}</div>`,
-  rs=Array.isArray(c.hist)&&c.hist.length?`<h3>Riwayat status</h3><div class="upl">${c.hist.slice().reverse().slice(0,8).map(h=>`<div class="upr alr"><span class="upm"><b>${h.a==="putus"?"Diputus":"Disambung kembali"}</b><small>${esc(tglS(h.d))}${h.by?" · oleh "+esc(h.by):""}</small></span><span class="upa">${h.sale?`<span class="bdg wr">Biaya sambung kembali</span>`:""}</span></div>`).join("")}</div>`:"",
-  hs=hist.length?`<h3>Tagihan sebelumnya</h3><div class="upl">${hist.map(x=>`<div class="upr alr"><span class="upm"><b>${esc(x.bill.period)}</b><small>${esc(x.sale_number)} · ${qf(x.bill.usage)} m³${x.bill.est?" · taksiran":""}</small>${payOk(x).map(y=>`<button class="lkb" onclick="mdClose();openDoc('kuit','${y._id}')">${ic("print")}Kuitansi ${tglS(y.date)}</button>`).join("")}</span><span class="upa"><b>${rp(x.total)}</b>${owedS(x)>0.005?'<span class="bdg wr">Belum lunas</span>':'<span class="bdg ok">Lunas</span>'}</span></div>`).join("")}</div>`:b?"":`<h3>Riwayat tagihan</h3><p class="k">Belum ada tagihan.</p>`;
- const rem=ow.length&&!noPerm("air.kelola")?`<div class="lda">${dkb("Kirim pengingat tunggakan","mdOpen('ar','"+c.party_id+"')","bell")}</div>`:"",nx=ok?wdNext(c._id):null,fb=ok?`<button class="b s" onclick="mdClose()">Batal</button><button class="b${nx?" s":""}" onclick="askC('terbitSatu','')">Terbitkan</button>${nx?`<button class="b" onclick="terbitSatu(true)">Terbitkan &amp; lanjut</button>`:""}`:"";
- return{t:p.name||"Pelanggan",s:"askC('terbitSatu','')",y:"Terbitkan tagihan",fb,nf:ok?0:1,b:`<div class="ldw wdw">${st}${fm_}${pay}${rem}${info}${hs}${rs}${kl}</div>`,P:{l:`${st}${fm_}${pay}${rem}`,r:`${info}${hs}${rs}${kl}`}}};
+MD.wd = () => {
+  const c = wConn(S.ewd);
+  if (!c._id)
+    return {
+      t: "Detail pelanggan",
+      s: "mdClose()",
+      y: "Tutup",
+      b: "<p>Sambungan tidak ditemukan.</p>",
+      nf: 1,
+    };
+  const p = cust(c.party_id),
+    per = S.bp || today().slice(0, 7),
+    b = billOf(c._id, per),
+    a = arrears(c._id),
+    o = a.reduce((t, x) => t + owedS(x), 0),
+    off = c.status !== "aktif",
+    lb = wLastB(c._id),
+    R = (k, v) =>
+      `<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,
+    hist = db.sales
+      .filter(
+        (x) =>
+          x.bill &&
+          x.bill.conn_id === c._id &&
+          x.status === "posted" &&
+          x !== b,
+      )
+      .sort(
+        (x, y) =>
+          y.bill.period.localeCompare(x.bill.period) ||
+          y._id.localeCompare(x._id),
+      )
+      .slice(0, 6),
+    ok = !off && !b && !noPerm("air.kelola"),
+    st = `<div class="lds"><span class="bdg ${off ? "" : "ok"}">${off ? "Diputus" : "Aktif"}</span>${off ? "" : b ? `<span class="bdg ok">✓ Ditagih ${esc(per)}</span>` : `<span class="bdg wr">Belum ditagih ${esc(per)}</span>`}${a.length ? `<span class="bdg wr">Belum lunas ${a.length}</span>` : ""}</div>`,
+    info = `<h3>Rincian</h3><div class="kvg">${R("Nomor meter", esc(c.meter_no))}${R("Angka terakhir", qf(wPrev(c._id)) + " m³")}${R("Telepon", esc(p.phone || "-"))}${R("Alamat", esc(p.address || "-"))}${R("Golongan", esc(c.cls ? clsName(c.cls) : "Standar"))}${R("Bacaan terakhir", lb ? esc(lb.period) : "Belum ada")}${R("Tunggakan", a.length ? rp(o) : "Tidak ada")}${R("Piutang total", rp(piu(p._id || c.party_id)))}</div>`,
+    fm_ = ok
+      ? `<h3>Terbitkan tagihan</h3>${estPend(c._id).length ? `<p class="k smw">Ada ${estPend(c._id).length} tagihan taksiran (${qf(estPend(c._id).reduce((t, x) => t + x.bill.usage, 0))} m³). Tagihan berikutnya dengan angka meter asli dikoreksi otomatis terhadap pemakaian taksiran itu.</p>` : ""}${fld("wd-a", "Angka meter akhir (angka terakhir " + qf(wPrev(c._id)) + ")", { type: "text", lid: "wd-al", a: ' inputmode="decimal" autocomplete="off" placeholder="angka akhir" oninput="wdPrev()" aria-describedby="wd-pv"', value: "" })}<label class="ck"><input type="checkbox" id="wd-e" onchange="wdEst()"> Meter rusak / tidak terbaca (taksir pemakaian)</label><div class="k wdp" id="wd-pv" aria-live="polite"></div><div class="wdg2"><div>${fld("wd-p", "Bulan pemakaian", { type: "month", value: per, a: ' onchange="bpChg(this.value)"' })}</div><div>${fld("wd-d", "Tanggal tagihan", { type: "date", value: S.wdd || today() })}</div></div>`
+      : b
+        ? `<h3>Tagihan ${esc(per)}</h3><div class="kvg">${R("Nomor", esc(b.sale_number))}${R("Pemakaian", qf(b.bill.usage) + " m³" + (b.bill.est ? " (taksiran)" : ""))}${R("Tagihan", rp(b.total))}${R("Sisa", owedS(b) > 0.005 ? rp(owedS(b)) : '<span class="bdg ok">Lunas</span>')}</div><div class="lda">${dkb("Cetak tagihan", "mdClose();openDoc('tagih','" + b._id + "')")}${dkb("Struk tagihan", "mdClose();openDoc('tagih','" + b._id + "','" + strukP() + "')")}${
+            payOk(b).length === 1
+              ? kwBtn(payOk(b)[0], 1)
+              : payOk(b)
+                  .map((y) => kwBtn(y))
+                  .join("")
+          }${owedS(b) > 0.005 && waNo(p.phone) ? dkb("Kirim tagihan WhatsApp", "tgWa('" + b._id + "')", "out") : ""}</div>`
+        : off
+          ? `<p class="k">Sambungan diputus, tidak ditagih sampai disambung kembali.</p>`
+          : `<p class="k">Anda hanya dapat melihat data ini; menerbitkan tagihan membutuhkan izin kelola Pamsimas.</p>`,
+    ow = a.slice().sort((x, y) => x.bill.period.localeCompare(y.bill.period)),
+    pay =
+      ow.length && !noPerm("air.kelola")
+        ? `<h3>Pembayaran</h3><div class="noent"><div class="wdg2"><div>${fld("wp-d", "Tanggal bayar", { type: "date", value: today() })}</div><div>${fld("wp-k", "Kas/Bank", { t: "select", opts: opt(db.cash_accounts.filter(isAct), (k) => [k._id, k.name]) })}</div></div>${fld("wp-a", "Jumlah (Rp) — kosong = lunasi sisa", { type: "text", a: RPA, value: "" })}${aLate().on ? fld("wp-f", "Denda keterlambatan (Rp) — kosong = hitung otomatis bila terlambat; isi 0 untuk membebaskan", { type: "text", a: RPA, value: "" }) : ""}</div><div class="upl">${ow
+            .map((x) => {
+              const lf = lateFine(x, today(), owedS(x));
+              return `<div class="upr alr"><span class="upm"><b>${esc(x.bill.period)}</b><small>${esc(x.sale_number)} · jatuh tempo ${esc(x.bill.due || "-")}${lf ? " · denda bila dibayar hari ini Rp " + fm(lf) : ""}</small></span><span class="upa"><b>${rp(owedS(x))}</b><small>sisa dari ${rp(x.total)}</small><span class="alb">${ib("cash", "Bayar", "terima('" + x._id + "','wp')")}</span></span></div>`;
+            })
+            .join("")}</div>`
+        : "",
+    kl = noPerm("air.kelola")
+      ? ""
+      : `<h3>Kelola sambungan</h3><div class="lda">${dkb("Edit sambungan", "mdOpen('cn','" + c._id + "')", "edit")}${dkb("Ganti meter", "mdOpen('gm','" + c._id + "')", "edit")}${!off && typeof arrears === "function" && arrears(c._id).length ? dkb("Surat peringatan 1", "openDoc('spw','" + c._id + ":1')") + dkb("Surat peringatan 2", "openDoc('spw','" + c._id + ":2')") : ""}${off ? dkb("Sambungkan kembali", "askC('togConn','" + c._id + "')", "check") : dkb("Putus sambungan", "askC('togConn','" + c._id + "')", "x", "dng")}</div>`,
+    rs =
+      Array.isArray(c.hist) && c.hist.length
+        ? `<h3>Riwayat status</h3><div class="upl">${c.hist
+            .slice()
+            .reverse()
+            .slice(0, 8)
+            .map(
+              (h) =>
+                `<div class="upr alr"><span class="upm"><b>${h.a === "putus" ? "Diputus" : "Disambung kembali"}</b><small>${esc(tglS(h.d))}${h.by ? " · oleh " + esc(h.by) : ""}</small></span><span class="upa">${h.sale ? `<span class="bdg wr">Biaya sambung kembali</span>` : ""}</span></div>`,
+            )
+            .join("")}</div>`
+        : "",
+    hs = hist.length
+      ? `<h3>Tagihan sebelumnya</h3><div class="upl">${hist
+          .map(
+            (x) =>
+              `<div class="upr alr"><span class="upm"><b>${esc(x.bill.period)}</b><small>${esc(x.sale_number)} · ${qf(x.bill.usage)} m³${x.bill.est ? " · taksiran" : ""}</small>${payOk(
+                x,
+              )
+                .map(
+                  (y) =>
+                    `<button class="lkb" onclick="mdClose();openDoc('kuit','${y._id}')">${ic("print")}Kuitansi ${tglS(y.date)}</button>`,
+                )
+                .join(
+                  "",
+                )}</span><span class="upa"><b>${rp(x.total)}</b>${owedS(x) > 0.005 ? '<span class="bdg wr">Belum lunas</span>' : '<span class="bdg ok">Lunas</span>'}</span></div>`,
+          )
+          .join("")}</div>`
+      : b
+        ? ""
+        : `<h3>Riwayat tagihan</h3><p class="k">Belum ada tagihan.</p>`;
+  const rem =
+      ow.length && !noPerm("air.kelola")
+        ? `<div class="lda">${dkb("Kirim pengingat tunggakan", "mdOpen('ar','" + c.party_id + "')", "bell")}</div>`
+        : "",
+    nx = ok ? wdNext(c._id) : null,
+    fb = ok
+      ? `<button class="b s" onclick="mdClose()">Batal</button><button class="b${nx ? " s" : ""}" onclick="askC('terbitSatu','')">Terbitkan</button>${nx ? `<button class="b" onclick="terbitSatu(true)">Terbitkan &amp; lanjut</button>` : ""}`
+      : "";
+  return {
+    t: p.name || "Pelanggan",
+    s: "askC('terbitSatu','')",
+    y: "Terbitkan tagihan",
+    fb,
+    nf: ok ? 0 : 1,
+    b: `<div class="ldw wdw">${st}${fm_}${pay}${rem}${info}${hs}${rs}${kl}</div>`,
+    P: { l: `${st}${fm_}${pay}${rem}`, r: `${info}${hs}${rs}${kl}` },
+  };
+};
 
 // ===== v1.1.203: Ganti meter lewat modal =====
-MD.gm=()=>{const c=wConn(S.egm);if(!c._id)return{t:"Ganti meter",s:"mdClose()",y:"Tutup",b:"<p>Sambungan tidak ditemukan.</p>",nf:1};
- const p=cust(c.party_id),per=today().slice(0,7),R=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,lb=wLastB(c._id),
-  warn=c.status==="aktif"&&!billOf(c._id,per)?`<div class="k smw" role="note">Periode ${esc(per)} belum ditagih. Tagih dulu angka akhir meter lama (<a href="#" onclick="mdOpen('wd','${c._id}');return false">buka tagihan</a>) supaya pemakaian meter lama tidak hilang.</div>`:"",
-  hs=db.water_readings.filter(r=>r.kind==="ganti"&&r.status!=="voided"&&r.conn_id===c._id).slice().reverse(),last=wRds(c._id).filter(r=>r.status!=="voided").pop();
- return{t:"Ganti meter",s:"askC('gantiMeter','')",y:"Catat ganti meter",b:`<div class="ldw wdw"><p class="k">${esc(p.name||"Pelanggan")}. Pemakaian setelah ini dihitung dari angka awal meter baru.</p>${warn}<h3>Meter saat ini</h3><div class="kvg">${R("Nomor meter lama",esc(c.meter_no))}${R("Angka akhir terakhir",qf(wPrev(c._id))+" m³")}${R("Bacaan terakhir",lb?esc(lb.period):"Belum ada")}</div><h3>Meter baru</h3>${fld("gm-m","Nomor meter baru",{req:1,a:' autocomplete="off" maxlength="40"'})}${fld("gm-a","Angka awal meter baru",{type:"text",req:1,a:' inputmode="decimal" autocomplete="off"',hint:"Angka yang tertera di meter baru saat dipasang (biasanya 0)"})}<div class="wdg2"><div>${fld("gm-d","Tanggal ganti",{type:"date",value:today()})}</div><div>${fld("gm-r","Alasan",{t:"select",opts:opt(GM_ALASAN.map(x=>[x,x]),x=>x)})}</div></div>${hs.length?`<h3>Riwayat ganti meter</h3><div class="upl">${hs.map(r=>`<div class="upr alr"><span class="upm"><b>${esc(r.date)}</b><small>${esc(r.old_meter||"")} → ${esc(r.meter_no)}${r.reason?" · "+esc(r.reason):""} · angka akhir lama ${qf(r.prev)} · awal baru ${qf(r.curr)}</small></span><span class="upa">${last&&last._id===r._id?`<span class="alb">${ib("undo","Batalkan","askC('batalGanti','"+r._id+"')","x")}</span>`:""}</span></div>`).join("")}</div>`:""}</div>`}};
+MD.gm = () => {
+  const c = wConn(S.egm);
+  if (!c._id)
+    return {
+      t: "Ganti meter",
+      s: "mdClose()",
+      y: "Tutup",
+      b: "<p>Sambungan tidak ditemukan.</p>",
+      nf: 1,
+    };
+  const p = cust(c.party_id),
+    per = today().slice(0, 7),
+    R = (k, v) =>
+      `<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,
+    lb = wLastB(c._id),
+    warn =
+      c.status === "aktif" && !billOf(c._id, per)
+        ? `<div class="k smw" role="note">Periode ${esc(per)} belum ditagih. Tagih dulu angka akhir meter lama (<a href="#" onclick="mdOpen('wd','${c._id}');return false">buka tagihan</a>) supaya pemakaian meter lama tidak hilang.</div>`
+        : "",
+    hs = db.water_readings
+      .filter(
+        (r) =>
+          r.kind === "ganti" && r.status !== "voided" && r.conn_id === c._id,
+      )
+      .slice()
+      .reverse(),
+    last = wRds(c._id)
+      .filter((r) => r.status !== "voided")
+      .pop();
+  return {
+    t: "Ganti meter",
+    s: "askC('gantiMeter','')",
+    y: "Catat ganti meter",
+    b: `<div class="ldw wdw"><p class="k">${esc(p.name || "Pelanggan")}. Pemakaian setelah ini dihitung dari angka awal meter baru.</p>${warn}<h3>Meter saat ini</h3><div class="kvg">${R("Nomor meter lama", esc(c.meter_no))}${R("Angka akhir terakhir", qf(wPrev(c._id)) + " m³")}${R("Bacaan terakhir", lb ? esc(lb.period) : "Belum ada")}</div><h3>Meter baru</h3>${fld("gm-m", "Nomor meter baru", { req: 1, a: ' autocomplete="off" maxlength="40"' })}${fld("gm-a", "Angka awal meter baru", { type: "text", req: 1, a: ' inputmode="decimal" autocomplete="off"', hint: "Angka yang tertera di meter baru saat dipasang (biasanya 0)" })}<div class="wdg2"><div>${fld("gm-d", "Tanggal ganti", { type: "date", value: today() })}</div><div>${fld(
+      "gm-r",
+      "Alasan",
+      {
+        t: "select",
+        opts: opt(
+          GM_ALASAN.map((x) => [x, x]),
+          (x) => x,
+        ),
+      },
+    )}</div></div>${hs.length ? `<h3>Riwayat ganti meter</h3><div class="upl">${hs.map((r) => `<div class="upr alr"><span class="upm"><b>${esc(r.date)}</b><small>${esc(r.old_meter || "")} → ${esc(r.meter_no)}${r.reason ? " · " + esc(r.reason) : ""} · angka akhir lama ${qf(r.prev)} · awal baru ${qf(r.curr)}</small></span><span class="upa">${last && last._id === r._id ? `<span class="alb">${ib("undo", "Batalkan", "askC('batalGanti','" + r._id + "')", "x")}</span>` : ""}</span></div>`).join("")}</div>` : ""}</div>`,
+  };
+};
 
 // ===== v1.1.184: Terima pembayaran piutang lewat modal (menggantikan form di atas daftar Piutang) =====
-MD.wb=()=>{const x=db.sales.find(q=>q._id===S.ewb);if(!x)return{t:"Piutang",s:"mdClose()",y:"Tutup",b:"<p>Piutang tidak ditemukan.</p>",nf:1};
- const nm=x.party_id?cust(x.party_id).name:"Tanpa pelanggan",o=owedS(x),pd=paidOf(x),R=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,lf=lateFine(x,today(),o),late=o>0.005&&x.status!=="voided"&&x.bill&&x.bill.due&&x.bill.due<today(),
-  vdb=x.status==="voided",ok=o>0.005&&!vdb&&!noPerm("air.kelola"),
-  info=`<div class="lds">${late?'<span class="bdg bd">Terlambat</span>':""}${pd>0&&o>0.005?'<span class="bdg wr">Dibayar sebagian</span>':""}${vdb?'<span class="bdg">Dibatalkan</span>':o<=0.005?'<span class="bdg ok">Lunas</span>':""}</div><div class="kvg">${R("Tagihan",esc(x.sale_number))}${R(x.bill?"Periode":"Jenis",x.bill?esc(x.bill.period):x.opening?"Saldo awal piutang":"Layanan kredit")}${R(x.bill?"Jatuh tempo":"Tanggal",esc(tglS(x.bill?x.bill.due:x.date)))}${R("Total",rp(x.total))}${R("Sudah dibayar",rp(pd))}${R("Sisa",rp(o))}</div>`,
-  sk=x.bill&&wConn(x.bill.conn_id)._id?dkb("Rincian sambungan","mdOpen('wd','"+x.bill.conn_id+"')","out"):"",
-  nota=(x.status==="posted"&&!x.opening||ok&&x.party_id||sk)?`<div class="lda">${sk}${x.status==="posted"&&!x.opening?dkb(x.bill?"Cetak tagihan":"Cetak bukti","mdClose();openDoc('"+(x.bill?"tagih":"jual")+"','"+x._id+"')")+dkb(x.bill?"Struk tagihan":"Struk bukti","mdClose();openDoc('"+(x.bill?"tagih":"jual")+"','"+x._id+"','"+strukP()+"')"):""}${ok&&x.party_id?dkb("Kirim pengingat","mdOpen('ar','"+x.party_id+"')","bell"):""}${x.status==="posted"&&!x.opening&&!noPerm("air.kelola")?dkb(x.bill?"Batalkan tagihan":"Batalkan penjualan","askC('batalJual','"+x._id+"')","undo","dng"):""}</div>`:"",
-  py=db.payments.filter(y=>y.sale_id===x._id),
-  riw=py.length?`<h3>Pembayaran tercatat</h3><div class="upl">${py.map(y=>{const vd=y.status==="voided";return`<div class="upr alr${vd?" vd":""}"><span class="tri in" aria-hidden="true">↓</span><span class="upm"><b>${rp(y.amount)}</b><small>${esc(tglS(y.date))}${y.fine?" · denda "+rp(y.fine):""}</small></span><span class="upa">${vd?'<span class="bdg">Batal</span>':'<span class="bdg ok">Diterima</span>'}${y.status==="posted"?`<span class="alb">${ib("print","Kuitansi","openDoc('kuit','"+y._id+"')","s")}${noPerm("air.kelola")?"":ib("undo","Batalkan","askC('batalTerima','"+y._id+"')","x")}</span>`:""}</span></div>`}).join("")}</div>`:"",
-  jj=ok?`<h3>Janji bayar</h3>${x.janji?`<p class="k">Pelanggan berjanji membayar ${esc(tglS(x.janji.d))}${x.janji.n?" · "+esc(x.janji.n):""}${x.janji.d<today()?" · sudah lewat":""}</p>`:'<p class="k">Pelanggan belum memberi janji bayar.</p>'}<div class="noent wdg2"><div>${fld("wj-d","Tanggal janji",{type:"date",value:x.janji?x.janji.d:new Date(Date.parse(today()+"T00:00:00Z")+7*864e5).toISOString().slice(0,10)})}</div><div>${fld("wj-n","Catatan (opsional)",{value:x.janji?x.janji.n||"":"",a:' maxlength="80" autocomplete="off"'})}</div></div><div class="lda">${dkb(x.janji?"Ubah janji":"Simpan janji","janjiSave('"+x._id+"')","check")}${x.janji?dkb("Hapus janji","janjiDel('"+x._id+"')","x"):""}</div>`:"",
-  frm=ok?`<h3>Terima pembayaran</h3><div class="noent">${fld("wp-a","Jumlah (Rp)",{type:"text",a:RPA+' aria-describedby="wp-sr"',value:fm(o)})}<div class="wdq"><span id="wp-sr" class="k">Sisa piutang Rp ${fm(o)}</span><button type="button" class="lkb" onclick="const e=$('#wp-a');e.value='${fm(o)}';e.focus()">Lunasi sisa</button></div><div class="wdg2"><div>${fld("wp-d","Tanggal bayar",{type:"date",value:today()})}</div><div>${fld("wp-k","Kas/Bank",{t:"select",opts:opt(db.cash_accounts.filter(isAct),k=>[k._id,k.name])})}</div></div>${aLate().on&&x.bill?fld("wp-f","Denda keterlambatan (Rp) — kosong = otomatis"+(lf?" (bila dibayar hari ini Rp "+fm(lf)+")":"")+"; isi 0 untuk membebaskan",{type:"text",a:RPA,value:""}):""}</div>`
-   :vdb?`<p class="k">Tagihan ini sudah dibatalkan dengan jurnal pembalik.</p>`:o>0.005?`<p class="k">Anda hanya dapat melihat data ini; menerima pembayaran membutuhkan izin kelola Pamsimas.</p>`:`<p class="k">Piutang ini sudah lunas.</p>`;
- return{t:nm,s:"terima('"+x._id+"','wp')",y:"Terima pembayaran",nf:ok?0:1,b:`<div class="ldw wdw">${info}${nota}${riw}${jj}${frm}</div>`,P:{l:`${info}${nota}${riw}`,r:`${jj}${frm}`}}};
+MD.wb = () => {
+  const x = db.sales.find((q) => q._id === S.ewb);
+  if (!x)
+    return {
+      t: "Piutang",
+      s: "mdClose()",
+      y: "Tutup",
+      b: "<p>Piutang tidak ditemukan.</p>",
+      nf: 1,
+    };
+  const nm = x.party_id ? cust(x.party_id).name : "Tanpa pelanggan",
+    o = owedS(x),
+    pd = paidOf(x),
+    R = (k, v) =>
+      `<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,
+    lf = lateFine(x, today(), o),
+    late =
+      o > 0.005 &&
+      x.status !== "voided" &&
+      x.bill &&
+      x.bill.due &&
+      x.bill.due < today(),
+    vdb = x.status === "voided",
+    ok = o > 0.005 && !vdb && !noPerm("air.kelola"),
+    info = `<div class="lds">${late ? '<span class="bdg bd">Terlambat</span>' : ""}${pd > 0 && o > 0.005 ? '<span class="bdg wr">Dibayar sebagian</span>' : ""}${vdb ? '<span class="bdg">Dibatalkan</span>' : o <= 0.005 ? '<span class="bdg ok">Lunas</span>' : ""}</div><div class="kvg">${R("Tagihan", esc(x.sale_number))}${R(x.bill ? "Periode" : "Jenis", x.bill ? esc(x.bill.period) : x.opening ? "Saldo awal piutang" : "Layanan kredit")}${R(x.bill ? "Jatuh tempo" : "Tanggal", esc(tglS(x.bill ? x.bill.due : x.date)))}${R("Total", rp(x.total))}${R("Sudah dibayar", rp(pd))}${R("Sisa", rp(o))}</div>`,
+    sk =
+      x.bill && wConn(x.bill.conn_id)._id
+        ? dkb(
+            "Rincian sambungan",
+            "mdOpen('wd','" + x.bill.conn_id + "')",
+            "out",
+          )
+        : "",
+    nota =
+      (x.status === "posted" && !x.opening) || (ok && x.party_id) || sk
+        ? `<div class="lda">${sk}${x.status === "posted" && !x.opening ? dkb(x.bill ? "Cetak tagihan" : "Cetak bukti", "mdClose();openDoc('" + (x.bill ? "tagih" : "jual") + "','" + x._id + "')") + dkb(x.bill ? "Struk tagihan" : "Struk bukti", "mdClose();openDoc('" + (x.bill ? "tagih" : "jual") + "','" + x._id + "','" + strukP() + "')") : ""}${ok && x.party_id ? dkb("Kirim pengingat", "mdOpen('ar','" + x.party_id + "')", "bell") : ""}${x.status === "posted" && !x.opening && !noPerm("air.kelola") ? dkb(x.bill ? "Batalkan tagihan" : "Batalkan penjualan", "askC('batalJual','" + x._id + "')", "undo", "dng") : ""}</div>`
+        : "",
+    py = db.payments.filter((y) => y.sale_id === x._id),
+    riw = py.length
+      ? `<h3>Pembayaran tercatat</h3><div class="upl">${py
+          .map((y) => {
+            const vd = y.status === "voided";
+            return `<div class="upr alr${vd ? " vd" : ""}"><span class="tri in" aria-hidden="true">↓</span><span class="upm"><b>${rp(y.amount)}</b><small>${esc(tglS(y.date))}${y.fine ? " · denda " + rp(y.fine) : ""}</small></span><span class="upa">${vd ? '<span class="bdg">Batal</span>' : '<span class="bdg ok">Diterima</span>'}${y.status === "posted" ? `<span class="alb">${ib("print", "Kuitansi", "openDoc('kuit','" + y._id + "')", "s")}${noPerm("air.kelola") ? "" : ib("undo", "Batalkan", "askC('batalTerima','" + y._id + "')", "x")}</span>` : ""}</span></div>`;
+          })
+          .join("")}</div>`
+      : "",
+    jj = ok
+      ? `<h3>Janji bayar</h3>${x.janji ? `<p class="k">Pelanggan berjanji membayar ${esc(tglS(x.janji.d))}${x.janji.n ? " · " + esc(x.janji.n) : ""}${x.janji.d < today() ? " · sudah lewat" : ""}</p>` : '<p class="k">Pelanggan belum memberi janji bayar.</p>'}<div class="noent wdg2"><div>${fld("wj-d", "Tanggal janji", { type: "date", value: x.janji ? x.janji.d : new Date(Date.parse(today() + "T00:00:00Z") + 7 * 864e5).toISOString().slice(0, 10) })}</div><div>${fld("wj-n", "Catatan (opsional)", { value: x.janji ? x.janji.n || "" : "", a: ' maxlength="80" autocomplete="off"' })}</div></div><div class="lda">${dkb(x.janji ? "Ubah janji" : "Simpan janji", "janjiSave('" + x._id + "')", "check")}${x.janji ? dkb("Hapus janji", "janjiDel('" + x._id + "')", "x") : ""}</div>`
+      : "",
+    frm = ok
+      ? `<h3>Terima pembayaran</h3><div class="noent">${fld("wp-a", "Jumlah (Rp)", { type: "text", a: RPA + ' aria-describedby="wp-sr"', value: fm(o) })}<div class="wdq"><span id="wp-sr" class="k">Sisa piutang Rp ${fm(o)}</span><button type="button" class="lkb" onclick="const e=$('#wp-a');e.value='${fm(o)}';e.focus()">Lunasi sisa</button></div><div class="wdg2"><div>${fld("wp-d", "Tanggal bayar", { type: "date", value: today() })}</div><div>${fld("wp-k", "Kas/Bank", { t: "select", opts: opt(db.cash_accounts.filter(isAct), (k) => [k._id, k.name]) })}</div></div>${aLate().on && x.bill ? fld("wp-f", "Denda keterlambatan (Rp) — kosong = otomatis" + (lf ? " (bila dibayar hari ini Rp " + fm(lf) + ")" : "") + "; isi 0 untuk membebaskan", { type: "text", a: RPA, value: "" }) : ""}</div>`
+      : vdb
+        ? `<p class="k">Tagihan ini sudah dibatalkan dengan jurnal pembalik.</p>`
+        : o > 0.005
+          ? `<p class="k">Anda hanya dapat melihat data ini; menerima pembayaran membutuhkan izin kelola Pamsimas.</p>`
+          : `<p class="k">Piutang ini sudah lunas.</p>`;
+  return {
+    t: nm,
+    s: "terima('" + x._id + "','wp')",
+    y: "Terima pembayaran",
+    nf: ok ? 0 : 1,
+    b: `<div class="ldw wdw">${info}${nota}${riw}${jj}${frm}</div>`,
+    P: { l: `${info}${nota}${riw}`, r: `${jj}${frm}` },
+  };
+};
 
 // ===== v1.1.170: Master > Tarif Air lewat modal (golongan tarif, denda, biaya pasang baru, diskon) =====
-const nf0=v=>({type:"text",a:' inputmode="numeric" autocomplete="off" oninput="fmtR(this)"',value:v===""||v==null?"":fm(v)});
-MD.gl=()=>{const e=aClasses().find(x=>x.code===S.egl),c=airCfg(),b=e||c,mv=S.mv&&S.mv.k===mdKey()?S.mv.v:null,md=mv&&mv["gt-md"]?mv["gt-md"]:b.mode==="tier"?"tier":"flat",t=b.tiers.length===3?b.tiers:[{upto:10,price:b.tiers[0].price},{upto:20,price:b.tiers[0].price},{upto:null,price:b.tiers[0].price}];
- return{t:EN(e,"Ubah golongan tarif","Golongan tarif baru"),s:"saveGol()",y:EN(e,"Simpan perubahan","Tambah golongan"),
-  b:fld("gt-n","Nama golongan (mis. Rumah tangga, Usaha, Sosial)",{value:e?e.name:"",req:1,a:' maxlength="40" autocomplete="off"'})
-  +fld("gt-md","Model tarif",{t:"select",a:' onchange="gtMd(this.value)"',opts:opt([["flat","Sama untuk semua (satu harga per m³)"],["tier","Bertingkat (3 blok)"]],x=>x,md)})
-  +fld("gt-p1","Harga per m³ (Rp); untuk bertingkat = harga blok 1",{...nf0(t[0].price),req:1})
-  +`<div id="gt-tr"${md==="tier"?"":" hidden"}>`+fld("gt-u1","Blok 1: sampai (m³)",nf0(t[0].upto))+fld("gt-u2","Blok 2: sampai (m³)",nf0(t[1].upto))+fld("gt-p2","Blok 2: harga per m³ (Rp)",nf0(t[1].price))+fld("gt-p3","Blok 3 (selebihnya): harga per m³ (Rp)",nf0(t[2].price))+`</div>`
-  +fld("gt-ab","Beban tetap per bulan (Rp)",nf0(b.abon))+fld("gt-mn","Pemakaian minimum yang ditagih (m³; 0 = tanpa minimum)",nf0(b.min_m3))
-  +'<p class="k">Berlaku untuk tagihan berikutnya; tagihan yang sudah terbit tidak berubah.</p>'}};
-MD.dn=()=>{const L=aLate();return{t:"Denda keterlambatan",s:"saveLate()",y:"Simpan denda",
-  b:fld("al-on","Denda keterlambatan tagihan air",{t:"select",opts:opt([["0","Nonaktif"],["1","Aktif"]],x=>x,L.on?"1":"0")})
-  +fld("al-ty","Cara hitung",{t:"select",opts:opt([["tetap","Nominal tetap per tagihan (Rp)"],["persen","Persentase dari sisa tagihan (%)"]],x=>x,L.type)})
-  +fld("al-v","Nilai denda (Rp atau %)",nf0(L.val))+fld("al-g","Tenggang setelah jatuh tempo (hari)",nf0(L.grace))+fld("al-m","Batas maksimum denda (Rp; 0 = tanpa batas)",nf0(L.max))
-  +'<p class="k">Dikenakan sekali per tagihan, pada pembayaran pertama sesudah jatuh tempo + tenggang (akun 4210 Pendapatan Denda Air).</p>'}};
-MD.pb=()=>{const I=aInst();return{t:"Biaya pasang baru",s:"saveInst()",y:"Simpan biaya",
-  b:fld("ai-on","Biaya pasang baru",{t:"select",opts:opt([["0","Nonaktif"],["1","Aktif"]],x=>x,I.on?"1":"0")})
-  +fld("ai-n","Nama biaya",{value:I.name,req:1,a:' maxlength="40" autocomplete="off"'})+fld("ai-a","Nominal (Rp)",nf0(I.amt))
-  +'<p class="k">Ditagihkan sebagai piutang pelanggan saat menambah sambungan baru (akun 4220 Pendapatan Pasang Baru Air).</p>'}};
-MD.sk=()=>{const I=aRecon();return{t:"Biaya sambung kembali",s:"saveRecon()",y:"Simpan biaya",
-  b:fld("ak-on","Biaya sambung kembali",{t:"select",opts:opt([["0","Nonaktif"],["1","Aktif"]],x=>x,I.on?"1":"0")})
-  +fld("ak-n","Nama biaya",{value:I.name,req:1,a:' maxlength="40" autocomplete="off"'})+fld("ak-a","Nominal (Rp)",nf0(I.amt))
-  +'<p class="k">Ditagihkan sebagai piutang pelanggan setiap kali sambungan yang diputus disambung kembali (akun 4220).</p>'}};
-MD.ds=()=>{const e=aDiscs().find(x=>x.code===S.eds);return{t:EN(e,"Ubah diskon","Diskon baru"),s:"saveDisc()",y:EN(e,"Simpan perubahan","Tambah diskon"),
-  b:fld("ad-n","Nama diskon (mis. Warga kurang mampu)",{value:e?e.name:"",req:1,a:' maxlength="40" autocomplete="off"'})
-  +fld("ad-t","Jenis diskon",{t:"select",opts:opt([["persen","Persentase (%)"],["nominal","Nominal (Rp)"]],x=>x,e?e.type:"persen")})
-  +fld("ad-v","Nilai (% atau Rp)",{type:"text",a:' inputmode="decimal" autocomplete="off"',value:e?String(e.val).replace(".",","):"",req:1})
-  +fld("ad-s","Berlaku untuk",{t:"select",opts:opt([["semua","Tagihan air dan layanan lain"],["tagihan","Hanya tagihan air"],["penjualan","Hanya penjualan lain"]],x=>x,e?e.scope:"semua")})
-  +'<p class="k">Diskon tagihan dipilih per sambungan; diskon layanan dipilih saat mencatat layanan.</p>'}};
+const nf0 = (v) => ({
+  type: "text",
+  a: ' inputmode="numeric" autocomplete="off" oninput="fmtR(this)"',
+  value: v === "" || v == null ? "" : fm(v),
+});
+MD.gl = () => {
+  const e = aClasses().find((x) => x.code === S.egl),
+    c = airCfg(),
+    b = e || c,
+    mv = S.mv && S.mv.k === mdKey() ? S.mv.v : null,
+    md = mv && mv["gt-md"] ? mv["gt-md"] : b.mode === "tier" ? "tier" : "flat",
+    t =
+      b.tiers.length === 3
+        ? b.tiers
+        : [
+            { upto: 10, price: b.tiers[0].price },
+            { upto: 20, price: b.tiers[0].price },
+            { upto: null, price: b.tiers[0].price },
+          ];
+  return {
+    t: EN(e, "Ubah golongan tarif", "Golongan tarif baru"),
+    s: "saveGol()",
+    y: EN(e, "Simpan perubahan", "Tambah golongan"),
+    b:
+      fld("gt-n", "Nama golongan (mis. Rumah tangga, Usaha, Sosial)", {
+        value: e ? e.name : "",
+        req: 1,
+        a: ' maxlength="40" autocomplete="off"',
+      }) +
+      fld("gt-md", "Model tarif", {
+        t: "select",
+        a: ' onchange="gtMd(this.value)"',
+        opts: opt(
+          [
+            ["flat", "Sama untuk semua (satu harga per m³)"],
+            ["tier", "Bertingkat (3 blok)"],
+          ],
+          (x) => x,
+          md,
+        ),
+      }) +
+      fld("gt-p1", "Harga per m³ (Rp); untuk bertingkat = harga blok 1", {
+        ...nf0(t[0].price),
+        req: 1,
+      }) +
+      `<div id="gt-tr"${md === "tier" ? "" : " hidden"}>` +
+      fld("gt-u1", "Blok 1: sampai (m³)", nf0(t[0].upto)) +
+      fld("gt-u2", "Blok 2: sampai (m³)", nf0(t[1].upto)) +
+      fld("gt-p2", "Blok 2: harga per m³ (Rp)", nf0(t[1].price)) +
+      fld("gt-p3", "Blok 3 (selebihnya): harga per m³ (Rp)", nf0(t[2].price)) +
+      `</div>` +
+      fld("gt-ab", "Beban tetap per bulan (Rp)", nf0(b.abon)) +
+      fld(
+        "gt-mn",
+        "Pemakaian minimum yang ditagih (m³; 0 = tanpa minimum)",
+        nf0(b.min_m3),
+      ) +
+      '<p class="k">Berlaku untuk tagihan berikutnya; tagihan yang sudah terbit tidak berubah.</p>',
+  };
+};
+MD.dn = () => {
+  const L = aLate();
+  return {
+    t: "Denda keterlambatan",
+    s: "saveLate()",
+    y: "Simpan denda",
+    b:
+      fld("al-on", "Denda keterlambatan tagihan air", {
+        t: "select",
+        opts: opt(
+          [
+            ["0", "Nonaktif"],
+            ["1", "Aktif"],
+          ],
+          (x) => x,
+          L.on ? "1" : "0",
+        ),
+      }) +
+      fld("al-ty", "Cara hitung", {
+        t: "select",
+        opts: opt(
+          [
+            ["tetap", "Nominal tetap per tagihan (Rp)"],
+            ["persen", "Persentase dari sisa tagihan (%)"],
+          ],
+          (x) => x,
+          L.type,
+        ),
+      }) +
+      fld("al-v", "Nilai denda (Rp atau %)", nf0(L.val)) +
+      fld("al-g", "Tenggang setelah jatuh tempo (hari)", nf0(L.grace)) +
+      fld("al-m", "Batas maksimum denda (Rp; 0 = tanpa batas)", nf0(L.max)) +
+      '<p class="k">Dikenakan sekali per tagihan, pada pembayaran pertama sesudah jatuh tempo + tenggang (akun 4210 Pendapatan Denda Air).</p>',
+  };
+};
+MD.pb = () => {
+  const I = aInst();
+  return {
+    t: "Biaya pasang baru",
+    s: "saveInst()",
+    y: "Simpan biaya",
+    b:
+      fld("ai-on", "Biaya pasang baru", {
+        t: "select",
+        opts: opt(
+          [
+            ["0", "Nonaktif"],
+            ["1", "Aktif"],
+          ],
+          (x) => x,
+          I.on ? "1" : "0",
+        ),
+      }) +
+      fld("ai-n", "Nama biaya", {
+        value: I.name,
+        req: 1,
+        a: ' maxlength="40" autocomplete="off"',
+      }) +
+      fld("ai-a", "Nominal (Rp)", nf0(I.amt)) +
+      '<p class="k">Ditagihkan sebagai piutang pelanggan saat menambah sambungan baru (akun 4220 Pendapatan Pasang Baru Air).</p>',
+  };
+};
+MD.sk = () => {
+  const I = aRecon();
+  return {
+    t: "Biaya sambung kembali",
+    s: "saveRecon()",
+    y: "Simpan biaya",
+    b:
+      fld("ak-on", "Biaya sambung kembali", {
+        t: "select",
+        opts: opt(
+          [
+            ["0", "Nonaktif"],
+            ["1", "Aktif"],
+          ],
+          (x) => x,
+          I.on ? "1" : "0",
+        ),
+      }) +
+      fld("ak-n", "Nama biaya", {
+        value: I.name,
+        req: 1,
+        a: ' maxlength="40" autocomplete="off"',
+      }) +
+      fld("ak-a", "Nominal (Rp)", nf0(I.amt)) +
+      '<p class="k">Ditagihkan sebagai piutang pelanggan setiap kali sambungan yang diputus disambung kembali (akun 4220).</p>',
+  };
+};
+MD.ds = () => {
+  const e = aDiscs().find((x) => x.code === S.eds);
+  return {
+    t: EN(e, "Ubah diskon", "Diskon baru"),
+    s: "saveDisc()",
+    y: EN(e, "Simpan perubahan", "Tambah diskon"),
+    b:
+      fld("ad-n", "Nama diskon (mis. Warga kurang mampu)", {
+        value: e ? e.name : "",
+        req: 1,
+        a: ' maxlength="40" autocomplete="off"',
+      }) +
+      fld("ad-t", "Jenis diskon", {
+        t: "select",
+        opts: opt(
+          [
+            ["persen", "Persentase (%)"],
+            ["nominal", "Nominal (Rp)"],
+          ],
+          (x) => x,
+          e ? e.type : "persen",
+        ),
+      }) +
+      fld("ad-v", "Nilai (% atau Rp)", {
+        type: "text",
+        a: ' inputmode="decimal" autocomplete="off"',
+        value: e ? String(e.val).replace(".", ",") : "",
+        req: 1,
+      }) +
+      fld("ad-s", "Berlaku untuk", {
+        t: "select",
+        opts: opt(
+          [
+            ["semua", "Tagihan air dan layanan lain"],
+            ["tagihan", "Hanya tagihan air"],
+            ["penjualan", "Hanya penjualan lain"],
+          ],
+          (x) => x,
+          e ? e.scope : "semua",
+        ),
+      }) +
+      '<p class="k">Diskon tagihan dipilih per sambungan; diskon layanan dipilih saat mencatat layanan.</p>',
+  };
+};
 // v1.1.375 (GJ5): bayar semua gaji disetujui lewat modal (tanggal dan kas dipilih di dialog)
-MD.gp=()=>{const per=S.egp||(typeof gjPer==="function"?gjPer():""),ap=gjScope("approved",per),tn=ap.reduce((t,p)=>t+p.net_salary,0);
- if(!ap.length)return{t:"Bayar semua gaji",s:"mdClose()",y:"Tutup",b:'<p class="k">Tidak ada gaji berstatus Disetujui pada periode ini.</p>',nf:1};
- return{t:"Bayar semua gaji "+esc(per),s:"askC('payBayarAll','"+per+"')",y:"Bayar semua ("+ap.length+")",b:`<div class="kvg"><div class="kv"><span class="k">Periode</span><b>${esc(per)}</b></div><div class="kv"><span class="k">Jumlah gaji</span><b>${ap.length}</b></div><div class="kv"><span class="k">Total bersih</span><b>${rp(tn)}</b></div></div><div class="lkg2"><div>${fld("gj-d","Tanggal bayar",{type:"date",value:today()})}</div><div>${fld("gj-k","Kas/Bank",{t:"select",opts:opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name])})}</div></div>`}};
+MD.gp = () => {
+  const per = S.egp || (typeof gjPer === "function" ? gjPer() : ""),
+    ap = gjScope("approved", per),
+    tn = ap.reduce((t, p) => t + p.net_salary, 0);
+  if (!ap.length)
+    return {
+      t: "Bayar semua gaji",
+      s: "mdClose()",
+      y: "Tutup",
+      b: '<p class="k">Tidak ada gaji berstatus Disetujui pada periode ini.</p>',
+      nf: 1,
+    };
+  return {
+    t: "Bayar semua gaji " + esc(per),
+    s: "askC('payBayarAll','" + per + "')",
+    y: "Bayar semua (" + ap.length + ")",
+    b: `<div class="kvg"><div class="kv"><span class="k">Periode</span><b>${esc(per)}</b></div><div class="kv"><span class="k">Jumlah gaji</span><b>${ap.length}</b></div><div class="kv"><span class="k">Total bersih</span><b>${rp(tn)}</b></div></div><div class="lkg2"><div>${fld("gj-d", "Tanggal bayar", { type: "date", value: today() })}</div><div>${fld("gj-k", "Kas/Bank", { t: "select", opts: opt(db.cash_accounts.filter(isAct), (c) => [c._id, c.name]) })}</div></div>`,
+  };
+};
 // v1.1.374 (GJ4): buat gaji periode lewat modal
-MD.gb=()=>{const ne=db.employees.filter(e=>isAct(e)&&(e.base_salary||0)>0).length;return{t:"Buat gaji periode",s:"payGen()",y:"Buat gaji periode ini",b:`<p class="k">Draf → Disetujui → Dibayar · ${ne} pegawai aktif punya gaji pokok.</p>${fld("gj-m","Periode gaji",{type:"month",value:today().slice(0,7),hint:"Gaji pokok diisi di Master &gt; Pegawai. Beban dicatat ke unit pegawai; potongan menunggu disetor."})}`}};
+MD.gb = () => {
+  const ne = db.employees.filter(
+    (e) => isAct(e) && (e.base_salary || 0) > 0,
+  ).length;
+  return {
+    t: "Buat gaji periode",
+    s: "payGen()",
+    y: "Buat gaji periode ini",
+    b: `<p class="k">Draf → Disetujui → Dibayar · ${ne} pegawai aktif punya gaji pokok.</p>${fld("gj-m", "Periode gaji", { type: "month", value: today().slice(0, 7), hint: "Gaji pokok diisi di Master &gt; Pegawai. Beban dicatat ke unit pegawai; potongan menunggu disetor." })}`,
+  };
+};
 // v1.1.374 (GJ4): setor potongan gaji lewat modal (menggantikan formulir terbuka di kartu Potongan gaji)
-MD.gs=()=>{const R=potRows().filter(x=>x.r>0),kas=opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name]);
- if(!R.length)return{t:"Setor potongan gaji",s:"mdClose()",y:"Tutup",b:'<p class="k">Tidak ada potongan gaji yang perlu disetor.</p>',nf:1};
- return{t:"Setor potongan gaji",s:"potSetor()",y:"Catat setoran",b:`<p class="k">Untuk BPJS, pajak, koperasi, dan sejenisnya; melunasi Kewajiban Lain (2200).</p>${fld("ps-u","Unit",{t:"select",a:' onchange="potFill()"',opts:opt(R,x=>[x.k,unitName(x.k||null)+" · sisa Rp "+fm(x.r)])})}${fld("ps-a","Jumlah (Rp)",{a:' type="text" inputmode="numeric" autocomplete="off" oninput="fmtR(this)"',value:fm(R[0].r)})}${fld("ps-d","Tanggal setor",{type:"date",value:today()})}${fld("ps-k","Kas/Bank",{t:"select",opts:kas})}${fld("ps-n","Tujuan setoran",{a:' type="text" autocomplete="off" placeholder="mis. BPJS Ketenagakerjaan"'})}`}};
-MD.td=()=>{const t=db.transactions.find(x=>x._id===S.etd);if(!t)return{t:"Transaksi",s:"mdClose()",y:"Tutup",b:"<p>Transaksi tidak ditemukan.</p>",nf:1};
- const K=(k,v)=>`<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,jes=db.journal_entries.filter(j=>j.transaction_id===t._id).sort((a,b)=>(a.reversal_of?1:0)-(b.reversal_of?1:0)),
-  au=db.audit_logs.filter(a=>a.entity_id===t._id&&["post","void"].includes(a.action)).sort((a,b)=>(a.at||"")<(b.at||"")?-1:1),
-  jl=jes.map(j=>{const ls=db.journal_lines.filter(l=>l.journal_entry_id===j._id);return`<div class="k">${j.reversal_of?"Jurnal pembalik":"Jurnal"}</div>`+tbl(["Akun","#Debit","#Kredit"],ls.map(l=>{const a=acc(l.account_id);return`<tr><td>${esc(a?a.code+" "+a.name:l.account_id)}</td><td class="n">${l.debit?rp(l.debit):""}</td><td class="n">${l.credit?rp(l.credit):""}</td></tr>`}))}).join(""),
-  can_void=t.status==="posted"&&!/^(loan|sale)/.test(t.type),
-  bdg=`<span class="bdg ${t.status==="posted"?"ok":"wr"}">${t.status==="posted"?"Diposting":t.status==="voided"?"Dibatalkan":esc(t.status)}</span>`;
- const hd=`<div class="lds">${bdg}<b>${rp(t.amount)}</b></div><div class="kvg">${K("No. bukti",bktNo(t._id))}${K("Tanggal",t.date)}${K("Jenis",esc(TL[t.type]||t.type))}${K("Unit",esc(unitName(t.business_unit_id)))}${K("Keterangan",esc(t.description))}${t.edited_from?`<div class="kv"><span class="k">Hasil ubahan</span><button class="b s sm" onclick="mdOpen('td','${t.edited_from}')">Lihat transaksi lama</button></div>`:""}${t.replaced_by?`<div class="kv"><span class="k">Diganti oleh</span><button class="b s sm" onclick="mdOpen('td','${t.replaced_by}')">Lihat transaksi baru</button></div>`:""}${au.map(a=>K(a.action==="void"?"Dibatalkan":"Dicatat",esc(wd(a.at)+(a.by?" · "+a.by:""))).replace("<b>","<b>")).join("")}</div>`,jr=jl||'<p class="k">Tidak ada jurnal.</p>',ac=can_void?`<div class="lda">${EDITABLE.includes(t.type)?ib("edit","Ubah","editTrx('"+t._id+"')"):""}${ib("undo","Batalkan","askC('voidT','"+t._id+"')","x")}</div>`:"";
- return{t:t.description,s:"mdClose()",y:"Tutup",nf:1,b:`<div class="ldw">${hd}${jr}${ac}</div>`,P:{l:hd+ac,r:jr}}};
+MD.gs = () => {
+  const R = potRows().filter((x) => x.r > 0),
+    kas = opt(db.cash_accounts.filter(isAct), (c) => [c._id, c.name]);
+  if (!R.length)
+    return {
+      t: "Setor potongan gaji",
+      s: "mdClose()",
+      y: "Tutup",
+      b: '<p class="k">Tidak ada potongan gaji yang perlu disetor.</p>',
+      nf: 1,
+    };
+  return {
+    t: "Setor potongan gaji",
+    s: "potSetor()",
+    y: "Catat setoran",
+    b: `<p class="k">Untuk BPJS, pajak, koperasi, dan sejenisnya; melunasi Kewajiban Lain (2200).</p>${fld("ps-u", "Unit", { t: "select", a: ' onchange="potFill()"', opts: opt(R, (x) => [x.k, unitName(x.k || null) + " · sisa Rp " + fm(x.r)]) })}${fld("ps-a", "Jumlah (Rp)", { a: ' type="text" inputmode="numeric" autocomplete="off" oninput="fmtR(this)"', value: fm(R[0].r) })}${fld("ps-d", "Tanggal setor", { type: "date", value: today() })}${fld("ps-k", "Kas/Bank", { t: "select", opts: kas })}${fld("ps-n", "Tujuan setoran", { a: ' type="text" autocomplete="off" placeholder="mis. BPJS Ketenagakerjaan"' })}`,
+  };
+};
+MD.td = () => {
+  const t = db.transactions.find((x) => x._id === S.etd);
+  if (!t)
+    return {
+      t: "Transaksi",
+      s: "mdClose()",
+      y: "Tutup",
+      b: "<p>Transaksi tidak ditemukan.</p>",
+      nf: 1,
+    };
+  const K = (k, v) =>
+      `<div class="kv"><span class="k">${k}</span><b>${v}</b></div>`,
+    jes = db.journal_entries
+      .filter((j) => j.transaction_id === t._id)
+      .sort((a, b) => (a.reversal_of ? 1 : 0) - (b.reversal_of ? 1 : 0)),
+    au = db.audit_logs
+      .filter(
+        (a) => a.entity_id === t._id && ["post", "void"].includes(a.action),
+      )
+      .sort((a, b) => ((a.at || "") < (b.at || "") ? -1 : 1)),
+    jl = jes
+      .map((j) => {
+        const ls = db.journal_lines.filter((l) => l.journal_entry_id === j._id);
+        return (
+          `<div class="k">${j.reversal_of ? "Jurnal pembalik" : "Jurnal"}</div>` +
+          tbl(
+            ["Akun", "#Debit", "#Kredit"],
+            ls.map((l) => {
+              const a = acc(l.account_id);
+              return `<tr><td>${esc(a ? a.code + " " + a.name : l.account_id)}</td><td class="n">${l.debit ? rp(l.debit) : ""}</td><td class="n">${l.credit ? rp(l.credit) : ""}</td></tr>`;
+            }),
+          )
+        );
+      })
+      .join(""),
+    can_void = t.status === "posted" && !/^(loan|sale)/.test(t.type),
+    bdg = `<span class="bdg ${t.status === "posted" ? "ok" : "wr"}">${t.status === "posted" ? "Diposting" : t.status === "voided" ? "Dibatalkan" : esc(t.status)}</span>`;
+  const hd = `<div class="lds">${bdg}<b>${rp(t.amount)}</b></div><div class="kvg">${K("No. bukti", bktNo(t._id))}${K("Tanggal", t.date)}${K("Jenis", esc(TL[t.type] || t.type))}${K("Unit", esc(unitName(t.business_unit_id)))}${K("Keterangan", esc(t.description))}${t.edited_from ? `<div class="kv"><span class="k">Hasil ubahan</span><button class="b s sm" onclick="mdOpen('td','${t.edited_from}')">Lihat transaksi lama</button></div>` : ""}${t.replaced_by ? `<div class="kv"><span class="k">Diganti oleh</span><button class="b s sm" onclick="mdOpen('td','${t.replaced_by}')">Lihat transaksi baru</button></div>` : ""}${au.map((a) => K(a.action === "void" ? "Dibatalkan" : "Dicatat", esc(wd(a.at) + (a.by ? " · " + a.by : ""))).replace("<b>", "<b>")).join("")}</div>`,
+    jr = jl || '<p class="k">Tidak ada jurnal.</p>',
+    ac = can_void
+      ? `<div class="lda">${EDITABLE.includes(t.type) ? ib("edit", "Ubah", "editTrx('" + t._id + "')") : ""}${ib("undo", "Batalkan", "askC('voidT','" + t._id + "')", "x")}</div>`
+      : "";
+  return {
+    t: t.description,
+    s: "mdClose()",
+    y: "Tutup",
+    nf: 1,
+    b: `<div class="ldw">${hd}${jr}${ac}</div>`,
+    P: { l: hd + ac, r: jr },
+  };
+};
 // ===== v1.1.009b: ubah transaksi (batalkan + posting ulang, bertaut) =====
-const EDITABLE=["in","out","tf","manual"];
-function editChk(id){const t=db.transactions.find(x=>x._id===id);if(!t)throw Error("Transaksi tidak ditemukan");if(t.status!=="posted")throw Error("Hanya transaksi berstatus Diposting yang dapat diubah");
- if(!EDITABLE.includes(t.type))throw Error("Jenis transaksi ini dikoreksi lewat menu asalnya (Simpan Pinjam, Pamsimas, Gaji, atau Data)");
- const cu=curUser();if(cu&&(cu.unit_ids||[]).length&&!cu.unit_ids.includes(t.business_unit_id||""))throw Error("Transaksi ini bukan milik unit tugas Anda");
- if(closed(t.date))throw Error("Periode "+t.date.slice(0,7)+" sudah ditutup; buka periode dulu untuk mengubah transaksi ini");return t}
+const EDITABLE = ["in", "out", "tf", "manual"];
+function editChk(id) {
+  const t = db.transactions.find((x) => x._id === id);
+  if (!t) throw Error("Transaksi tidak ditemukan");
+  if (t.status !== "posted")
+    throw Error("Hanya transaksi berstatus Diposting yang dapat diubah");
+  if (!EDITABLE.includes(t.type))
+    throw Error(
+      "Jenis transaksi ini dikoreksi lewat menu asalnya (Simpan Pinjam, Pamsimas, Gaji, atau Data)",
+    );
+  const cu = curUser();
+  if (
+    cu &&
+    (cu.unit_ids || []).length &&
+    !cu.unit_ids.includes(t.business_unit_id || "")
+  )
+    throw Error("Transaksi ini bukan milik unit tugas Anda");
+  if (closed(t.date))
+    throw Error(
+      "Periode " +
+        t.date.slice(0, 7) +
+        " sudah ditutup; buka periode dulu untuk mengubah transaksi ini",
+    );
+  return t;
+}
 // nilai awal form dari jurnal transaksi
-function editDef(t){const je=db.journal_entries.find(j=>j.transaction_id===t._id&&!j.reversal_of),ls=db.journal_lines.filter(l=>l.journal_entry_id===je._id),dl=ls.find(l=>l.debit>0),cl=ls.find(l=>l.credit>0),cashOf=a=>(db.cash_accounts.find(c=>c.account_id===a)||{})._id;
- const o={type:t.type,date:t.date,unit:t.business_unit_id||"",amt:fm(t.amount),desc:t.description==="-"?"":t.description};
- if(t.type==="in"){o.cash=cashOf(dl.account_id);o.acc=cl.account_id}else if(t.type==="out"){o.acc=dl.account_id;o.cash=cashOf(cl.account_id)}
- else if(t.type==="tf"){o.cash2=cashOf(dl.account_id);o.cash=cashOf(cl.account_id)}else{o.acc=dl.account_id;o.acc2=cl.account_id}return o}
-function editTrx(id){try{const t=editChk(id);S.ft=t.type;mdOpen("tn",id)}catch(e){S.msg="⚠ "+e.message;render()}}
-const _tn=MD.tn;MD.tn=()=>{const t=S.etn&&db.transactions.find(x=>x._id===S.etn);if(!t)return _tn();S.ft=t.type;return{t:"Ubah transaksi",s:"submitT()",y:"Simpan perubahan",b:`<p class="k">Transaksi lama dibatalkan dengan jurnal pembalik, lalu transaksi baru diposting dan saling ditautkan. Riwayat tetap tercatat.</p><div class="frm">${trxFormHtml(editDef(t))}<div class="prev" id="f-prev" aria-live="polite"></div></div>`}};
+function editDef(t) {
+  const je = db.journal_entries.find(
+      (j) => j.transaction_id === t._id && !j.reversal_of,
+    ),
+    ls = db.journal_lines.filter((l) => l.journal_entry_id === je._id),
+    dl = ls.find((l) => l.debit > 0),
+    cl = ls.find((l) => l.credit > 0),
+    cashOf = (a) =>
+      (db.cash_accounts.find((c) => c.account_id === a) || {})._id;
+  const o = {
+    type: t.type,
+    date: t.date,
+    unit: t.business_unit_id || "",
+    amt: fm(t.amount),
+    desc: t.description === "-" ? "" : t.description,
+  };
+  if (t.type === "in") {
+    o.cash = cashOf(dl.account_id);
+    o.acc = cl.account_id;
+  } else if (t.type === "out") {
+    o.acc = dl.account_id;
+    o.cash = cashOf(cl.account_id);
+  } else if (t.type === "tf") {
+    o.cash2 = cashOf(dl.account_id);
+    o.cash = cashOf(cl.account_id);
+  } else {
+    o.acc = dl.account_id;
+    o.acc2 = cl.account_id;
+  }
+  return o;
+}
+function editTrx(id) {
+  try {
+    const t = editChk(id);
+    S.ft = t.type;
+    mdOpen("tn", id);
+  } catch (e) {
+    S.msg = "⚠ " + e.message;
+    render();
+  }
+}
+const _tn = MD.tn;
+MD.tn = () => {
+  const t = S.etn && db.transactions.find((x) => x._id === S.etn);
+  if (!t) return _tn();
+  S.ft = t.type;
+  return {
+    t: "Ubah transaksi",
+    s: "submitT()",
+    y: "Simpan perubahan",
+    b: `<p class="k">Transaksi lama dibatalkan dengan jurnal pembalik, lalu transaksi baru diposting dan saling ditautkan. Riwayat tetap tercatat.</p><div class="frm">${trxFormHtml(editDef(t))}<div class="prev" id="f-prev" aria-live="polite"></div></div>`,
+  };
+};
 // ===== v1.1.012: rincian master dalam modal (unit, rekening, akun, pihak, pegawai, tarif, pajak) =====
-MK.mdt="emdt";
-MD.mdt=()=>{const [k,id]=String(S.emdt||"|").split("|"),K=(a,b)=>`<div class="kv"><span class="k">${a}</span><b>${b}</b></div>`,st=x=>`<span class="bdg ${isAct(x)?"ok":"wr"}">${isAct(x)?"Aktif":"Nonaktif"}</span>`,
- act=(ed,tog,x)=>`<div class="lda">${ed?ib("edit","Edit",ed,"s"):""}${ib(isAct(x)?"x":"check",isAct(x)?"Nonaktifkan":"Aktifkan",tog,"s")}</div>`,
- miss={t:"Rincian",s:"mdClose()",y:"Tutup",b:"<p>Data tidak ditemukan.</p>",nf:1},W=(t,x,rows,btn)=>({t,s:"mdClose()",y:"Tutup",nf:1,b:`<div class="ldw"><div class="lds">${st(x)}</div><div class="kvg">${rows.join("")}</div>${btn}</div>`});
- if(k==="u"){const x=db.business_units.find(q=>q._id===id);if(!x)return miss;const n=db.loans.filter(l=>l.unit_id===id).length,tn=db.transactions.filter(t=>t.business_unit_id===id).length;
-  return W(x.name,x,[K("Kode",esc(x.code)),K("Nama",esc(x.name)),K("Jenis",esc(UNIT_T[unitType(x.type)])),...(UNIT_M[x.type]?[K("Modul",esc(modNm(UNIT_M[x.type]))+" · "+(modOn(UNIT_M[x.type])?"aktif":"nonaktif"))]:unitNoMod(x)?[K("Modul","Belum ada modul")]:[]),K("Transaksi",tn),K(unitStat(x)[1][0].toUpperCase()+unitStat(x)[1].slice(1),unitStat(x)[0]),...(x.type==="simpan_pinjam"?[K("Total pinjaman",n)]:[])],act("openM('u','"+id+"')","togM('u','"+id+"')",x)+(unitDelBlock(x)?`<p class="k">${esc(unitDelBlock(x))}</p>`:`<div class="lda">${ib("x","Hapus unit","askC('delUnit','"+id+"')","x")}</div><p class="k">Unit masih kosong, sehingga boleh dihapus permanen.</p>`))}
- if(k==="c"){const x=db.cash_accounts.find(q=>q._id===id);if(!x)return miss;const a=acc(x.account_id);
-  return W(x.name,x,[K("Nama",esc(x.name)),K("Jenis",esc(x.type)),K("Akun",esc(a?a.code+" "+a.name:x.account_id)),K("Saldo",rp(net(a,balAll())))],act("openM('c','"+id+"')","togM('c','"+id+"')",x))}
- if(k==="a"){const x=acc(id);if(!x)return miss;const par=x.parent_id&&acc(x.parent_id);
-  return W(x.code+" "+x.name,x,[K("Kode",esc(x.code)),K("Nama",esc(x.name)),K("Tipe",esc(x.type)),K("Induk",par?esc(par.code+" "+par.name):"-"),K("Dipakai jurnal",hasJ(id)?"Ya":"Belum"),...(SYSA.includes(id)?[K("Catatan","Dipakai otomatis oleh modul; tidak dapat dinonaktifkan")]:[])],act("openM('a','"+id+"')","togM('a','"+id+"')",x))}
- if(k==="py"){const x=db.parties.find(q=>q._id===id);if(!x)return miss;
-  return W(x.name,x,[K("Nama",esc(x.name)),K("Jenis",esc(PT[x.type]||x.type)),K("Telepon",esc(x.phone||"-")),K("Alamat",esc(x.address||"-"))],act("openP('"+id+"')","togP('"+id+"')",x))}
- if(k==="pg"){const x=db.employees.find(q=>q._id===id);if(!x)return miss;
-  return W(x.name,x,[K("No pegawai",esc(x.emp_number)),K("Nama",esc(x.name)),K("Jabatan",esc(x.position||"-")),K("Unit",esc(unitName(x.unit_id))),K("Mulai",esc(x.start_date||"-")),...(x.end_date?[K("Berakhir",esc(x.end_date))]:[]),K("Gaji pokok",rp(x.base_salary||0))],act("openG('"+id+"')","togG('"+id+"')",x))}
- if(k==="rt"){const x=db.rate_master.find(q=>q._id===id);if(!x)return miss;const ac=x.active!==false;
-  return{t:x.fee_code+" v"+(x.version||1),s:"mdClose()",y:"Tutup",nf:1,b:`<div class="ldw"><div class="lds"><span class="bdg ${ac?"ok":"wr"}">${ac?"Aktif":"Nonaktif"}</span></div><div class="kvg">${K("Kode",esc(x.fee_code)+" · versi "+(x.version||1))}${K("Nama",esc(x.fee_name))}${K("Jenis",esc(ftName(x.fee_type)))}${K("Metode",esc((FEE_METHODS.find(m=>m[0]===x.calc_method)||[0,""])[1]))}${x.base?K("Dasar",esc((FEE_BASES.find(m=>m[0]===x.base)||[0,x.base])[1])):""}${x.rate?K("Persentase",x.rate.toLocaleString("id-ID")+"%"):""}${x.fixed_amount?K("Nominal","Rp "+fm(x.fixed_amount)):""}${x.minimum?K("Minimum","Rp "+fm(x.minimum)):""}${x.maximum?K("Maksimum","Rp "+fm(x.maximum)):""}${K("Dikenai pajak",x.taxable?"Ya":"Tidak")}${K("Berlaku",x.effective_from+(x.effective_until?" s/d "+x.effective_until:" →"))}</div><div class="lda">${ib("plus","Tambah versi baru","mdOpen('rt','"+esc(x.fee_code)+"')","s")}${ib(ac?"x":"check",ac?"Nonaktifkan":"Aktifkan","togRate('"+id+"')","s")}</div></div>`}}
- if(k==="tx"){const x=db.tax_master.find(q=>q._id===id);if(!x)return miss;const ac=x.active!==false;
-  return{t:x.tax_code+" v"+(x.version||1),s:"mdClose()",y:"Tutup",nf:1,b:`<div class="ldw"><div class="lds"><span class="bdg ${ac?"ok":"wr"}">${ac?"Aktif":"Nonaktif"}</span></div><div class="kvg">${K("Kode",esc(x.tax_code)+" · versi "+(x.version||1))}${K("Nama",esc(x.tax_name))}${K("Tarif",x.tax_rate.toLocaleString("id-ID")+"%")}${K("Berlaku",x.effective_from+(x.effective_until?" s/d "+x.effective_until:" →"))}</div><div class="lda">${ib(ac?"x":"check",ac?"Nonaktifkan":"Aktifkan","togRate('"+id+"',1)","s")}</div></div>`}}
- return miss};
+MK.mdt = "emdt";
+MD.mdt = () => {
+  const [k, id] = String(S.emdt || "|").split("|"),
+    K = (a, b) =>
+      `<div class="kv"><span class="k">${a}</span><b>${b}</b></div>`,
+    st = (x) =>
+      `<span class="bdg ${isAct(x) ? "ok" : "wr"}">${isAct(x) ? "Aktif" : "Nonaktif"}</span>`,
+    act = (ed, tog, x) =>
+      `<div class="lda">${ed ? ib("edit", "Edit", ed, "s") : ""}${ib(isAct(x) ? "x" : "check", isAct(x) ? "Nonaktifkan" : "Aktifkan", tog, "s")}</div>`,
+    miss = {
+      t: "Rincian",
+      s: "mdClose()",
+      y: "Tutup",
+      b: "<p>Data tidak ditemukan.</p>",
+      nf: 1,
+    },
+    W = (t, x, rows, btn) => ({
+      t,
+      s: "mdClose()",
+      y: "Tutup",
+      nf: 1,
+      b: `<div class="ldw"><div class="lds">${st(x)}</div><div class="kvg">${rows.join("")}</div>${btn}</div>`,
+    });
+  if (k === "u") {
+    const x = db.business_units.find((q) => q._id === id);
+    if (!x) return miss;
+    const n = db.loans.filter((l) => l.unit_id === id).length,
+      tn = db.transactions.filter((t) => t.business_unit_id === id).length;
+    return W(
+      x.name,
+      x,
+      [
+        K("Kode", esc(x.code)),
+        K("Nama", esc(x.name)),
+        K("Jenis", esc(UNIT_T[unitType(x.type)])),
+        ...(UNIT_M[x.type]
+          ? [
+              K(
+                "Modul",
+                esc(modNm(UNIT_M[x.type])) +
+                  " · " +
+                  (modOn(UNIT_M[x.type]) ? "aktif" : "nonaktif"),
+              ),
+            ]
+          : unitNoMod(x)
+            ? [K("Modul", "Belum ada modul")]
+            : []),
+        K("Transaksi", tn),
+        K(
+          unitStat(x)[1][0].toUpperCase() + unitStat(x)[1].slice(1),
+          unitStat(x)[0],
+        ),
+        ...(x.type === "simpan_pinjam" ? [K("Total pinjaman", n)] : []),
+      ],
+      act("openM('u','" + id + "')", "togM('u','" + id + "')", x) +
+        (unitDelBlock(x)
+          ? `<p class="k">${esc(unitDelBlock(x))}</p>`
+          : `<div class="lda">${ib("x", "Hapus unit", "askC('delUnit','" + id + "')", "x")}</div><p class="k">Unit masih kosong, sehingga boleh dihapus permanen.</p>`),
+    );
+  }
+  if (k === "c") {
+    const x = db.cash_accounts.find((q) => q._id === id);
+    if (!x) return miss;
+    const a = acc(x.account_id);
+    return W(
+      x.name,
+      x,
+      [
+        K("Nama", esc(x.name)),
+        K("Jenis", esc(x.type)),
+        K("Akun", esc(a ? a.code + " " + a.name : x.account_id)),
+        K("Saldo", rp(net(a, balAll()))),
+      ],
+      act("openM('c','" + id + "')", "togM('c','" + id + "')", x),
+    );
+  }
+  if (k === "a") {
+    const x = acc(id);
+    if (!x) return miss;
+    const par = x.parent_id && acc(x.parent_id);
+    return W(
+      x.code + " " + x.name,
+      x,
+      [
+        K("Kode", esc(x.code)),
+        K("Nama", esc(x.name)),
+        K("Tipe", esc(x.type)),
+        K("Induk", par ? esc(par.code + " " + par.name) : "-"),
+        K("Dipakai jurnal", hasJ(id) ? "Ya" : "Belum"),
+        ...(SYSA.includes(id)
+          ? [
+              K(
+                "Catatan",
+                "Dipakai otomatis oleh modul; tidak dapat dinonaktifkan",
+              ),
+            ]
+          : []),
+      ],
+      act("openM('a','" + id + "')", "togM('a','" + id + "')", x),
+    );
+  }
+  if (k === "py") {
+    const x = db.parties.find((q) => q._id === id);
+    if (!x) return miss;
+    return W(
+      x.name,
+      x,
+      [
+        K("Nama", esc(x.name)),
+        K("Jenis", esc(PT[x.type] || x.type)),
+        K("Telepon", esc(x.phone || "-")),
+        K("Alamat", esc(x.address || "-")),
+      ],
+      act("openP('" + id + "')", "togP('" + id + "')", x),
+    );
+  }
+  if (k === "pg") {
+    const x = db.employees.find((q) => q._id === id);
+    if (!x) return miss;
+    return W(
+      x.name,
+      x,
+      [
+        K("No pegawai", esc(x.emp_number)),
+        K("Nama", esc(x.name)),
+        K("Jabatan", esc(x.position || "-")),
+        K("Unit", esc(unitName(x.unit_id))),
+        K("Mulai", esc(x.start_date || "-")),
+        ...(x.end_date ? [K("Berakhir", esc(x.end_date))] : []),
+        K("Gaji pokok", rp(x.base_salary || 0)),
+      ],
+      act("openG('" + id + "')", "togG('" + id + "')", x),
+    );
+  }
+  if (k === "rt") {
+    const x = db.rate_master.find((q) => q._id === id);
+    if (!x) return miss;
+    const ac = x.active !== false;
+    return {
+      t: x.fee_code + " v" + (x.version || 1),
+      s: "mdClose()",
+      y: "Tutup",
+      nf: 1,
+      b: `<div class="ldw"><div class="lds"><span class="bdg ${ac ? "ok" : "wr"}">${ac ? "Aktif" : "Nonaktif"}</span></div><div class="kvg">${K("Kode", esc(x.fee_code) + " · versi " + (x.version || 1))}${K("Nama", esc(x.fee_name))}${K("Jenis", esc(ftName(x.fee_type)))}${K("Metode", esc((FEE_METHODS.find((m) => m[0] === x.calc_method) || [0, ""])[1]))}${x.base ? K("Dasar", esc((FEE_BASES.find((m) => m[0] === x.base) || [0, x.base])[1])) : ""}${x.rate ? K("Persentase", x.rate.toLocaleString("id-ID") + "%") : ""}${x.fixed_amount ? K("Nominal", "Rp " + fm(x.fixed_amount)) : ""}${x.minimum ? K("Minimum", "Rp " + fm(x.minimum)) : ""}${x.maximum ? K("Maksimum", "Rp " + fm(x.maximum)) : ""}${K("Dikenai pajak", x.taxable ? "Ya" : "Tidak")}${K("Berlaku", x.effective_from + (x.effective_until ? " s/d " + x.effective_until : " →"))}</div><div class="lda">${ib("plus", "Tambah versi baru", "mdOpen('rt','" + esc(x.fee_code) + "')", "s")}${ib(ac ? "x" : "check", ac ? "Nonaktifkan" : "Aktifkan", "togRate('" + id + "')", "s")}</div></div>`,
+    };
+  }
+  if (k === "tx") {
+    const x = db.tax_master.find((q) => q._id === id);
+    if (!x) return miss;
+    const ac = x.active !== false;
+    return {
+      t: x.tax_code + " v" + (x.version || 1),
+      s: "mdClose()",
+      y: "Tutup",
+      nf: 1,
+      b: `<div class="ldw"><div class="lds"><span class="bdg ${ac ? "ok" : "wr"}">${ac ? "Aktif" : "Nonaktif"}</span></div><div class="kvg">${K("Kode", esc(x.tax_code) + " · versi " + (x.version || 1))}${K("Nama", esc(x.tax_name))}${K("Tarif", x.tax_rate.toLocaleString("id-ID") + "%")}${K("Berlaku", x.effective_from + (x.effective_until ? " s/d " + x.effective_until : " →"))}</div><div class="lda">${ib(ac ? "x" : "check", ac ? "Nonaktifkan" : "Aktifkan", "togRate('" + id + "',1)", "s")}</div></div>`,
+    };
+  }
+  return miss;
+};
 
 // ===== v1.1.213: isian Pamsimas yang tadinya inline kini lewat modal =====
-MD.jl=()=>{const U=x=>S.unit==="all"||x.unit_id===S.unit,pr=db.products.filter(U).filter(p=>!isDgProd(p)),pel=db.parties.filter(p=>p.type==="pelanggan"),kas=opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name]),ds=discOpts("penjualan");
- return{t:"Catat layanan",s:"jual()",y:"Simpan layanan",b:cartHtml()+'<p class="k">Layanan Pamsimas di luar tagihan bulanan (sambung kembali, ganti meter, balik nama, dan sebagainya). Tambahkan ke daftar, lalu pilih cara bayar.</p>'
- +fld("j-d","Tanggal",{type:"date",value:today()})
- +fld("j-p","Layanan",{t:"select",opts:opt(pr.filter(isAct),p=>[p._id,p.name+" – Rp "+fm(p.price)+"/"+p.unit])})
- +fld("j-q","Jumlah",{type:"text",a:' inputmode="decimal" autocomplete="off"'})
- +fld("j-h","Tarif satuan (Rp) — kosong = tarif layanan",{type:"text",a:' inputmode="numeric" autocomplete="off" oninput="fmtR(this)"'})
- +'<div class="fl"><button class="b s" onclick="jAdd()">Tambah ke daftar</button></div>'
- +(ds?fld("j-ds","Diskon",{t:"select",opts:ds}):"")
- +fld("j-t","Cara bayar",{t:"select",opts:'<option value="cash">Tunai</option><option value="credit">Kredit (piutang)</option>'})
- +fld("j-c","Pelanggan",{t:"select",opts:'<option value="">Pilih pelanggan</option>'+opt(pel.filter(isAct),p=>[p._id,p.name])})
- +fld("j-k","Kas/Bank (untuk tunai)",{t:"select",opts:kas})}};
-MD.by=()=>({t:"Catat biaya",s:"biayaSave()",y:"Simpan biaya",b:'<p class="k">Pengeluaran Pamsimas: listrik pompa, kaporit, perawatan pipa, honor operator, dan lainnya. Dicatat sebagai pengeluaran biasa pada unit Pamsimas.</p>'
- +fld("by-d","Tanggal",{type:"date",value:today()})+fld("by-j","Jenis biaya",{t:"select",opts:opt(BIAYA_J,j=>[j[0],j[1]])})
- +fld("by-a","Jumlah (Rp)",nf0(""))+fld("by-k","Dibayar dari",{t:"select",opts:opt(db.cash_accounts.filter(isAct),c=>[c._id,c.name])})
- +fld("by-s","Keterangan (opsional)",{type:"text",a:' autocomplete="off"'})});
-MD.rv=()=>({t:"Dana pemeliharaan",s:"biayaRsv()",y:"Simpan persen",b:'<p class="k">Persen dari pendapatan tagihan yang disarankan dicadangkan untuk perbaikan dan penggantian jaringan. Hanya muncul sebagai saran di Laporan Pamsimas; belum dijurnal. 0 = tidak dipakai.</p>'
- +fld("by-p","Persen dari pendapatan tagihan air",{type:"text",a:' inputmode="decimal" autocomplete="off" placeholder="0"',value:airRsv()||""})});
-MD.sr=()=>{const pv=srcPrev("");return{t:"Bacaan meter induk",s:"srcSave()",y:"Simpan bacaan",b:'<p class="k">Catat bacaan meter induk (air yang diproduksi atau masuk jaringan) tiap bulan. Dibandingkan dengan m³ yang ditagih untuk menghitung kehilangan air.</p>'
- +fld("sr-m","Bulan",{type:"month",value:today().slice(0,7)})+fld("sr-d","Tanggal baca",{type:"date",value:today()})
- +fld("sr-n","Sumber (kosong = Meter induk)",{type:"text",a:' autocomplete="off"'})
- +fld("sr-a","Angka awal",{type:"text",a:' inputmode="decimal" autocomplete="off"',value:pv==null?"":pv})+fld("sr-b","Angka akhir",{type:"text",a:' inputmode="decimal" autocomplete="off"'})}};
-MD.sb=()=>({t:"Batas kehilangan air",s:"lossSet()",y:"Simpan batas",b:'<p class="k">Bulan dengan persen kehilangan di atas batas ditandai. Bawaan 20%.</p>'
- +fld("sr-l","Batas (%)",{type:"text",a:' inputmode="decimal" autocomplete="off"',value:airLossMax()})});
-MD.ad=()=>({t:"Catat pengaduan",s:"adSave()",y:"Simpan pengaduan",b:'<p class="k">Laporan pipa bocor, air mati, atau keluhan lain. Tidak memengaruhi jurnal.</p>'
- +fld("ad-d","Tanggal",{type:"date",value:today()})
- +fld("ad-p","Pelapor (pelanggan)",{t:"select",opts:'<option value="">(bukan pelanggan terdaftar)</option>'+opt(db.parties.filter(p=>p.type==="pelanggan"&&isAct(p)),p=>[p._id,p.name])})
- +fld("ad-n","Nama pelapor (bila bukan pelanggan)",{type:"text",a:' autocomplete="off"'})
- +fld("ad-l","Lokasi",{type:"text",a:' autocomplete="off" placeholder="Dusun / jalan / titik pipa"'})
- +fld("ad-s","Uraian",{type:"text",a:' autocomplete="off" placeholder="Pipa bocor, air mati, dll."'})
- +fld("ad-t","Petugas (opsional)",{type:"text",a:' autocomplete="off"'})});
-MD.tf=()=>({t:"Tarif standar",s:"saveTarif()",y:"Simpan tarif",b:'<p class="k">Berlaku untuk golongan Umum. Perubahan hanya berlaku untuk tagihan berikutnya; tagihan yang sudah terbit tidak berubah.</p><div class="twg">'+tarifForm()+'</div>'});
+MD.jl = () => {
+  const U = (x) => S.unit === "all" || x.unit_id === S.unit,
+    pr = db.products.filter(U).filter((p) => !isDgProd(p)),
+    pel = db.parties.filter((p) => p.type === "pelanggan"),
+    kas = opt(db.cash_accounts.filter(isAct), (c) => [c._id, c.name]),
+    ds = discOpts("penjualan");
+  return {
+    t: "Catat layanan",
+    s: "jual()",
+    y: "Simpan layanan",
+    b:
+      cartHtml() +
+      '<p class="k">Layanan Pamsimas di luar tagihan bulanan (sambung kembali, ganti meter, balik nama, dan sebagainya). Tambahkan ke daftar, lalu pilih cara bayar.</p>' +
+      fld("j-d", "Tanggal", { type: "date", value: today() }) +
+      fld("j-p", "Layanan", {
+        t: "select",
+        opts: opt(pr.filter(isAct), (p) => [
+          p._id,
+          p.name + " – Rp " + fm(p.price) + "/" + p.unit,
+        ]),
+      }) +
+      fld("j-q", "Jumlah", {
+        type: "text",
+        a: ' inputmode="decimal" autocomplete="off"',
+      }) +
+      fld("j-h", "Tarif satuan (Rp) — kosong = tarif layanan", {
+        type: "text",
+        a: ' inputmode="numeric" autocomplete="off" oninput="fmtR(this)"',
+      }) +
+      '<div class="fl"><button class="b s" onclick="jAdd()">Tambah ke daftar</button></div>' +
+      (ds ? fld("j-ds", "Diskon", { t: "select", opts: ds }) : "") +
+      fld("j-t", "Cara bayar", {
+        t: "select",
+        opts: '<option value="cash">Tunai</option><option value="credit">Kredit (piutang)</option>',
+      }) +
+      fld("j-c", "Pelanggan", {
+        t: "select",
+        opts:
+          '<option value="">Pilih pelanggan</option>' +
+          opt(pel.filter(isAct), (p) => [p._id, p.name]),
+      }) +
+      fld("j-k", "Kas/Bank (untuk tunai)", { t: "select", opts: kas }),
+  };
+};
+MD.by = () => ({
+  t: "Catat biaya",
+  s: "biayaSave()",
+  y: "Simpan biaya",
+  b:
+    '<p class="k">Pengeluaran Pamsimas: listrik pompa, kaporit, perawatan pipa, honor operator, dan lainnya. Dicatat sebagai pengeluaran biasa pada unit Pamsimas.</p>' +
+    fld("by-d", "Tanggal", { type: "date", value: today() }) +
+    fld("by-j", "Jenis biaya", {
+      t: "select",
+      opts: opt(BIAYA_J, (j) => [j[0], j[1]]),
+    }) +
+    fld("by-a", "Jumlah (Rp)", nf0("")) +
+    fld("by-k", "Dibayar dari", {
+      t: "select",
+      opts: opt(db.cash_accounts.filter(isAct), (c) => [c._id, c.name]),
+    }) +
+    fld("by-s", "Keterangan (opsional)", {
+      type: "text",
+      a: ' autocomplete="off"',
+    }),
+});
+MD.rv = () => ({
+  t: "Dana pemeliharaan",
+  s: "biayaRsv()",
+  y: "Simpan persen",
+  b:
+    '<p class="k">Persen dari pendapatan tagihan yang disarankan dicadangkan untuk perbaikan dan penggantian jaringan. Hanya muncul sebagai saran di Laporan Pamsimas; belum dijurnal. 0 = tidak dipakai.</p>' +
+    fld("by-p", "Persen dari pendapatan tagihan air", {
+      type: "text",
+      a: ' inputmode="decimal" autocomplete="off" placeholder="0"',
+      value: airRsv() || "",
+    }),
+});
+MD.sr = () => {
+  const pv = srcPrev("");
+  return {
+    t: "Bacaan meter induk",
+    s: "srcSave()",
+    y: "Simpan bacaan",
+    b:
+      '<p class="k">Catat bacaan meter induk (air yang diproduksi atau masuk jaringan) tiap bulan. Dibandingkan dengan m³ yang ditagih untuk menghitung kehilangan air.</p>' +
+      fld("sr-m", "Bulan", { type: "month", value: today().slice(0, 7) }) +
+      fld("sr-d", "Tanggal baca", { type: "date", value: today() }) +
+      fld("sr-n", "Sumber (kosong = Meter induk)", {
+        type: "text",
+        a: ' autocomplete="off"',
+      }) +
+      fld("sr-a", "Angka awal", {
+        type: "text",
+        a: ' inputmode="decimal" autocomplete="off"',
+        value: pv == null ? "" : pv,
+      }) +
+      fld("sr-b", "Angka akhir", {
+        type: "text",
+        a: ' inputmode="decimal" autocomplete="off"',
+      }),
+  };
+};
+MD.sb = () => ({
+  t: "Batas kehilangan air",
+  s: "lossSet()",
+  y: "Simpan batas",
+  b:
+    '<p class="k">Bulan dengan persen kehilangan di atas batas ditandai. Bawaan 20%.</p>' +
+    fld("sr-l", "Batas (%)", {
+      type: "text",
+      a: ' inputmode="decimal" autocomplete="off"',
+      value: airLossMax(),
+    }),
+});
+MD.ad = () => ({
+  t: "Catat pengaduan",
+  s: "adSave()",
+  y: "Simpan pengaduan",
+  b:
+    '<p class="k">Laporan pipa bocor, air mati, atau keluhan lain. Tidak memengaruhi jurnal.</p>' +
+    fld("ad-d", "Tanggal", { type: "date", value: today() }) +
+    fld("ad-p", "Pelapor (pelanggan)", {
+      t: "select",
+      opts:
+        '<option value="">(bukan pelanggan terdaftar)</option>' +
+        opt(
+          db.parties.filter((p) => p.type === "pelanggan" && isAct(p)),
+          (p) => [p._id, p.name],
+        ),
+    }) +
+    fld("ad-n", "Nama pelapor (bila bukan pelanggan)", {
+      type: "text",
+      a: ' autocomplete="off"',
+    }) +
+    fld("ad-l", "Lokasi", {
+      type: "text",
+      a: ' autocomplete="off" placeholder="Dusun / jalan / titik pipa"',
+    }) +
+    fld("ad-s", "Uraian", {
+      type: "text",
+      a: ' autocomplete="off" placeholder="Pipa bocor, air mati, dll."',
+    }) +
+    fld("ad-t", "Petugas (opsional)", {
+      type: "text",
+      a: ' autocomplete="off"',
+    }),
+});
+MD.tf = () => ({
+  t: "Tarif standar",
+  s: "saveTarif()",
+  y: "Simpan tarif",
+  b:
+    '<p class="k">Berlaku untuk golongan Umum. Perubahan hanya berlaku untuk tagihan berikutnya; tagihan yang sudah terbit tidak berubah.</p><div class="twg">' +
+    tarifForm() +
+    "</div>",
+});
