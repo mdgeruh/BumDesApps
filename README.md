@@ -12,7 +12,13 @@ Aplikasi manajemen BUMDes untuk banyak unit usaha (Simpan Pinjam, Pamsimas, dll.
 
 Panduan Perdagangan: `docs/PANDUAN_PERDAGANGAN.md`.
 
-## Fitur (v1.1.382)
+## Fitur (v1.1.388)
+- **Perbaikan tumpang tindih Laba Rugi per Unit di HP (DB9b) (v1.1.388).**
+- **Rombak Dashboard: ringkasan dulu, lalu tindakan (DB9) (v1.1.387).**
+- **Rincian kosong Laba Rugi per Unit lebih ringkas (DB8b) (v1.1.386).**
+- **Laba Rugi per Unit interaktif (DB8) (v1.1.385).**
+- **Rincian gaji dan cetak Laporan Gaji dirapikan (GJ6) (v1.1.384).**
+- **Wisata Desa dihapus (DW1) (v1.1.383).**
 - **Dashboard: Tren dengan pilihan metrik (DB7) (v1.1.382).**
 - **Dashboard: persentase ekstrem dan Pola dilipat (DB6) (v1.1.381).**
 - **Dashboard: KPI utama dan perbandingan hari yang sama (DB1) (v1.1.380).**
