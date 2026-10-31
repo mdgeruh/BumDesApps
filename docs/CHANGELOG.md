@@ -2,6 +2,37 @@
 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar. Skema versi `1.1.NNN` (naik satu tiap rilis) mulai v1.1.001; sebelumnya `0.1.NNN`. Rencana ke depan: `ROADMAP.md`.
 
+## [1.1.388] — 2026-10-21
+
+### Diubah
+- Perbaikan tampilan Laba Rugi per Unit di HP
+
+## [1.1.387] — 2026-10-21
+
+### Diubah
+- Dashboard dirombak total (UI dan UX) sesuai pola ringkasan lalu tindakan
+
+## [1.1.386] — 2026-10-21
+
+### Diubah
+- Rincian Laba Rugi per Unit: keterangan kosong memakai baris kecil (lru-n); uji ui-lru memeriksa tingginya.
+
+## [1.1.385] — 2026-10-21
+
+### Diubah
+- Dashboard: kartu Laba Rugi per Unit memakai details per unit dengan rincian akun, tautan Buku Besar dan Laporan, label Laba/Rugi, bar relatif.
+
+## [1.1.384] — 2026-10-21
+
+### Diubah
+- Formulir Tambah komponen di rincian gaji (sekali pakai dan per satuan) memakai grid dua kolom; cetak laporan menampilkan ringkasan empat kolom tanpa ikon.
+
+## [1.1.383] — 2026-10-21
+
+### Diubah
+- Semua yang berkaitan dengan Wisata Desa dihapus: transaksi, jurnal, dan log audit di bumdes-data-setahun.json (671 transaksi), baris generator gen-mertha, serta penyebutan di ROADMAP, CHANGELOG, data/README, dan Blueprint.
+- Audit menyeluruh: rujukan menu lama "Setelan > Modul" di PANDUAN_PERDAGANGAN dan SUMMARY diganti Master > Unit Usaha > Modul Unit Usaha.
+
 ## [1.1.382] — 2026-10-21
 
 ### Diubah
@@ -510,7 +541,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/) secara longgar.
 ## [1.1.293] — 2026-10-17
 
 ### Diubah
-- Unit Perdagangan tidak lagi dibuat otomatis (bawaan hanya Simpan Pinjam dan Pamsimas); unit perdagangan dibuat sendiri lewat Setelan > Unit Usaha (jenis Perdagangan). Data contoh diperbarui dan ada berkas data setahun penuh baru; tombol SP1/SP2/Putus di Calon Putus dan tombol aksi Pengaduan kini berjajar rapi (Simpan Pinjam, Pamsimas, Jasa dan Proyek; tanpa Perdagangan dan Wisata Desa).
+- Unit Perdagangan tidak lagi dibuat otomatis (bawaan hanya Simpan Pinjam dan Pamsimas); unit perdagangan dibuat sendiri lewat Setelan > Unit Usaha (jenis Perdagangan). Data contoh diperbarui dan ada berkas data setahun penuh baru; tombol SP1/SP2/Putus di Calon Putus dan tombol aksi Pengaduan kini berjajar rapi (Simpan Pinjam, Pamsimas, Jasa dan Proyek; tanpa Perdagangan).
 
 ## [1.1.292] — 2026-10-17
 

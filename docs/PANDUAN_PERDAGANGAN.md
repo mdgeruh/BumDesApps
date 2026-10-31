@@ -3,7 +3,7 @@
 Untuk pengurus BUMDes yang mengelola toko atau kios (sembako, pertanian, kebutuhan rumah). Modul ini memakai buku besar yang sama dengan unit lain, sehingga laporan keuangan BUMDes ikut terisi otomatis.
 
 ## 1. Mengaktifkan
-1. **Setelan > Modul**: nyalakan **Perdagangan**. Akun Persediaan (1500), Piutang (1400), Utang (2100), Penjualan (4300), HPP (5900), dan Selisih Stok (5910) dibuat otomatis.
+1. **Master > Unit Usaha > Modul Unit Usaha**: nyalakan **Perdagangan**. Akun Persediaan (1500), Piutang (1400), Utang (2100), Penjualan (4300), HPP (5900), dan Selisih Stok (5910) dibuat otomatis.
 2. **Unit Usaha**: tambah unit berjenis **Perdagangan** (satu unit = satu toko dan satu gudang).
 3. Menu **Perdagangan** muncul untuk pengguna yang berhak (Bendahara dan Petugas Unit mengelola; Pengawas hanya melihat).
 

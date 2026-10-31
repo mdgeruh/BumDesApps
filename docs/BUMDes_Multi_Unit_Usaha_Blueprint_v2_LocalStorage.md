@@ -17,7 +17,6 @@ Contoh unit usaha:
 -   Unit Sumber Air
 -   Unit Perdagangan
 -   Unit Pertanian
--   Unit Pariwisata
 -   Unit usaha lain yang ditambahkan di kemudian hari
 
 Sistem tidak dirancang sebagai aplikasi koperasi. Unit Simpan Pinjam
@@ -487,7 +486,6 @@ UNIT001 = Simpan Pinjam
 UNIT002 = Sumber Air
 UNIT003 = Pertanian
 UNIT004 = Perdagangan
-UNIT005 = Pariwisata
 ```
 
 Unit baru cukup ditambahkan sebagai data.
